@@ -1,0 +1,14 @@
+{
+    "compileOnSave": true,
+    "compilerOptions": {
+        "rootDir": "./src",
+        "strict": true,
+        "forceConsistentCasingInFileNames": true,
+        "target": "ESNext",
+        "module": "NodeNext",
+        "moduleResolution": "nodenext",
+        "outDir": "./dist",
+        "esModuleInterop": true,
+        "resolveJsonModule": true
+    }
+}
