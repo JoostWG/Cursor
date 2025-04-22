@@ -1,0 +1,302 @@
+import BaseCommand from '../utils/baseCommand';
+import {
+    ActionRowBuilder,
+    ButtonBuilder,
+    ButtonStyle,
+    ChatInputCommandInteraction,
+    Colors,
+    EmbedBuilder,
+    InteractionReplyOptions,
+    MessageFlags,
+    SlashCommandBuilder,
+    User,
+    userMention,
+} from 'discord.js';
+
+const gameName = 'Rock Paper Scissors' as const;
+const emojis = {
+    rock: '🪨',
+    paper: '📄',
+    scissors: '✂️',
+} as const;
+
+type Choice = keyof typeof emojis;
+
+class Round {
+    public choices: [Choice | null, Choice | null];
+
+    public constructor() {
+        this.choices = [null, null];
+    }
+
+    public get(index: number) {
+        return this.choices[index];
+    }
+
+    public set(index: number, choice: Choice) {
+        this.choices[index] = choice;
+    }
+
+    public isFinished(): this is 3 {
+        return !this.choices.includes(null);
+    }
+
+    public getResult() {
+        if (!this.choices[0] || !this.choices[1]) {
+            return -1;
+        }
+
+        const keys = Object.keys(emojis);
+        return (keys.indexOf(this.choices[0]) - keys.indexOf(this.choices[1])) % 3;
+    }
+}
+
+class Game {
+    private users: [User, User];
+    private rounds: [Round, Round, Round];
+    private currentRoundIndex: number;
+    private timeout: number;
+
+    private status:
+        | 'invite_pending'
+        | 'invite_denied'
+        | 'invite_expired'
+        | 'game_active'
+        | 'game_finished'
+        | 'game_expired';
+
+    public constructor(users: [User, User], options?: { timeout?: number }) {
+        this.users = users;
+        this.timeout = options?.timeout ?? 60_000;
+        this.rounds = [new Round(), new Round(), new Round()];
+        this.currentRoundIndex = 0;
+        this.status = 'invite_pending';
+    }
+
+    public async start(interaction: ChatInputCommandInteraction) {
+        const response = await interaction.reply(this.buildMessage({ withResponse: true }));
+
+        if (!response.resource?.message) {
+            interaction.editReply({
+                content: 'Something went wrong...',
+                embeds: [],
+                components: [],
+            });
+            return;
+        }
+
+        let inviteInteraction;
+
+        try {
+            inviteInteraction = await response.resource.message.awaitMessageComponent({
+                time: this.timeout,
+                filter: (i) => i.user.id === this.player2.id,
+            });
+        } catch {
+            this.status = 'invite_expired';
+            await interaction.editReply(this.buildMessage());
+            return;
+        }
+
+        switch (inviteInteraction?.customId) {
+            case 'accept':
+                this.status = 'game_active';
+                await inviteInteraction.update(this.buildMessage());
+                break;
+
+            case 'deny':
+                this.status = 'invite_denied';
+                await inviteInteraction.update(this.buildMessage());
+                return;
+        }
+
+        response.resource.message
+            .createMessageComponentCollector({
+                time: this.timeout,
+                filter: (i) => {
+                    const userIndex = this.users.map((user) => user.id).indexOf(i.user.id);
+
+                    return (
+                        userIndex !== -1 &&
+                        this.rounds[this.currentRoundIndex].get(userIndex) === null
+                    );
+                },
+            })
+            .on('collect', async (buttonInteraction) => {
+                const userIndex = this.users
+                    .map((user) => user.id)
+                    .indexOf(buttonInteraction.user.id);
+
+                if (userIndex === -1) {
+                    await buttonInteraction.reply({
+                        content: "This ain't your game!",
+                        flags: MessageFlags.Ephemeral,
+                    });
+                    return;
+                }
+
+                if (this.rounds[this.currentRoundIndex].get(userIndex) === null) {
+                    await buttonInteraction.reply({
+                        content: 'You have already chosen this round. Waiting for opponent...',
+                        flags: MessageFlags.Ephemeral,
+                    });
+                    return;
+                }
+                this.rounds[this.currentRoundIndex].set(
+                    userIndex,
+                    buttonInteraction.customId as Choice,
+                );
+
+                if (this.rounds[this.currentRoundIndex].isFinished()) {
+                    if (this.currentRoundIndex === 2) {
+                        this.status = 'game_finished';
+                    } else {
+                        this.currentRoundIndex++;
+                    }
+                }
+
+                await buttonInteraction.update(this.buildMessage());
+            });
+    }
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    private buildMessage<E extends Record<string, any>>(
+        extra?: E,
+    ): Pick<InteractionReplyOptions, 'content' | 'embeds' | 'components'> & E {
+        // @ts-expect-error: Caused by `components`. Following guide, works at runtime.
+        return {
+            content: this.status === 'invite_pending' ? userMention(this.player2.id) : '',
+            embeds: [this.buildEmbed()],
+            components: this.buildComponents(),
+            ...extra,
+        };
+    }
+
+    private buildEmbed() {
+        const builder = new EmbedBuilder().setTitle(gameName);
+
+        switch (this.status) {
+            case 'invite_pending':
+                return builder
+                    .setColor(Colors.Blue)
+                    .setDescription(
+                        `${userMention(this.player1.id)} has invited you to play ${gameName}.\nPlease accept or deny within 60 seconds.`,
+                    );
+
+            case 'invite_denied':
+                return builder.setColor(Colors.Red).setDescription('Invite denied');
+
+            case 'invite_expired':
+                return builder.setColor(Colors.Red).setDescription('Invite expired');
+
+            case 'game_expired':
+            case 'game_active':
+            case 'game_finished':
+                return builder.setColor(Colors.Gold).addFields(
+                    ...this.rounds.map((round, roundIndex) => {
+                        return {
+                            name: `Round ${roundIndex + 1}`,
+                            value: `${round.choices
+                                .map((choice, choiceIndex) => {
+                                    const choiceString = choice
+                                        ? round.isFinished()
+                                            ? emojis[choice]
+                                            : '???'
+                                        : roundIndex === this.currentRoundIndex
+                                          ? 'Wating...'
+                                          : '...';
+
+                                    return `${this.users[choiceIndex].displayName}: ${choiceString}`;
+                                })
+                                .join('\n')}\n${
+                                [
+                                    'Tie!',
+                                    `${this.player1.displayName} wins!`,
+                                    `${this.player2.displayName} wins!`,
+                                ][round.getResult()] ?? ''
+                            }`,
+                            inline: true,
+                        };
+                    }),
+                );
+        }
+    }
+
+    private buildComponents() {
+        const builder = new ActionRowBuilder();
+
+        switch (this.status) {
+            case 'invite_pending':
+            case 'invite_denied':
+            case 'invite_expired':
+                return [
+                    builder.addComponents(
+                        new ButtonBuilder()
+                            .setCustomId('deny')
+                            .setLabel('Deny')
+                            .setStyle(ButtonStyle.Danger)
+                            .setDisabled(this.status !== 'invite_pending'),
+                        new ButtonBuilder()
+                            .setCustomId('accept')
+                            .setLabel('Accept')
+                            .setStyle(ButtonStyle.Success)
+                            .setDisabled(this.status !== 'invite_pending'),
+                    ),
+                ];
+
+            case 'game_expired':
+            case 'game_active':
+            case 'game_finished':
+                return [
+                    builder.addComponents(
+                        ...Object.entries(emojis).map(([key, emoji]) => {
+                            return new ButtonBuilder()
+                                .setCustomId(key)
+                                .setLabel(emoji)
+                                .setStyle(ButtonStyle.Primary)
+                                .setDisabled(this.status !== 'game_active');
+                        }),
+                    ),
+                ];
+        }
+    }
+
+    private get player1() {
+        return this.users[0];
+    }
+
+    private get player2() {
+        return this.users[1];
+    }
+}
+
+export default class RockPaperScissorsCommand extends BaseCommand {
+    public static readonly data = new SlashCommandBuilder()
+        .setName('rps')
+        .setDescription(`Play ${gameName}`)
+        .addUserOption((option) =>
+            option.setName('opponent').setDescription('Choose your opponent').setRequired(true),
+        );
+
+    public async execute(interaction: ChatInputCommandInteraction) {
+        const opponent = interaction.options.getUser('opponent', true);
+
+        if (opponent.bot) {
+            await interaction.reply({
+                content: 'You cannot play against bots.',
+                flags: MessageFlags.Ephemeral,
+            });
+            return;
+        }
+
+        if (opponent.id === interaction.user.id) {
+            await interaction.reply({
+                content: 'You cannot play against yourself.',
+                flags: MessageFlags.Ephemeral,
+            });
+            return;
+        }
+
+        await new Game([interaction.user, opponent]).start(interaction);
+    }
+}
