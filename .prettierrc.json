@@ -5,5 +5,9 @@
     "singleQuote": true,
     "printWidth": 100,
     "quoteProps": "consistent",
-    "tabWidth": 4
+    "tabWidth": 4,
+    "plugins": [
+        "@trivago/prettier-plugin-sort-imports"
+    ],
+    "importOrderSortSpecifiers": true
 }
