@@ -117,14 +117,6 @@ class Game {
         response.resource.message
             .createMessageComponentCollector({
                 time: this.timeout,
-                filter: (i) => {
-                    const userIndex = this.users.map((user) => user.id).indexOf(i.user.id);
-
-                    return (
-                        userIndex !== -1 &&
-                        this.rounds[this.currentRoundIndex].get(userIndex) === null
-                    );
-                },
             })
             .on('collect', async (buttonInteraction) => {
                 const userIndex = this.users
@@ -141,7 +133,7 @@ class Game {
                     return;
                 }
 
-                if (this.rounds[this.currentRoundIndex].get(userIndex) === null) {
+                if (this.rounds[this.currentRoundIndex].get(userIndex) !== null) {
                     await buttonInteraction.reply({
                         content: i18next.t('commands.rps.game.error.alreadyChosen', {
                             lng: buttonInteraction.locale,
