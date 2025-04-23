@@ -187,14 +187,12 @@ class Game {
 
         switch (this.status) {
             case 'invitePending':
-                return builder
-                    .setColor(Colors.Blue)
-                    .setDescription(
-                        i18next.t('commands.rps.game.invitePending', {
-                            lng: this.locale,
-                            user: userMention(this.player1.id),
-                        }),
-                    );
+                return builder.setColor(Colors.Blue).setDescription(
+                    i18next.t('commands.rps.game.invitePending', {
+                        lng: this.locale,
+                        user: userMention(this.player1.id),
+                    }),
+                );
 
             case 'inviteDenied':
                 return builder
