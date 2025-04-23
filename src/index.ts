@@ -9,6 +9,8 @@ import {
     GatewayIntentBits,
     MessageFlags,
 } from 'discord.js';
+import i18next from 'i18next';
+import I18NexFsBackend from 'i18next-fs-backend';
 
 export class Client extends DiscordJsClient {
     private commands: Collection<string, BaseCommand>;
@@ -86,6 +88,15 @@ client.on(Events.InteractionCreate, async (interaction) => {
             console.error(error);
         }
     }
+});
+
+i18next.use(I18NexFsBackend).init({
+    backend: {
+        loadPath: './locales/{{lng}}/translations.json',
+    },
+    fallbackLng: 'en-Us',
+    preload: ['en-US', 'nl'],
+    supportedLngs: ['en-US', 'nl'],
 });
 
 client.login(discordToken);

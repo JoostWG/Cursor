@@ -1,12 +1,23 @@
 import { devGuildId, discordAppId, discordToken } from '../config.json';
 import getCommands from './getCommands';
 import { REST, Routes } from 'discord.js';
+import i18next from 'i18next';
+import I18NexFsBackend from 'i18next-fs-backend';
 
 (async () => {
     if (!discordToken || !discordAppId || !devGuildId) {
         console.error('Invalid config.');
         return;
     }
+
+    await i18next.use(I18NexFsBackend).init({
+        backend: {
+            loadPath: './locales/{{lng}}/translations.json',
+        },
+        fallbackLng: 'en-Us',
+        preload: ['en-US', 'nl'],
+        supportedLngs: ['en-US', 'nl'],
+    });
 
     const globalCommands = [];
     const devCommands = [];
