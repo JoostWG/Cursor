@@ -61,19 +61,19 @@ class Game {
     private locale?: Locale;
 
     private status:
-        | 'invite_pending'
-        | 'invite_denied'
-        | 'invite_expired'
-        | 'game_active'
-        | 'game_finished'
-        | 'game_expired';
+        | 'invitePending'
+        | 'inviteDenied'
+        | 'inviteExpired'
+        | 'gameActive'
+        | 'gameFinished'
+        | 'gameExpired';
 
     public constructor(users: [User, User], options?: { timeout?: number }) {
         this.users = users;
         this.timeout = options?.timeout ?? 60_000;
         this.rounds = [new Round(), new Round(), new Round()];
         this.currentRoundIndex = 0;
-        this.status = 'invite_pending';
+        this.status = 'invitePending';
     }
 
     public async start(interaction: ChatInputCommandInteraction) {
@@ -97,19 +97,19 @@ class Game {
                 filter: (i) => i.user.id === this.player2.id,
             });
         } catch {
-            this.status = 'invite_expired';
+            this.status = 'inviteExpired';
             await interaction.editReply(this.buildMessage());
             return;
         }
 
         switch (inviteInteraction?.customId) {
             case 'accept':
-                this.status = 'game_active';
+                this.status = 'gameActive';
                 await inviteInteraction.update(this.buildMessage());
                 break;
 
             case 'deny':
-                this.status = 'invite_denied';
+                this.status = 'inviteDenied';
                 await inviteInteraction.update(this.buildMessage());
                 return;
         }
@@ -157,7 +157,7 @@ class Game {
 
                 if (this.rounds[this.currentRoundIndex].isFinished()) {
                     if (this.currentRoundIndex === 2) {
-                        this.status = 'game_finished';
+                        this.status = 'gameFinished';
                     } else {
                         this.currentRoundIndex++;
                     }
@@ -173,7 +173,7 @@ class Game {
     ): Pick<InteractionReplyOptions, 'content' | 'embeds' | 'components'> & E {
         // @ts-expect-error: Caused by `components`. Following guide, works at runtime.
         return {
-            content: this.status === 'invite_pending' ? userMention(this.player2.id) : '',
+            content: this.status === 'invitePending' ? userMention(this.player2.id) : '',
             embeds: [this.buildEmbed()],
             components: this.buildComponents(),
             ...extra,
@@ -186,7 +186,7 @@ class Game {
         );
 
         switch (this.status) {
-            case 'invite_pending':
+            case 'invitePending':
                 return builder
                     .setColor(Colors.Blue)
                     .setDescription(
@@ -196,23 +196,23 @@ class Game {
                         }),
                     );
 
-            case 'invite_denied':
+            case 'inviteDenied':
                 return builder
                     .setColor(Colors.Red)
                     .setDescription(
                         i18next.t('commands.rps.game.inviteDenied', { lng: this.locale }),
                     );
 
-            case 'invite_expired':
+            case 'inviteExpired':
                 return builder
                     .setColor(Colors.Red)
                     .setDescription(
                         i18next.t('commands.rps.game.inviteExpired', { lng: this.locale }),
                     );
 
-            case 'game_expired':
-            case 'game_active':
-            case 'game_finished':
+            case 'gameExpired':
+            case 'gameActive':
+            case 'gameFinished':
                 return builder.setColor(Colors.Gold).addFields(
                     ...this.rounds.map((round, roundIndex) => {
                         return {
@@ -258,27 +258,27 @@ class Game {
         const builder = new ActionRowBuilder();
 
         switch (this.status) {
-            case 'invite_pending':
-            case 'invite_denied':
-            case 'invite_expired':
+            case 'invitePending':
+            case 'inviteDenied':
+            case 'inviteExpired':
                 return [
                     builder.addComponents(
                         new ButtonBuilder()
                             .setCustomId('deny')
                             .setLabel(i18next.t('commands.rps.game.deny', { lng: this.locale }))
                             .setStyle(ButtonStyle.Danger)
-                            .setDisabled(this.status !== 'invite_pending'),
+                            .setDisabled(this.status !== 'invitePending'),
                         new ButtonBuilder()
                             .setCustomId('accept')
                             .setLabel(i18next.t('commands.rps.game.accept', { lng: this.locale }))
                             .setStyle(ButtonStyle.Success)
-                            .setDisabled(this.status !== 'invite_pending'),
+                            .setDisabled(this.status !== 'invitePending'),
                     ),
                 ];
 
-            case 'game_expired':
-            case 'game_active':
-            case 'game_finished':
+            case 'gameExpired':
+            case 'gameActive':
+            case 'gameFinished':
                 return [
                     builder.addComponents(
                         ...Object.entries(emojis).map(([key, emoji]) => {
@@ -286,7 +286,7 @@ class Game {
                                 .setCustomId(key)
                                 .setLabel(emoji)
                                 .setStyle(ButtonStyle.Primary)
-                                .setDisabled(this.status !== 'game_active');
+                                .setDisabled(this.status !== 'gameActive');
                         }),
                     ),
                 ];
