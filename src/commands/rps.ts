@@ -1,3 +1,4 @@
+import { getTranslations } from '../utils';
 import BaseCommand from '../utils/baseCommand';
 import {
     ActionRowBuilder,
@@ -7,13 +8,14 @@ import {
     Colors,
     EmbedBuilder,
     InteractionReplyOptions,
+    Locale,
     MessageFlags,
     SlashCommandBuilder,
     User,
     userMention,
 } from 'discord.js';
+import i18next from 'i18next';
 
-const gameName = 'Rock Paper Scissors' as const;
 const emojis = {
     rock: '🪨',
     paper: '📄',
@@ -56,6 +58,7 @@ class Game {
     private rounds: [Round, Round, Round];
     private currentRoundIndex: number;
     private timeout: number;
+    private locale?: Locale;
 
     private status:
         | 'invite_pending'
@@ -74,6 +77,7 @@ class Game {
     }
 
     public async start(interaction: ChatInputCommandInteraction) {
+        this.locale = interaction.locale;
         const response = await interaction.reply(this.buildMessage({ withResponse: true }));
 
         if (!response.resource?.message) {
@@ -129,7 +133,9 @@ class Game {
 
                 if (userIndex === -1) {
                     await buttonInteraction.reply({
-                        content: "This ain't your game!",
+                        content: i18next.t('commands.rps.game.error.notPLayer', {
+                            lng: buttonInteraction.locale,
+                        }),
                         flags: MessageFlags.Ephemeral,
                     });
                     return;
@@ -137,7 +143,9 @@ class Game {
 
                 if (this.rounds[this.currentRoundIndex].get(userIndex) === null) {
                     await buttonInteraction.reply({
-                        content: 'You have already chosen this round. Waiting for opponent...',
+                        content: i18next.t('commands.rps.game.error.alreadyChosen', {
+                            lng: buttonInteraction.locale,
+                        }),
                         flags: MessageFlags.Ephemeral,
                     });
                     return;
@@ -173,21 +181,34 @@ class Game {
     }
 
     private buildEmbed() {
-        const builder = new EmbedBuilder().setTitle(gameName);
+        const builder = new EmbedBuilder().setTitle(
+            i18next.t('commands.rps.game.name', { lng: this.locale }),
+        );
 
         switch (this.status) {
             case 'invite_pending':
                 return builder
                     .setColor(Colors.Blue)
                     .setDescription(
-                        `${userMention(this.player1.id)} has invited you to play ${gameName}.\nPlease accept or deny within 60 seconds.`,
+                        i18next.t('commands.rps.game.invitePending', {
+                            lng: this.locale,
+                            user: userMention(this.player1.id),
+                        }),
                     );
 
             case 'invite_denied':
-                return builder.setColor(Colors.Red).setDescription('Invite denied');
+                return builder
+                    .setColor(Colors.Red)
+                    .setDescription(
+                        i18next.t('commands.rps.game.inviteDenied', { lng: this.locale }),
+                    );
 
             case 'invite_expired':
-                return builder.setColor(Colors.Red).setDescription('Invite expired');
+                return builder
+                    .setColor(Colors.Red)
+                    .setDescription(
+                        i18next.t('commands.rps.game.inviteExpired', { lng: this.locale }),
+                    );
 
             case 'game_expired':
             case 'game_active':
@@ -195,7 +216,10 @@ class Game {
                 return builder.setColor(Colors.Gold).addFields(
                     ...this.rounds.map((round, roundIndex) => {
                         return {
-                            name: `Round ${roundIndex + 1}`,
+                            name:
+                                i18next.t('commands.rps.game.round', {
+                                    lng: this.locale,
+                                }) + ` ${roundIndex + 1}`,
                             value: `${round.choices
                                 .map((choice, choiceIndex) => {
                                     const choiceString = choice
@@ -203,16 +227,24 @@ class Game {
                                             ? emojis[choice]
                                             : '???'
                                         : roundIndex === this.currentRoundIndex
-                                          ? 'Wating...'
+                                          ? i18next.t('commands.rps.game.waiting', {
+                                                lng: this.locale,
+                                            }) + '...'
                                           : '...';
 
                                     return `${this.users[choiceIndex].displayName}: ${choiceString}`;
                                 })
                                 .join('\n')}\n${
                                 [
-                                    'Tie!',
-                                    `${this.player1.displayName} wins!`,
-                                    `${this.player2.displayName} wins!`,
+                                    i18next.t('commands.rps.game.tie', { lng: this.locale }),
+                                    i18next.t('commands.rps.game.win', {
+                                        lng: this.locale,
+                                        user: this.player1.displayName,
+                                    }),
+                                    i18next.t('commands.rps.game.win', {
+                                        lng: this.locale,
+                                        user: this.player2.displayName,
+                                    }),
                                 ][round.getResult()] ?? ''
                             }`,
                             inline: true,
@@ -233,12 +265,12 @@ class Game {
                     builder.addComponents(
                         new ButtonBuilder()
                             .setCustomId('deny')
-                            .setLabel('Deny')
+                            .setLabel(i18next.t('commands.rps.game.deny', { lng: this.locale }))
                             .setStyle(ButtonStyle.Danger)
                             .setDisabled(this.status !== 'invite_pending'),
                         new ButtonBuilder()
                             .setCustomId('accept')
-                            .setLabel('Accept')
+                            .setLabel(i18next.t('commands.rps.game.accept', { lng: this.locale }))
                             .setStyle(ButtonStyle.Success)
                             .setDisabled(this.status !== 'invite_pending'),
                     ),
@@ -271,11 +303,21 @@ class Game {
 }
 
 export default class RockPaperScissorsCommand extends BaseCommand {
+    static devOnly = true;
     public static readonly data = new SlashCommandBuilder()
         .setName('rps')
-        .setDescription(`Play ${gameName}`)
+        .setNameLocalizations(getTranslations('commands.rps.name'))
+        .setDescription('Play Rock Paper Scissors')
+        .setDescriptionLocalizations(getTranslations('commands.rps.description'))
         .addUserOption((option) =>
-            option.setName('opponent').setDescription('Choose your opponent').setRequired(true),
+            option
+                .setName('opponent')
+                .setNameLocalizations(getTranslations('commands.rps.options.opponent.name'))
+                .setDescription('Choose your opponent')
+                .setDescriptionLocalizations(
+                    getTranslations('commands.rps.options.opponent.description'),
+                )
+                .setRequired(true),
         );
 
     public async execute(interaction: ChatInputCommandInteraction) {
@@ -283,7 +325,7 @@ export default class RockPaperScissorsCommand extends BaseCommand {
 
         if (opponent.bot) {
             await interaction.reply({
-                content: 'You cannot play against bots.',
+                content: i18next.t('commands.rps.error.noBot', { lng: interaction.locale }),
                 flags: MessageFlags.Ephemeral,
             });
             return;
@@ -291,7 +333,7 @@ export default class RockPaperScissorsCommand extends BaseCommand {
 
         if (opponent.id === interaction.user.id) {
             await interaction.reply({
-                content: 'You cannot play against yourself.',
+                content: i18next.t('commands.rps.error.noSelf', { lng: interaction.locale }),
                 flags: MessageFlags.Ephemeral,
             });
             return;

@@ -1,0 +1,34 @@
+{
+    "commands": {
+        "rps": {
+            "name": "rps",
+            "description": "Speel Steen Papier Schaar",
+            "options": {
+                "opponent": {
+                    "name": "tegenstander",
+                    "description": "Kies je tegenstander"
+                }
+            },
+            "error": {
+                "noBot": "Je kan niet tegen bots spelen.",
+                "noSelf": "Je kan niet tegen jezelf spelen."
+            },
+            "game": {
+                "name": "Steen Papier Schaar",
+                "error": {
+                    "notPLayer": "Je doet niet mee met dit spel.",
+                    "alreadyChosen": "Je hebt deze ronde al gekozen. Wachten op tegenstander..."
+                },
+                "invitePending": "{{- user}} heeft je uitgenodigd om Steen Papier Schaar te spelen.\nAcepteer of weiger binnen 60 seconden.",
+                "inviteDenied": "Uinodiging geweigerd",
+                "inviteExpired": "Uitnodiging verlopen",
+                "waiting": "Wachten",
+                "tie": "Gelijkspel!",
+                "win": "{{- user}} heeft gewonnen!",
+                "accept": "Accepteren",
+                "deny": "Weigeren",
+                "round": "Ronde"
+            }
+        }
+    }
+}

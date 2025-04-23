@@ -1,0 +1,34 @@
+{
+    "commands": {
+        "rps": {
+            "name": "rps",
+            "description": "Play Rock Paper Scissors",
+            "options": {
+                "opponent": {
+                    "name": "opponent",
+                    "description": "Choose your opponent"
+                }
+            },
+            "error": {
+                "noBot": "You cannot play agains bots.",
+                "noSelf": "You cannot play agains yourself."
+            },
+            "game": {
+                "name": "Rock Paper Scissors",
+                "error": {
+                    "notPLayer": "This ain't your game!",
+                    "alreadyChosen": "You have already chosen this round. Waiting for opponent..."
+                },
+                "invitePending": "{{- user}} has invited you to play Rock Paper Scissors\nPlease accept or deny within 60 seconds.",
+                "inviteDenied": "Invite denied",
+                "inviteExpired": "Invite expired",
+                "waiting": "Waiting",
+                "tie": "Tie!",
+                "win": "{{- user}} wins!",
+                "accept": "Accept",
+                "deny": "Deny",
+                "round": "Round"
+            }
+        }
+    }
+}
