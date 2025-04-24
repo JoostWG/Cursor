@@ -29,6 +29,29 @@
                 "deny": "Deny",
                 "round": "Round"
             }
+        },
+        "joke": {
+            "name": "joke",
+            "description": "Tells you a joke",
+            "options": {
+                "category": {
+                    "name": "category",
+                    "description": "The joke category"
+                },
+                "safe": {
+                    "name": "safe",
+                    "description": "Whether the joke must be safe. Defaults to `True`. Setting this to `False` requires an NSFW channel."
+                }
+            },
+            "categories": {
+                "programming": "Programming",
+                "misc": "Miscellaneous",
+                "dark": "Dark",
+                "pun": "Pun",
+                "spooky": "Spooky",
+                "christmas": "Christmas"
+            },
+            "nsfw": "Setting `nsfw` to `False` can only be done in NSFW channels."
         }
     }
 }

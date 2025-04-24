@@ -29,6 +29,29 @@
                 "deny": "Weigeren",
                 "round": "Ronde"
             }
+        },
+        "joke": {
+            "name": "grap",
+            "description": "Verteld een grap. Grappen zijn helaas niet in het Nederlands.",
+            "options": {
+                "category": {
+                    "name": "categorie",
+                    "description": "Kies een categorie"
+                },
+                "safe": {
+                    "name": "veilig",
+                    "description": "Of de grap gepast mag zijn. Zet dit naar False in een NSFW kanaal voor groffe grappen."
+                }
+            },
+            "categories": {
+                "programming": "Programmeren",
+                "misc": "Gemengd",
+                "dark": "Zwart",
+                "pun": "Woordspelling",
+                "spooky": "Spookachtig",
+                "christmas": "Kerst"
+            },
+            "nsfw": "Je kan `veilig` alleen in NSFW kanalen op `False` zetten."
         }
     }
 }
