@@ -77,8 +77,6 @@ export default class JokeCommand extends BaseCommand {
     public constructor() {
         super('joke', 'Tells you a joke');
 
-        this.devOnly = true;
-
         this.data
             .addStringOption((option) =>
                 this.wrapOption(option, 'category', 'Choose a category').addChoices(

@@ -294,8 +294,6 @@ export default class RockPaperScissorsCommand extends BaseCommand {
     public constructor() {
         super('rps', 'Play Rock Paper Scissors');
 
-        this.devOnly = true;
-
         this.data.addUserOption((option) =>
             this.wrapOption(option, 'opponent', 'Choose your opponent').setRequired(true),
         );
