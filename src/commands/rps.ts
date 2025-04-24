@@ -301,7 +301,7 @@ export default class RockPaperScissorsCommand extends BaseCommand {
         );
     }
 
-    public async execute(interaction: ChatInputCommandInteraction) {
+    public override async execute(interaction: ChatInputCommandInteraction) {
         const opponent = interaction.options.getUser('opponent', true);
 
         if (opponent.bot) {

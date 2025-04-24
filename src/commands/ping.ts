@@ -6,7 +6,7 @@ export default class PingCommand extends BaseCommand {
         super('ping', 'Ping!');
     }
 
-    public async execute(interaction: ChatInputCommandInteraction) {
+    public override async execute(interaction: ChatInputCommandInteraction) {
         await interaction.reply({
             content: 'Pong!',
             flags: MessageFlags.Ephemeral,

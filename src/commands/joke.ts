@@ -100,7 +100,7 @@ export default class JokeCommand extends BaseCommand {
             );
     }
 
-    public async execute(interaction: ChatInputCommandInteraction) {
+    public override async execute(interaction: ChatInputCommandInteraction) {
         const category = interaction.options.getString('category') ?? 'Any';
         const safe = interaction.options.getBoolean('safe') ?? true;
 
