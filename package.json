@@ -1,6 +1,7 @@
 {
     "scripts": {
-        "deploy": "node ./dist/deploy.js --dev",
+        "deploy": "node ./dist/deploy.js --dev --global",
+        "deploy-dev": "node ./dist/deploy.js --dev",
         "deploy-global": "node ./dist/deploy.js --global",
         "watch": "tsc --watch",
         "format": "prettier --write src/"
