@@ -52,6 +52,17 @@
                 "christmas": "Kerst"
             },
             "nsfw": "Je kan `veilig` alleen in NSFW kanalen op `False` zetten."
+        },
+        "user": {
+            "name": "gebruiker",
+            "description": "Gebruikerinformatie",
+            "options": {
+                "user": {
+                    "name": "gebruiker",
+                    "description": "Selecteer een gebruiker"
+                }
+            },
+            "createdAt": "Geregistreerd op"
         }
     }
 }

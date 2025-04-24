@@ -52,6 +52,17 @@
                 "christmas": "Christmas"
             },
             "nsfw": "Setting `nsfw` to `False` can only be done in NSFW channels."
+        },
+        "user": {
+            "name": "user",
+            "description": "User information",
+            "options": {
+                "user": {
+                    "name": "user",
+                    "description": "Select a user"
+                }
+            },
+            "createdAt": "Created at"
         }
     }
 }
