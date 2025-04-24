@@ -1,6 +1,6 @@
 import { discordToken } from '../config.json';
 import getCommands from './getCommands';
-import BaseCommand from './utils/baseCommand';
+import { BaseCommand } from './utils/command';
 import {
     ClientOptions,
     Collection,

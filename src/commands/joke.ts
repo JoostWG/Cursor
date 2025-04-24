@@ -1,5 +1,5 @@
 import { getTranslations } from '../utils';
-import BaseCommand from '../utils/baseCommand';
+import { BaseCommand } from '../utils/command';
 import axios from 'axios';
 import {
     ChatInputCommandInteraction,

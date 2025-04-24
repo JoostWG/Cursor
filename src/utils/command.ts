@@ -6,7 +6,7 @@ import {
     SlashCommandBuilder,
 } from 'discord.js';
 
-export default abstract class BaseCommand {
+export abstract class BaseCommand {
     public devOnly?: boolean;
     public readonly data = new SlashCommandBuilder();
 

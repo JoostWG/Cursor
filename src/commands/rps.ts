@@ -1,5 +1,5 @@
 import { getTranslations } from '../utils';
-import BaseCommand from '../utils/baseCommand';
+import { BaseCommand } from '../utils/command';
 import {
     ActionRowBuilder,
     ButtonBuilder,

@@ -1,4 +1,4 @@
-import BaseCommand from '../utils/baseCommand';
+import { BaseCommand } from '../utils/command';
 import { ChatInputCommandInteraction, MessageFlags } from 'discord.js';
 
 export default class PingCommand extends BaseCommand {
