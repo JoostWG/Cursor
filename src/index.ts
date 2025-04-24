@@ -41,62 +41,64 @@ export class Client extends DiscordJsClient {
     }
 }
 
-const client = new Client({
-    intents: [GatewayIntentBits.GuildMembers, GatewayIntentBits.Guilds],
-});
+(async () => {
+    await i18next.use(I18NexFsBackend).init({
+        backend: {
+            loadPath: './locales/{{lng}}/translations.json',
+        },
+        fallbackLng: 'en-Us',
+        preload: ['en-US', 'nl'],
+        supportedLngs: ['en-US', 'nl'],
+    });
 
-client.on('ready', async () => {
-    console.info('Ready!');
-});
+    const client = new Client({
+        intents: [GatewayIntentBits.GuildMembers, GatewayIntentBits.Guilds],
+    });
 
-client.on(Events.InteractionCreate, async (interaction) => {
-    if (interaction.isChatInputCommand()) {
-        const command = client.getCommand(interaction.commandName);
+    client.on('ready', async () => {
+        console.info('Ready!');
+    });
 
-        if (!command) {
-            console.error(`No command matching ${interaction.commandName} was found.`);
-            return;
-        }
+    client.on(Events.InteractionCreate, async (interaction) => {
+        if (interaction.isChatInputCommand()) {
+            const command = client.getCommand(interaction.commandName);
 
-        try {
-            await command.execute(interaction);
-        } catch (error) {
-            console.error(error);
-            if (interaction.replied || interaction.deferred) {
-                await interaction.followUp({
-                    content: 'There was an error while executing this command!',
-                    flags: MessageFlags.Ephemeral,
-                });
-            } else {
-                await interaction.reply({
-                    content: 'There was an error while executing this command!',
-                    flags: MessageFlags.Ephemeral,
-                });
+            if (!command) {
+                console.error(`No command matching ${interaction.commandName} was found.`);
+                return;
+            }
+
+            try {
+                await command.execute(interaction);
+            } catch (error) {
+                console.error(error);
+                if (interaction.replied || interaction.deferred) {
+                    await interaction.followUp({
+                        content: 'There was an error while executing this command!',
+                        flags: MessageFlags.Ephemeral,
+                    });
+                } else {
+                    await interaction.reply({
+                        content: 'There was an error while executing this command!',
+                        flags: MessageFlags.Ephemeral,
+                    });
+                }
+            }
+        } else if (interaction.isAutocomplete()) {
+            const command = client.getCommand(interaction.commandName);
+
+            if (!command || !command.autocomplete) {
+                console.error(`No command matching ${interaction.commandName} was found.`);
+                return;
+            }
+
+            try {
+                await interaction.respond(await command.autocomplete(interaction));
+            } catch (error) {
+                console.error(error);
             }
         }
-    } else if (interaction.isAutocomplete()) {
-        const command = client.getCommand(interaction.commandName);
+    });
 
-        if (!command || !command.autocomplete) {
-            console.error(`No command matching ${interaction.commandName} was found.`);
-            return;
-        }
-
-        try {
-            await interaction.respond(await command.autocomplete(interaction));
-        } catch (error) {
-            console.error(error);
-        }
-    }
-});
-
-i18next.use(I18NexFsBackend).init({
-    backend: {
-        loadPath: './locales/{{lng}}/translations.json',
-    },
-    fallbackLng: 'en-Us',
-    preload: ['en-US', 'nl'],
-    supportedLngs: ['en-US', 'nl'],
-});
-
-client.login(discordToken);
+    client.login(discordToken);
+})();
