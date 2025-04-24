@@ -25,11 +25,7 @@ export class Client extends DiscordJsClient {
     private async loadCommands() {
         for await (const command of getCommands()) {
             try {
-                // @ts-expect-error Can't do new on abstract classes blablabla
-                const commandInstance = new command(this);
-                if (commandInstance instanceof BaseCommand) {
-                    this.commands.set(command.data.name, commandInstance);
-                }
+                this.commands.set(command.data.name, command);
             } catch {
                 //
             }

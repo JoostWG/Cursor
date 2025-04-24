@@ -1,8 +1,10 @@
 import BaseCommand from '../utils/baseCommand';
-import { ChatInputCommandInteraction, MessageFlags, SlashCommandBuilder } from 'discord.js';
+import { ChatInputCommandInteraction, MessageFlags } from 'discord.js';
 
 export default class PingCommand extends BaseCommand {
-    public static readonly data = new SlashCommandBuilder().setName('ping').setDescription('Ping!');
+    public constructor() {
+        super('ping', 'Ping!');
+    }
 
     public async execute(interaction: ChatInputCommandInteraction) {
         await interaction.reply({

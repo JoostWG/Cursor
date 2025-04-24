@@ -7,7 +7,6 @@ import {
     EmbedBuilder,
     Locale,
     MessageFlags,
-    SlashCommandBuilder,
     TextChannel,
     bold,
     spoiler,
@@ -75,45 +74,46 @@ type MultipleJokesResponse = SuccessResponse & {
 };
 
 export default class JokeCommand extends BaseCommand {
-    public static readonly devOnly = true;
+    public constructor() {
+        super('joke', 'Tells you a joke');
 
-    public static readonly data = new SlashCommandBuilder()
-        .setName('joke')
-        .setDescription('Tells you a joke')
+        this.devOnly = true;
 
-        .setNameLocalizations(getTranslations('commands.joke.name'))
-        .setDescriptionLocalizations(getTranslations('commands.joke.description'))
-        .addStringOption((option) =>
-            option
-                .setName('category')
-                .setDescription('The joke category')
-                .setNameLocalizations(getTranslations('commands.joke.options.category.name'))
-                .setDescriptionLocalizations(
-                    getTranslations('commands.joke.options.category.description'),
-                )
-                .addChoices(
-                    Object.entries(JokeCategory).map(([name, key]) => {
-                        return {
-                            name,
-                            value: key,
-                            name_localizations: getTranslations('commands.joke.categories.' + key),
-                        };
-                    }),
-                )
-                .setRequired(false),
-        )
-        .addBooleanOption((option) =>
-            option
-                .setName('safe')
-                .setDescription(
-                    'Whether the joke must be safe. Defaults to true. Setting this to false requires an NSFW channel.',
-                )
-                .setNameLocalizations(getTranslations('commands.joke.options.safe.name'))
-                .setDescriptionLocalizations(
-                    getTranslations('commands.joke.options.safe.description'),
-                )
-                .setRequired(false),
-        );
+        this.data
+            .addStringOption((option) =>
+                option
+                    .setName('category')
+                    .setDescription('The joke category')
+                    .setNameLocalizations(getTranslations('commands.joke.options.category.name'))
+                    .setDescriptionLocalizations(
+                        getTranslations('commands.joke.options.category.description'),
+                    )
+                    .addChoices(
+                        Object.entries(JokeCategory).map(([name, key]) => {
+                            return {
+                                name,
+                                value: key,
+                                name_localizations: getTranslations(
+                                    'commands.joke.categories.' + key,
+                                ),
+                            };
+                        }),
+                    )
+                    .setRequired(false),
+            )
+            .addBooleanOption((option) =>
+                option
+                    .setName('safe')
+                    .setDescription(
+                        'Whether the joke must be safe. Defaults to true. Setting this to false requires an NSFW channel.',
+                    )
+                    .setNameLocalizations(getTranslations('commands.joke.options.safe.name'))
+                    .setDescriptionLocalizations(
+                        getTranslations('commands.joke.options.safe.description'),
+                    )
+                    .setRequired(false),
+            );
+    }
 
     public async execute(interaction: ChatInputCommandInteraction) {
         const category = interaction.options.getString('category') ?? 'Any';

@@ -10,7 +10,6 @@ import {
     InteractionReplyOptions,
     Locale,
     MessageFlags,
-    SlashCommandBuilder,
     User,
     userMention,
 } from 'discord.js';
@@ -293,13 +292,12 @@ class Game {
 }
 
 export default class RockPaperScissorsCommand extends BaseCommand {
-    static devOnly = true;
-    public static readonly data = new SlashCommandBuilder()
-        .setName('rps')
-        .setNameLocalizations(getTranslations('commands.rps.name'))
-        .setDescription('Play Rock Paper Scissors')
-        .setDescriptionLocalizations(getTranslations('commands.rps.description'))
-        .addUserOption((option) =>
+    public constructor() {
+        super('rps', 'Play Rock Paper Scissors');
+
+        this.devOnly = true;
+
+        this.data.addUserOption((option) =>
             option
                 .setName('opponent')
                 .setNameLocalizations(getTranslations('commands.rps.options.opponent.name'))
@@ -309,6 +307,7 @@ export default class RockPaperScissorsCommand extends BaseCommand {
                 )
                 .setRequired(true),
         );
+    }
 
     public async execute(interaction: ChatInputCommandInteraction) {
         const opponent = interaction.options.getUser('opponent', true);

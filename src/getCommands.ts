@@ -3,7 +3,7 @@ import fs from 'fs/promises';
 import path from 'path';
 import { pathToFileURL } from 'url';
 
-export default async function* getCommands(dir?: string): AsyncGenerator<typeof BaseCommand> {
+export default async function* getCommands(dir?: string): AsyncGenerator<BaseCommand> {
     dir ??= path.join(__dirname, './commands');
 
     for (const dirent of await fs.readdir(dir, { withFileTypes: true })) {
@@ -15,8 +15,8 @@ export default async function* getCommands(dir?: string): AsyncGenerator<typeof 
             const commandModule = await import(pathToFileURL(fullPath).href);
             const command = commandModule.default.default;
 
-            if (command && command.data) {
-                yield command;
+            if (command) {
+                yield new command();
             }
         }
     }
