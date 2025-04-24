@@ -51,7 +51,7 @@
                 "spooky": "Spooky",
                 "christmas": "Christmas"
             },
-            "nsfw": "Setting `nsfw` to `False` can only be done in NSFW channels."
+            "nsfw": "Setting `safe` to `False` can only be done in NSFW channels."
         },
         "user": {
             "name": "user",
