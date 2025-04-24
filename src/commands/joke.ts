@@ -81,37 +81,22 @@ export default class JokeCommand extends BaseCommand {
 
         this.data
             .addStringOption((option) =>
-                option
-                    .setName('category')
-                    .setDescription('The joke category')
-                    .setNameLocalizations(getTranslations('commands.joke.options.category.name'))
-                    .setDescriptionLocalizations(
-                        getTranslations('commands.joke.options.category.description'),
-                    )
-                    .addChoices(
-                        Object.entries(JokeCategory).map(([name, key]) => {
-                            return {
-                                name,
-                                value: key,
-                                name_localizations: getTranslations(
-                                    'commands.joke.categories.' + key,
-                                ),
-                            };
-                        }),
-                    )
-                    .setRequired(false),
+                this.wrapOption(option, 'category', 'Choose a category').addChoices(
+                    Object.entries(JokeCategory).map(([name, key]) => {
+                        return {
+                            name,
+                            value: key,
+                            name_localizations: getTranslations('commands.joke.categories.' + key),
+                        };
+                    }),
+                ),
             )
             .addBooleanOption((option) =>
-                option
-                    .setName('safe')
-                    .setDescription(
-                        'Whether the joke must be safe. Defaults to true. Setting this to false requires an NSFW channel.',
-                    )
-                    .setNameLocalizations(getTranslations('commands.joke.options.safe.name'))
-                    .setDescriptionLocalizations(
-                        getTranslations('commands.joke.options.safe.description'),
-                    )
-                    .setRequired(false),
+                this.wrapOption(
+                    option,
+                    'safe',
+                    'Whether the joke must be safe. Defaults to true. Setting this to false requires an NSFW channel.',
+                ),
             );
     }
 

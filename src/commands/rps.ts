@@ -1,4 +1,3 @@
-import { getTranslations } from '../utils';
 import { BaseCommand } from '../utils/command';
 import {
     ActionRowBuilder,
@@ -298,14 +297,7 @@ export default class RockPaperScissorsCommand extends BaseCommand {
         this.devOnly = true;
 
         this.data.addUserOption((option) =>
-            option
-                .setName('opponent')
-                .setNameLocalizations(getTranslations('commands.rps.options.opponent.name'))
-                .setDescription('Choose your opponent')
-                .setDescriptionLocalizations(
-                    getTranslations('commands.rps.options.opponent.description'),
-                )
-                .setRequired(true),
+            this.wrapOption(option, 'opponent', 'Choose your opponent').setRequired(true),
         );
     }
 
