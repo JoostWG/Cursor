@@ -1,4 +1,6 @@
 {
     "previous": "Previous",
-    "next": "Next"
+    "next": "Next",
+    "back": "Back",
+    "openInBrowser": "Open in browser"
 }

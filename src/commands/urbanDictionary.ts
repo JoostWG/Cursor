@@ -11,6 +11,9 @@ import {
     InteractionReplyOptions,
     Locale,
     MessageFlags,
+    StringSelectMenuBuilder,
+    StringSelectMenuOptionBuilder,
+    inlineCode,
 } from 'discord.js';
 import i18next from 'i18next';
 
@@ -27,59 +30,190 @@ interface Definition {
     current_vote: string;
 }
 
-type ResponseData =
-    | {
-          list: Definition[];
-      }
+type ResponseData<T> =
+    | T
     | {
           error: string | number;
       };
 
-class DefinitionsView {
-    private definitions: Definition[];
-    private index: number;
-    private locale?: Locale;
+const hyperlinkRegex = /\[([^[\]]+)]/gm;
 
-    public constructor(definitions: Definition[]) {
-        this.definitions = definitions;
-        this.index = 0;
+class ApiError extends Error {
+    //
+}
+
+class Api {
+    private static axios = axios.create({
+        baseURL: 'https://api.urbandictionary.com/v0',
+    });
+
+    private static async get<T>(url: string, config?: axios.AxiosRequestConfig) {
+        const { data } = await this.axios.get<ResponseData<T>>(url, config);
+
+        // `data` can be anything
+        if (typeof data === 'object' && !Array.isArray(data) && data !== null && 'error' in data) {
+            throw new ApiError(typeof data.error === 'number' ? data.error.toString() : data.error);
+        }
+
+        return data;
     }
 
-    public async send(interaction: ChatInputCommandInteraction) {
+    public static async define(term: string) {
+        const data = await this.get<{ list: Definition[] }>('/define', { params: { term } });
+
+        return data.list;
+    }
+
+    public static async autocomplete(term: string) {
+        return await this.get<string[]>('/autocomplete', { params: { term } });
+    }
+}
+
+// This class is a mess (kinda), but works well
+class UrbanDictionaryView {
+    private cache: Map<string, Definition[]>;
+    private history: { term: string; index: number }[];
+    private locale?: Locale;
+    private active: boolean;
+
+    public constructor(initialTerm: string) {
+        this.cache = new Map();
+        this.history = [{ term: initialTerm, index: 0 }];
+        this.active = true;
+    }
+
+    public async start(interaction: ChatInputCommandInteraction) {
         this.locale = interaction.locale;
+
+        await this.loadDefinitions();
+
         const response = await interaction.reply(this.buildMessage({ withResponse: true }));
 
-        if (!response.resource || !response.resource.message) {
+        if (!response?.resource?.message) {
             console.error('Error...');
             return;
         }
 
-        response.resource.message
+        const collector = response.resource.message
             .createMessageComponentCollector({
                 time: 60_000,
                 filter: (i) => i.user.id === interaction.user.id,
             })
             .on('collect', async (interaction) => {
+                collector.resetTimer();
+
                 switch (interaction.customId) {
                     case 'previous':
-                        this.index--;
+                        this.current.index--;
                         break;
+
                     case 'next':
-                        this.index++;
+                        this.current.index++;
+                        break;
+
+                    case 'select':
+                        if (!interaction.isStringSelectMenu()) {
+                            break;
+                        }
+
+                        this.history.push({ term: interaction.values[0], index: 0 });
+                        await this.loadDefinitions();
+                        break;
+
+                    case 'back':
+                        this.history.pop();
                         break;
                 }
 
                 await interaction.update(this.buildMessage());
+            })
+            .on('end', async () => {
+                this.active = false;
+                await interaction.editReply(this.buildMessage());
             });
+    }
+
+    private async loadDefinitions() {
+        if (this.cache.has(this.current.term)) {
+            return;
+        }
+
+        this.cache.set(this.current.term, await Api.define(this.current.term));
     }
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     private buildMessage<E extends Record<string, any>>(
         extra?: E,
     ): Pick<InteractionReplyOptions, 'content' | 'embeds' | 'components'> & E {
-        const definition = this.definitions[this.index];
+        const definition = this.definitions[this.current.index];
+
+        if (!definition) {
+            // @ts-expect-error It's 11:42 PM and I don't feel like fixing this right now.
+            return {
+                content: i18next.t('commands:urban-dictionary.notFound', { lng: this.locale }),
+                flags: [MessageFlags.Ephemeral],
+            };
+        }
+
+        const components = [
+            new ActionRowBuilder().addComponents(
+                new ButtonBuilder()
+                    .setCustomId('previous')
+                    .setLabel(i18next.t('previous', { lng: this.locale }))
+                    .setStyle(ButtonStyle.Primary)
+                    .setDisabled(this.current.index <= 0 || !this.active),
+                new ButtonBuilder()
+                    .setCustomId('page')
+                    .setLabel(`${this.current.index + 1}/${this.definitions.length}`)
+                    .setStyle(ButtonStyle.Secondary)
+                    .setDisabled(true),
+                new ButtonBuilder()
+                    .setCustomId('next')
+                    .setLabel(i18next.t('next', { lng: this.locale }))
+                    .setStyle(ButtonStyle.Primary)
+                    .setDisabled(this.current.index + 1 >= this.definitions.length || !this.active),
+                new ButtonBuilder()
+                    .setStyle(ButtonStyle.Link)
+                    .setLabel(i18next.t('openInBrowser', { lng: this.locale }))
+                    .setURL(definition.permalink),
+            ),
+            new ActionRowBuilder().addComponents(
+                new ButtonBuilder()
+                    .setCustomId('back')
+                    .setLabel(i18next.t('back', { lng: this.locale }))
+                    .setStyle(ButtonStyle.Danger)
+                    .setDisabled(this.history.length < 2 || !this.active),
+            ),
+        ];
+
+        const hyperlinkTerms = [
+            ...this.extractHyperlinks(definition.definition),
+            ...this.extractHyperlinks(definition.example),
+        ];
+
+        if (hyperlinkTerms.length) {
+            components.splice(
+                1,
+                0,
+                new ActionRowBuilder().addComponents(
+                    new StringSelectMenuBuilder()
+                        .setCustomId('select')
+                        .setPlaceholder(
+                            i18next.t('commands:urban-dictionary.select', { lng: this.locale }),
+                        )
+                        .addOptions(
+                            hyperlinkTerms.map((term) =>
+                                new StringSelectMenuOptionBuilder().setLabel(term).setValue(term),
+                            ),
+                        )
+                        .setDisabled(!this.active),
+                ),
+            );
+        }
+
         // @ts-expect-error: Caused by `components`. Following guide, works at runtime.
         return {
+            content: inlineCode(this.history.map((item) => item.term).join(' > ')),
             embeds: [
                 new EmbedBuilder()
                     .setColor(Colors.Blurple)
@@ -95,94 +229,49 @@ class DefinitionsView {
                         text: `👍${definition.thumbs_up} 👎${definition.thumbs_down}`,
                     }),
             ],
-            components: [
-                new ActionRowBuilder().addComponents(
-                    new ButtonBuilder()
-                        .setCustomId('previous')
-                        .setLabel(i18next.t('previous', { lng: this.locale }))
-                        .setStyle(ButtonStyle.Primary)
-                        .setDisabled(this.index <= 0),
-                    new ButtonBuilder()
-                        .setCustomId('page')
-                        .setLabel(`${this.index + 1}/${this.definitions.length}`)
-                        .setStyle(ButtonStyle.Secondary)
-                        .setDisabled(true),
-                    new ButtonBuilder()
-                        .setCustomId('next')
-                        .setLabel(i18next.t('next', { lng: this.locale }))
-                        .setStyle(ButtonStyle.Primary)
-                        .setDisabled(this.index + 1 >= this.definitions.length),
-                ),
-            ],
+            components,
             ...extra,
         };
     }
 
+    private extractHyperlinks(text: string) {
+        return text.matchAll(hyperlinkRegex).map((match) => match[1]);
+    }
+
     private transformHyperlinks(text: string) {
-        return text.replace(/\[([^[\]]+)]/gm, (_, term) => `[${term}](${this.getWebUrl(term)})`);
+        return text.replace(hyperlinkRegex, (_, term) => `[${term}](${this.getWebUrl(term)})`);
     }
 
     private getWebUrl(term: string) {
         return `https://urbandictionary.com/define.php?term=${encodeURIComponent(term)}`;
     }
+
+    private get current() {
+        return this.history.at(-1) as { term: string; index: number };
+    }
+
+    private get definitions() {
+        return this.cache.get(this.current.term) as Definition[];
+    }
 }
 
 export default class UrbanDictionaryCommand extends BaseCommand {
-    private api: axios.AxiosInstance;
-
     public constructor() {
         super('urban-dictionary', 'Search Urban Dictionary');
 
         this.data
             .setNSFW(true)
-            .addSubcommand((subcommand) =>
-                this.wrapSubcommand(subcommand, 'search', 'Search for a term').addStringOption(
-                    (option) =>
-                        this.wrapOption(option, 'term', 'The term to search for', 'search')
-                            .setAutocomplete(true)
-                            .setRequired(true),
-                ),
-            )
-            .addSubcommand((subcommand) =>
-                this.wrapSubcommand(subcommand, 'random', 'Returns some random definitions'),
+            .addStringOption((option) =>
+                this.wrapOption(option, 'term', 'The term to search for')
+                    .setRequired(true)
+                    .setAutocomplete(true),
             );
-
-        this.api = axios.create({
-            baseURL: 'https://api.urbandictionary.com/v0',
-        });
     }
 
     public override async execute(interaction: ChatInputCommandInteraction) {
-        let response: axios.AxiosResponse<ResponseData>;
-
-        switch (interaction.options.getSubcommand()) {
-            case 'search':
-                response = await this.api.get<ResponseData>('/define', {
-                    params: { term: interaction.options.getString('term') },
-                });
-                break;
-
-            case 'random':
-                response = await this.api.get<ResponseData>('/random');
-                break;
-
-            default:
-                await interaction.reply({
-                    content: 'Missing subcommand handler',
-                    flags: MessageFlags.Ephemeral,
-                });
-                return;
-        }
-
-        if (response.status !== 200 || 'error' in response.data) {
-            await interaction.reply({
-                content: 'Error...',
-                flags: MessageFlags.Ephemeral,
-            });
-            return;
-        }
-
-        await new DefinitionsView(response.data.list).send(interaction);
+        await new UrbanDictionaryView(interaction.options.getString('term', true)).start(
+            interaction,
+        );
     }
 
     public override async autocomplete(interaction: AutocompleteInteraction) {
@@ -192,10 +281,8 @@ export default class UrbanDictionaryCommand extends BaseCommand {
             return [];
         }
 
-        const { data } = await this.api.get<string[]>('/autocomplete', {
-            params: { term },
-        });
+        const results = await Api.autocomplete(term);
 
-        return data.map((result) => ({ name: result, value: result }));
+        return results.map((result) => ({ name: result, value: result }));
     }
 }
