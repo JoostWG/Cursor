@@ -74,6 +74,8 @@ type MultipleJokesResponse = SuccessResponse & {
 };
 
 export default class JokeCommand extends BaseCommand {
+    private api: axios.AxiosInstance;
+
     public constructor() {
         super('joke', 'Tells you a joke');
 
@@ -96,6 +98,10 @@ export default class JokeCommand extends BaseCommand {
                     'Whether the joke must be safe. Defaults to true. Setting this to false requires an NSFW channel.',
                 ),
             );
+
+        this.api = axios.create({
+            baseURL: 'https://v2.jokeapi.dev',
+        });
     }
 
     public override async execute(interaction: ChatInputCommandInteraction) {
@@ -133,9 +139,9 @@ export default class JokeCommand extends BaseCommand {
         const language = languageMap[interaction.locale] ?? 'en';
 
         try {
-            const { data } = await axios.get<
+            const { data } = await this.api.get<
                 SingleJokeResponse | MultipleJokesResponse | ErrorResponse
-            >(`https://v2.jokeapi.dev/joke/${category}`, {
+            >(`/joke/${category}`, {
                 params: {
                     amount: 1,
                     lang: language,
