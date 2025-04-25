@@ -133,7 +133,6 @@ export default class UrbanDictionaryCommand extends BaseCommand {
     public constructor() {
         super('urban-dictionary', 'Search Urban Dictionary');
 
-        this.devOnly = true;
         this.data
             .setNSFW(true)
             .addSubcommand((subcommand) =>
