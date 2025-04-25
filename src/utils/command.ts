@@ -5,6 +5,7 @@ import {
     AutocompleteInteraction,
     ChatInputCommandInteraction,
     SlashCommandBuilder,
+    SlashCommandSubcommandBuilder,
 } from 'discord.js';
 
 export abstract class BaseCommand {
@@ -38,6 +39,20 @@ export abstract class BaseCommand {
             .setNameLocalizations(getTranslations(`commands.${this.name}.options.${name}.name`))
             .setDescriptionLocalizations(
                 getTranslations(`commands.${this.name}.options.${name}.description`),
+            );
+    }
+
+    protected wrapSubcommand(
+        subcommand: SlashCommandSubcommandBuilder,
+        name: string,
+        description: string,
+    ) {
+        return subcommand
+            .setName(name)
+            .setDescription(description)
+            .setNameLocalizations(getTranslations(`commands.${this.name}.subcommands.${name}.name`))
+            .setDescriptionLocalizations(
+                getTranslations(`commands.${this.name}.subcommands.${name}.description`),
             );
     }
 }
