@@ -32,14 +32,17 @@ export abstract class BaseCommand {
         option: T,
         name: string,
         description: string,
+        subcommand?: string,
     ) {
+        const translationKeyPrefix = subcommand
+            ? `commands.${this.name}.subcommands.${subcommand}.options.${name}`
+            : `commands.${this.name}.options.${name}.name`;
+
         return option
             .setName(name)
             .setDescription(description)
-            .setNameLocalizations(getTranslations(`commands.${this.name}.options.${name}.name`))
-            .setDescriptionLocalizations(
-                getTranslations(`commands.${this.name}.options.${name}.description`),
-            );
+            .setNameLocalizations(getTranslations(`${translationKeyPrefix}.name`))
+            .setDescriptionLocalizations(getTranslations(`${translationKeyPrefix}.description`));
     }
 
     protected wrapSubcommand(
