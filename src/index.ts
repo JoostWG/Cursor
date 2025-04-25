@@ -40,8 +40,10 @@ export class Client extends DiscordJsClient {
 (async () => {
     await i18next.use(I18NexFsBackend).init({
         backend: {
-            loadPath: './locales/{{lng}}/translations.json',
+            loadPath: './locales/{{lng}}/{{ns}}.json',
         },
+        ns: ['common', 'commands'],
+        defaultNS: 'common',
         fallbackLng: 'en-Us',
         preload: ['en-US', 'nl'],
         supportedLngs: ['en-US', 'nl'],

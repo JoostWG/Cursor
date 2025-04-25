@@ -18,7 +18,7 @@ export default class UserCommand extends BaseCommand {
                 iconURL: user.avatarURL({ extension: 'png', size: 1024 }) ?? undefined,
             })
             .addFields({
-                name: i18next.t('commands.user.createdAt', { lng: interaction.locale }),
+                name: i18next.t('commands:user.createdAt', { lng: interaction.locale }),
                 value: [
                     time(user.createdAt),
                     time(user.createdAt, TimestampStyles.RelativeTime),

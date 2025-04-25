@@ -86,7 +86,7 @@ export default class JokeCommand extends BaseCommand {
                         return {
                             name,
                             value: key,
-                            name_localizations: getTranslations('commands.joke.categories.' + key),
+                            name_localizations: getTranslations('commands:joke.categories.' + key),
                         };
                     }),
                 ),
@@ -117,7 +117,7 @@ export default class JokeCommand extends BaseCommand {
             )
         ) {
             await interaction.reply({
-                content: i18next.t('commands.joke.nsfw', {
+                content: i18next.t('commands:joke.nsfw', {
                     lng: interaction.locale,
                 }),
                 flags: MessageFlags.Ephemeral,

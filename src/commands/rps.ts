@@ -123,7 +123,7 @@ class Game {
 
                 if (userIndex === -1) {
                     await buttonInteraction.reply({
-                        content: i18next.t('commands.rps.game.error.notPLayer', {
+                        content: i18next.t('commands:rps.game.error.notPLayer', {
                             lng: buttonInteraction.locale,
                         }),
                         flags: MessageFlags.Ephemeral,
@@ -133,7 +133,7 @@ class Game {
 
                 if (this.rounds[this.currentRoundIndex].get(userIndex) !== null) {
                     await buttonInteraction.reply({
-                        content: i18next.t('commands.rps.game.error.alreadyChosen', {
+                        content: i18next.t('commands:rps.game.error.alreadyChosen', {
                             lng: buttonInteraction.locale,
                         }),
                         flags: MessageFlags.Ephemeral,
@@ -172,13 +172,13 @@ class Game {
 
     private buildEmbed() {
         const builder = new EmbedBuilder().setTitle(
-            i18next.t('commands.rps.game.name', { lng: this.locale }),
+            i18next.t('commands:rps.game.name', { lng: this.locale }),
         );
 
         switch (this.status) {
             case 'invitePending':
                 return builder.setColor(Colors.Blue).setDescription(
-                    i18next.t('commands.rps.game.invitePending', {
+                    i18next.t('commands:rps.game.invitePending', {
                         lng: this.locale,
                         user: userMention(this.player1.id),
                     }),
@@ -188,14 +188,14 @@ class Game {
                 return builder
                     .setColor(Colors.Red)
                     .setDescription(
-                        i18next.t('commands.rps.game.inviteDenied', { lng: this.locale }),
+                        i18next.t('commands:rps.game.inviteDenied', { lng: this.locale }),
                     );
 
             case 'inviteExpired':
                 return builder
                     .setColor(Colors.Red)
                     .setDescription(
-                        i18next.t('commands.rps.game.inviteExpired', { lng: this.locale }),
+                        i18next.t('commands:rps.game.inviteExpired', { lng: this.locale }),
                     );
 
             case 'gameExpired':
@@ -205,7 +205,7 @@ class Game {
                     ...this.rounds.map((round, roundIndex) => {
                         return {
                             name:
-                                i18next.t('commands.rps.game.round', {
+                                i18next.t('commands:rps.game.round', {
                                     lng: this.locale,
                                 }) + ` ${roundIndex + 1}`,
                             value: `${round.choices
@@ -215,7 +215,7 @@ class Game {
                                             ? emojis[choice]
                                             : '???'
                                         : roundIndex === this.currentRoundIndex
-                                          ? i18next.t('commands.rps.game.waiting', {
+                                          ? i18next.t('commands:rps.game.waiting', {
                                                 lng: this.locale,
                                             }) + '...'
                                           : '...';
@@ -224,12 +224,12 @@ class Game {
                                 })
                                 .join('\n')}\n${
                                 [
-                                    i18next.t('commands.rps.game.tie', { lng: this.locale }),
-                                    i18next.t('commands.rps.game.win', {
+                                    i18next.t('commands:rps.game.tie', { lng: this.locale }),
+                                    i18next.t('commands:rps.game.win', {
                                         lng: this.locale,
                                         user: this.player1.displayName,
                                     }),
-                                    i18next.t('commands.rps.game.win', {
+                                    i18next.t('commands:rps.game.win', {
                                         lng: this.locale,
                                         user: this.player2.displayName,
                                     }),
@@ -253,12 +253,12 @@ class Game {
                     builder.addComponents(
                         new ButtonBuilder()
                             .setCustomId('deny')
-                            .setLabel(i18next.t('commands.rps.game.deny', { lng: this.locale }))
+                            .setLabel(i18next.t('commands:rps.game.deny', { lng: this.locale }))
                             .setStyle(ButtonStyle.Danger)
                             .setDisabled(this.status !== 'invitePending'),
                         new ButtonBuilder()
                             .setCustomId('accept')
-                            .setLabel(i18next.t('commands.rps.game.accept', { lng: this.locale }))
+                            .setLabel(i18next.t('commands:rps.game.accept', { lng: this.locale }))
                             .setStyle(ButtonStyle.Success)
                             .setDisabled(this.status !== 'invitePending'),
                     ),
@@ -304,7 +304,7 @@ export default class RockPaperScissorsCommand extends BaseCommand {
 
         if (opponent.bot) {
             await interaction.reply({
-                content: i18next.t('commands.rps.error.noBot', { lng: interaction.locale }),
+                content: i18next.t('commands:rps.error.noBot', { lng: interaction.locale }),
                 flags: MessageFlags.Ephemeral,
             });
             return;
@@ -312,7 +312,7 @@ export default class RockPaperScissorsCommand extends BaseCommand {
 
         if (opponent.id === interaction.user.id) {
             await interaction.reply({
-                content: i18next.t('commands.rps.error.noSelf', { lng: interaction.locale }),
+                content: i18next.t('commands:rps.error.noSelf', { lng: interaction.locale }),
                 flags: MessageFlags.Ephemeral,
             });
             return;

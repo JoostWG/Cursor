@@ -1,0 +1,86 @@
+{
+    "rps": {
+        "name": "rps",
+        "description": "Speel Steen Papier Schaar",
+        "options": {
+            "opponent": {
+                "name": "tegenstander",
+                "description": "Kies je tegenstander"
+            }
+        },
+        "error": {
+            "noBot": "Je kan niet tegen bots spelen.",
+            "noSelf": "Je kan niet tegen jezelf spelen."
+        },
+        "game": {
+            "name": "Steen Papier Schaar",
+            "error": {
+                "notPLayer": "Je doet niet mee met dit spel.",
+                "alreadyChosen": "Je hebt deze ronde al gekozen. Wachten op tegenstander..."
+            },
+            "invitePending": "{{- user}} heeft je uitgenodigd om Steen Papier Schaar te spelen.\nAcepteer of weiger binnen 60 seconden.",
+            "inviteDenied": "Uinodiging geweigerd",
+            "inviteExpired": "Uitnodiging verlopen",
+            "waiting": "Wachten",
+            "tie": "Gelijkspel!",
+            "win": "{{- user}} heeft gewonnen!",
+            "accept": "Accepteren",
+            "deny": "Weigeren",
+            "round": "Ronde"
+        }
+    },
+    "joke": {
+        "name": "grap",
+        "description": "Verteld een grap. Grappen zijn helaas niet in het Nederlands.",
+        "options": {
+            "category": {
+                "name": "categorie",
+                "description": "Kies een categorie"
+            },
+            "safe": {
+                "name": "veilig",
+                "description": "Of de grap gepast mag zijn. Zet dit naar False in een NSFW kanaal voor groffe grappen."
+            }
+        },
+        "categories": {
+            "programming": "Programmeren",
+            "misc": "Gemengd",
+            "dark": "Zwart",
+            "pun": "Woordspelling",
+            "spooky": "Spookachtig",
+            "christmas": "Kerst"
+        },
+        "nsfw": "Je kan `veilig` alleen in NSFW kanalen op `False` zetten."
+    },
+    "user": {
+        "name": "gebruiker",
+        "description": "Gebruikerinformatie",
+        "options": {
+            "user": {
+                "name": "gebruiker",
+                "description": "Selecteer een gebruiker"
+            }
+        },
+        "createdAt": "Geregistreerd op"
+    },
+    "urban-dictionary": {
+        "name": "urban-dictionary",
+        "description": "Zoek op Urban Dictionary",
+        "subcommands": {
+            "search": {
+                "name": "zoeken",
+                "description": "Zoek op een term",
+                "options": {
+                    "term": {
+                        "name": "term",
+                        "description": "De term om naar te zoeken"
+                    }
+                }
+            },
+            "random": {
+                "name": "willekeurig",
+                "description": "Geeft willekeurige definities terug"
+            }
+        }
+    }
+}

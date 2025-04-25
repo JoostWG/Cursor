@@ -99,7 +99,7 @@ class DefinitionsView {
                 new ActionRowBuilder().addComponents([
                     new ButtonBuilder()
                         .setCustomId('previous')
-                        .setLabel(i18next.t('common.previous', { lng: this.locale }))
+                        .setLabel(i18next.t('previous', { lng: this.locale }))
                         .setStyle(ButtonStyle.Primary)
                         .setDisabled(this.index <= 0),
                     new ButtonBuilder()
@@ -109,7 +109,7 @@ class DefinitionsView {
                         .setDisabled(true),
                     new ButtonBuilder()
                         .setCustomId('next')
-                        .setLabel(i18next.t('common.next', { lng: this.locale }))
+                        .setLabel(i18next.t('next', { lng: this.locale }))
                         .setStyle(ButtonStyle.Primary)
                         .setDisabled(this.index + 1 >= this.definitions.length),
                 ]),

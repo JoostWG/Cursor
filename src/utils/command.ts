@@ -18,8 +18,8 @@ export abstract class BaseCommand {
         this.data = new SlashCommandBuilder()
             .setName(name)
             .setDescription(description)
-            .setNameLocalizations(getTranslations(`commands.${name}.name`))
-            .setDescriptionLocalizations(getTranslations(`commands.${name}.description`));
+            .setNameLocalizations(getTranslations(`commands:${name}.name`))
+            .setDescriptionLocalizations(getTranslations(`commands:${name}.description`));
     }
 
     public abstract execute(interaction: ChatInputCommandInteraction): Promise<void>;
@@ -35,8 +35,8 @@ export abstract class BaseCommand {
         subcommand?: string,
     ) {
         const translationKeyPrefix = subcommand
-            ? `commands.${this.name}.subcommands.${subcommand}.options.${name}`
-            : `commands.${this.name}.options.${name}.name`;
+            ? `commands:${this.name}.subcommands.${subcommand}.options.${name}`
+            : `commands:${this.name}.options.${name}.name`;
 
         return option
             .setName(name)
@@ -53,9 +53,9 @@ export abstract class BaseCommand {
         return subcommand
             .setName(name)
             .setDescription(description)
-            .setNameLocalizations(getTranslations(`commands.${this.name}.subcommands.${name}.name`))
+            .setNameLocalizations(getTranslations(`commands:${this.name}.subcommands.${name}.name`))
             .setDescriptionLocalizations(
-                getTranslations(`commands.${this.name}.subcommands.${name}.description`),
+                getTranslations(`commands:${this.name}.subcommands.${name}.description`),
             );
     }
 }
