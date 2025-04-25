@@ -1,4 +1,8 @@
 {
+    "common": {
+        "previous": "Vorige",
+        "next": "Volgende"
+    },
     "commands": {
         "rps": {
             "name": "rps",
@@ -63,6 +67,26 @@
                 }
             },
             "createdAt": "Geregistreerd op"
+        },
+        "urban-dictionary": {
+            "name": "urban-dictionary",
+            "description": "Zoek op Urban Dictionary",
+            "subcommands": {
+                "search": {
+                    "name": "zoeken",
+                    "description": "Zoek op een term",
+                    "options": {
+                        "term": {
+                            "name": "term",
+                            "description": "De term om naar te zoeken"
+                        }
+                    }
+                },
+                "random": {
+                    "name": "willekeurig",
+                    "description": "Geeft willekeurige definities terug"
+                }
+            }
         }
     }
 }

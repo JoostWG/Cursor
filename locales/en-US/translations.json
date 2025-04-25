@@ -1,4 +1,8 @@
 {
+    "common": {
+        "previous": "Previous",
+        "next": "Next"
+    },
     "commands": {
         "rps": {
             "name": "rps",
@@ -63,6 +67,26 @@
                 }
             },
             "createdAt": "Created at"
+        },
+        "urban-dictionary": {
+            "name": "urban-dictionary",
+            "description": "Search Urban Dictionary",
+            "subcommands": {
+                "search": {
+                    "name": "search",
+                    "description": "Search for a term",
+                    "options": {
+                        "term": {
+                            "name": "term",
+                            "description": "The term to search for"
+                        }
+                    }
+                },
+                "random": {
+                    "name": "random",
+                    "description": "Returns some random definitions"
+                }
+            }
         }
     }
 }
