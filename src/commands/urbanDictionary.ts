@@ -99,7 +99,7 @@ class UrbanDictionaryView {
         }
 
         const response = await interaction.reply({
-            ...this.buildMessage(),
+            components: this.buildComponents(),
             flags: MessageFlags.IsComponentsV2,
             withResponse: true,
         });
@@ -140,11 +140,11 @@ class UrbanDictionaryView {
                         break;
                 }
 
-                await interaction.update(this.buildMessage());
+                await interaction.update({ components: this.buildComponents() });
             })
             .on('end', async () => {
                 this.active = false;
-                await interaction.editReply(this.buildMessage());
+                await interaction.editReply({ components: this.buildComponents() });
             });
     }
 
@@ -156,7 +156,7 @@ class UrbanDictionaryView {
         this.cache.set(this.current.term, await Api.define(this.current.term));
     }
 
-    private buildMessage() {
+    private buildComponents() {
         const definition = this.definitions[this.current.index];
 
         const hyperlinkTerms = [
@@ -164,89 +164,86 @@ class UrbanDictionaryView {
             ...this.extractHyperlinks(definition.example),
         ];
 
-        return {
-            components: [
-                new ContainerBuilder()
-                    .addTextDisplayComponents(
-                        new TextDisplayBuilder().setContent(
-                            [
-                                heading(definition.word),
-                                subtext(`By ${definition.author}`),
-                                this.transformHyperlinks(definition.definition),
-                                heading('Example', HeadingLevel.Three),
-                                this.transformHyperlinks(definition.example),
-                            ].join('\n'),
-                        ),
-                    )
-                    .addSeparatorComponents(new SeparatorBuilder().setDivider(true))
-                    .addTextDisplayComponents(
-                        new TextDisplayBuilder().setContent(
-                            inlineCode(this.history.map((item) => item.term).join(' > ')),
-                        ),
-                    )
-                    .addActionRowComponents(
-                        // @ts-expect-error: Bug in discord.js builders (I think)
-                        new ActionRowBuilder().addComponents(
-                            new StringSelectMenuBuilder()
-                                .setCustomId('select')
-                                .setPlaceholder(
-                                    i18next.t('commands:urban-dictionary.select', {
-                                        lng: this.locale,
-                                    }),
-                                )
-                                .addOptions(
-                                    hyperlinkTerms.length
-                                        ? hyperlinkTerms.map((term) =>
-                                              new StringSelectMenuOptionBuilder()
-                                                  .setLabel(term)
-                                                  .setValue(term),
-                                          )
-                                        : [
-                                              new StringSelectMenuOptionBuilder()
-                                                  .setLabel('null')
-                                                  .setValue('null'),
-                                          ],
-                                )
-                                .setDisabled(!hyperlinkTerms.length || !this.active),
-                        ),
-                        new ActionRowBuilder().addComponents(
-                            new ButtonBuilder()
-                                .setCustomId('back')
-                                .setLabel(i18next.t('back', { lng: this.locale }))
-                                .setStyle(ButtonStyle.Danger)
-                                .setDisabled(this.history.length < 2 || !this.active),
-                        ),
-                    )
-                    .addSeparatorComponents(new SeparatorBuilder().setDivider(true))
-                    .addActionRowComponents(
-                        // @ts-expect-error: Bug in discord.js builders (I think)
-                        new ActionRowBuilder().addComponents(
-                            new ButtonBuilder()
-                                .setCustomId('previous')
-                                .setLabel(i18next.t('previous', { lng: this.locale }))
-                                .setStyle(ButtonStyle.Primary)
-                                .setDisabled(this.current.index <= 0 || !this.active),
-                            new ButtonBuilder()
-                                .setCustomId('next')
-                                .setLabel(i18next.t('next', { lng: this.locale }))
-                                .setStyle(ButtonStyle.Primary)
-                                .setDisabled(
-                                    this.current.index + 1 >= this.definitions.length ||
-                                        !this.active,
-                                ),
-                            new ButtonBuilder()
-                                .setStyle(ButtonStyle.Link)
-                                .setLabel(i18next.t('openInBrowser', { lng: this.locale }))
-                                .setURL(definition.permalink),
-                        ),
-                    )
-                    .addTextDisplayComponents(
-                        new TextDisplayBuilder().setContent(
-                            subtext(`${this.current.index + 1}/${this.definitions.length}`),
-                        ),
+        return [
+            new ContainerBuilder()
+                .addTextDisplayComponents(
+                    new TextDisplayBuilder().setContent(
+                        [
+                            heading(definition.word),
+                            subtext(`By ${definition.author}`),
+                            this.transformHyperlinks(definition.definition),
+                            heading('Example', HeadingLevel.Three),
+                            this.transformHyperlinks(definition.example),
+                        ].join('\n'),
                     ),
-            ],
-        };
+                )
+                .addSeparatorComponents(new SeparatorBuilder().setDivider(true))
+                .addTextDisplayComponents(
+                    new TextDisplayBuilder().setContent(
+                        inlineCode(this.history.map((item) => item.term).join(' > ')),
+                    ),
+                )
+                .addActionRowComponents(
+                    // @ts-expect-error: Bug in discord.js builders (I think)
+                    new ActionRowBuilder().addComponents(
+                        new StringSelectMenuBuilder()
+                            .setCustomId('select')
+                            .setPlaceholder(
+                                i18next.t('commands:urban-dictionary.select', {
+                                    lng: this.locale,
+                                }),
+                            )
+                            .addOptions(
+                                hyperlinkTerms.length
+                                    ? hyperlinkTerms.map((term) =>
+                                          new StringSelectMenuOptionBuilder()
+                                              .setLabel(term)
+                                              .setValue(term),
+                                      )
+                                    : [
+                                          new StringSelectMenuOptionBuilder()
+                                              .setLabel('null')
+                                              .setValue('null'),
+                                      ],
+                            )
+                            .setDisabled(!hyperlinkTerms.length || !this.active),
+                    ),
+                    new ActionRowBuilder().addComponents(
+                        new ButtonBuilder()
+                            .setCustomId('back')
+                            .setLabel(i18next.t('back', { lng: this.locale }))
+                            .setStyle(ButtonStyle.Danger)
+                            .setDisabled(this.history.length < 2 || !this.active),
+                    ),
+                )
+                .addSeparatorComponents(new SeparatorBuilder().setDivider(true))
+                .addActionRowComponents(
+                    // @ts-expect-error: Bug in discord.js builders (I think)
+                    new ActionRowBuilder().addComponents(
+                        new ButtonBuilder()
+                            .setCustomId('previous')
+                            .setLabel(i18next.t('previous', { lng: this.locale }))
+                            .setStyle(ButtonStyle.Primary)
+                            .setDisabled(this.current.index <= 0 || !this.active),
+                        new ButtonBuilder()
+                            .setCustomId('next')
+                            .setLabel(i18next.t('next', { lng: this.locale }))
+                            .setStyle(ButtonStyle.Primary)
+                            .setDisabled(
+                                this.current.index + 1 >= this.definitions.length || !this.active,
+                            ),
+                        new ButtonBuilder()
+                            .setStyle(ButtonStyle.Link)
+                            .setLabel(i18next.t('openInBrowser', { lng: this.locale }))
+                            .setURL(definition.permalink),
+                    ),
+                )
+                .addTextDisplayComponents(
+                    new TextDisplayBuilder().setContent(
+                        subtext(`${this.current.index + 1}/${this.definitions.length}`),
+                    ),
+                ),
+        ];
     }
 
     private extractHyperlinks(text: string) {
