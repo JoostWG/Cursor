@@ -6,14 +6,17 @@ import {
     ButtonBuilder,
     ButtonStyle,
     ChatInputCommandInteraction,
-    Colors,
-    EmbedBuilder,
-    InteractionReplyOptions,
+    ContainerBuilder,
+    HeadingLevel,
     Locale,
     MessageFlags,
+    SeparatorBuilder,
     StringSelectMenuBuilder,
     StringSelectMenuOptionBuilder,
+    TextDisplayBuilder,
+    heading,
     inlineCode,
+    subtext,
 } from 'discord.js';
 import i18next from 'i18next';
 
@@ -87,7 +90,19 @@ class UrbanDictionaryView {
 
         await this.loadDefinitions();
 
-        const response = await interaction.reply(this.buildMessage({ withResponse: true }));
+        if (!this.definitions.length) {
+            await interaction.reply({
+                content: i18next.t('commands:urban-dictionary.notFound', { lng: this.locale }),
+                flags: MessageFlags.Ephemeral,
+            });
+            return;
+        }
+
+        const response = await interaction.reply({
+            ...this.buildMessage(),
+            flags: MessageFlags.IsComponentsV2,
+            withResponse: true,
+        });
 
         if (!response?.resource?.message) {
             console.error('Error...');
@@ -141,96 +156,96 @@ class UrbanDictionaryView {
         this.cache.set(this.current.term, await Api.define(this.current.term));
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    private buildMessage<E extends Record<string, any>>(
-        extra?: E,
-    ): Pick<InteractionReplyOptions, 'content' | 'embeds' | 'components'> & E {
+    private buildMessage() {
         const definition = this.definitions[this.current.index];
-
-        if (!definition) {
-            // @ts-expect-error It's 11:42 PM and I don't feel like fixing this right now.
-            return {
-                content: i18next.t('commands:urban-dictionary.notFound', { lng: this.locale }),
-                flags: [MessageFlags.Ephemeral],
-            };
-        }
-
-        const components = [
-            new ActionRowBuilder().addComponents(
-                new ButtonBuilder()
-                    .setCustomId('previous')
-                    .setLabel(i18next.t('previous', { lng: this.locale }))
-                    .setStyle(ButtonStyle.Primary)
-                    .setDisabled(this.current.index <= 0 || !this.active),
-                new ButtonBuilder()
-                    .setCustomId('page')
-                    .setLabel(`${this.current.index + 1}/${this.definitions.length}`)
-                    .setStyle(ButtonStyle.Secondary)
-                    .setDisabled(true),
-                new ButtonBuilder()
-                    .setCustomId('next')
-                    .setLabel(i18next.t('next', { lng: this.locale }))
-                    .setStyle(ButtonStyle.Primary)
-                    .setDisabled(this.current.index + 1 >= this.definitions.length || !this.active),
-                new ButtonBuilder()
-                    .setStyle(ButtonStyle.Link)
-                    .setLabel(i18next.t('openInBrowser', { lng: this.locale }))
-                    .setURL(definition.permalink),
-            ),
-            new ActionRowBuilder().addComponents(
-                new ButtonBuilder()
-                    .setCustomId('back')
-                    .setLabel(i18next.t('back', { lng: this.locale }))
-                    .setStyle(ButtonStyle.Danger)
-                    .setDisabled(this.history.length < 2 || !this.active),
-            ),
-        ];
 
         const hyperlinkTerms = [
             ...this.extractHyperlinks(definition.definition),
             ...this.extractHyperlinks(definition.example),
         ];
 
-        if (hyperlinkTerms.length) {
-            components.splice(
-                1,
-                0,
-                new ActionRowBuilder().addComponents(
-                    new StringSelectMenuBuilder()
-                        .setCustomId('select')
-                        .setPlaceholder(
-                            i18next.t('commands:urban-dictionary.select', { lng: this.locale }),
-                        )
-                        .addOptions(
-                            hyperlinkTerms.map((term) =>
-                                new StringSelectMenuOptionBuilder().setLabel(term).setValue(term),
-                            ),
-                        )
-                        .setDisabled(!this.active),
-                ),
-            );
-        }
-
-        // @ts-expect-error: Caused by `components`. Following guide, works at runtime.
         return {
-            content: inlineCode(this.history.map((item) => item.term).join(' > ')),
-            embeds: [
-                new EmbedBuilder()
-                    .setColor(Colors.Blurple)
-                    .setTitle(definition.word)
-                    .setDescription(this.transformHyperlinks(definition.definition))
-                    .addFields({
-                        name: 'Example',
-                        value: this.transformHyperlinks(definition.example),
-                        inline: false,
-                    })
-                    .setTimestamp(new Date(definition.written_on))
-                    .setFooter({
-                        text: `👍${definition.thumbs_up} 👎${definition.thumbs_down}`,
-                    }),
+            components: [
+                new ContainerBuilder()
+                    .addTextDisplayComponents(
+                        new TextDisplayBuilder().setContent(
+                            [
+                                heading(definition.word),
+                                subtext(`By ${definition.author}`),
+                                this.transformHyperlinks(definition.definition),
+                                heading('Example', HeadingLevel.Three),
+                                this.transformHyperlinks(definition.example),
+                            ].join('\n'),
+                        ),
+                    )
+                    .addSeparatorComponents(new SeparatorBuilder().setDivider(true))
+                    .addTextDisplayComponents(
+                        new TextDisplayBuilder().setContent(
+                            inlineCode(this.history.map((item) => item.term).join(' > ')),
+                        ),
+                    )
+                    .addActionRowComponents(
+                        // @ts-expect-error: Bug in discord.js builders (I think)
+                        new ActionRowBuilder().addComponents(
+                            new StringSelectMenuBuilder()
+                                .setCustomId('select')
+                                .setPlaceholder(
+                                    i18next.t('commands:urban-dictionary.select', {
+                                        lng: this.locale,
+                                    }),
+                                )
+                                .addOptions(
+                                    hyperlinkTerms.length
+                                        ? hyperlinkTerms.map((term) =>
+                                              new StringSelectMenuOptionBuilder()
+                                                  .setLabel(term)
+                                                  .setValue(term),
+                                          )
+                                        : [
+                                              new StringSelectMenuOptionBuilder()
+                                                  .setLabel('null')
+                                                  .setValue('null'),
+                                          ],
+                                )
+                                .setDisabled(!hyperlinkTerms.length || !this.active),
+                        ),
+                        new ActionRowBuilder().addComponents(
+                            new ButtonBuilder()
+                                .setCustomId('back')
+                                .setLabel(i18next.t('back', { lng: this.locale }))
+                                .setStyle(ButtonStyle.Danger)
+                                .setDisabled(this.history.length < 2 || !this.active),
+                        ),
+                    )
+                    .addSeparatorComponents(new SeparatorBuilder().setDivider(true))
+                    .addActionRowComponents(
+                        // @ts-expect-error: Bug in discord.js builders (I think)
+                        new ActionRowBuilder().addComponents(
+                            new ButtonBuilder()
+                                .setCustomId('previous')
+                                .setLabel(i18next.t('previous', { lng: this.locale }))
+                                .setStyle(ButtonStyle.Primary)
+                                .setDisabled(this.current.index <= 0 || !this.active),
+                            new ButtonBuilder()
+                                .setCustomId('next')
+                                .setLabel(i18next.t('next', { lng: this.locale }))
+                                .setStyle(ButtonStyle.Primary)
+                                .setDisabled(
+                                    this.current.index + 1 >= this.definitions.length ||
+                                        !this.active,
+                                ),
+                            new ButtonBuilder()
+                                .setStyle(ButtonStyle.Link)
+                                .setLabel(i18next.t('openInBrowser', { lng: this.locale }))
+                                .setURL(definition.permalink),
+                        ),
+                    )
+                    .addTextDisplayComponents(
+                        new TextDisplayBuilder().setContent(
+                            subtext(`${this.current.index + 1}/${this.definitions.length}`),
+                        ),
+                    ),
             ],
-            components,
-            ...extra,
         };
     }
 
