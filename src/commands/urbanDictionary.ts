@@ -104,7 +104,7 @@ class UrbanDictionaryView {
             withResponse: true,
         });
 
-        if (!response?.resource?.message) {
+        if (!response.resource?.message) {
             console.error('Error...');
             return;
         }
