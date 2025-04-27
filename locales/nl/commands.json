@@ -26,7 +26,7 @@
             "win": "{{- user}} heeft gewonnen!",
             "accept": "Accepteren",
             "deny": "Weigeren",
-            "round": "Ronde"
+            "round": "Ronde {{- round}}"
         }
     },
     "joke": {

@@ -5,11 +5,14 @@ import {
     ButtonStyle,
     ChatInputCommandInteraction,
     Colors,
-    EmbedBuilder,
-    InteractionReplyOptions,
+    ContainerBuilder,
+    HeadingLevel,
     Locale,
     MessageFlags,
+    SeparatorBuilder,
+    TextDisplayBuilder,
     User,
+    heading,
     userMention,
 } from 'discord.js';
 import i18next from 'i18next';
@@ -76,7 +79,10 @@ class Game {
 
     public async start(interaction: ChatInputCommandInteraction) {
         this.locale = interaction.locale;
-        const response = await interaction.reply(this.buildMessage({ withResponse: true }));
+        const response = await interaction.reply({
+            components: this.buildComponents(),
+            withResponse: true,
+        });
 
         if (!response.resource?.message) {
             interaction.editReply({
@@ -96,19 +102,19 @@ class Game {
             });
         } catch {
             this.status = 'inviteExpired';
-            await interaction.editReply(this.buildMessage());
+            await interaction.editReply({ components: this.buildComponents() });
             return;
         }
 
         switch (inviteInteraction?.customId) {
             case 'accept':
                 this.status = 'gameActive';
-                await inviteInteraction.update(this.buildMessage());
+                await inviteInteraction.update({ components: this.buildComponents() });
                 break;
 
             case 'deny':
                 this.status = 'inviteDenied';
-                await inviteInteraction.update(this.buildMessage());
+                await inviteInteraction.update({ components: this.buildComponents() });
                 return;
         }
 
@@ -153,104 +159,59 @@ class Game {
                     }
                 }
 
-                await buttonInteraction.update(this.buildMessage());
+                await buttonInteraction.update({ components: this.buildComponents() });
             });
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    private buildMessage<E extends Record<string, any>>(
-        extra?: E,
-    ): Pick<InteractionReplyOptions, 'content' | 'embeds' | 'components'> & E {
-        // @ts-expect-error: Caused by `components`. Following guide, works at runtime.
-        return {
-            content: this.status === 'invitePending' ? userMention(this.player2.id) : '',
-            embeds: [this.buildEmbed()],
-            components: this.buildComponents(),
-            ...extra,
-        };
-    }
+    private buildComponents() {
+        const builder = new ContainerBuilder();
 
-    private buildEmbed() {
-        const builder = new EmbedBuilder().setTitle(
-            i18next.t('commands:rps.game.name', { lng: this.locale }),
+        builder.addTextDisplayComponents(
+            new TextDisplayBuilder().setContent(
+                heading(i18next.t('commands:rps.game.name', { lng: this.locale })),
+            ),
         );
 
         switch (this.status) {
             case 'invitePending':
-                return builder.setColor(Colors.Blue).setDescription(
-                    i18next.t('commands:rps.game.invitePending', {
-                        lng: this.locale,
-                        user: userMention(this.player1.id),
-                    }),
-                );
-
             case 'inviteDenied':
-                return builder
-                    .setColor(Colors.Red)
-                    .setDescription(
-                        i18next.t('commands:rps.game.inviteDenied', { lng: this.locale }),
-                    );
-
             case 'inviteExpired':
-                return builder
-                    .setColor(Colors.Red)
-                    .setDescription(
-                        i18next.t('commands:rps.game.inviteExpired', { lng: this.locale }),
-                    );
-
-            case 'gameExpired':
-            case 'gameActive':
-            case 'gameFinished':
-                return builder.setColor(Colors.Gold).addFields(
-                    ...this.rounds.map((round, roundIndex) => {
-                        return {
-                            name:
-                                i18next.t('commands:rps.game.round', {
+                switch (this.status) {
+                    case 'invitePending':
+                        builder.setAccentColor(Colors.Blue).addTextDisplayComponents(
+                            new TextDisplayBuilder().setContent(
+                                i18next.t('commands:rps.game.invitePending', {
                                     lng: this.locale,
-                                }) + ` ${roundIndex + 1}`,
-                            value: `${round.choices
-                                .map((choice, choiceIndex) => {
-                                    const choiceString = choice
-                                        ? round.isFinished()
-                                            ? emojis[choice]
-                                            : '???'
-                                        : roundIndex === this.currentRoundIndex
-                                          ? i18next.t('commands:rps.game.waiting', {
-                                                lng: this.locale,
-                                            }) + '...'
-                                          : '...';
+                                    user: userMention(this.player1.id),
+                                }),
+                            ),
+                        );
+                        break;
 
-                                    return `${this.users[choiceIndex].displayName}: ${choiceString}`;
-                                })
-                                .join('\n')}\n${
-                                [
-                                    i18next.t('commands:rps.game.tie', { lng: this.locale }),
-                                    i18next.t('commands:rps.game.win', {
-                                        lng: this.locale,
-                                        user: this.player1.displayName,
-                                    }),
-                                    i18next.t('commands:rps.game.win', {
-                                        lng: this.locale,
-                                        user: this.player2.displayName,
-                                    }),
-                                ][round.getResult()] ?? ''
-                            }`,
-                            inline: true,
-                        };
-                    }),
-                );
-        }
-    }
+                    case 'inviteDenied':
+                        builder.setAccentColor(Colors.Red).addTextDisplayComponents(
+                            new TextDisplayBuilder().setContent(
+                                i18next.t('commands:rps.game.inviteDenied', {
+                                    lng: this.locale,
+                                }),
+                            ),
+                        );
+                        break;
 
-    private buildComponents() {
-        const builder = new ActionRowBuilder();
+                    case 'inviteExpired':
+                        builder.setAccentColor(Colors.Red).addTextDisplayComponents(
+                            new TextDisplayBuilder().setContent(
+                                i18next.t('commands:rps.game.inviteExpired', {
+                                    lng: this.locale,
+                                }),
+                            ),
+                        );
+                        break;
+                }
 
-        switch (this.status) {
-            case 'invitePending':
-            case 'inviteDenied':
-            case 'inviteExpired':
-                return [
-                    builder.addComponents(
+                builder.addActionRowComponents(
+                    // @ts-expect-error: Bug in discord.js builders (I think)
+                    new ActionRowBuilder().addComponents(
                         new ButtonBuilder()
                             .setCustomId('deny')
                             .setLabel(i18next.t('commands:rps.game.deny', { lng: this.locale }))
@@ -262,23 +223,74 @@ class Game {
                             .setStyle(ButtonStyle.Success)
                             .setDisabled(this.status !== 'invitePending'),
                     ),
-                ];
+                );
+                break;
 
             case 'gameExpired':
             case 'gameActive':
             case 'gameFinished':
-                return [
-                    builder.addComponents(
-                        ...Object.entries(emojis).map(([key, emoji]) => {
-                            return new ButtonBuilder()
-                                .setCustomId(key)
-                                .setLabel(emoji)
-                                .setStyle(ButtonStyle.Primary)
-                                .setDisabled(this.status !== 'gameActive');
-                        }),
-                    ),
-                ];
+                builder
+                    .setAccentColor(Colors.Gold)
+                    .addTextDisplayComponents(
+                        new TextDisplayBuilder().setContent(
+                            this.rounds
+                                .map((round, roundIndex) => {
+                                    return [
+                                        heading(
+                                            i18next.t('commands:rps.game.round', {
+                                                lng: this.locale,
+                                                round: roundIndex + 1,
+                                            }),
+                                            HeadingLevel.Three,
+                                        ),
+                                        ...round.choices.map((choice, choiceIndex) => {
+                                            const choiceString = choice
+                                                ? round.isFinished()
+                                                    ? emojis[choice]
+                                                    : '???'
+                                                : roundIndex === this.currentRoundIndex
+                                                  ? i18next.t('commands:rps.game.waiting', {
+                                                        lng: this.locale,
+                                                    }) + '...'
+                                                  : '...';
+
+                                            return `${this.users[choiceIndex].displayName}: ${choiceString}`;
+                                        }),
+                                        [
+                                            i18next.t('commands:rps.game.tie', {
+                                                lng: this.locale,
+                                            }),
+                                            i18next.t('commands:rps.game.win', {
+                                                lng: this.locale,
+                                                user: this.player1.displayName,
+                                            }),
+                                            i18next.t('commands:rps.game.win', {
+                                                lng: this.locale,
+                                                user: this.player2.displayName,
+                                            }),
+                                        ][round.getResult()] ?? '',
+                                    ];
+                                })
+                                .flat()
+                                .join('\n'),
+                        ),
+                    )
+                    .addSeparatorComponents(new SeparatorBuilder().setDivider(true))
+                    .addActionRowComponents(
+                        // @ts-expect-error: Bug in discord.js builders (I think)
+                        new ActionRowBuilder().addComponents(
+                            ...Object.entries(emojis).map(([key, emoji]) => {
+                                return new ButtonBuilder()
+                                    .setCustomId(key)
+                                    .setLabel(emoji)
+                                    .setStyle(ButtonStyle.Primary)
+                                    .setDisabled(this.status !== 'gameActive');
+                            }),
+                        ),
+                    );
         }
+
+        return [builder];
     }
 
     private get player1() {
@@ -302,21 +314,21 @@ export default class RockPaperScissorsCommand extends BaseCommand {
     public override async execute(interaction: ChatInputCommandInteraction) {
         const opponent = interaction.options.getUser('opponent', true);
 
-        if (opponent.bot) {
-            await interaction.reply({
-                content: i18next.t('commands:rps.error.noBot', { lng: interaction.locale }),
-                flags: MessageFlags.Ephemeral,
-            });
-            return;
-        }
+        // if (opponent.bot) {
+        //     await interaction.reply({
+        //         content: i18next.t('commands:rps.error.noBot', { lng: interaction.locale }),
+        //         flags: MessageFlags.Ephemeral,
+        //     });
+        //     return;
+        // }
 
-        if (opponent.id === interaction.user.id) {
-            await interaction.reply({
-                content: i18next.t('commands:rps.error.noSelf', { lng: interaction.locale }),
-                flags: MessageFlags.Ephemeral,
-            });
-            return;
-        }
+        // if (opponent.id === interaction.user.id) {
+        //     await interaction.reply({
+        //         content: i18next.t('commands:rps.error.noSelf', { lng: interaction.locale }),
+        //         flags: MessageFlags.Ephemeral,
+        //     });
+        //     return;
+        // }
 
         await new Game([interaction.user, opponent]).start(interaction);
     }
