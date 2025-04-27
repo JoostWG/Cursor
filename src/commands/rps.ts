@@ -314,21 +314,21 @@ export default class RockPaperScissorsCommand extends BaseCommand {
     public override async execute(interaction: ChatInputCommandInteraction) {
         const opponent = interaction.options.getUser('opponent', true);
 
-        // if (opponent.bot) {
-        //     await interaction.reply({
-        //         content: i18next.t('commands:rps.error.noBot', { lng: interaction.locale }),
-        //         flags: MessageFlags.Ephemeral,
-        //     });
-        //     return;
-        // }
+        if (opponent.bot) {
+            await interaction.reply({
+                content: i18next.t('commands:rps.error.noBot', { lng: interaction.locale }),
+                flags: MessageFlags.Ephemeral,
+            });
+            return;
+        }
 
-        // if (opponent.id === interaction.user.id) {
-        //     await interaction.reply({
-        //         content: i18next.t('commands:rps.error.noSelf', { lng: interaction.locale }),
-        //         flags: MessageFlags.Ephemeral,
-        //     });
-        //     return;
-        // }
+        if (opponent.id === interaction.user.id) {
+            await interaction.reply({
+                content: i18next.t('commands:rps.error.noSelf', { lng: interaction.locale }),
+                flags: MessageFlags.Ephemeral,
+            });
+            return;
+        }
 
         await new Game([interaction.user, opponent]).start(interaction);
     }
