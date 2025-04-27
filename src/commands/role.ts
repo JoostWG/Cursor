@@ -194,7 +194,7 @@ export default class RoleCommand extends BaseCommand {
         }
 
         if (role.managed && !options?.allowManaged) {
-            throw new InvalidRoleError('Target role is manged and cannot be modified.');
+            throw new InvalidRoleError('Target role is managed and cannot be modified.');
         }
 
         if (!interaction.guild.members.me?.permissions.has(PermissionFlagsBits.ManageRoles)) {
