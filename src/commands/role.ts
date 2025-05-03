@@ -60,7 +60,7 @@ export default class RoleCommand extends BaseCommand {
 
             default:
                 await interaction.reply({
-                    content: 'No corresponding subcommand handler found.',
+                    content: `No corresponding subcommand handler found for ${inlineCode(interaction.options.getSubcommand())}.`,
                     flags: MessageFlags.Ephemeral,
                 });
                 break;
