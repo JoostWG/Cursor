@@ -92,7 +92,8 @@ export class Client extends DiscordJsClient {
             }
 
             try {
-                await interaction.respond(await command.autocomplete(interaction));
+                const results = await command.autocomplete(interaction);
+                await interaction.respond(results.slice(0, 25));
             } catch (error) {
                 console.error(error);
             }
