@@ -184,8 +184,7 @@ class UrbanDictionaryView {
                     ),
                 )
                 .addActionRowComponents(
-                    // @ts-expect-error: Bug in discord.js builders (I think)
-                    new ActionRowBuilder().addComponents(
+                    new ActionRowBuilder<StringSelectMenuBuilder>().addComponents(
                         new StringSelectMenuBuilder()
                             .setCustomId('select')
                             .setPlaceholder(
@@ -208,7 +207,9 @@ class UrbanDictionaryView {
                             )
                             .setDisabled(!hyperlinkTerms.length || !this.active),
                     ),
-                    new ActionRowBuilder().addComponents(
+                )
+                .addActionRowComponents(
+                    new ActionRowBuilder<ButtonBuilder>().addComponents(
                         new ButtonBuilder()
                             .setCustomId('back')
                             .setLabel(i18next.t('back', { lng: this.locale }))
@@ -218,8 +219,7 @@ class UrbanDictionaryView {
                 )
                 .addSeparatorComponents(new SeparatorBuilder().setDivider(true))
                 .addActionRowComponents(
-                    // @ts-expect-error: Bug in discord.js builders (I think)
-                    new ActionRowBuilder().addComponents(
+                    new ActionRowBuilder<ButtonBuilder>().addComponents(
                         new ButtonBuilder()
                             .setCustomId('previous')
                             .setLabel(i18next.t('previous', { lng: this.locale }))

@@ -96,8 +96,7 @@ export default class RoleCommand extends BaseCommand {
                         ),
                     )
                     .addActionRowComponents(
-                        // @ts-expect-error: Bug
-                        new ActionRowBuilder().addComponents(
+                        new ActionRowBuilder<ButtonBuilder>().addComponents(
                             new ButtonBuilder()
                                 .setCustomId('cancel')
                                 .setStyle(ButtonStyle.Secondary)

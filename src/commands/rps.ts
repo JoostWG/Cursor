@@ -210,8 +210,7 @@ class Game {
                 }
 
                 builder.addActionRowComponents(
-                    // @ts-expect-error: Bug in discord.js builders (I think)
-                    new ActionRowBuilder().addComponents(
+                    new ActionRowBuilder<ButtonBuilder>().addComponents(
                         new ButtonBuilder()
                             .setCustomId('deny')
                             .setLabel(i18next.t('commands:rps.game.deny', { lng: this.locale }))
@@ -277,8 +276,7 @@ class Game {
                     )
                     .addSeparatorComponents(new SeparatorBuilder().setDivider(true))
                     .addActionRowComponents(
-                        // @ts-expect-error: Bug in discord.js builders (I think)
-                        new ActionRowBuilder().addComponents(
+                        new ActionRowBuilder<ButtonBuilder>().addComponents(
                             ...Object.entries(emojis).map(([key, emoji]) => {
                                 return new ButtonBuilder()
                                     .setCustomId(key)
