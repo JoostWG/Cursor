@@ -201,7 +201,7 @@ export default class RoleCommand extends BaseCommand {
 
         const changes = oldProps
             .filter((value, key) => value !== role[key])
-            .mapValues((_, key) => role[key]);
+            .mapValues((value, key) => ({ old: value, new: role[key] }));
 
         await interaction.reply({
             flags: [MessageFlags.IsComponentsV2, MessageFlags.Ephemeral],
@@ -213,12 +213,18 @@ export default class RoleCommand extends BaseCommand {
                             ...changes.map((value, key) =>
                                 [
                                     'Set',
-                                    inlineCode(key),
+                                    bold(key),
+                                    'from',
+                                    inlineCode(
+                                        key === 'color'
+                                            ? `#${value.old.toString(16)}`
+                                            : value.old.toString(),
+                                    ),
                                     'to',
                                     inlineCode(
                                         key === 'color'
-                                            ? `#${value.toString(16)}`
-                                            : value.toString(),
+                                            ? `#${value.new.toString(16)}`
+                                            : value.new.toString(),
                                     ),
                                 ].join(' '),
                             ),
