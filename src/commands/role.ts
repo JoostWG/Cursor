@@ -32,10 +32,15 @@ export default class RoleCommand extends BaseCommand {
             .setDefaultMemberPermissions(PermissionFlagsBits.ManageRoles)
             .setContexts(InteractionContextType.Guild)
             .addSubcommand((subcommand) =>
-                this.wrapSubcommand(subcommand, 'delete', 'Deletes a role').addRoleOption(
-                    (option) =>
-                        this.wrapOption(option, 'role', 'The role to delete').setRequired(true),
-                ),
+                subcommand
+                    .setName('delete')
+                    .setDescription('Delete a role')
+                    .addRoleOption((option) =>
+                        option
+                            .setName('role')
+                            .setDescription('The role to delete')
+                            .setRequired(true),
+                    ),
             );
     }
 
