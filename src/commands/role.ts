@@ -15,6 +15,7 @@ import {
     MessageFlags,
     PermissionFlagsBits,
     Role,
+    RoleEditOptions,
     TextDisplayBuilder,
     TimestampStyles,
     bold,
@@ -149,11 +150,12 @@ export default class RoleCommand extends BaseCommand {
             return;
         }
 
-        const options: Partial<Pick<Role, 'name' | 'color' | 'hoist' | 'mentionable'>> = {
-            name: interaction.options.getString('name') ?? undefined,
-            hoist: interaction.options.getBoolean('hoisted') ?? undefined,
-            mentionable: interaction.options.getBoolean('mentionable') ?? undefined,
-        };
+        const options: Partial<Pick<RoleEditOptions, 'name' | 'color' | 'hoist' | 'mentionable'>> =
+            {
+                name: interaction.options.getString('name') ?? undefined,
+                hoist: interaction.options.getBoolean('hoisted') ?? undefined,
+                mentionable: interaction.options.getBoolean('mentionable') ?? undefined,
+            };
 
         const colorInput = interaction.options.getString('color');
 
@@ -197,6 +199,7 @@ export default class RoleCommand extends BaseCommand {
             return;
         }
 
+        // TODO: Fix this type mess
         const changes = oldProps
             .filter((value, key) => value !== role[key as keyof typeof role])
             .mapValues((_, key) => role[key as keyof typeof role]);
@@ -210,7 +213,8 @@ export default class RoleCommand extends BaseCommand {
                             heading(`Updated ${roleMention(role.id)}`, HeadingLevel.Three),
                             ...changes.map(
                                 (value, key) =>
-                                    `Set ${inlineCode(key)} to ${inlineCode(`${value}`)}`,
+                                    // @ts-expect-error Too lazy right now. value can only be string, number or boolean here
+                                    `Set ${inlineCode(key)} to ${inlineCode(value.toString())}`,
                             ),
                             '',
                             bold('Reason'),
