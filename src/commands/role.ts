@@ -115,40 +115,41 @@ export default class RoleCommand extends BaseCommand {
             return;
         }
 
-        switch (interaction.options.getSubcommand()) {
-            case 'update':
-                await this.handleUpdateSubcommand(interaction);
-                break;
+        try {
+            switch (interaction.options.getSubcommand()) {
+                case 'update':
+                    await this.handleUpdateSubcommand(interaction);
+                    break;
 
-            case 'delete':
-                await this.handleDeleteSubcommand(interaction);
-                break;
+                case 'delete':
+                    await this.handleDeleteSubcommand(interaction);
+                    break;
 
-            default:
-                await interaction.reply({
-                    content: `No corresponding subcommand handler found for ${inlineCode(interaction.options.getSubcommand())}.`,
-                    flags: MessageFlags.Ephemeral,
-                });
-                break;
+                default:
+                    await interaction.reply({
+                        content: `No corresponding subcommand handler found for ${inlineCode(interaction.options.getSubcommand())}.`,
+                        flags: MessageFlags.Ephemeral,
+                    });
+                    break;
+            }
+        } catch (error) {
+            if (!(error instanceof InvalidRoleError)) {
+                throw error;
+            }
+
+            await interaction.reply({
+                content: '⚠️ ' + error.message,
+                flags: MessageFlags.Ephemeral,
+            });
+
+            return;
         }
     }
 
     private async handleUpdateSubcommand(interaction: ChatInputCommandInteraction<'cached'>) {
         const role = interaction.options.getRole('role', true);
 
-        try {
-            this.validateRole(interaction, role, { allowManaged: true });
-        } catch (error) {
-            await interaction.reply({
-                content:
-                    '⚠️ ' +
-                    (error instanceof InvalidRoleError
-                        ? error.message
-                        : 'Something went wrong validating role input'),
-                flags: MessageFlags.Ephemeral,
-            });
-            return;
-        }
+        this.validateRole(interaction, role, { allowManaged: true });
 
         const options: Partial<Pick<RoleEditOptions, 'name' | 'color' | 'hoist' | 'mentionable'>> =
             {
@@ -230,19 +231,7 @@ export default class RoleCommand extends BaseCommand {
         const timeout = 10; // Show confirmation modal for 10 seconds
         const role = interaction.options.getRole('role', true);
 
-        try {
-            this.validateRole(interaction, role);
-        } catch (error) {
-            await interaction.reply({
-                content:
-                    '⚠️ ' +
-                    (error instanceof InvalidRoleError
-                        ? error.message
-                        : 'Something went wrong validating role input'),
-                flags: MessageFlags.Ephemeral,
-            });
-            return;
-        }
+        this.validateRole(interaction, role);
 
         const response = await interaction.reply({
             flags: [MessageFlags.IsComponentsV2, MessageFlags.Ephemeral],
