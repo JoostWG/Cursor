@@ -30,6 +30,8 @@ class InvalidRoleError extends Error {
     //
 }
 
+type AllowedRoleProps = 'name' | 'color' | 'hoist' | 'mentionable';
+
 export default class RoleCommand extends BaseCommand {
     public constructor() {
         super('role', 'Role utility');
@@ -151,12 +153,11 @@ export default class RoleCommand extends BaseCommand {
 
         this.validateRole(interaction, role, { allowManaged: true });
 
-        const options: Partial<Pick<RoleEditOptions, 'name' | 'color' | 'hoist' | 'mentionable'>> =
-            {
-                name: interaction.options.getString('name') ?? undefined,
-                hoist: interaction.options.getBoolean('hoisted') ?? undefined,
-                mentionable: interaction.options.getBoolean('mentionable') ?? undefined,
-            };
+        const options: Partial<Pick<RoleEditOptions, AllowedRoleProps>> = {
+            name: interaction.options.getString('name') ?? undefined,
+            hoist: interaction.options.getBoolean('hoisted') ?? undefined,
+            mentionable: interaction.options.getBoolean('mentionable') ?? undefined,
+        };
 
         const colorInput = interaction.options.getString('color');
 
@@ -178,14 +179,12 @@ export default class RoleCommand extends BaseCommand {
 
         const reason = interaction.options.getString('reason') ?? undefined;
 
-        const oldProps = new Collection(
-            Object.entries({
-                name: role.name,
-                color: role.color,
-                hoist: role.hoist,
-                mentionable: role.mentionable,
-            }),
-        );
+        const oldProps = new Collection<AllowedRoleProps, Role[AllowedRoleProps]>([
+            ['name', role.name],
+            ['color', role.color],
+            ['hoist', role.hoist],
+            ['mentionable', role.mentionable],
+        ]);
 
         try {
             await role.edit({ ...options, reason });
@@ -200,10 +199,9 @@ export default class RoleCommand extends BaseCommand {
             return;
         }
 
-        // TODO: Fix this type mess
         const changes = oldProps
-            .filter((value, key) => value !== role[key as keyof typeof role])
-            .mapValues((_, key) => role[key as keyof typeof role]);
+            .filter((value, key) => value !== role[key])
+            .mapValues((_, key) => role[key]);
 
         await interaction.reply({
             flags: [MessageFlags.IsComponentsV2, MessageFlags.Ephemeral],
@@ -214,7 +212,6 @@ export default class RoleCommand extends BaseCommand {
                             heading(`Updated ${roleMention(role.id)}`, HeadingLevel.Three),
                             ...changes.map(
                                 (value, key) =>
-                                    // @ts-expect-error Too lazy right now. value can only be string, number or boolean here
                                     `Set ${inlineCode(key)} to ${inlineCode(value.toString())}`,
                             ),
                             '',
