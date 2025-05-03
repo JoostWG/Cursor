@@ -210,9 +210,17 @@ export default class RoleCommand extends BaseCommand {
                     new TextDisplayBuilder().setContent(
                         [
                             heading(`Updated ${roleMention(role.id)}`, HeadingLevel.Three),
-                            ...changes.map(
-                                (value, key) =>
-                                    `Set ${inlineCode(key)} to ${inlineCode(value.toString())}`,
+                            ...changes.map((value, key) =>
+                                [
+                                    'Set',
+                                    inlineCode(key),
+                                    'to',
+                                    inlineCode(
+                                        key === 'color'
+                                            ? `#${value.toString(16)}`
+                                            : value.toString(),
+                                    ),
+                                ].join(' '),
                             ),
                             '',
                             bold('Reason'),
