@@ -55,7 +55,7 @@ export default class RoleCommand extends BaseCommand {
 
         switch (interaction.options.getSubcommand()) {
             case 'delete':
-                this.handleDeleteSubcommand(interaction);
+                await this.handleDeleteSubcommand(interaction);
                 break;
 
             default:

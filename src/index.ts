@@ -19,6 +19,7 @@ export class Client extends DiscordJsClient {
         super(options);
         this.commands = new Collection();
 
+        // eslint-disable-next-line @typescript-eslint/no-floating-promises
         this.loadCommands();
     }
 
@@ -98,5 +99,5 @@ export class Client extends DiscordJsClient {
         }
     });
 
-    client.login(discordToken);
+    await client.login(discordToken);
 })();
