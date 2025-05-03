@@ -1,12 +1,15 @@
 import { BaseCommand } from '../utils/command';
 import {
     ActionRowBuilder,
+    AutocompleteInteraction,
     ButtonBuilder,
     ButtonStyle,
     ChatInputCommandInteraction,
+    Collection,
     Colors,
     ContainerBuilder,
     DiscordAPIError,
+    HeadingLevel,
     Interaction,
     InteractionContextType,
     MessageFlags,
@@ -14,7 +17,9 @@ import {
     Role,
     TextDisplayBuilder,
     TimestampStyles,
+    bold,
     heading,
+    inlineCode,
     roleMention,
     subtext,
     time,
@@ -33,6 +38,42 @@ export default class RoleCommand extends BaseCommand {
             .setContexts(InteractionContextType.Guild)
             .addSubcommand((subcommand) =>
                 subcommand
+                    .setName('update')
+                    .setDescription('Update a role')
+                    .addRoleOption((option) =>
+                        option
+                            .setName('role')
+                            .setDescription('The role you want to update')
+                            .setRequired(true),
+                    )
+                    .addStringOption((option) =>
+                        option
+                            .setName('name')
+                            .setDescription('Change the name of the role')
+                            .setMaxLength(100),
+                    )
+                    .addStringOption((option) =>
+                        option
+                            .setName('color')
+                            .setDescription('Change the color of the role')
+                            .setAutocomplete(true),
+                    )
+                    .addBooleanOption((option) =>
+                        option
+                            .setName('hoisted')
+                            .setDescription('Change whether the role should be hoisted or not'),
+                    )
+                    .addBooleanOption((option) =>
+                        option
+                            .setName('mentionable')
+                            .setDescription('Change whether the role should be mentionable or not'),
+                    )
+                    .addStringOption((option) =>
+                        option.setName('reason').setDescription('The reason for updating the role'),
+                    ),
+            )
+            .addSubcommand((subcommand) =>
+                subcommand
                     .setName('delete')
                     .setDescription('Delete a role')
                     .addRoleOption((option) =>
@@ -41,6 +82,26 @@ export default class RoleCommand extends BaseCommand {
                             .setDescription('The role to delete')
                             .setRequired(true),
                     ),
+            );
+    }
+
+    public override async autocomplete(interaction: AutocompleteInteraction) {
+        if (interaction.options.getFocused(true).name !== 'color') {
+            return [];
+        }
+
+        const q = interaction.options.getFocused().toLowerCase();
+
+        return Object.entries(Colors)
+            .map(([name, value]) => ({
+                // Convert PascalCase to normal text
+                name: name.replaceAll(/([a-z])([A-Z])/g, (_, a, b) => `${a} ${b.toLowerCase()}`),
+                value: `#${value.toString(16)}`,
+            }))
+            .filter(({ name }) => name.toLowerCase().includes(q))
+            .toSorted(
+                ({ name: aName }, { name: bName }) =>
+                    aName.toLowerCase().indexOf(q) - bName.toLowerCase().indexOf(q),
             );
     }
 
@@ -54,6 +115,10 @@ export default class RoleCommand extends BaseCommand {
         }
 
         switch (interaction.options.getSubcommand()) {
+            case 'update':
+                await this.handleUpdateSubcommand(interaction);
+                break;
+
             case 'delete':
                 await this.handleDeleteSubcommand(interaction);
                 break;
@@ -65,6 +130,96 @@ export default class RoleCommand extends BaseCommand {
                 });
                 break;
         }
+    }
+
+    private async handleUpdateSubcommand(interaction: ChatInputCommandInteraction<'cached'>) {
+        const role = interaction.options.getRole('role', true);
+
+        try {
+            this.validateRole(interaction, role, { allowManaged: true });
+        } catch (error) {
+            await interaction.reply({
+                content:
+                    '⚠️ ' +
+                    (error instanceof InvalidRoleError
+                        ? error.message
+                        : 'Something went wrong validating role input'),
+                flags: MessageFlags.Ephemeral,
+            });
+            return;
+        }
+
+        const options: Partial<Pick<Role, 'name' | 'color' | 'hoist' | 'mentionable'>> = {
+            name: interaction.options.getString('name') ?? undefined,
+            hoist: interaction.options.getBoolean('hoisted') ?? undefined,
+            mentionable: interaction.options.getBoolean('mentionable') ?? undefined,
+        };
+
+        const colorInput = interaction.options.getString('color');
+
+        if (colorInput) {
+            // TODO: discord.js resolveColor
+            const pattern = /^(?:#|0x)?([0-9a-fA-F]{6})$/;
+            const match = colorInput.match(pattern);
+
+            if (!match) {
+                await interaction.reply({
+                    content: `Invalid color. Must match ${inlineCode(pattern.toString())}`,
+                    flags: MessageFlags.Ephemeral,
+                });
+                return;
+            }
+
+            options.color = parseInt(match[1], 16);
+        }
+
+        const reason = interaction.options.getString('reason') ?? undefined;
+
+        const oldProps = new Collection(
+            Object.entries({
+                name: role.name,
+                color: role.color,
+                hoist: role.hoist,
+                mentionable: role.mentionable,
+            }),
+        );
+
+        try {
+            await role.edit({ ...options, reason });
+        } catch (error) {
+            console.error(error);
+
+            await interaction.reply({
+                content: 'Something went wrong updating the role.',
+                flags: MessageFlags.Ephemeral,
+            });
+
+            return;
+        }
+
+        const changes = oldProps
+            .filter((value, key) => value !== role[key as keyof typeof role])
+            .mapValues((_, key) => role[key as keyof typeof role]);
+
+        await interaction.reply({
+            flags: [MessageFlags.IsComponentsV2, MessageFlags.Ephemeral],
+            components: [
+                new ContainerBuilder().addTextDisplayComponents(
+                    new TextDisplayBuilder().setContent(
+                        [
+                            heading(`Updated ${roleMention(role.id)}`, HeadingLevel.Three),
+                            ...changes.map(
+                                (value, key) =>
+                                    `Set ${inlineCode(key)} to ${inlineCode(`${value}`)}`,
+                            ),
+                            '',
+                            bold('Reason'),
+                            reason ?? 'No reason given',
+                        ].join('\n'),
+                    ),
+                ),
+            ],
+        });
     }
 
     private async handleDeleteSubcommand(interaction: ChatInputCommandInteraction<'cached'>) {
