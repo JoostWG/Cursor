@@ -19,8 +19,7 @@ export class Client extends DiscordJsClient {
         super(options);
         this.commands = new Collection();
 
-        // eslint-disable-next-line @typescript-eslint/no-floating-promises
-        this.loadCommands();
+        void this.loadCommands();
     }
 
     private async loadCommands() {
