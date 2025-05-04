@@ -1,5 +1,6 @@
 import { discordToken } from '../config.json';
 import getCommands from './getCommands';
+import { initI18Next } from './utils';
 import { BaseCommand } from './utils/command';
 import {
     ClientOptions,
@@ -9,8 +10,6 @@ import {
     GatewayIntentBits,
     MessageFlags,
 } from 'discord.js';
-import i18next from 'i18next';
-import I18NexFsBackend from 'i18next-fs-backend';
 
 export class Client extends DiscordJsClient {
     private commands: Collection<string, BaseCommand>;
@@ -38,16 +37,7 @@ export class Client extends DiscordJsClient {
 }
 
 (async () => {
-    await i18next.use(I18NexFsBackend).init({
-        backend: {
-            loadPath: './locales/{{lng}}/{{ns}}.json',
-        },
-        ns: ['common', 'commands'],
-        defaultNS: 'common',
-        fallbackLng: 'en-Us',
-        preload: ['en-US', 'nl'],
-        supportedLngs: ['en-US', 'nl'],
-    });
+    await initI18Next();
 
     const client = new Client({
         intents: [GatewayIntentBits.GuildMembers, GatewayIntentBits.Guilds],
