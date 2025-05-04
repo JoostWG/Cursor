@@ -1,5 +1,19 @@
 import { LocalizationMap } from 'discord.js';
 import i18next from 'i18next';
+import I18NexFsBackend from 'i18next-fs-backend';
+
+export async function initI18Next() {
+    return await i18next.use(I18NexFsBackend).init({
+        backend: {
+            loadPath: './locales/{{lng}}/{{ns}}.json',
+        },
+        ns: ['common', 'commands'],
+        defaultNS: 'common',
+        fallbackLng: 'en-Us',
+        preload: ['en-US', 'nl'],
+        supportedLngs: ['en-US', 'nl'],
+    });
+}
 
 export function getTranslations(key: string): LocalizationMap {
     return Object.fromEntries(

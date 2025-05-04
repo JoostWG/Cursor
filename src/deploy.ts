@@ -1,8 +1,7 @@
 import { devGuildId, discordAppId, discordToken } from '../config.json';
 import getCommands from './getCommands';
+import { initI18Next } from './utils';
 import { REST, Routes } from 'discord.js';
-import i18next from 'i18next';
-import I18NexFsBackend from 'i18next-fs-backend';
 
 (async () => {
     if (!discordToken || !discordAppId || !devGuildId) {
@@ -10,14 +9,7 @@ import I18NexFsBackend from 'i18next-fs-backend';
         return;
     }
 
-    await i18next.use(I18NexFsBackend).init({
-        backend: {
-            loadPath: './locales/{{lng}}/translations.json',
-        },
-        fallbackLng: 'en-Us',
-        preload: ['en-US', 'nl'],
-        supportedLngs: ['en-US', 'nl'],
-    });
+    await initI18Next();
 
     const globalCommands = [];
     const devCommands = [];
