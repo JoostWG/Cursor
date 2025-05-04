@@ -85,7 +85,7 @@ class Game {
         });
 
         if (!response.resource?.message) {
-            interaction.editReply({
+            await interaction.editReply({
                 content: 'Something went wrong...',
                 embeds: [],
                 components: [],

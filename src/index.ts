@@ -19,6 +19,7 @@ export class Client extends DiscordJsClient {
         super(options);
         this.commands = new Collection();
 
+        // eslint-disable-next-line @typescript-eslint/no-floating-promises
         this.loadCommands();
     }
 
@@ -91,12 +92,13 @@ export class Client extends DiscordJsClient {
             }
 
             try {
-                await interaction.respond(await command.autocomplete(interaction));
+                const results = await command.autocomplete(interaction);
+                await interaction.respond(results.slice(0, 25));
             } catch (error) {
                 console.error(error);
             }
         }
     });
 
-    client.login(discordToken);
+    await client.login(discordToken);
 })();
