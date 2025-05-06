@@ -4,7 +4,7 @@ import i18next from 'i18next';
 
 export default class UserCommand extends BaseCommand {
     public constructor() {
-        super('user', 'Returns information about a user');
+        super('user');
 
         this.data.addUserOption((option) => this.wrapOption(option, 'user', 'Select a user'));
     }

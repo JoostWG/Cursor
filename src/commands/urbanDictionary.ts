@@ -269,7 +269,7 @@ class UrbanDictionaryView {
 
 export default class UrbanDictionaryCommand extends BaseCommand {
     public constructor() {
-        super('urban-dictionary', 'Search Urban Dictionary');
+        super('urban-dictionary');
 
         this.data
             .setNSFW(true)

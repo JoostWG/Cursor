@@ -302,7 +302,7 @@ class Game {
 
 export default class RockPaperScissorsCommand extends BaseCommand {
     public constructor() {
-        super('rps', 'Play Rock Paper Scissors');
+        super('rps');
 
         this.data.addUserOption((option) =>
             this.wrapOption(option, 'opponent', 'Choose your opponent').setRequired(true),

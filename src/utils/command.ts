@@ -1,4 +1,4 @@
-import { getTranslations } from '.';
+import { getTranslations, localize } from '.';
 import {
     ApplicationCommandOptionBase,
     ApplicationCommandOptionChoiceData,
@@ -13,13 +13,10 @@ export abstract class BaseCommand {
     public devOnly?: boolean;
     public readonly data = new SlashCommandBuilder();
 
-    public constructor(name: string, description: string) {
+    public constructor(name: string) {
         this.name = name;
-        this.data = new SlashCommandBuilder()
-            .setName(name)
-            .setDescription(description)
-            .setNameLocalizations(getTranslations(`commands:${name}.name`))
-            .setDescriptionLocalizations(getTranslations(`commands:${name}.description`));
+
+        this.data = localize(SlashCommandBuilder, name, name);
     }
 
     public abstract execute(interaction: ChatInputCommandInteraction): Promise<void>;

@@ -34,7 +34,7 @@ type AllowedRoleProps = 'name' | 'color' | 'hoist' | 'mentionable';
 
 export default class RoleCommand extends BaseCommand {
     public constructor() {
-        super('role', 'Role utility');
+        super('role');
 
         this.data
             .setDefaultMemberPermissions(PermissionFlagsBits.ManageRoles)

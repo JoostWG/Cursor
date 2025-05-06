@@ -3,7 +3,7 @@ import { ChatInputCommandInteraction, MessageFlags } from 'discord.js';
 
 export default class PingCommand extends BaseCommand {
     public constructor() {
-        super('ping', 'Ping!');
+        super('ping');
     }
 
     public override async execute(interaction: ChatInputCommandInteraction) {

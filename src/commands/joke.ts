@@ -77,7 +77,7 @@ export default class JokeCommand extends BaseCommand {
     private api: axios.AxiosInstance;
 
     public constructor() {
-        super('joke', 'Tells you a joke');
+        super('joke');
 
         this.data
             .addStringOption((option) =>
