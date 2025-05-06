@@ -32,28 +32,20 @@ export function getTranslations(key: string): LocalizationMap {
             : [],
     );
 }
-// This mess works
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-type Constructor<T = any> = new (...args: any[]) => T;
-
-type RType<T extends Constructor<SharedNameAndDescription>> = {
-    setName(name: string, key: string): InstanceType<T>;
-    setDescription(description: string, key?: string): InstanceType<T>;
-} & InstanceType<T>;
-
-export function localize<T extends Constructor<SharedNameAndDescription>>(
-    BuilderClass: T,
-): RType<T> {
-    return new (class Localized extends BuilderClass {
-        override setName(name: string, key?: string) {
-            return super.setName(name).setNameLocalizations(getTranslations(key ?? name));
-        }
-
-        override setDescription(description: string, key?: string) {
-            return super
-                .setDescription(description)
-                .setDescriptionLocalizations(getTranslations(key ?? description));
-        }
-    })() as RType<T>;
+export function localize<T extends SharedNameAndDescription>(
+    Builder: new () => T,
+    name: string,
+    key: string,
+): T {
+    return new Builder()
+        .setName(name)
+        .setNameLocalizations(getTranslations(`commands:${key}.name`))
+        .setDescription(
+            i18next.t(`commands:${key}.description`, {
+                defaultValue: 'KEY_NOT_FOUND',
+                lng: 'en-US',
+            }),
+        )
+        .setDescriptionLocalizations(getTranslations(`commands:${key}.description`));
 }
