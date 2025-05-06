@@ -116,6 +116,10 @@
                     "role": {
                         "name": "role",
                         "description": "The role to delete"
+                    },
+                    "reason": {
+                        "name": "reason",
+                        "description": "The reason for deleting the role"
                     }
                 }
             }

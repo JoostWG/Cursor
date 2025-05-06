@@ -116,6 +116,10 @@
                     "role": {
                         "name": "rol",
                         "description": "De rol die je wilt verwijderen"
+                    },
+                    "reason": {
+                        "name": "reden",
+                        "description": "De reden voor het verwijderen van de rol"
                     }
                 }
             }

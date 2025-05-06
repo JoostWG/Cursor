@@ -90,17 +90,21 @@ export default class RoleCommand extends BaseCommand {
                     ),
             )
             .addSubcommand(
-                localize(
-                    SlashCommandSubcommandBuilder,
-                    'delete',
-                    'role.subcommands.delete',
-                ).addRoleOption(
-                    localize(
-                        SlashCommandRoleOption,
-                        'role',
-                        'role.subcommands.delete.options.role',
-                    ).setRequired(true),
-                ),
+                localize(SlashCommandSubcommandBuilder, 'delete', 'role.subcommands.delete')
+                    .addRoleOption(
+                        localize(
+                            SlashCommandRoleOption,
+                            'role',
+                            'role.subcommands.delete.options.role',
+                        ).setRequired(true),
+                    )
+                    .addStringOption(
+                        localize(
+                            SlashCommandStringOption,
+                            'reason',
+                            'role.subcommands.delete.options.reason',
+                        ),
+                    ),
             );
     }
 
@@ -257,6 +261,7 @@ export default class RoleCommand extends BaseCommand {
     private async handleDeleteSubcommand(interaction: ChatInputCommandInteraction<'cached'>) {
         const timeout = 10; // Show confirmation modal for 10 seconds
         const role = interaction.options.getRole('role', true);
+        const reason = interaction.options.getString('reason') ?? undefined;
 
         this.validateRole(interaction, role);
 
@@ -325,7 +330,7 @@ export default class RoleCommand extends BaseCommand {
 
             case 'confirm':
                 try {
-                    await interaction.guild.roles.delete(role.id);
+                    await interaction.guild.roles.delete(role.id, reason);
                 } catch (error) {
                     if (!(error instanceof DiscordAPIError)) {
                         throw error;
@@ -351,6 +356,9 @@ export default class RoleCommand extends BaseCommand {
                                     [
                                         heading('Role deleted'),
                                         'The role was deleted successfully.',
+                                        '',
+                                        bold('Reason'),
+                                        reason,
                                     ].join('\n'),
                                 ),
                             ),
