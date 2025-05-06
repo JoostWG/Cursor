@@ -1,11 +1,9 @@
-import { getTranslations, localize } from '.';
+import { localize } from '.';
 import {
-    ApplicationCommandOptionBase,
     ApplicationCommandOptionChoiceData,
     AutocompleteInteraction,
     ChatInputCommandInteraction,
     SlashCommandBuilder,
-    SlashCommandSubcommandBuilder,
 } from 'discord.js';
 
 export abstract class BaseCommand {
