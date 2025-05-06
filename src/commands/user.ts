@@ -1,12 +1,19 @@
+import { localize } from '../utils';
 import { BaseCommand } from '../utils/command';
-import { ChatInputCommandInteraction, EmbedBuilder, TimestampStyles, time } from 'discord.js';
+import {
+    ChatInputCommandInteraction,
+    EmbedBuilder,
+    SlashCommandUserOption,
+    TimestampStyles,
+    time,
+} from 'discord.js';
 import i18next from 'i18next';
 
 export default class UserCommand extends BaseCommand {
     public constructor() {
         super('user');
 
-        this.data.addUserOption((option) => this.wrapOption(option, 'user', 'Select a user'));
+        this.data.addUserOption(localize(SlashCommandUserOption, 'user', 'user.options.user'));
     }
 
     public override async execute(interaction: ChatInputCommandInteraction) {

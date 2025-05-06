@@ -1,4 +1,4 @@
-import { getTranslations } from '../utils';
+import { getTranslations, localize } from '../utils';
 import { BaseCommand } from '../utils/command';
 import axios from 'axios';
 import {
@@ -7,6 +7,8 @@ import {
     EmbedBuilder,
     Locale,
     MessageFlags,
+    SlashCommandBooleanOption,
+    SlashCommandStringOption,
     TextChannel,
     bold,
     spoiler,
@@ -80,8 +82,8 @@ export default class JokeCommand extends BaseCommand {
         super('joke');
 
         this.data
-            .addStringOption((option) =>
-                this.wrapOption(option, 'category', 'Choose a category').addChoices(
+            .addStringOption(
+                localize(SlashCommandStringOption, 'category', 'joke.options.category').addChoices(
                     Object.entries(JokeCategory).map(([name, key]) => {
                         return {
                             name,
@@ -91,13 +93,7 @@ export default class JokeCommand extends BaseCommand {
                     }),
                 ),
             )
-            .addBooleanOption((option) =>
-                this.wrapOption(
-                    option,
-                    'safe',
-                    'Whether the joke must be safe. Defaults to true. Setting this to false requires an NSFW channel.',
-                ),
-            );
+            .addBooleanOption(localize(SlashCommandBooleanOption, 'safe', 'joke.options.safe'));
 
         this.api = axios.create({
             baseURL: 'https://v2.jokeapi.dev',

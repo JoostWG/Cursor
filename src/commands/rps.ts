@@ -1,3 +1,4 @@
+import { localize } from '../utils';
 import { BaseCommand } from '../utils/command';
 import {
     ActionRowBuilder,
@@ -10,6 +11,7 @@ import {
     Locale,
     MessageFlags,
     SeparatorBuilder,
+    SlashCommandUserOption,
     TextDisplayBuilder,
     User,
     heading,
@@ -304,8 +306,8 @@ export default class RockPaperScissorsCommand extends BaseCommand {
     public constructor() {
         super('rps');
 
-        this.data.addUserOption((option) =>
-            this.wrapOption(option, 'opponent', 'Choose your opponent').setRequired(true),
+        this.data.addUserOption(
+            localize(SlashCommandUserOption, 'opponent', 'rps.options.opponent').setRequired(true),
         );
     }
 

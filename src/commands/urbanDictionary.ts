@@ -1,3 +1,4 @@
+import { localize } from '../utils';
 import { BaseCommand } from '../utils/command';
 import axios from 'axios';
 import {
@@ -11,6 +12,7 @@ import {
     Locale,
     MessageFlags,
     SeparatorBuilder,
+    SlashCommandStringOption,
     StringSelectMenuBuilder,
     StringSelectMenuOptionBuilder,
     TextDisplayBuilder,
@@ -273,8 +275,8 @@ export default class UrbanDictionaryCommand extends BaseCommand {
 
         this.data
             .setNSFW(true)
-            .addStringOption((option) =>
-                this.wrapOption(option, 'term', 'The term to search for')
+            .addStringOption(
+                localize(SlashCommandStringOption, 'term', 'urban-dictionary.options.term')
                     .setRequired(true)
                     .setAutocomplete(true),
             );
