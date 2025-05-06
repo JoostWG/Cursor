@@ -74,5 +74,51 @@
         },
         "select": "Select a term",
         "notFound": "No definitions found"
+    },
+    "role": {
+        "name": "role",
+        "description": "Role utility",
+        "subcommands": {
+            "update": {
+                "name": "update",
+                "description": "Update a role",
+                "options": {
+                    "role": {
+                        "name": "role",
+                        "description": "The role to update"
+                    },
+                    "name": {
+                        "name": "name",
+                        "description": "Change the name of the role"
+                    },
+                    "color": {
+                        "name": "color",
+                        "description": "Change the color of the role"
+                    },
+                    "hoisted": {
+                        "name": "hoist",
+                        "description": "Change whether the role should be hoisted or not"
+                    },
+                    "mentionable": {
+                        "name": "mentionable",
+                        "description": "Change whether the role should be mentionable or not"
+                    },
+                    "reason": {
+                        "name": "reason",
+                        "description": "The reason for updating the role"
+                    }
+                }
+            },
+            "delete": {
+                "name": "delete",
+                "description": "Delete a role",
+                "options": {
+                    "role": {
+                        "name": "role",
+                        "description": "The role to delete"
+                    }
+                }
+            }
+        }
     }
 }

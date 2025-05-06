@@ -74,5 +74,51 @@
         },
         "select": "Selecteer een term",
         "notFound": "Geen definities gevonden"
+    },
+    "role": {
+        "name": "rol",
+        "description": "Rol handigheden",
+        "subcommands": {
+            "update": {
+                "name": "wijzig",
+                "description": "Wijzig een rol",
+                "options": {
+                    "role": {
+                        "name": "rol",
+                        "description": "De rol die je wilt wijzigen"
+                    },
+                    "name": {
+                        "name": "naam",
+                        "description": "Verander de naam van de rol"
+                    },
+                    "color": {
+                        "name": "kleur",
+                        "description": "Verander de kleur van de rol"
+                    },
+                    "hoisted": {
+                        "name": "scheiden",
+                        "description": "Verander of de rol apart moet worden weergegeven of niet"
+                    },
+                    "mentionable": {
+                        "name": "pingbaar",
+                        "description": "Verander of de role pingbaar moet zijn"
+                    },
+                    "reason": {
+                        "name": "reden",
+                        "description": "De reden voor het wijzigen van de rol"
+                    }
+                }
+            },
+            "delete": {
+                "name": "verwijder",
+                "description": "Verwijder een rol",
+                "options": {
+                    "role": {
+                        "name": "rol",
+                        "description": "De rol die je wilt verwijderen"
+                    }
+                }
+            }
+        }
     }
 }
