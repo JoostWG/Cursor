@@ -1,3 +1,4 @@
+import { localize } from '../utils';
 import { BaseCommand } from '../utils/command';
 import {
     ActionRowBuilder,
@@ -16,6 +17,10 @@ import {
     PermissionFlagsBits,
     Role,
     RoleEditOptions,
+    SlashCommandBooleanOption,
+    SlashCommandRoleOption,
+    SlashCommandStringOption,
+    SlashCommandSubcommandBuilder,
     TextDisplayBuilder,
     TimestampStyles,
     bold,
@@ -39,52 +44,63 @@ export default class RoleCommand extends BaseCommand {
         this.data
             .setDefaultMemberPermissions(PermissionFlagsBits.ManageRoles)
             .setContexts(InteractionContextType.Guild)
-            .addSubcommand((subcommand) =>
-                subcommand
-                    .setName('update')
-                    .setDescription('Update a role')
-                    .addRoleOption((option) =>
-                        option
-                            .setName('role')
-                            .setDescription('The role you want to update')
-                            .setRequired(true),
+            .addSubcommand(
+                localize(SlashCommandSubcommandBuilder, 'role', 'role.subcommands.update')
+                    .addRoleOption(
+                        localize(
+                            SlashCommandRoleOption,
+                            'role',
+                            'role.subcommands.update.options.role',
+                        ).setRequired(true),
                     )
-                    .addStringOption((option) =>
-                        option
-                            .setName('name')
-                            .setDescription('Change the name of the role')
-                            .setMaxLength(100),
+                    .addStringOption(
+                        localize(
+                            SlashCommandStringOption,
+                            'name',
+                            'role.subcommands.update.options.name',
+                        ).setMaxLength(100),
                     )
-                    .addStringOption((option) =>
-                        option
-                            .setName('color')
-                            .setDescription('Change the color of the role')
-                            .setAutocomplete(true),
+                    .addStringOption(
+                        localize(
+                            SlashCommandStringOption,
+                            'color',
+                            'role.subcommands.update.options.color',
+                        ).setAutocomplete(true),
                     )
-                    .addBooleanOption((option) =>
-                        option
-                            .setName('hoisted')
-                            .setDescription('Change whether the role should be hoisted or not'),
+                    .addBooleanOption(
+                        localize(
+                            SlashCommandBooleanOption,
+                            'hoisted',
+                            'role.subcommands.update.options.hoisted',
+                        ),
                     )
-                    .addBooleanOption((option) =>
-                        option
-                            .setName('mentionable')
-                            .setDescription('Change whether the role should be mentionable or not'),
+                    .addBooleanOption(
+                        localize(
+                            SlashCommandBooleanOption,
+                            'mentionable',
+                            'role.subcommands.update.options.mentionable',
+                        ),
                     )
-                    .addStringOption((option) =>
-                        option.setName('reason').setDescription('The reason for updating the role'),
+                    .addStringOption(
+                        localize(
+                            SlashCommandStringOption,
+                            'reason',
+                            'role.subcommands.update.options.reason',
+                        ),
                     ),
             )
-            .addSubcommand((subcommand) =>
-                subcommand
-                    .setName('delete')
-                    .setDescription('Delete a role')
-                    .addRoleOption((option) =>
-                        option
-                            .setName('role')
-                            .setDescription('The role to delete')
-                            .setRequired(true),
-                    ),
+            .addSubcommand(
+                localize(
+                    SlashCommandSubcommandBuilder,
+                    'delete',
+                    'role.subcommands.delete',
+                ).addRoleOption(
+                    localize(
+                        SlashCommandRoleOption,
+                        'role',
+                        'role.subcommands.delete.options.role',
+                    ).setRequired(true),
+                ),
             );
     }
 
