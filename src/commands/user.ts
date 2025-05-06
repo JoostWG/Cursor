@@ -1,3 +1,4 @@
+import { Client } from '..';
 import { localize } from '../utils';
 import { BaseCommand } from '../utils/command';
 import {
@@ -10,8 +11,8 @@ import {
 import i18next from 'i18next';
 
 export default class UserCommand extends BaseCommand {
-    public constructor() {
-        super('user');
+    public constructor(client: Client) {
+        super(client, 'user');
 
         this.data.addUserOption(localize(SlashCommandUserOption, 'user', 'user.options.user'));
     }

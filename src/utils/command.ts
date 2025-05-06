@@ -1,4 +1,5 @@
 import { localize } from '.';
+import { Client } from '..';
 import {
     ApplicationCommandOptionChoiceData,
     AutocompleteInteraction,
@@ -7,10 +8,13 @@ import {
 } from 'discord.js';
 
 export abstract class BaseCommand {
+    protected client: Client;
     public devOnly?: boolean;
     public readonly data = new SlashCommandBuilder();
 
-    public constructor(name: string) {
+    public constructor(client: Client, name: string) {
+        this.client = client;
+
         this.data = localize(SlashCommandBuilder, name, name);
     }
 

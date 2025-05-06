@@ -1,3 +1,4 @@
+import { Client } from '..';
 import { getTranslations, localize } from '../utils';
 import { BaseCommand } from '../utils/command';
 import axios from 'axios';
@@ -78,8 +79,8 @@ type MultipleJokesResponse = SuccessResponse & {
 export default class JokeCommand extends BaseCommand {
     private api: axios.AxiosInstance;
 
-    public constructor() {
-        super('joke');
+    public constructor(client: Client) {
+        super(client, 'joke');
 
         this.data
             .addStringOption(
