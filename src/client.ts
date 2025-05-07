@@ -1,5 +1,5 @@
 import getCommands from './getCommands';
-import { BaseCommand } from './utils/command';
+import { BaseCommand, CommandError } from './utils/command';
 import {
     ClientOptions,
     Collection,
@@ -54,15 +54,23 @@ client.on(Events.InteractionCreate, async (interaction) => {
         try {
             await command.execute(interaction);
         } catch (error) {
-            console.error(error);
+            let message: string;
+
+            if (error instanceof CommandError) {
+                message = error.message;
+            } else {
+                message = 'There was an error while executing this command!';
+                console.error(error);
+            }
+
             if (interaction.replied || interaction.deferred) {
                 await interaction.followUp({
-                    content: 'There was an error while executing this command!',
+                    content: message,
                     flags: MessageFlags.Ephemeral,
                 });
             } else {
                 await interaction.reply({
-                    content: 'There was an error while executing this command!',
+                    content: message,
                     flags: MessageFlags.Ephemeral,
                 });
             }

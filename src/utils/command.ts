@@ -6,6 +6,10 @@ import {
     SlashCommandBuilder,
 } from 'discord.js';
 
+export class CommandError extends Error {
+    //
+}
+
 export abstract class BaseCommand {
     public devOnly?: boolean;
     public readonly data = new SlashCommandBuilder();
