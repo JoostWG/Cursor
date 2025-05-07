@@ -4,10 +4,15 @@ import {
     ApplicationCommandOptionChoiceData,
     AutocompleteInteraction,
     ChatInputCommandInteraction,
+    ContainerBuilder,
+    HeadingLevel,
     InteractionContextType,
     MessageFlags,
     SlashCommandStringOption,
     SlashCommandSubcommandBuilder,
+    TextDisplayBuilder,
+    bold,
+    heading,
     inlineCode,
 } from 'discord.js';
 
@@ -26,6 +31,18 @@ export default class TagCommand extends BaseCommand {
                 new SlashCommandSubcommandBuilder()
                     .setName('get')
                     .setDescription('Get single tag')
+                    .addStringOption(
+                        new SlashCommandStringOption()
+                            .setName('name')
+                            .setDescription('tag name')
+                            .setRequired(true)
+                            .setAutocomplete(true),
+                    ),
+            )
+            .addSubcommand(
+                new SlashCommandSubcommandBuilder()
+                    .setName('info')
+                    .setDescription('tag info')
                     .addStringOption(
                         new SlashCommandStringOption()
                             .setName('name')
@@ -113,6 +130,10 @@ export default class TagCommand extends BaseCommand {
                 await this.handleGetSubcommand(interaction);
                 break;
 
+            case 'info':
+                await this.handleInfoSubcommand(interaction);
+                break;
+
             case 'create':
                 await this.handleCreateSubcommand(interaction);
                 break;
@@ -159,6 +180,45 @@ export default class TagCommand extends BaseCommand {
         });
 
         await interaction.reply(tag.content);
+    }
+
+    private async handleInfoSubcommand(interaction: ChatInputCommandInteraction<'cached'>) {
+        const tag = await Tag.selectOne((query) =>
+            query
+                .where('guild_id', '=', interaction.guildId)
+                .where('name', '=', interaction.options.getString('name', true)),
+        );
+
+        if (!tag) {
+            await interaction.reply({
+                content: 'Tag not found.',
+                flags: MessageFlags.Ephemeral,
+            });
+            return;
+        }
+
+        await interaction.reply({
+            flags: MessageFlags.IsComponentsV2,
+            components: [
+                new ContainerBuilder().addTextDisplayComponents(
+                    new TextDisplayBuilder().setContent(
+                        [
+                            heading('Tag info', HeadingLevel.Three),
+                            bold('Name'),
+                            tag.name,
+                            '',
+                            bold('Created at'),
+                            String(tag.createdAt),
+                            // time(tag.createdAt),
+                            // time(tag.createdAt, TimestampStyles.RelativeTime),
+                            '',
+                            bold('Uses'),
+                            tag.uses,
+                        ].join('\n'),
+                    ),
+                ),
+            ],
+        });
     }
 
     private async handleCreateSubcommand(interaction: ChatInputCommandInteraction<'cached'>) {
