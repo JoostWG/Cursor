@@ -57,7 +57,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
             let message: string;
 
             if (error instanceof CommandError) {
-                message = error.message;
+                message = '⚠️ ' + error.message;
             } else {
                 message = 'There was an error while executing this command!';
                 console.error(error);
