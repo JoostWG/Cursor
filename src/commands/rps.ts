@@ -1,4 +1,3 @@
-import { Client } from '..';
 import { localize } from '../utils';
 import { BaseCommand } from '../utils/command';
 import {
@@ -304,8 +303,8 @@ class Game {
 }
 
 export default class RockPaperScissorsCommand extends BaseCommand {
-    public constructor(client: Client) {
-        super(client, 'rps');
+    public constructor() {
+        super('rps');
 
         this.data.addUserOption(
             localize(SlashCommandUserOption, 'opponent', 'rps.options.opponent').setRequired(true),

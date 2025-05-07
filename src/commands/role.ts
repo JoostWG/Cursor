@@ -1,4 +1,3 @@
-import { Client } from '..';
 import { localize } from '../utils';
 import { BaseCommand } from '../utils/command';
 import {
@@ -39,8 +38,8 @@ class InvalidRoleError extends Error {
 type AllowedRoleProps = 'name' | 'color' | 'hoist' | 'mentionable';
 
 export default class RoleCommand extends BaseCommand {
-    public constructor(client: Client) {
-        super(client, 'role');
+    public constructor() {
+        super('role');
 
         this.data
             .setDefaultMemberPermissions(PermissionFlagsBits.ManageRoles)

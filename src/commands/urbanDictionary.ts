@@ -1,4 +1,3 @@
-import { Client } from '..';
 import { localize } from '../utils';
 import { BaseCommand } from '../utils/command';
 import axios from 'axios';
@@ -271,8 +270,8 @@ class UrbanDictionaryView {
 }
 
 export default class UrbanDictionaryCommand extends BaseCommand {
-    public constructor(client: Client) {
-        super(client, 'urban-dictionary');
+    public constructor() {
+        super('urban-dictionary');
 
         this.data
             .setNSFW(true)
