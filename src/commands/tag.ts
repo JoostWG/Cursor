@@ -1,5 +1,5 @@
 import { Tag } from '../database/models/Tag';
-import { BaseCommand } from '../utils/command';
+import { BaseCommand, CommandError } from '../utils/command';
 import {
     ApplicationCommandOptionChoiceData,
     AutocompleteInteraction,
@@ -15,6 +15,15 @@ import {
     heading,
     inlineCode,
 } from 'discord.js';
+
+class TagNotFoundError extends CommandError {
+    public name: string;
+
+    public constructor(name: string) {
+        super('Tag not found!');
+        this.name = name;
+    }
+}
 
 export default class TagCommand extends BaseCommand {
     public constructor() {
@@ -161,19 +170,7 @@ export default class TagCommand extends BaseCommand {
     }
 
     private async handleGetSubcommand(interaction: ChatInputCommandInteraction<'cached'>) {
-        const tag = await Tag.selectOne((query) =>
-            query
-                .where('guild_id', '=', interaction.guildId)
-                .where('name', '=', interaction.options.getString('name', true)),
-        );
-
-        if (!tag) {
-            await interaction.reply({
-                content: 'Tag not found.',
-                flags: MessageFlags.Ephemeral,
-            });
-            return;
-        }
+        const tag = await this.findTagOrFail(interaction);
 
         await tag.update({
             uses: tag.uses + 1,
@@ -183,19 +180,7 @@ export default class TagCommand extends BaseCommand {
     }
 
     private async handleInfoSubcommand(interaction: ChatInputCommandInteraction<'cached'>) {
-        const tag = await Tag.selectOne((query) =>
-            query
-                .where('guild_id', '=', interaction.guildId)
-                .where('name', '=', interaction.options.getString('name', true)),
-        );
-
-        if (!tag) {
-            await interaction.reply({
-                content: 'Tag not found.',
-                flags: MessageFlags.Ephemeral,
-            });
-            return;
-        }
+        const tag = await this.findTagOrFail(interaction);
 
         await interaction.reply({
             flags: MessageFlags.IsComponentsV2,
@@ -225,18 +210,10 @@ export default class TagCommand extends BaseCommand {
         const name = interaction.options.getString('name', true);
         const content = interaction.options.getString('content', true);
 
-        const existingTag = await Tag.selectOne((query) =>
-            query
-                .where('guild_id', '=', interaction.guildId)
-                .where('name', '=', interaction.options.getString('name', true)),
-        );
+        const existingTag = await this.findTag(interaction);
 
         if (existingTag) {
-            await interaction.reply({
-                content: 'A tag with that name already exists.',
-                flags: MessageFlags.Ephemeral,
-            });
-            return;
+            throw new CommandError('A tag with that name already exists.');
         }
 
         await Tag.create({
@@ -250,19 +227,7 @@ export default class TagCommand extends BaseCommand {
     }
 
     private async handleUpdateSubcommand(interaction: ChatInputCommandInteraction<'cached'>) {
-        const tag = await Tag.selectOne((query) =>
-            query
-                .where('guild_id', '=', interaction.guildId)
-                .where('name', '=', interaction.options.getString('name', true)),
-        );
-
-        if (!tag) {
-            await interaction.reply({
-                content: 'Tag not found.',
-                flags: MessageFlags.Ephemeral,
-            });
-            return;
-        }
+        const tag = await this.findTagOrFail(interaction);
 
         await tag.update({
             content: interaction.options.getString('content', true),
@@ -272,22 +237,28 @@ export default class TagCommand extends BaseCommand {
     }
 
     private async handleDeleteSubcommand(interaction: ChatInputCommandInteraction<'cached'>) {
-        const tag = await Tag.selectOne((query) =>
-            query
-                .where('guild_id', '=', interaction.guildId)
-                .where('name', '=', interaction.options.getString('name', true)),
-        );
-
-        if (!tag) {
-            await interaction.reply({
-                content: 'Tag not found.',
-                flags: MessageFlags.Ephemeral,
-            });
-            return;
-        }
+        const tag = await this.findTagOrFail(interaction);
 
         await tag.delete();
 
         await interaction.reply('Tag deleted!');
+    }
+
+    private async findTag(interaction: ChatInputCommandInteraction<'cached'>) {
+        return await Tag.selectOne((query) =>
+            query
+                .where('guild_id', '=', interaction.guildId)
+                .where('name', '=', interaction.options.getString('name', true)),
+        );
+    }
+
+    private async findTagOrFail(interaction: ChatInputCommandInteraction<'cached'>) {
+        const tag = await this.findTag(interaction);
+
+        if (!tag) {
+            throw new TagNotFoundError(interaction.options.getString('name', true));
+        }
+
+        return tag;
     }
 }
