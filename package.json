@@ -3,6 +3,7 @@
         "deploy": "node ./dist/deploy.js --dev --global",
         "deploy-dev": "node ./dist/deploy.js --dev",
         "deploy-global": "node ./dist/deploy.js --global",
+        "migrate": "node ./dist/migrate.js",
         "watch": "tsc --watch",
         "format": "prettier --write src/",
         "lint": "eslint ."
