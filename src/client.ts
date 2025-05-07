@@ -38,7 +38,7 @@ const client = new Client({
     intents: [GatewayIntentBits.GuildMembers, GatewayIntentBits.Guilds],
 });
 
-client.on('ready', async () => {
+client.on(Events.ClientReady, async () => {
     console.info('Ready!');
 });
 
