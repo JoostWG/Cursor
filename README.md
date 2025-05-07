@@ -1,3 +1,3 @@
 # Cursor
 
-Hobby Discord bot to explore discord.js, and just for fun.
+Coming from a few years of discord.py, this is my first proper attempt at making a bot in discord.js.
