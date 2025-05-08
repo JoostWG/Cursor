@@ -9,6 +9,7 @@
         "moduleResolution": "nodenext",
         "outDir": "./dist",
         "esModuleInterop": true,
-        "resolveJsonModule": true
+        "resolveJsonModule": true,
+        "allowUnreachableCode": false
     }
 }
