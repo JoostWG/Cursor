@@ -1,5 +1,3 @@
-import { localize } from '../utils';
-import { BaseCommand, CommandError } from '../utils/command';
 import type {
     AutocompleteInteraction,
     ChatInputCommandInteraction,
@@ -32,6 +30,8 @@ import {
     subtext,
     time,
 } from 'discord.js';
+import { localize } from '../utils';
+import { BaseCommand, CommandError } from '../utils/command';
 
 class InvalidRoleError extends CommandError {
     //

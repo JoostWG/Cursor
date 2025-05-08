@@ -1,5 +1,3 @@
-import { getTranslations, localize } from '../utils';
-import { BaseCommand, CommandError } from '../utils/command';
 import axios from 'axios';
 import type { ChatInputCommandInteraction } from 'discord.js';
 import {
@@ -13,6 +11,8 @@ import {
     spoiler,
 } from 'discord.js';
 import i18next from 'i18next';
+import { getTranslations, localize } from '../utils';
+import { BaseCommand, CommandError } from '../utils/command';
 
 type JokeBlacklistFlag = 'nsfw' | 'religious' | 'political' | 'racist' | 'sexist' | 'explicit';
 

@@ -1,5 +1,3 @@
-import { localize } from '../utils';
-import { BaseCommand } from '../utils/command';
 import axios from 'axios';
 import type { AutocompleteInteraction, ChatInputCommandInteraction, Locale } from 'discord.js';
 import {
@@ -19,6 +17,8 @@ import {
     subtext,
 } from 'discord.js';
 import i18next from 'i18next';
+import { localize } from '../utils';
+import { BaseCommand } from '../utils/command';
 
 interface Definition {
     defid: number;

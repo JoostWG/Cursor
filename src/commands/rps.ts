@@ -1,5 +1,3 @@
-import { localize } from '../utils';
-import { BaseCommand, CommandError } from '../utils/command';
 import type { ChatInputCommandInteraction, Locale, User } from 'discord.js';
 import {
     ActionRowBuilder,
@@ -16,6 +14,8 @@ import {
     userMention,
 } from 'discord.js';
 import i18next from 'i18next';
+import { localize } from '../utils';
+import { BaseCommand, CommandError } from '../utils/command';
 
 const emojis = {
     rock: '🪨',

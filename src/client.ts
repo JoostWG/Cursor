@@ -1,6 +1,3 @@
-import getCommands from './getCommands';
-import type { BaseCommand } from './utils/command';
-import { CommandError } from './utils/command';
 import type { ClientOptions } from 'discord.js';
 import {
     Collection,
@@ -9,6 +6,9 @@ import {
     GatewayIntentBits,
     MessageFlags,
 } from 'discord.js';
+import getCommands from './getCommands';
+import type { BaseCommand } from './utils/command';
+import { CommandError } from './utils/command';
 
 export class Client extends DiscordJsClient {
     private commands: Collection<string, BaseCommand>;

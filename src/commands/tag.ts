@@ -1,5 +1,3 @@
-import { Tag } from '../database/models/Tag';
-import { BaseCommand, CommandError } from '../utils/command';
 import type {
     ApplicationCommandOptionChoiceData,
     AutocompleteInteraction,
@@ -17,6 +15,8 @@ import {
     heading,
     inlineCode,
 } from 'discord.js';
+import { Tag } from '../database/models/Tag';
+import { BaseCommand, CommandError } from '../utils/command';
 
 class TagNotFoundError extends CommandError {
     public name: string;

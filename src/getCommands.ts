@@ -1,7 +1,7 @@
-import type { BaseCommand } from './utils/command';
 import fs from 'fs/promises';
 import path from 'path';
 import { pathToFileURL } from 'url';
+import type { BaseCommand } from './utils/command';
 
 export default async function* getCommands(dir?: string): AsyncGenerator<BaseCommand> {
     dir ??= path.join(__dirname, './commands');

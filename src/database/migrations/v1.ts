@@ -1,6 +1,6 @@
-import type { Database } from '../database';
 import type { Kysely } from 'kysely';
 import { sql } from 'kysely';
+import type { Database } from '../database';
 
 export default {
     async up(db: Kysely<Database>) {
