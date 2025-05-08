@@ -119,14 +119,15 @@ export default class JokeCommand extends BaseCommand {
         const blacklistFlags = safe ? 'nsfw,religious,political,racist,sexist,explicit' : '';
 
         const languageMap: Partial<Record<Locale, JokeLanguage>> = {
-                [Locale.Czech]: JokeLanguage.Czech,
-                [Locale.German]: JokeLanguage.German,
-                [Locale.SpanishES]: JokeLanguage.Spanish,
-                [Locale.SpanishLATAM]: JokeLanguage.Spanish,
-                [Locale.French]: JokeLanguage.French,
-                [Locale.PortugueseBR]: JokeLanguage.Portuguese,
-            },
-            language = languageMap[interaction.locale] ?? 'en';
+            [Locale.Czech]: JokeLanguage.Czech,
+            [Locale.German]: JokeLanguage.German,
+            [Locale.SpanishES]: JokeLanguage.Spanish,
+            [Locale.SpanishLATAM]: JokeLanguage.Spanish,
+            [Locale.French]: JokeLanguage.French,
+            [Locale.PortugueseBR]: JokeLanguage.Portuguese,
+        };
+
+        const language = languageMap[interaction.locale] ?? 'en';
 
         try {
             const { data } = await this.api.get<
