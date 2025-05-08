@@ -219,8 +219,8 @@ export default class TagCommand extends BaseCommand {
         }
 
         await Tag.create({
-            name: name,
-            content: content,
+            name,
+            content,
             guild_id: interaction.guildId,
             user_id: interaction.user.id,
         });

@@ -19,21 +19,21 @@ export function getTranslations(key: string): LocalizationMap {
     if (i18next.options.preload) {
         return Object.fromEntries(
             (i18next.options.preload as Locale[])
-                .map((locale: Locale) => {
-                    return [
-                        locale,
-                        i18next.t(key, {
-                            lng: locale,
-                            defaultValue: '',
-                        }) as string,
-                    ] as const;
-                })
+                .map(
+                    (locale: Locale) =>
+                        [
+                            locale,
+                            i18next.t(key, {
+                                lng: locale,
+                                defaultValue: '',
+                            }) as string,
+                        ] as const,
+                )
                 // eslint-disable-next-line @typescript-eslint/no-unused-vars
                 .filter(([_, t]) => t !== ''),
         );
-    } else {
-        return {};
     }
+    return {};
 }
 
 export function localize<T extends SharedNameAndDescription>(

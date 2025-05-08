@@ -314,7 +314,7 @@ export default class RoleCommand extends BaseCommand {
                     await confirmInteraction.update({
                         components: [
                             new TextDisplayBuilder().setContent(
-                                'Role delete failed.' + error.message,
+                                `Role delete failed.${error.message}`,
                             ),
                         ],
                     });

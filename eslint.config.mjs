@@ -17,6 +17,10 @@ export default defineConfig(
             },
         },
         rules: {
+            'prefer-template': 'warn',
+            'arrow-body-style': 'warn',
+            'object-shorthand': 'warn',
+            'no-else-return': 'warn',
             '@typescript-eslint/no-floating-promises': ['warn', { ignoreIIFE: true }],
             '@typescript-eslint/consistent-type-imports': 'error',
             '@typescript-eslint/prefer-nullish-coalescing': 'warn',

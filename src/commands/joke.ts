@@ -83,13 +83,11 @@ export default class JokeCommand extends BaseCommand {
         this.data
             .addStringOption(
                 localize(SlashCommandStringOption, 'category', 'joke.options.category').addChoices(
-                    Object.entries(JokeCategory).map(([name, key]) => {
-                        return {
-                            name,
-                            value: key,
-                            name_localizations: getTranslations('commands:joke.categories.' + key),
-                        };
-                    }),
+                    Object.entries(JokeCategory).map(([name, key]) => ({
+                        name,
+                        value: key,
+                        name_localizations: getTranslations(`commands:joke.categories.${key}`),
+                    })),
                 ),
             )
             .addBooleanOption(localize(SlashCommandBooleanOption, 'safe', 'joke.options.safe'));
@@ -121,15 +119,14 @@ export default class JokeCommand extends BaseCommand {
         const blacklistFlags = safe ? 'nsfw,religious,political,racist,sexist,explicit' : '';
 
         const languageMap: Partial<Record<Locale, JokeLanguage>> = {
-            [Locale.Czech]: JokeLanguage.Czech,
-            [Locale.German]: JokeLanguage.German,
-            [Locale.SpanishES]: JokeLanguage.Spanish,
-            [Locale.SpanishLATAM]: JokeLanguage.Spanish,
-            [Locale.French]: JokeLanguage.French,
-            [Locale.PortugueseBR]: JokeLanguage.Portuguese,
-        };
-
-        const language = languageMap[interaction.locale] ?? 'en';
+                [Locale.Czech]: JokeLanguage.Czech,
+                [Locale.German]: JokeLanguage.German,
+                [Locale.SpanishES]: JokeLanguage.Spanish,
+                [Locale.SpanishLATAM]: JokeLanguage.Spanish,
+                [Locale.French]: JokeLanguage.French,
+                [Locale.PortugueseBR]: JokeLanguage.Portuguese,
+            },
+            language = languageMap[interaction.locale] ?? 'en';
 
         try {
             const { data } = await this.api.get<
@@ -138,8 +135,8 @@ export default class JokeCommand extends BaseCommand {
                 params: {
                     amount: 1,
                     lang: language,
-                    safe: safe,
-                    blacklistFlags: blacklistFlags,
+                    safe,
+                    blacklistFlags,
                 },
             });
 
@@ -153,11 +150,9 @@ export default class JokeCommand extends BaseCommand {
             }
 
             await interaction.reply(
-                bold(data.category) +
-                    '\n' +
-                    (data.type === 'single'
-                        ? data.joke
-                        : data.setup + '\n' + spoiler(data.delivery)),
+                `${bold(data.category)}\n${
+                    data.type === 'single' ? data.joke : `${data.setup}\n${spoiler(data.delivery)}`
+                }`,
             );
         } catch (error) {
             if (axios.isAxiosError(error)) {
@@ -177,8 +172,8 @@ export default class JokeCommand extends BaseCommand {
                 .setColor(Colors.Red)
                 .setTitle(`${error.code} ${error.message}`)
                 .setDescription(`${error.causedBy.join('\n')}\n\n${error.additionalInfo}`);
-        } else {
-            return new EmbedBuilder().setColor(Colors.Red).setTitle('Unknown error');
         }
+
+        return new EmbedBuilder().setColor(Colors.Red).setTitle('Unknown error');
     }
 }

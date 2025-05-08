@@ -241,43 +241,41 @@ class Game {
                     .addTextDisplayComponents(
                         new TextDisplayBuilder().setContent(
                             this.rounds
-                                .map((round, roundIndex) => {
-                                    return [
-                                        heading(
-                                            i18next.t('commands:rps.game.round', {
-                                                lng: this.locale,
-                                                round: roundIndex + 1,
-                                            }),
-                                            HeadingLevel.Three,
-                                        ),
-                                        ...round.choices.map((choice, choiceIndex) => {
-                                            const choiceString = choice
-                                                ? round.isFinished()
-                                                    ? emojis[choice]
-                                                    : '???'
-                                                : roundIndex === this.currentRoundIndex
-                                                  ? i18next.t('commands:rps.game.waiting', {
-                                                        lng: this.locale,
-                                                    }) + '...'
-                                                  : '...';
-
-                                            return `${this.users[choiceIndex].displayName}: ${choiceString}`;
+                                .map((round, roundIndex) => [
+                                    heading(
+                                        i18next.t('commands:rps.game.round', {
+                                            lng: this.locale,
+                                            round: roundIndex + 1,
                                         }),
-                                        [
-                                            i18next.t('commands:rps.game.tie', {
-                                                lng: this.locale,
-                                            }),
-                                            i18next.t('commands:rps.game.win', {
-                                                lng: this.locale,
-                                                user: this.player1.displayName,
-                                            }),
-                                            i18next.t('commands:rps.game.win', {
-                                                lng: this.locale,
-                                                user: this.player2.displayName,
-                                            }),
-                                        ][round.getResult()] ?? '',
-                                    ];
-                                })
+                                        HeadingLevel.Three,
+                                    ),
+                                    ...round.choices.map((choice, choiceIndex) => {
+                                        const choiceString = choice
+                                            ? round.isFinished()
+                                                ? emojis[choice]
+                                                : '???'
+                                            : roundIndex === this.currentRoundIndex
+                                              ? `${i18next.t('commands:rps.game.waiting', {
+                                                    lng: this.locale,
+                                                })}...`
+                                              : '...';
+
+                                        return `${this.users[choiceIndex].displayName}: ${choiceString}`;
+                                    }),
+                                    [
+                                        i18next.t('commands:rps.game.tie', {
+                                            lng: this.locale,
+                                        }),
+                                        i18next.t('commands:rps.game.win', {
+                                            lng: this.locale,
+                                            user: this.player1.displayName,
+                                        }),
+                                        i18next.t('commands:rps.game.win', {
+                                            lng: this.locale,
+                                            user: this.player2.displayName,
+                                        }),
+                                    ][round.getResult()] ?? '',
+                                ])
                                 .flat()
                                 .join('\n'),
                         ),
@@ -285,13 +283,13 @@ class Game {
                     .addSeparatorComponents(new SeparatorBuilder().setDivider(true))
                     .addActionRowComponents(
                         new ActionRowBuilder<ButtonBuilder>().addComponents(
-                            ...Object.entries(emojis).map(([key, emoji]) => {
-                                return new ButtonBuilder()
+                            ...Object.entries(emojis).map(([key, emoji]) =>
+                                new ButtonBuilder()
                                     .setCustomId(key)
                                     .setLabel(emoji)
                                     .setStyle(ButtonStyle.Primary)
-                                    .setDisabled(this.status !== 'gameActive');
-                            }),
+                                    .setDisabled(this.status !== 'gameActive'),
+                            ),
                         ),
                     );
         }
