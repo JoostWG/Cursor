@@ -13,7 +13,7 @@ export class Tag {
     #uses: number;
     #createdAt: Date;
 
-    public constructor(row: TagRow) {
+    protected constructor(row: TagRow) {
         this.#id = row.id;
         this.#guildId = row.guild_id;
         this.#userId = row.user_id;
