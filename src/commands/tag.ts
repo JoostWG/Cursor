@@ -31,8 +31,6 @@ export default class TagCommand extends BaseCommand {
     public constructor() {
         super('tag');
 
-        this.devOnly = true;
-
         this.data
             .setContexts(InteractionContextType.Guild)
             .addSubcommand(
