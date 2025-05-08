@@ -5,6 +5,7 @@
         "deploy-global": "node ./dist/deploy.js --global",
         "migrate": "node ./dist/migrate.js",
         "watch": "tsc --watch",
+        "build": "tsc --build",
         "format": "prettier --write src/",
         "lint": "eslint ."
     },
