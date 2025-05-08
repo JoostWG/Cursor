@@ -19,6 +19,15 @@ export default defineConfig([
         },
         rules: {
             '@typescript-eslint/no-floating-promises': ['warn', { ignoreIIFE: true }],
+            '@typescript-eslint/consistent-type-imports': 'error',
+            '@typescript-eslint/prefer-nullish-coalescing': 'warn',
+            '@typescript-eslint/member-ordering': 'warn',
+            '@typescript-eslint/no-shadow': 'error',
+            '@typescript-eslint/no-unsafe-return': 'error',
+            // '@typescript-eslint/no-unsafe-type-assertion': 'warn',
+            // '@typescript-eslint/strict-boolean-expressions': 'warn',
+            // '@typescript-eslint/no-magic-numbers': 'warn',
+            // '@typescript-eslint/naming-convention': 'warn',
         },
     },
 ]);
