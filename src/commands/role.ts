@@ -1,5 +1,5 @@
 import { localize } from '../utils';
-import { BaseCommand } from '../utils/command';
+import { BaseCommand, CommandError } from '../utils/command';
 import {
     ActionRowBuilder,
     AutocompleteInteraction,
@@ -31,7 +31,7 @@ import {
     time,
 } from 'discord.js';
 
-class InvalidRoleError extends Error {
+class InvalidRoleError extends CommandError {
     //
 }
 
@@ -130,41 +130,22 @@ export default class RoleCommand extends BaseCommand {
 
     public override async execute(interaction: ChatInputCommandInteraction) {
         if (!interaction.inCachedGuild()) {
-            await interaction.reply({
-                content: 'Unable to execute command.',
-                flags: MessageFlags.Ephemeral,
-            });
-            return;
+            throw new CommandError('Must use in guild');
         }
 
-        try {
-            switch (interaction.options.getSubcommand()) {
-                case 'update':
-                    await this.handleUpdateSubcommand(interaction);
-                    break;
+        switch (interaction.options.getSubcommand()) {
+            case 'update':
+                await this.handleUpdateSubcommand(interaction);
+                break;
 
-                case 'delete':
-                    await this.handleDeleteSubcommand(interaction);
-                    break;
+            case 'delete':
+                await this.handleDeleteSubcommand(interaction);
+                break;
 
-                default:
-                    await interaction.reply({
-                        content: `No corresponding subcommand handler found for ${inlineCode(interaction.options.getSubcommand())}.`,
-                        flags: MessageFlags.Ephemeral,
-                    });
-                    break;
-            }
-        } catch (error) {
-            if (!(error instanceof InvalidRoleError)) {
-                throw error;
-            }
-
-            await interaction.reply({
-                content: '⚠️ ' + error.message,
-                flags: MessageFlags.Ephemeral,
-            });
-
-            return;
+            default:
+                throw new CommandError(
+                    `No corresponding subcommand handler found for ${inlineCode(interaction.options.getSubcommand())}.`,
+                );
         }
     }
 
@@ -187,11 +168,9 @@ export default class RoleCommand extends BaseCommand {
             const match = colorInput.match(pattern);
 
             if (!match) {
-                await interaction.reply({
-                    content: `Invalid color. Must match ${inlineCode(pattern.toString())}`,
-                    flags: MessageFlags.Ephemeral,
-                });
-                return;
+                throw new CommandError(
+                    `Invalid color. Must match ${inlineCode(pattern.toString())}`,
+                );
             }
 
             options.color = parseInt(match[1], 16);
@@ -210,13 +189,7 @@ export default class RoleCommand extends BaseCommand {
             await role.edit({ ...options, reason });
         } catch (error) {
             console.error(error);
-
-            await interaction.reply({
-                content: 'Something went wrong updating the role.',
-                flags: MessageFlags.Ephemeral,
-            });
-
-            return;
+            throw new CommandError('Something went wrong updating the role.');
         }
 
         const changes = oldProps

@@ -1,12 +1,11 @@
 import { getTranslations, localize } from '../utils';
-import { BaseCommand } from '../utils/command';
+import { BaseCommand, CommandError } from '../utils/command';
 import axios from 'axios';
 import {
     ChatInputCommandInteraction,
     Colors,
     EmbedBuilder,
     Locale,
-    MessageFlags,
     SlashCommandBooleanOption,
     SlashCommandStringOption,
     TextChannel,
@@ -112,13 +111,11 @@ export default class JokeCommand extends BaseCommand {
                 interaction.channel.nsfw
             )
         ) {
-            await interaction.reply({
-                content: i18next.t('commands:joke.nsfw', {
+            throw new CommandError(
+                i18next.t('commands:joke.nsfw', {
                     lng: interaction.locale,
                 }),
-                flags: MessageFlags.Ephemeral,
-            });
-            return;
+            );
         }
 
         const blacklistFlags = safe ? 'nsfw,religious,political,racist,sexist,explicit' : '';
@@ -152,11 +149,7 @@ export default class JokeCommand extends BaseCommand {
                 });
             }
             if (data.error || 'jokes' in data) {
-                await interaction.reply({
-                    content: 'Something went wrong...',
-                    flags: MessageFlags.Ephemeral,
-                });
-                return;
+                throw new CommandError('Something went wrong...');
             }
 
             await interaction.reply(
@@ -173,11 +166,7 @@ export default class JokeCommand extends BaseCommand {
                 });
                 console.error('Axios error:', error.response?.data || error.message);
             } else {
-                await interaction.reply({
-                    content: 'Something went wrong...',
-                    flags: MessageFlags.Ephemeral,
-                });
-                console.error('Unexpected error:', error);
+                throw new CommandError('Something went wrong...');
             }
         }
     }

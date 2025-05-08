@@ -1,5 +1,5 @@
 import { localize } from '../utils';
-import { BaseCommand } from '../utils/command';
+import { BaseCommand, CommandError } from '../utils/command';
 import {
     ActionRowBuilder,
     ButtonBuilder,
@@ -315,19 +315,15 @@ export default class RockPaperScissorsCommand extends BaseCommand {
         const opponent = interaction.options.getUser('opponent', true);
 
         if (opponent.bot) {
-            await interaction.reply({
-                content: i18next.t('commands:rps.error.noBot', { lng: interaction.locale }),
-                flags: MessageFlags.Ephemeral,
-            });
-            return;
+            throw new CommandError(
+                i18next.t('commands:rps.error.noBot', { lng: interaction.locale }),
+            );
         }
 
         if (opponent.id === interaction.user.id) {
-            await interaction.reply({
-                content: i18next.t('commands:rps.error.noSelf', { lng: interaction.locale }),
-                flags: MessageFlags.Ephemeral,
-            });
-            return;
+            throw new CommandError(
+                i18next.t('commands:rps.error.noSelf', { lng: interaction.locale }),
+            );
         }
 
         await new Game([interaction.user, opponent]).start(interaction);
