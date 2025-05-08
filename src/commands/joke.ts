@@ -1,8 +1,8 @@
 import { getTranslations, localize } from '../utils';
 import { BaseCommand, CommandError } from '../utils/command';
 import axios from 'axios';
+import type { ChatInputCommandInteraction } from 'discord.js';
 import {
-    ChatInputCommandInteraction,
     Colors,
     EmbedBuilder,
     Locale,
@@ -164,7 +164,7 @@ export default class JokeCommand extends BaseCommand {
                 await interaction.reply({
                     embeds: [this.buildErrorEmbed(error.response?.data as ErrorResponse)],
                 });
-                console.error('Axios error:', error.response?.data || error.message);
+                console.error('Axios error:', error.response?.data ?? error.message);
             } else {
                 throw new CommandError('Something went wrong...');
             }

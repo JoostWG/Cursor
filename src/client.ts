@@ -1,7 +1,8 @@
 import getCommands from './getCommands';
-import { BaseCommand, CommandError } from './utils/command';
+import type { BaseCommand } from './utils/command';
+import { CommandError } from './utils/command';
+import type { ClientOptions } from 'discord.js';
 import {
-    ClientOptions,
     Collection,
     Client as DiscordJsClient,
     Events,
@@ -19,6 +20,10 @@ export class Client extends DiscordJsClient {
         void this.loadCommands();
     }
 
+    public getCommand(name: string) {
+        return this.commands.get(name);
+    }
+
     private async loadCommands() {
         for await (const command of getCommands()) {
             try {
@@ -27,10 +32,6 @@ export class Client extends DiscordJsClient {
                 //
             }
         }
-    }
-
-    public getCommand(name: string) {
-        return this.commands.get(name);
     }
 }
 

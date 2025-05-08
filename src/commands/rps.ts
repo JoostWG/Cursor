@@ -1,19 +1,17 @@
 import { localize } from '../utils';
 import { BaseCommand, CommandError } from '../utils/command';
+import type { ChatInputCommandInteraction, Locale, User } from 'discord.js';
 import {
     ActionRowBuilder,
     ButtonBuilder,
     ButtonStyle,
-    ChatInputCommandInteraction,
     Colors,
     ContainerBuilder,
     HeadingLevel,
-    Locale,
     MessageFlags,
     SeparatorBuilder,
     SlashCommandUserOption,
     TextDisplayBuilder,
-    User,
     heading,
     userMention,
 } from 'discord.js';
@@ -77,6 +75,14 @@ class Game {
         this.rounds = [new Round(), new Round(), new Round()];
         this.currentRoundIndex = 0;
         this.status = 'invitePending';
+    }
+
+    private get player1() {
+        return this.users[0];
+    }
+
+    private get player2() {
+        return this.users[1];
     }
 
     public async start(interaction: ChatInputCommandInteraction) {
@@ -291,14 +297,6 @@ class Game {
         }
 
         return [builder];
-    }
-
-    private get player1() {
-        return this.users[0];
-    }
-
-    private get player2() {
-        return this.users[1];
     }
 }
 

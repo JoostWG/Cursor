@@ -1,4 +1,4 @@
-import { LocalizationMap, SharedNameAndDescription } from 'discord.js';
+import type { Locale, LocalizationMap, SharedNameAndDescription } from 'discord.js';
 import i18next from 'i18next';
 import I18NexFsBackend from 'i18next-fs-backend';
 
@@ -16,29 +16,32 @@ export async function initI18Next() {
 }
 
 export function getTranslations(key: string): LocalizationMap {
-    return Object.fromEntries(
-        i18next.options.preload
-            ? i18next.options.preload
-                  .map((locale) => {
-                      const translation = i18next.t(key, {
-                          lng: locale,
-                          defaultValue: '!not-found!',
-                      });
-
-                      return [locale, translation];
-                  })
-                  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-                  .filter(([_, t]) => t !== '!not-found!')
-            : [],
-    );
+    if (i18next.options.preload) {
+        return Object.fromEntries(
+            (i18next.options.preload as Locale[])
+                .map((locale: Locale) => {
+                    return [
+                        locale,
+                        i18next.t(key, {
+                            lng: locale,
+                            defaultValue: '',
+                        }) as string,
+                    ] as const;
+                })
+                // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                .filter(([_, t]) => t !== ''),
+        );
+    } else {
+        return {};
+    }
 }
 
 export function localize<T extends SharedNameAndDescription>(
-    Builder: new () => T,
+    builder: new () => T,
     name: string,
     key: string,
 ): T {
-    return new Builder()
+    return new builder()
         .setName(name)
         .setNameLocalizations(getTranslations(`commands:${key}.name`))
         .setDescription(

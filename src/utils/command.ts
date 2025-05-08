@@ -1,10 +1,10 @@
 import { localize } from '.';
-import {
+import type {
     ApplicationCommandOptionChoiceData,
     AutocompleteInteraction,
     ChatInputCommandInteraction,
-    SlashCommandBuilder,
 } from 'discord.js';
+import { SlashCommandBuilder } from 'discord.js';
 
 export class CommandError extends Error {
     //

@@ -1,15 +1,13 @@
 import { localize } from '../utils';
 import { BaseCommand } from '../utils/command';
 import axios from 'axios';
+import type { AutocompleteInteraction, ChatInputCommandInteraction, Locale } from 'discord.js';
 import {
     ActionRowBuilder,
-    AutocompleteInteraction,
     ButtonBuilder,
     ButtonStyle,
-    ChatInputCommandInteraction,
     ContainerBuilder,
     HeadingLevel,
-    Locale,
     MessageFlags,
     SeparatorBuilder,
     SlashCommandStringOption,
@@ -52,6 +50,16 @@ class Api {
         baseURL: 'https://api.urbandictionary.com/v0',
     });
 
+    public static async define(term: string) {
+        const data = await this.get<{ list: Definition[] }>('/define', { params: { term } });
+
+        return data.list;
+    }
+
+    public static async autocomplete(term: string) {
+        return await this.get<string[]>('/autocomplete', { params: { term } });
+    }
+
     private static async get<T>(url: string, config?: axios.AxiosRequestConfig) {
         const { data } = await this.axios.get<ResponseData<T>>(url, config);
 
@@ -61,16 +69,6 @@ class Api {
         }
 
         return data;
-    }
-
-    public static async define(term: string) {
-        const data = await this.get<{ list: Definition[] }>('/define', { params: { term } });
-
-        return data.list;
-    }
-
-    public static async autocomplete(term: string) {
-        return await this.get<string[]>('/autocomplete', { params: { term } });
     }
 }
 
@@ -85,6 +83,14 @@ class UrbanDictionaryView {
         this.cache = new Map();
         this.history = [{ term: initialTerm, index: 0 }];
         this.active = true;
+    }
+
+    private get current() {
+        return this.history.at(-1) as { term: string; index: number };
+    }
+
+    private get definitions() {
+        return this.cache.get(this.current.term) as Definition[];
     }
 
     public async start(interaction: ChatInputCommandInteraction) {
@@ -116,10 +122,10 @@ class UrbanDictionaryView {
                 time: 60_000,
                 filter: (i) => i.user.id === interaction.user.id,
             })
-            .on('collect', async (interaction) => {
+            .on('collect', async (componentInteraction) => {
                 collector.resetTimer();
 
-                switch (interaction.customId) {
+                switch (componentInteraction.customId) {
                     case 'previous':
                         this.current.index--;
                         break;
@@ -129,11 +135,11 @@ class UrbanDictionaryView {
                         break;
 
                     case 'select':
-                        if (!interaction.isStringSelectMenu()) {
+                        if (!componentInteraction.isStringSelectMenu()) {
                             break;
                         }
 
-                        this.history.push({ term: interaction.values[0], index: 0 });
+                        this.history.push({ term: componentInteraction.values[0], index: 0 });
                         await this.loadDefinitions();
                         break;
 
@@ -142,7 +148,7 @@ class UrbanDictionaryView {
                         break;
                 }
 
-                await interaction.update({ components: this.buildComponents() });
+                await componentInteraction.update({ components: this.buildComponents() });
             })
             .on('end', async () => {
                 this.active = false;
@@ -258,14 +264,6 @@ class UrbanDictionaryView {
 
     private getWebUrl(term: string) {
         return `https://urbandictionary.com/define.php?term=${encodeURIComponent(term)}`;
-    }
-
-    private get current() {
-        return this.history.at(-1) as { term: string; index: number };
-    }
-
-    private get definitions() {
-        return this.cache.get(this.current.term) as Definition[];
     }
 }
 

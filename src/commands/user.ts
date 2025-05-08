@@ -1,12 +1,7 @@
 import { localize } from '../utils';
 import { BaseCommand } from '../utils/command';
-import {
-    ChatInputCommandInteraction,
-    EmbedBuilder,
-    SlashCommandUserOption,
-    TimestampStyles,
-    time,
-} from 'discord.js';
+import type { ChatInputCommandInteraction } from 'discord.js';
+import { EmbedBuilder, SlashCommandUserOption, TimestampStyles, time } from 'discord.js';
 import i18next from 'i18next';
 
 export default class UserCommand extends BaseCommand {

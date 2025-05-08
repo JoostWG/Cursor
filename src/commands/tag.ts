@@ -1,9 +1,11 @@
 import { Tag } from '../database/models/Tag';
 import { BaseCommand, CommandError } from '../utils/command';
-import {
+import type {
     ApplicationCommandOptionChoiceData,
     AutocompleteInteraction,
     ChatInputCommandInteraction,
+} from 'discord.js';
+import {
     ContainerBuilder,
     HeadingLevel,
     InteractionContextType,

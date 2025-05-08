@@ -1,5 +1,6 @@
 import { BaseCommand } from '../utils/command';
-import { ChatInputCommandInteraction, MessageFlags } from 'discord.js';
+import type { ChatInputCommandInteraction } from 'discord.js';
+import { MessageFlags } from 'discord.js';
 
 export default class PingCommand extends BaseCommand {
     public constructor() {

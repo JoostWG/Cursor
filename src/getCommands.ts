@@ -1,4 +1,4 @@
-import { BaseCommand } from './utils/command';
+import type { BaseCommand } from './utils/command';
 import fs from 'fs/promises';
 import path from 'path';
 import { pathToFileURL } from 'url';

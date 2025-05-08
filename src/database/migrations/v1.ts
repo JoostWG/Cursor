@@ -1,5 +1,6 @@
-import { Database } from '../database';
-import { Kysely, sql } from 'kysely';
+import type { Database } from '../database';
+import type { Kysely } from 'kysely';
+import { sql } from 'kysely';
 
 export default {
     async up(db: Kysely<Database>) {

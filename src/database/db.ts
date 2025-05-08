@@ -1,4 +1,4 @@
-import { Database } from './database';
+import type { Database } from './database';
 import SQLite from 'better-sqlite3';
 import { Kysely, SqliteDialect } from 'kysely';
 

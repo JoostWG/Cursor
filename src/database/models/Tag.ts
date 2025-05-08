@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-empty-object-type */
-import { Database, NewTag, TagRow, TagUpdate } from '../database';
+import type { Database, NewTag, TagRow, TagUpdate } from '../database';
 import { db } from '../db';
-import { Snowflake } from 'discord.js';
-import { SelectQueryBuilder } from 'kysely';
+import type { Snowflake } from 'discord.js';
+import type { SelectQueryBuilder } from 'kysely';
 
 export class Tag {
     #id: number;
@@ -21,12 +21,6 @@ export class Tag {
         this.#content = row.content;
         this.#uses = row.uses;
         this.#createdAt = row.created_at;
-    }
-
-    private updateProperties(data: TagUpdate) {
-        this.#name = data.name ?? this.#name;
-        this.#content = data.content ?? this.#content;
-        this.#uses = data.uses ?? this.#uses;
     }
 
     public get id() {
@@ -55,15 +49,6 @@ export class Tag {
 
     public get createdAt() {
         return this.#createdAt;
-    }
-
-    public async update(data: TagUpdate) {
-        await db.updateTable('tags').where('id', '=', this.id).set(data).execute();
-        this.updateProperties(data);
-    }
-
-    public async delete() {
-        await db.deleteFrom('tags').where('id', '=', this.id).execute();
     }
 
     public static async select(
@@ -102,5 +87,20 @@ export class Tag {
         }
 
         return await this.find(result.insertId as unknown as number);
+    }
+
+    public async update(data: TagUpdate) {
+        await db.updateTable('tags').where('id', '=', this.id).set(data).execute();
+        this.updateProperties(data);
+    }
+
+    public async delete() {
+        await db.deleteFrom('tags').where('id', '=', this.id).execute();
+    }
+
+    private updateProperties(data: TagUpdate) {
+        this.#name = data.name ?? this.#name;
+        this.#content = data.content ?? this.#content;
+        this.#uses = data.uses ?? this.#uses;
     }
 }

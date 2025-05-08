@@ -1,22 +1,24 @@
 import { localize } from '../utils';
 import { BaseCommand, CommandError } from '../utils/command';
+import type {
+    AutocompleteInteraction,
+    ChatInputCommandInteraction,
+    Interaction,
+    Role,
+    RoleEditOptions,
+} from 'discord.js';
 import {
     ActionRowBuilder,
-    AutocompleteInteraction,
     ButtonBuilder,
     ButtonStyle,
-    ChatInputCommandInteraction,
     Collection,
     Colors,
     ContainerBuilder,
     DiscordAPIError,
     HeadingLevel,
-    Interaction,
     InteractionContextType,
     MessageFlags,
     PermissionFlagsBits,
-    Role,
-    RoleEditOptions,
     SlashCommandBooleanOption,
     SlashCommandRoleOption,
     SlashCommandStringOption,
