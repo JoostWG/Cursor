@@ -20,6 +20,6 @@ export default {
     },
 
     async down(db: Kysely<Database>) {
-        await db.schema.dropTable('tag').execute();
+        await db.schema.dropTable('tags').execute();
     },
 };
