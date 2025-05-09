@@ -2,6 +2,13 @@ import type { ColumnType, Generated, Insertable, Selectable, Updateable } from '
 
 export interface Database {
     tags: TagsTable;
+    migrations: MigrationsTable;
+}
+
+export interface MigrationsTable {
+    id: Generated<number>;
+    name: string;
+    batch: number;
 }
 
 export interface TagsTable {

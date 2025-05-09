@@ -1,10 +1,9 @@
-import type { Kysely } from 'kysely';
 import { sql } from 'kysely';
-import type { Database } from '../database';
+import { defineMigration } from '../../migrate';
 
-export default {
-    async up(db: Kysely<Database>) {
-        await db.schema
+export default defineMigration({
+    async up(schema) {
+        await schema
             .createTable('tags')
             .addColumn('id', 'integer', (col) => col.primaryKey().autoIncrement().notNull())
             .addColumn('guild_id', 'varchar(255)', (col) => col.notNull())
@@ -19,7 +18,7 @@ export default {
             .execute();
     },
 
-    async down(db: Kysely<Database>) {
-        await db.schema.dropTable('tags').execute();
+    async down(schema) {
+        await schema.dropTable('tags').execute();
     },
-};
+});
