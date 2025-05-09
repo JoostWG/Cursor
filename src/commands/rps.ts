@@ -8,8 +8,10 @@ import {
     HeadingLevel,
     MessageFlags,
     SeparatorBuilder,
+    SlashCommandSubcommandBuilder,
     SlashCommandUserOption,
     TextDisplayBuilder,
+    bold,
     heading,
     userMention,
 } from 'discord.js';
@@ -361,12 +363,37 @@ export default class RockPaperScissorsCommand extends BaseCommand {
     public constructor() {
         super('rps');
 
-        this.data.addUserOption(
-            localize(SlashCommandUserOption, 'opponent', 'rps.options.opponent').setRequired(true),
-        );
+        this.data
+            .addSubcommand(
+                new SlashCommandSubcommandBuilder()
+                    .setName('play')
+                    .setDescription('Play')
+                    .addUserOption(
+                        localize(
+                            SlashCommandUserOption,
+                            'opponent',
+                            'rps.options.opponent',
+                        ).setRequired(true),
+                    ),
+            )
+            .addSubcommand(
+                new SlashCommandSubcommandBuilder().setName('stats').setDescription('show stats'),
+            );
     }
 
     public override async execute(interaction: ChatInputCommandInteraction) {
+        switch (interaction.options.getSubcommand()) {
+            case 'play':
+                await this.play(interaction);
+                break;
+
+            case 'stats':
+                await this.stats(interaction);
+                break;
+        }
+    }
+
+    private async play(interaction: ChatInputCommandInteraction) {
         const opponent = interaction.options.getUser('opponent', true);
 
         if (opponent.bot) {
@@ -382,5 +409,43 @@ export default class RockPaperScissorsCommand extends BaseCommand {
         }
 
         await new Game([interaction.user, opponent]).start(interaction);
+    }
+
+    private async stats(interaction: ChatInputCommandInteraction) {
+        const games = await db
+            .selectFrom('rps_games')
+            .where('user_id', '=', interaction.user.id)
+            .select(({ fn }) => fn.count('id').as('count'))
+            .executeTakeFirst();
+
+        const choices = await db
+            .selectFrom('rps_choices')
+            .where('user_id', '=', interaction.user.id)
+            .select(['choice', ({ fn }) => fn.count('id').as('count')])
+            .groupBy('choice')
+            .execute();
+
+        const choiceCounts = new Map(choices.map((choice) => [choice.choice, choice.count]));
+
+        await interaction.reply({
+            flags: MessageFlags.IsComponentsV2,
+            components: [
+                new ContainerBuilder().addTextDisplayComponents(
+                    new TextDisplayBuilder().setContent(
+                        [
+                            heading('RPS Stats'),
+                            bold('Games played'),
+                            games?.count ?? 0,
+                            '',
+                            bold('Choice stats'),
+                            ...Object.entries(emojis).map(
+                                ([name, emoji]) =>
+                                    `${emoji} ${choiceCounts.get(name as Choice) ?? 0}`,
+                            ),
+                        ].join('\n'),
+                    ),
+                ),
+            ],
+        });
     }
 }
