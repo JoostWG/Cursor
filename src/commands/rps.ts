@@ -14,6 +14,7 @@ import {
     userMention,
 } from 'discord.js';
 import i18next from 'i18next';
+import { db } from '../database/db';
 import { localize } from '../utils';
 import { BaseCommand, CommandError } from '../utils/command';
 
@@ -27,6 +28,7 @@ type Choice = keyof typeof emojis;
 
 class Round {
     public choices: [Choice | null, Choice | null];
+    public roundId?: number;
 
     public constructor() {
         this.choices = [null, null];
@@ -60,6 +62,7 @@ class Game {
     private currentRoundIndex: number;
     private timeout: number;
     private locale?: Locale;
+    private gameId?: number;
 
     private status:
         | 'invitePending'
@@ -88,6 +91,7 @@ class Game {
     public async start(interaction: ChatInputCommandInteraction) {
         this.locale = interaction.locale;
         const response = await interaction.reply({
+            flags: MessageFlags.IsComponentsV2,
             components: this.buildComponents(),
             withResponse: true,
         });
@@ -126,6 +130,48 @@ class Game {
                 return;
         }
 
+        try {
+            await db.transaction().execute(async (transaction) => {
+                const gameInsert = await transaction
+                    .insertInto('rps_games')
+                    .values({ user_id: interaction.user.id })
+                    .executeTakeFirst();
+
+                if (!gameInsert.insertId) {
+                    throw new Error('No game insert id');
+                }
+
+                this.gameId = Number(gameInsert.insertId);
+
+                await transaction
+                    .insertInto('rps_game_user')
+                    .values({ rps_game_id: this.gameId, user_id: this.player1.id })
+                    .values({ rps_game_id: this.gameId, user_id: this.player2.id })
+                    .execute();
+
+                for (let i = 0; i < this.rounds.length; i++) {
+                    const roundInsert = await transaction
+                        .insertInto('rps_rounds')
+                        .values({ rps_game_id: this.gameId, nr: i + 1 })
+                        .executeTakeFirst();
+
+                    if (!roundInsert.insertId) {
+                        throw new Error('No round insert id');
+                    }
+
+                    this.rounds[i].roundId = Number(roundInsert.insertId);
+                }
+            });
+        } catch (error) {
+            console.error(error);
+            await interaction.editReply({
+                components: [
+                    new TextDisplayBuilder().setContent('Failed to start game: database issue'),
+                ],
+            });
+            return;
+        }
+
         response.resource.message
             .createMessageComponentCollector({
                 time: this.timeout,
@@ -145,7 +191,9 @@ class Game {
                     return;
                 }
 
-                if (this.rounds[this.currentRoundIndex].get(userIndex) !== null) {
+                const round = this.rounds[this.currentRoundIndex];
+
+                if (round.get(userIndex) !== null) {
                     await buttonInteraction.reply({
                         content: i18next.t('commands:rps.game.error.alreadyChosen', {
                             lng: buttonInteraction.locale,
@@ -154,12 +202,23 @@ class Game {
                     });
                     return;
                 }
-                this.rounds[this.currentRoundIndex].set(
-                    userIndex,
-                    buttonInteraction.customId as Choice,
-                );
 
-                if (this.rounds[this.currentRoundIndex].isFinished()) {
+                const choice = buttonInteraction.customId as Choice;
+
+                round.set(userIndex, choice);
+
+                if (round.roundId) {
+                    await db
+                        .insertInto('rps_choices')
+                        .values({
+                            rps_round_id: round.roundId,
+                            user_id: this.users[userIndex].id,
+                            choice,
+                        })
+                        .execute();
+                }
+
+                if (round.isFinished()) {
                     if (this.currentRoundIndex === 2) {
                         this.status = 'gameFinished';
                     } else {
