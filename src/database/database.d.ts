@@ -1,8 +1,8 @@
 import type { ColumnType, Generated, Insertable, Selectable, Updateable } from 'kysely';
 
 export interface Database {
-    tags: TagsTable;
     migrations: MigrationsTable;
+    tags: TagsTable;
 }
 
 export interface MigrationsTable {
