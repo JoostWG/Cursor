@@ -1,50 +1,28 @@
-import { sql } from 'kysely';
-import { defineMigration } from '../../migrate';
+/* eslint-disable @typescript-eslint/naming-convention */
+import { defineTables } from '../../migrate';
 
-export default defineMigration({
-    async up(schema) {
-        await schema
-            .createTable('rps_games')
-            .addColumn('id', 'integer', (col) => col.primaryKey().autoIncrement().notNull())
-            .addColumn('user_id', 'varchar(255)', (col) => col.notNull())
-            .addColumn('created_at', 'text', (col) =>
-                col.defaultTo(sql`CURRENT_TIMESTAMP`).notNull(),
-            )
-            .execute();
+export default defineTables({
+    rps_games: (builder) => builder.addColumn('user_id', 'varchar(255)', (col) => col.notNull()),
 
-        await schema
-            .createTable('rps_game_user')
-            .addColumn('id', 'integer', (col) => col.primaryKey().autoIncrement().notNull())
+    rps_game_user: (builder) =>
+        builder
             .addColumn('rps_game_id', 'integer', (col) =>
                 col.notNull().references('rps_games.id').onDelete('cascade'),
             )
-            .addColumn('user_id', 'varchar(255)', (col) => col.notNull())
-            .execute();
+            .addColumn('user_id', 'varchar(255)', (col) => col.notNull()),
 
-        await schema
-            .createTable('rps_rounds')
-            .addColumn('id', 'integer', (col) => col.primaryKey().autoIncrement().notNull())
+    rps_rounds: (builder) =>
+        builder
             .addColumn('rps_game_id', 'integer', (col) =>
                 col.notNull().references('rps_games.id').onDelete('cascade'),
             )
-            .addColumn('nr', 'integer', (col) => col.unsigned().notNull())
-            .execute();
+            .addColumn('nr', 'integer', (col) => col.unsigned().notNull()),
 
-        await schema
-            .createTable('rps_choices')
-            .addColumn('id', 'integer', (col) => col.primaryKey().autoIncrement().notNull())
+    rps_choices: (builder) =>
+        builder
             .addColumn('rps_round_id', 'integer', (col) =>
                 col.notNull().references('rps_rounds.id').onDelete('cascade'),
             )
             .addColumn('user_id', 'varchar(255)', (col) => col.notNull())
-            .addColumn('choice', 'varchar(255)', (col) => col.notNull())
-            .execute();
-    },
-
-    async down(schema) {
-        await schema.dropTable('rps_choices').execute();
-        await schema.dropTable('rps_rounds').execute();
-        await schema.dropTable('rps_game_user').execute();
-        await schema.dropTable('rps_games').execute();
-    },
+            .addColumn('choice', 'varchar(255)', (col) => col.notNull()),
 });

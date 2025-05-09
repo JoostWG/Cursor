@@ -15,36 +15,34 @@ export interface MigrationsTable {
     batch: number;
 }
 
-export interface TagsTable {
+export interface BaseTable {
     id: Generated<number>;
+    created_at: ColumnType<Date, string | undefined, never>;
+}
+
+export interface TagsTable extends BaseTable {
     guild_id: string;
     user_id: string;
     name: string;
     content: string;
     uses: Generated<number>;
-    created_at: ColumnType<Date, string | undefined, never>;
 }
 
-export interface RpsGamesTable {
-    id: Generated<number>;
+export interface RpsGamesTable extends BaseTable {
     user_id: string;
-    created_at: ColumnType<Date, string | undefined, never>;
 }
 
-export interface RpsGameUserTable {
-    id: Generated<number>;
+export interface RpsGameUserTable extends BaseTable {
     rps_game_id: number;
     user_id: string;
 }
 
-export interface RpsRoundsTable {
-    id: Generated<number>;
+export interface RpsRoundsTable extends BaseTable {
     rps_game_id: number;
     nr: number;
 }
 
-export interface RpsChoicesTable {
-    id: Generated<number>;
+export interface RpsChoicesTable extends BaseTable {
     rps_round_id: number;
     user_id: string;
     choice: 'rock' | 'paper' | 'scissors';

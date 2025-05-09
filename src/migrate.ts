@@ -1,5 +1,5 @@
 import fs from 'fs/promises';
-import type { SchemaModule } from 'kysely';
+import { type CreateTableBuilder, type SchemaModule, sql } from 'kysely';
 import path from 'path';
 import { pathToFileURL } from 'url';
 import { db } from './database/db';
@@ -33,6 +33,37 @@ class Migration {
 
 export function defineMigration(options: MigrationOptions) {
     return new Migration(options);
+}
+
+export function defineTables(
+    tables: Record<
+        string,
+        (builder: CreateTableBuilder<string, 'id'>) => CreateTableBuilder<string>
+    >,
+) {
+    return defineMigration({
+        async up(schema) {
+            for (const name of Object.keys(tables)) {
+                await tables[name](
+                    schema
+                        .createTable(name)
+                        .addColumn('id', 'integer', (col) =>
+                            col.primaryKey().autoIncrement().notNull(),
+                        ),
+                )
+                    .addColumn('created_at', 'text', (col) =>
+                        col.defaultTo(sql`CURRENT_TIMESTAMP`).notNull(),
+                    )
+                    .execute();
+            }
+        },
+
+        async down(schema) {
+            for (const name of Object.keys(tables).toReversed()) {
+                await schema.dropTable(name).execute();
+            }
+        },
+    });
 }
 
 (async () => {
