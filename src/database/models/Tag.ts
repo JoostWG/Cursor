@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-empty-object-type */
 import type { Snowflake } from 'discord.js';
 import type { SelectQueryBuilder } from 'kysely';
-import type { Database, NewTag, TagRow, TagUpdate } from '../database';
+import type { Database, NewTag, TagRow, TagUpdate } from '../../types/database';
 import { db } from '../db';
 
 export class Tag {
