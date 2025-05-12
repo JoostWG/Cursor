@@ -1,7 +1,6 @@
 import { REST, Routes } from 'discord.js';
 import { devGuildId, discordAppId, discordToken } from '../config.json';
-import getCommands from './getCommands';
-import { initI18Next } from './utils';
+import { getCommands, initI18Next } from './utils';
 
 (async () => {
     if (!discordToken || !discordAppId || !devGuildId) {

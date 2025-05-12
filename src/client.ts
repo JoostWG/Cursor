@@ -6,7 +6,7 @@ import {
     GatewayIntentBits,
     MessageFlags,
 } from 'discord.js';
-import getCommands from './getCommands';
+import { getCommands } from './utils';
 import type { BaseCommand } from './utils/command';
 import { CommandError } from './utils/command';
 
