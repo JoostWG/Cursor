@@ -79,7 +79,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
     } else if (interaction.isAutocomplete()) {
         const command = client.getCommand(interaction.commandName);
 
-        if (!command || !command.autocomplete) {
+        if (!command?.autocomplete) {
             console.error(`No command matching ${interaction.commandName} was found.`);
             return;
         }

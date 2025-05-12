@@ -120,7 +120,7 @@ class Game {
             return;
         }
 
-        switch (inviteInteraction?.customId) {
+        switch (inviteInteraction.customId) {
             case 'accept':
                 this.status = 'gameActive';
                 await inviteInteraction.update({ components: this.buildComponents() });

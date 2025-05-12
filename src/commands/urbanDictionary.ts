@@ -39,7 +39,7 @@ type ResponseData<T> =
           error: string | number;
       };
 
-const hyperlinkRegex = /\[([^[\]]+)]/gm;
+const hyperlinkRegex = /\[([^[\]]+)\]/gmu;
 
 class ApiError extends Error {
     //
@@ -259,7 +259,10 @@ class UrbanDictionaryView {
     }
 
     private transformHyperlinks(text: string) {
-        return text.replace(hyperlinkRegex, (_, term) => `[${term}](${this.getWebUrl(term)})`);
+        return text.replace(
+            hyperlinkRegex,
+            (_, term: string) => `[${term}](${this.getWebUrl(term)})`,
+        );
     }
 
     private getWebUrl(term: string) {

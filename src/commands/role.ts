@@ -120,7 +120,7 @@ export default class RoleCommand extends BaseCommand {
         return Object.entries(Colors)
             .map(([name, value]) => ({
                 // Convert PascalCase to normal text
-                name: name.replaceAll(/([a-z])([A-Z])/g, (_, a, b) => `${a} ${b.toLowerCase()}`),
+                name: name.replaceAll(/([a-z])([A-Z])/gu, (_, a, b) => `${a} ${b.toLowerCase()}`),
                 value: `#${value.toString(16)}`,
             }))
             .filter(({ name }) => name.toLowerCase().includes(q))
@@ -166,8 +166,8 @@ export default class RoleCommand extends BaseCommand {
 
         if (colorInput) {
             // TODO: discord.js resolveColor
-            const pattern = /^(?:#|0x)?([0-9a-fA-F]{6})$/;
-            const match = colorInput.match(pattern);
+            const pattern = /^(?:#|0x)?([0-9a-fA-F]{6})$/u;
+            const match = pattern.exec(colorInput);
 
             if (!match) {
                 throw new CommandError(
