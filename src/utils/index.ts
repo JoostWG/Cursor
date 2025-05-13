@@ -21,7 +21,7 @@ export async function initI18Next() {
 
 export async function* getCommands(dir?: string): AsyncGenerator<BaseCommand> {
     // eslint-disable-next-line no-param-reassign
-    dir ??= path.join(__dirname, './commands');
+    dir ??= path.join(__dirname, '../commands');
 
     for (const dirent of await fs.readdir(dir, { withFileTypes: true })) {
         const fullPath = path.join(dir, dirent.name);
