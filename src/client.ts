@@ -6,6 +6,7 @@ import {
     GatewayIntentBits,
     MessageFlags,
 } from 'discord.js';
+import { db } from './database/db';
 import { getCommands } from './utils';
 import type { BaseCommand } from './utils/command';
 import { CommandError } from './utils/command';
@@ -51,6 +52,18 @@ client.on(Events.InteractionCreate, async (interaction) => {
             console.error(`No command matching ${interaction.commandName} was found.`);
             return;
         }
+
+        db.insertInto('command_logs')
+            .values({
+                interaction_id: interaction.id,
+                user_id: interaction.user.id,
+                channel_id: interaction.channelId,
+                guild_id: interaction.inGuild() ? interaction.guildId : null,
+                command_name: interaction.commandName,
+                options: JSON.stringify(interaction.options.data),
+            })
+            .execute()
+            .catch(console.error);
 
         try {
             await command.execute(interaction);

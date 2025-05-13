@@ -1,4 +1,12 @@
-import type { ColumnType, Generated, Insertable, Selectable, Updateable } from 'kysely';
+import type { CommandInteractionOption } from 'discord.js';
+import type {
+    ColumnType,
+    Generated,
+    Insertable,
+    JSONColumnType,
+    Selectable,
+    Updateable,
+} from 'kysely';
 
 export interface Database {
     migrations: MigrationsTable;
@@ -7,6 +15,7 @@ export interface Database {
     rps_game_user: RpsGameUserTable;
     rps_rounds: RpsRoundsTable;
     rps_choices: RpsChoicesTable;
+    command_logs: CommandLogsTable;
 }
 
 export interface MigrationsTable {
@@ -46,6 +55,15 @@ export interface RpsChoicesTable extends BaseTable {
     rps_round_id: number;
     user_id: string;
     choice: 'rock' | 'paper' | 'scissors';
+}
+
+export interface CommandLogsTable extends BaseTable {
+    interaction_id: string;
+    user_id: string;
+    channel_id: string;
+    guild_id: string | null;
+    command_name: string;
+    options: JSONColumnType<CommandInteractionOption>;
 }
 
 export type TagRow = Selectable<TagsTable>;
