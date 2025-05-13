@@ -60,6 +60,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
                 channel_id: interaction.channelId,
                 guild_id: interaction.inGuild() ? interaction.guildId : null,
                 command_name: interaction.commandName,
+                command_type: interaction.commandType,
                 options: JSON.stringify(interaction.options.data),
             })
             .execute()

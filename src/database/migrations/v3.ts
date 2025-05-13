@@ -9,5 +9,6 @@ export default defineTables({
             .addColumn('channel_id', 'varchar(255)', (col) => col.notNull())
             .addColumn('guild_id', 'varchar(255)')
             .addColumn('command_name', 'varchar(255)')
+            .addColumn('command_type', 'integer', (col) => col.unsigned().notNull())
             .addColumn('options', 'json', (col) => col.notNull()),
 });

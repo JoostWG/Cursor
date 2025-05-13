@@ -1,4 +1,4 @@
-import type { CommandInteractionOption } from 'discord.js';
+import type { ApplicationCommandType, CommandInteractionOption } from 'discord.js';
 import type {
     ColumnType,
     Generated,
@@ -62,6 +62,7 @@ export interface CommandLogsTable extends BaseTable {
     user_id: string;
     channel_id: string;
     guild_id: string | null;
+    command_type: ApplicationCommandType;
     command_name: string;
     options: JSONColumnType<CommandInteractionOption>;
 }
