@@ -12,7 +12,7 @@ import {
 } from 'discord.js';
 import i18next from 'i18next';
 import { getTranslations, localize } from '../utils';
-import { BaseCommand, CommandError } from '../utils/command';
+import { CommandError, SlashCommand } from '../utils/command';
 
 type JokeBlacklistFlag = 'nsfw' | 'religious' | 'political' | 'racist' | 'sexist' | 'explicit';
 
@@ -74,7 +74,7 @@ type MultipleJokesResponse = SuccessResponse & {
     jokes: (SingleTypeJoke | TwopartTypeJoke)[];
 };
 
-export default class JokeCommand extends BaseCommand {
+export default class JokeCommand extends SlashCommand {
     private api: axios.AxiosInstance;
 
     public constructor() {

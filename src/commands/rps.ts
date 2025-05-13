@@ -18,7 +18,7 @@ import {
 import i18next from 'i18next';
 import { db } from '../database/db';
 import { localize } from '../utils';
-import { BaseCommand, CommandError } from '../utils/command';
+import { CommandError, SlashCommand } from '../utils/command';
 
 const emojis = {
     rock: '🪨',
@@ -359,7 +359,7 @@ class Game {
     }
 }
 
-export default class RockPaperScissorsCommand extends BaseCommand {
+export default class RockPaperScissorsCommand extends SlashCommand {
     public constructor() {
         super('rps');
 

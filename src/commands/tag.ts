@@ -16,7 +16,7 @@ import {
     inlineCode,
 } from 'discord.js';
 import { Tag } from '../database/models/Tag';
-import { BaseCommand, CommandError } from '../utils/command';
+import { CommandError, SlashCommand } from '../utils/command';
 
 class TagNotFoundError extends CommandError {
     public name: string;
@@ -27,7 +27,7 @@ class TagNotFoundError extends CommandError {
     }
 }
 
-export default class TagCommand extends BaseCommand {
+export default class TagCommand extends SlashCommand {
     public constructor() {
         super('tag');
 

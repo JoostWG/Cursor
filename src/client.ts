@@ -8,11 +8,11 @@ import {
 } from 'discord.js';
 import { db } from './database/db';
 import { getCommands } from './utils';
-import type { BaseCommand } from './utils/command';
+import type { BaseApplicationCommand } from './utils/command';
 import { CommandError } from './utils/command';
 
 export class Client extends DiscordJsClient {
-    private commands: Collection<string, BaseCommand>;
+    private commands: Collection<string, BaseApplicationCommand>;
 
     public constructor(options: ClientOptions) {
         super(options);
@@ -45,7 +45,7 @@ client.on(Events.ClientReady, async () => {
 });
 
 client.on(Events.InteractionCreate, async (interaction) => {
-    if (interaction.isChatInputCommand()) {
+    if (interaction.isCommand()) {
         const command = client.getCommand(interaction.commandName);
 
         if (!command) {
@@ -91,8 +91,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
         }
     } else if (interaction.isAutocomplete()) {
         const command = client.getCommand(interaction.commandName);
-
-        if (!command?.autocomplete) {
+        if (!command?.isSlashCommand() || !command.autocomplete) {
             console.error(`No command matching ${interaction.commandName} was found.`);
             return;
         }

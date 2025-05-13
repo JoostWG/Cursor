@@ -4,7 +4,7 @@ import i18next from 'i18next';
 import I18NexFsBackend from 'i18next-fs-backend';
 import path from 'path';
 import { pathToFileURL } from 'url';
-import type { BaseCommand } from './command';
+import type { BaseApplicationCommand } from './command';
 
 export async function initI18Next() {
     return await i18next.use(I18NexFsBackend).init({
@@ -19,7 +19,7 @@ export async function initI18Next() {
     });
 }
 
-export async function* getCommands(dir?: string): AsyncGenerator<BaseCommand> {
+export async function* getCommands(dir?: string): AsyncGenerator<BaseApplicationCommand> {
     // eslint-disable-next-line no-param-reassign
     dir ??= path.join(__dirname, '../commands');
 

@@ -31,7 +31,7 @@ import {
     time,
 } from 'discord.js';
 import { localize } from '../utils';
-import { BaseCommand, CommandError } from '../utils/command';
+import { CommandError, SlashCommand } from '../utils/command';
 
 class InvalidRoleError extends CommandError {
     //
@@ -39,7 +39,7 @@ class InvalidRoleError extends CommandError {
 
 type AllowedRoleProps = 'name' | 'color' | 'hoist' | 'mentionable';
 
-export default class RoleCommand extends BaseCommand {
+export default class RoleCommand extends SlashCommand {
     public constructor() {
         super('role');
 

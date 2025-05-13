@@ -2,9 +2,9 @@ import type { ChatInputCommandInteraction } from 'discord.js';
 import { EmbedBuilder, SlashCommandUserOption, TimestampStyles, time } from 'discord.js';
 import i18next from 'i18next';
 import { localize } from '../utils';
-import { BaseCommand } from '../utils/command';
+import { SlashCommand } from '../utils/command';
 
-export default class UserCommand extends BaseCommand {
+export default class UserCommand extends SlashCommand {
     public constructor() {
         super('user');
 

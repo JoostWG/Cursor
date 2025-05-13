@@ -18,7 +18,7 @@ import {
 } from 'discord.js';
 import i18next from 'i18next';
 import { localize } from '../utils';
-import { BaseCommand } from '../utils/command';
+import { SlashCommand } from '../utils/command';
 
 interface Definition {
     defid: number;
@@ -270,7 +270,7 @@ class UrbanDictionaryView {
     }
 }
 
-export default class UrbanDictionaryCommand extends BaseCommand {
+export default class UrbanDictionaryCommand extends SlashCommand {
     public constructor() {
         super('urban-dictionary');
 
