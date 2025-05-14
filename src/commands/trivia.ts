@@ -144,8 +144,6 @@ export default class TriviaCommand extends SlashCommand {
     public constructor() {
         super('trivia');
 
-        this.devOnly = true;
-
         this.data
             .setDescription('Test your knowledge!')
             .addStringOption(
