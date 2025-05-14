@@ -1,4 +1,5 @@
 import js from '@eslint/js';
+import eslintPluginPrettier from 'eslint-plugin-prettier';
 import { defineConfig, globalIgnores } from 'eslint/config';
 import globals from 'globals';
 import tseslint from 'typescript-eslint';
@@ -52,7 +53,9 @@ export default defineConfig(
                 project: './tsconfig.json', // make sure this path is correct
             },
         },
+        plugins: { prettier: eslintPluginPrettier },
         rules: {
+            'prettier/prettier': 'warn',
             '@typescript-eslint/no-floating-promises': ['warn', { ignoreIIFE: true }],
             '@typescript-eslint/consistent-type-imports': 'error',
             '@typescript-eslint/prefer-nullish-coalescing': 'warn',
