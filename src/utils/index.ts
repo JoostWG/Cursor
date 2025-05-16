@@ -28,7 +28,7 @@ export async function* getCommands(dir?: string): AsyncGenerator<BaseApplication
 
         if (dirent.isDirectory()) {
             yield* getCommands(fullPath);
-        } else {
+        } else if (fullPath.endsWith('.js')) {
             const commandModule = await import(pathToFileURL(fullPath).href);
             const command = commandModule.default.default;
 
