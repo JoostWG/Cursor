@@ -65,7 +65,6 @@ class Game {
     private timeout: number;
     private locale?: Locale;
     private gameId?: number;
-
     private status:
         | 'invitePending'
         | 'inviteDenied'

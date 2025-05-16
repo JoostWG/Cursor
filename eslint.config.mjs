@@ -1,14 +1,30 @@
 import js from '@eslint/js';
 import eslintPluginPrettier from 'eslint-plugin-prettier';
 import { defineConfig, globalIgnores } from 'eslint/config';
-import globals from 'globals';
 import tseslint from 'typescript-eslint';
+import stylistic from '@stylistic/eslint-plugin';
 
 export default defineConfig(
-    globalIgnores(['dist/*', 'eslint.config.mjs']),
-    { files: ['**/*.{js,mjs,cjs,ts}'], plugins: { js }, ...js.configs.all },
+    globalIgnores(['dist/*', 'eslint.config.mjs', 'prettier.config.js']),
+    js.configs.all,
+    tseslint.configs.all,
     {
-        files: ['**/*.{js,mjs,cjs,ts}'], plugins: { js }, rules: {
+        files: ['**/*.ts'],
+        plugins: {
+            js,
+            prettier: eslintPluginPrettier,
+            stylistic,
+        },
+        languageOptions: {
+            parser: tseslint.parser,
+            parserOptions: {
+                project: './tsconfig.json', // make sure this path is correct
+            },
+        },
+        rules: {
+            'prettier/prettier': 'warn',
+
+            // JS
             'prefer-template': 'warn',
             'arrow-body-style': 'warn',
             'object-shorthand': 'warn',
@@ -41,21 +57,8 @@ export default defineConfig(
             'no-warning-comments': 'off',
             'no-inline-comments': 'off',
             'no-void': 'off',
-        }
-    },
-    { files: ['**/*.{js,mjs,cjs,ts}'], languageOptions: { globals: globals.browser } },
-    tseslint.configs.all,
-    {
-        files: ['**/*.ts'],
-        languageOptions: {
-            parser: tseslint.parser,
-            parserOptions: {
-                project: './tsconfig.json', // make sure this path is correct
-            },
-        },
-        plugins: { prettier: eslintPluginPrettier },
-        rules: {
-            'prettier/prettier': 'warn',
+
+            // TS
             '@typescript-eslint/no-floating-promises': ['warn', { ignoreIIFE: true }],
             '@typescript-eslint/consistent-type-imports': 'error',
             '@typescript-eslint/prefer-nullish-coalescing': 'warn',
@@ -95,6 +98,15 @@ export default defineConfig(
             '@typescript-eslint/no-misused-promises': 'off',
             '@typescript-eslint/init-declarations': 'off',
             '@typescript-eslint/require-await': 'off',
+
+            // Things prettier doesn' cover
+            'stylistic/lines-between-class-members': ['warn', {
+                enforce: [
+                    { prev: '*', next: 'method', blankLine: 'always' },
+                    { prev: 'method', next: '*', blankLine: 'always' },
+                    { prev: 'field', next: 'field', blankLine: 'never' },
+                ],
+            }],
         },
     },
 );
