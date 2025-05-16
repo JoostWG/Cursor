@@ -109,7 +109,7 @@ export default class TagCommand extends SlashCommand {
             );
     }
 
-    public async autocomplete(
+    public override async autocomplete(
         interaction: AutocompleteInteraction,
     ): Promise<ApplicationCommandOptionChoiceData[]> {
         if (!interaction.guildId) {

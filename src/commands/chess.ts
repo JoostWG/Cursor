@@ -231,7 +231,7 @@ export default class ChessCommand extends SlashCommand {
             );
     }
 
-    public async autocomplete(interaction: AutocompleteInteraction) {
+    public override async autocomplete(interaction: AutocompleteInteraction) {
         const game = this.games.get(interaction.user.id);
 
         if (!game) {
