@@ -6,8 +6,8 @@
         "deploy-global": "node ./dist/deploy.js --global",
         "migrate": "node ./dist/migrate.js --up",
         "rollback": "node ./dist/migrate.js --down",
-        "watch": "tsc --watch",
-        "build": "tsc --build",
+        "watch": "tsc --watch --sourceMap",
+        "build": "tsc --build --sourceMap",
         "format": "prettier --write src/",
         "lint": "eslint .",
         "l-f": "npm run lint -- --fix && npm run format -- --log-level warn"
