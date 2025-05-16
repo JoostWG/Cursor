@@ -1,5 +1,5 @@
 {
-    "version": "6.1.0",
+    "version": "6.2.0",
     "scripts": {
         "deploy": "node ./dist/deploy.js --dev --global",
         "deploy-dev": "node ./dist/deploy.js --dev",
