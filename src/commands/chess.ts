@@ -119,7 +119,7 @@ class Game {
         const ctx = canvas.getContext('2d');
 
         ctx.beginPath();
-        ctx.fillStyle = 'black';
+        ctx.fillStyle = '#241302';
         ctx.rect(0, 0, canvas.width, canvas.height);
         ctx.fill();
 
@@ -169,7 +169,7 @@ class Game {
 
                 const square = `${letterMap[columnIndex]}${8 - rowIndex}`;
                 ctx.beginPath();
-                ctx.fillStyle = (rowIndex + columnIndex) % 2 ? 'darkgray' : 'lightgray';
+                ctx.fillStyle = (rowIndex + columnIndex) % 2 ? '#d28c45' : '#ffcf9f';
                 ctx.rect(...pos);
                 ctx.fill();
 
