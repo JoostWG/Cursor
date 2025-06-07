@@ -6,6 +6,7 @@ import type {
     AutocompleteInteraction,
     ChatInputCommandInteraction,
     InteractionReplyOptions,
+    Locale,
     Snowflake,
 } from 'discord.js';
 import {
@@ -44,6 +45,10 @@ abstract class ChessPieceFactory {
     public abstract getPieceImage(piece: Piece): Promise<Canvas | Image>;
 }
 
+abstract class MessageFactory {
+    public abstract getMessage(chess: Chess): string;
+}
+
 class CheckerboardTheme implements ChessBoardTheme {
     public constructor(
         private readonly colors: {
@@ -76,11 +81,13 @@ class DefaultChessPieceFactory implements ChessPieceFactory {
         k: 'King',
     } as const;
 
+    public constructor(private readonly dirPath: string) {}
+
     public async getPieceImage(piece: Piece) {
         return await loadImage(
             path.join(
                 __dirname,
-                `../../assets/chess/${this.colorMap[piece.color]}${this.pieceMap[piece.type]}.png`,
+                `${this.dirPath}/${this.colorMap[piece.color]}${this.pieceMap[piece.type]}.png`,
             ),
         );
     }
@@ -180,8 +187,29 @@ class DefaultChessBoard implements ChessBoard {
     }
 }
 
+class DefaultMessageFactory implements MessageFactory {
+    public constructor(private readonly locale: Locale) {}
+
+    public getMessage(chess: Chess) {
+        const title = `${chess.turn() === 'w' ? 'White' : 'Black'} to move`;
+
+        if (chess.isCheckmate()) {
+            return `Checkmate! ${chess.turn() === 'w' ? 'Black' : 'White'} wins.`;
+        } else if (chess.isDraw()) {
+            return 'Draw! TODO: Display why';
+        } else if (chess.isCheck()) {
+            return `Check! ${title}`;
+        }
+
+        return title;
+    }
+}
+
 class InteractionHandler implements OutputHandler {
-    public constructor(private readonly interaction: ChatInputCommandInteraction) {}
+    public constructor(
+        private readonly interaction: ChatInputCommandInteraction,
+        private readonly messageFactory: MessageFactory,
+    ) {}
 
     public async initiate(chess: Chess, boardImageData: Buffer) {
         await this.interaction.reply(await this.buildMessage(chess, boardImageData));
@@ -194,23 +222,15 @@ class InteractionHandler implements OutputHandler {
     private async buildMessage(chess: Chess, boardImageData: Buffer) {
         const file = new AttachmentBuilder(boardImageData, { name: 'board.png' });
 
-        let title = `${chess.turn() === 'w' ? 'White' : 'Black'} to move`;
-
-        if (chess.isCheckmate()) {
-            title = `Checkmate! ${chess.turn() === 'w' ? 'Black' : 'White'} wins.`;
-        } else if (chess.isDraw()) {
-            title = 'Draw! TODO: Display why';
-        } else if (chess.isCheck()) {
-            title = `Check! ${title}`;
-        }
-
         return {
             flags: MessageFlags.IsComponentsV2,
             files: [file],
             components: [
                 new ContainerBuilder()
                     .addTextDisplayComponents(
-                        new TextDisplayBuilder().setContent(heading(title, HeadingLevel.Three)),
+                        new TextDisplayBuilder().setContent(
+                            heading(this.messageFactory.getMessage(chess), HeadingLevel.Three),
+                        ),
                     )
                     .addMediaGalleryComponents(
                         new MediaGalleryBuilder().addItems(
@@ -316,11 +336,11 @@ export default class ChessCommand extends SlashCommand {
     private async handleStart(interaction: ChatInputCommandInteraction) {
         const game = new Game(
             new Chess(),
-            new InteractionHandler(interaction),
+            new InteractionHandler(interaction, new DefaultMessageFactory(interaction.locale)),
             new DefaultChessBoard(
                 512,
                 new CheckerboardTheme({ light: '#ffcf9f', dark: '#d28c45', border: '#241302' }),
-                new DefaultChessPieceFactory(),
+                new DefaultChessPieceFactory('../../assets/chess'),
             ),
         );
 
