@@ -37,6 +37,7 @@ abstract class ChessBoard {
 
 abstract class ChessBoardTheme {
     public abstract squareColor(x: number, y: number): ChessBoardColor;
+    public abstract borderColor(): ChessBoardColor;
 }
 
 abstract class ChessPieceFactory {
@@ -45,12 +46,19 @@ abstract class ChessPieceFactory {
 
 class CheckerboardTheme implements ChessBoardTheme {
     public constructor(
-        private readonly light: ChessBoardColor,
-        private readonly dark: ChessBoardColor,
+        private readonly colors: {
+            light: ChessBoardColor;
+            dark: ChessBoardColor;
+            border: ChessBoardColor;
+        },
     ) {}
 
     public squareColor(x: number, y: number) {
-        return (x + y) % 2 ? this.dark : this.light;
+        return (x + y) % 2 ? this.colors.dark : this.colors.light;
+    }
+
+    public borderColor() {
+        return this.colors.border;
     }
 }
 
@@ -94,7 +102,7 @@ class DefaultChessBoard implements ChessBoard {
         const ctx = canvas.getContext('2d');
 
         ctx.beginPath();
-        ctx.fillStyle = '#241302';
+        ctx.fillStyle = this.theme.borderColor();
         ctx.rect(0, 0, canvas.width, canvas.height);
         ctx.fill();
 
@@ -311,7 +319,7 @@ export default class ChessCommand extends SlashCommand {
             new InteractionHandler(interaction),
             new DefaultChessBoard(
                 512,
-                new CheckerboardTheme('#ffcf9f', '#d28c45'),
+                new CheckerboardTheme({ light: '#ffcf9f', dark: '#d28c45', border: '#241302' }),
                 new DefaultChessPieceFactory(),
             ),
         );
