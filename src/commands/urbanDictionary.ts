@@ -41,26 +41,31 @@ type ResponseData<T> =
 
 const hyperlinkRegex = /\[([^[\]]+)\]/gmu;
 
+abstract class Api {
+    public abstract define(term: string): Promise<Definition[]>;
+    public abstract autocomplete(term: string): Promise<string[]>;
+}
+
 class ApiError extends Error {
     //
 }
 
-class Api {
-    private static readonly axios = axios.create({
+class UrbanDictionaryApi implements Api {
+    private readonly axios = axios.create({
         baseURL: 'https://api.urbandictionary.com/v0',
     });
 
-    public static async define(term: string) {
+    public async define(term: string) {
         const data = await this.get<{ list: Definition[] }>('/define', { params: { term } });
 
         return data.list;
     }
 
-    public static async autocomplete(term: string) {
+    public async autocomplete(term: string) {
         return await this.get<string[]>('/autocomplete', { params: { term } });
     }
 
-    private static async get<T>(url: string, config?: axios.AxiosRequestConfig) {
+    private async get<T>(url: string, config?: axios.AxiosRequestConfig) {
         const { data } = await this.axios.get<ResponseData<T>>(url, config);
 
         // `data` can be anything
@@ -74,12 +79,14 @@ class Api {
 
 // This class is a mess (kinda), but works well
 class UrbanDictionaryView {
+    private readonly api: Api;
     private readonly cache: Map<string, Definition[]>;
     private readonly history: { term: string; index: number }[];
     private locale?: Locale;
     private active: boolean;
 
-    public constructor(initialTerm: string) {
+    public constructor(initialTerm: string, api: Api) {
+        this.api = api;
         this.cache = new Map();
         this.history = [{ term: initialTerm, index: 0 }];
         this.active = true;
@@ -161,7 +168,7 @@ class UrbanDictionaryView {
             return;
         }
 
-        this.cache.set(this.current.term, await Api.define(this.current.term));
+        this.cache.set(this.current.term, await this.api.define(this.current.term));
     }
 
     private buildComponents() {
@@ -271,8 +278,12 @@ class UrbanDictionaryView {
 }
 
 export default class UrbanDictionaryCommand extends SlashCommand {
+    private readonly api: Api;
+
     public constructor() {
         super('urban-dictionary');
+
+        this.api = new UrbanDictionaryApi();
 
         this.data
             .setNSFW(true)
@@ -284,7 +295,7 @@ export default class UrbanDictionaryCommand extends SlashCommand {
     }
 
     public override async execute(interaction: ChatInputCommandInteraction) {
-        await new UrbanDictionaryView(interaction.options.getString('term', true)).start(
+        await new UrbanDictionaryView(interaction.options.getString('term', true), this.api).start(
             interaction,
         );
     }
@@ -296,7 +307,7 @@ export default class UrbanDictionaryCommand extends SlashCommand {
             return [];
         }
 
-        const results = await Api.autocomplete(term);
+        const results = await this.api.autocomplete(term);
 
         return results.map((result) => ({ name: result, value: result }));
     }

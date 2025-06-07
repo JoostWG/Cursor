@@ -78,6 +78,7 @@ export default defineConfig(
             '@typescript-eslint/no-non-null-assertion': 'error',
             '@typescript-eslint/prefer-readonly': 'warn',
             '@typescript-eslint/no-unsafe-member-access': 'error',
+            '@typescript-eslint/no-extraneous-class': 'warn',
             // Below is all disabled
             '@typescript-eslint/no-unsafe-type-assertion': 'off',
             '@typescript-eslint/non-nullable-type-assertion-style': 'off',
@@ -87,7 +88,6 @@ export default defineConfig(
             '@typescript-eslint/explicit-function-return-type': 'off',
             '@typescript-eslint/explicit-module-boundary-types': 'off',
             '@typescript-eslint/no-unsafe-call': 'off',
-            '@typescript-eslint/no-extraneous-class': 'off',
             '@typescript-eslint/no-unsafe-assignment': 'off',
             '@typescript-eslint/return-await': 'off',
             '@typescript-eslint/await-thenable': 'off',
