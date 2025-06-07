@@ -1,4 +1,4 @@
-import type { Canvas, Image } from 'canvas';
+import type { Canvas, CanvasRenderingContext2D, Image } from 'canvas';
 import { createCanvas, loadImage } from 'canvas';
 import type { Piece } from 'chess.js';
 import { Chess } from 'chess.js';
@@ -101,10 +101,7 @@ class DefaultChessBoard implements ChessBoard {
         const canvas = createCanvas(this.size + borderWidth * 2, this.size + borderWidth * 2);
         const ctx = canvas.getContext('2d');
 
-        ctx.beginPath();
-        ctx.fillStyle = this.theme.borderColor();
-        ctx.rect(0, 0, canvas.width, canvas.height);
-        ctx.fill();
+        this.drawSquare(ctx, this.theme.borderColor(), 0, 0, canvas.width, canvas.height);
 
         const lastMove = chess.history({ verbose: true }).at(-1);
 
@@ -151,23 +148,15 @@ class DefaultChessBoard implements ChessBoard {
                 ] as const;
 
                 const square = `${this.letterMap[columnIndex]}${8 - rowIndex}`;
-                ctx.beginPath();
-                ctx.fillStyle = this.theme.squareColor(columnIndex, rowIndex);
-                ctx.rect(...pos);
-                ctx.fill();
+
+                this.drawSquare(ctx, this.theme.squareColor(columnIndex, rowIndex), ...pos);
 
                 if (lastMove && lastMove.from === square) {
-                    ctx.beginPath();
-                    ctx.fillStyle = '#FF000033';
-                    ctx.rect(...pos);
-                    ctx.fill();
+                    this.drawSquare(ctx, '#FF000033', ...pos);
                 }
 
                 if (lastMove && lastMove.to === square) {
-                    ctx.beginPath();
-                    ctx.fillStyle = '#00FF0033';
-                    ctx.rect(...pos);
-                    ctx.fill();
+                    this.drawSquare(ctx, '#00FF0033', ...pos);
                 }
 
                 if (cell) {
@@ -177,6 +166,17 @@ class DefaultChessBoard implements ChessBoard {
         }
 
         return canvas.toBuffer('image/png');
+    }
+
+    private drawSquare(
+        ctx: CanvasRenderingContext2D,
+        fillStyle: CanvasRenderingContext2D['fillStyle'],
+        ...args: Parameters<CanvasRenderingContext2D['rect']>
+    ) {
+        ctx.beginPath();
+        ctx.fillStyle = fillStyle;
+        ctx.rect(...args);
+        ctx.fill();
     }
 }
 
