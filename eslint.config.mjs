@@ -98,6 +98,7 @@ export default defineConfig(
             '@typescript-eslint/no-misused-promises': 'off',
             '@typescript-eslint/init-declarations': 'off',
             '@typescript-eslint/require-await': 'off',
+            '@typescript-eslint/parameter-properties': 'off',
 
             // Things prettier doesn' cover
             'stylistic/lines-between-class-members': ['warn', {
