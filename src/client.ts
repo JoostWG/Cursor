@@ -12,7 +12,7 @@ import type { BaseApplicationCommand } from './utils/command';
 import { CommandError } from './utils/command';
 
 export class Client extends DiscordJsClient {
-    private commands: Collection<string, BaseApplicationCommand>;
+    private readonly commands: Collection<string, BaseApplicationCommand>;
 
     public constructor(options: ClientOptions) {
         super(options);

@@ -75,7 +75,7 @@ type MultipleJokesResponse = SuccessResponse & {
 };
 
 export default class JokeCommand extends SlashCommand {
-    private api: axios.AxiosInstance;
+    private readonly api: axios.AxiosInstance;
 
     public constructor() {
         super('joke');

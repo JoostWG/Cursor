@@ -14,8 +14,8 @@ interface MigrationOptions {
 }
 
 class Migration {
-    #up: MigrationCallback;
-    #down: MigrationCallback;
+    readonly #up: MigrationCallback;
+    readonly #down: MigrationCallback;
 
     public constructor(options: MigrationOptions) {
         this.#up = options.up;

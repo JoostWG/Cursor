@@ -59,10 +59,10 @@ class Round {
 }
 
 class Game {
-    private users: [User, User];
-    private rounds: [Round, Round, Round];
+    private readonly users: [User, User];
+    private readonly rounds: [Round, Round, Round];
     private currentRoundIndex: number;
-    private timeout: number;
+    private readonly timeout: number;
     private locale?: Locale;
     private gameId?: number;
     private status:

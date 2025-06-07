@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/prefer-readonly */
 /* eslint-disable @typescript-eslint/no-empty-object-type */
 import type { Snowflake } from 'discord.js';
 import type { SelectQueryBuilder } from 'kysely';

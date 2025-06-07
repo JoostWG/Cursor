@@ -46,7 +46,7 @@ class ApiError extends Error {
 }
 
 class Api {
-    private static axios = axios.create({
+    private static readonly axios = axios.create({
         baseURL: 'https://api.urbandictionary.com/v0',
     });
 
@@ -74,8 +74,8 @@ class Api {
 
 // This class is a mess (kinda), but works well
 class UrbanDictionaryView {
-    private cache: Map<string, Definition[]>;
-    private history: { term: string; index: number }[];
+    private readonly cache: Map<string, Definition[]>;
+    private readonly history: { term: string; index: number }[];
     private locale?: Locale;
     private active: boolean;
 

@@ -76,6 +76,7 @@ export default defineConfig(
             '@typescript-eslint/prefer-regexp-exec': 'warn',
             '@typescript-eslint/prefer-optional-chain': 'warn',
             '@typescript-eslint/no-non-null-assertion': 'error',
+            '@typescript-eslint/prefer-readonly': 'warn',
             // Below is all disabled
             '@typescript-eslint/no-unsafe-type-assertion': 'off',
             '@typescript-eslint/non-nullable-type-assertion-style': 'off',
@@ -84,7 +85,6 @@ export default defineConfig(
             '@typescript-eslint/prefer-readonly-parameter-types': 'off',
             '@typescript-eslint/explicit-function-return-type': 'off',
             '@typescript-eslint/explicit-module-boundary-types': 'off',
-            '@typescript-eslint/prefer-readonly': 'off',
             '@typescript-eslint/no-unsafe-call': 'off',
             '@typescript-eslint/no-unsafe-member-access': 'off',
             '@typescript-eslint/no-extraneous-class': 'off',
