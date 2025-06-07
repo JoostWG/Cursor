@@ -94,6 +94,7 @@ export function defineTables(
         }
 
         const module = await import(pathToFileURL(path.join(dirPath, dirent.name)).href);
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
         const migration = module.default.default;
 
         if (migration instanceof Migration) {

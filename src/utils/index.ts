@@ -30,6 +30,7 @@ export async function* getCommands(dir?: string): AsyncGenerator<BaseApplication
             yield* getCommands(fullPath);
         } else if (fullPath.endsWith('.js')) {
             const commandModule = await import(pathToFileURL(fullPath).href);
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
             const command = commandModule.default.default;
 
             if (command) {

@@ -120,7 +120,10 @@ export default class RoleCommand extends SlashCommand {
         return Object.entries(Colors)
             .map(([name, value]) => ({
                 // Convert PascalCase to normal text
-                name: name.replaceAll(/([a-z])([A-Z])/gu, (_, a, b) => `${a} ${b.toLowerCase()}`),
+                name: name.replaceAll(
+                    /([a-z])([A-Z])/gu,
+                    (_, a: string, b: string) => `${a} ${b.toLowerCase()}`,
+                ),
                 value: `#${value.toString(16)}`,
             }))
             .filter(({ name }) => name.toLowerCase().includes(q))
