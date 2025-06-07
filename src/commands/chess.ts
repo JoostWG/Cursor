@@ -1,23 +1,25 @@
-import type { Canvas, CanvasRenderingContext2D, Image } from 'canvas';
-import { createCanvas, loadImage } from 'canvas';
-import type { Piece } from 'chess.js';
-import { Chess } from 'chess.js';
-import type {
-    AutocompleteInteraction,
-    ChatInputCommandInteraction,
-    InteractionReplyOptions,
-    Locale,
-    Snowflake,
-} from 'discord.js';
+import {
+    type Canvas,
+    type CanvasRenderingContext2D,
+    type Image,
+    createCanvas,
+    loadImage,
+} from 'canvas';
+import { Chess, type Piece } from 'chess.js';
 import {
     AttachmentBuilder,
+    type AutocompleteInteraction,
+    type ChatInputCommandInteraction,
     ContainerBuilder,
     HeadingLevel,
+    type InteractionReplyOptions,
+    type Locale,
     MediaGalleryBuilder,
     MediaGalleryItemBuilder,
     MessageFlags,
     SlashCommandStringOption,
     SlashCommandSubcommandBuilder,
+    type Snowflake,
     TextDisplayBuilder,
     heading,
     subtext,

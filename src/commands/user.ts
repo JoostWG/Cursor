@@ -1,5 +1,10 @@
-import type { ChatInputCommandInteraction } from 'discord.js';
-import { EmbedBuilder, SlashCommandUserOption, TimestampStyles, time } from 'discord.js';
+import {
+    type ChatInputCommandInteraction,
+    EmbedBuilder,
+    SlashCommandUserOption,
+    TimestampStyles,
+    time,
+} from 'discord.js';
 import i18next from 'i18next';
 import { localize } from '../utils';
 import { SlashCommand } from '../utils/command';

@@ -1,11 +1,13 @@
 import axios from 'axios';
-import type { AutocompleteInteraction, ChatInputCommandInteraction, Locale } from 'discord.js';
 import {
     ActionRowBuilder,
+    type AutocompleteInteraction,
     ButtonBuilder,
     ButtonStyle,
+    type ChatInputCommandInteraction,
     ContainerBuilder,
     HeadingLevel,
+    type Locale,
     MessageFlags,
     SeparatorBuilder,
     SlashCommandStringOption,

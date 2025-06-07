@@ -1,9 +1,7 @@
-import type {
-    ApplicationCommandOptionChoiceData,
-    AutocompleteInteraction,
-    ChatInputCommandInteraction,
-} from 'discord.js';
 import {
+    type ApplicationCommandOptionChoiceData,
+    type AutocompleteInteraction,
+    type ChatInputCommandInteraction,
     ContainerBuilder,
     HeadingLevel,
     InteractionContextType,

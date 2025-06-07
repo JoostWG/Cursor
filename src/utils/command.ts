@@ -1,14 +1,16 @@
-import type {
-    ApplicationCommandOptionChoiceData,
-    AutocompleteInteraction,
-    ChatInputCommandInteraction,
-    CommandInteraction,
-    ContextMenuCommandInteraction,
-    MessageContextMenuCommandInteraction,
-    RESTPostAPIBaseApplicationCommandsJSONBody,
-    UserContextMenuCommandInteraction,
+import {
+    type ApplicationCommandOptionChoiceData,
+    ApplicationCommandType,
+    type AutocompleteInteraction,
+    type ChatInputCommandInteraction,
+    type CommandInteraction,
+    ContextMenuCommandBuilder,
+    type ContextMenuCommandInteraction,
+    type MessageContextMenuCommandInteraction,
+    type RESTPostAPIBaseApplicationCommandsJSONBody,
+    SlashCommandBuilder,
+    type UserContextMenuCommandInteraction,
 } from 'discord.js';
-import { ApplicationCommandType, ContextMenuCommandBuilder, SlashCommandBuilder } from 'discord.js';
 import { localize } from '.';
 
 export class CommandError extends Error {

@@ -1,6 +1,6 @@
 import axios from 'axios';
-import type { ChatInputCommandInteraction } from 'discord.js';
 import {
+    type ChatInputCommandInteraction,
     Colors,
     EmbedBuilder,
     Locale,

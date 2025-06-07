@@ -12,11 +12,13 @@ import {
     heading,
     subtext,
 } from 'discord.js';
-import type { CategoryNames, Question, QuestionOptions } from 'open-trivia-db';
 import {
     Category,
+    type CategoryNames,
+    type Question,
     QuestionDifficulties,
     QuestionEncodings,
+    type QuestionOptions,
     QuestionTypes,
     getQuestions,
 } from 'open-trivia-db';

@@ -1,5 +1,5 @@
-import type { ClientOptions } from 'discord.js';
 import {
+    type ClientOptions,
     Collection,
     Client as DiscordJsClient,
     Events,
@@ -8,8 +8,7 @@ import {
 } from 'discord.js';
 import { db } from './database/db';
 import { getCommands } from './utils';
-import type { BaseApplicationCommand } from './utils/command';
-import { CommandError } from './utils/command';
+import { type BaseApplicationCommand, CommandError } from './utils/command';
 
 export class Client extends DiscordJsClient {
     private readonly commands: Collection<string, BaseApplicationCommand>;

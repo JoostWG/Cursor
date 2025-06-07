@@ -33,6 +33,7 @@ export default defineConfig(
             'require-unicode-regexp': 'warn',
             'func-style': ['error', 'declaration'],
             'no-console': ['warn', { allow: ['error', 'warn', 'debug', 'info'] }],
+            'no-duplicate-imports': 'error',
             // Below is all disabled
             'default-case': 'off', // I want to enable this but I also don't want to implement default cases will never be used in theory
             'sort-keys': 'off',
@@ -43,7 +44,6 @@ export default defineConfig(
             'id-length': 'off',
             'no-await-in-loop': 'off',
             'prefer-named-capture-group': 'off',
-            'no-duplicate-imports': 'off',
             'no-ternary': 'off',
             'no-continue': 'off',
             'max-statements': 'off',
@@ -60,7 +60,7 @@ export default defineConfig(
 
             // TS
             '@typescript-eslint/no-floating-promises': ['warn', { ignoreIIFE: true }],
-            '@typescript-eslint/consistent-type-imports': 'error',
+            '@typescript-eslint/consistent-type-imports': ['error', { fixStyle: 'inline-type-imports' }],
             '@typescript-eslint/prefer-nullish-coalescing': 'warn',
             '@typescript-eslint/member-ordering': 'warn',
             '@typescript-eslint/no-shadow': 'error',

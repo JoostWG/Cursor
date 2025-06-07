@@ -1,5 +1,4 @@
-import type { ChatInputCommandInteraction } from 'discord.js';
-import { MessageFlags } from 'discord.js';
+import { type ChatInputCommandInteraction, MessageFlags } from 'discord.js';
 import { SlashCommand } from '../utils/command';
 
 export default class PingCommand extends SlashCommand {
