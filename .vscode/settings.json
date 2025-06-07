@@ -8,5 +8,8 @@
         "source.fixAll.eslint": "explicit",
         "source.removeUnusedImports": "explicit"
     },
-    "eslint.format.enable": false
+    "eslint.format.enable": false,
+    "[typescript]": {
+        "editor.rulers": [100]
+    }
 }
