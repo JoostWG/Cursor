@@ -8,6 +8,7 @@ import {
     ContainerBuilder,
     HeadingLevel,
     type Locale,
+    type MessageComponentInteraction,
     MessageFlags,
     SeparatorBuilder,
     SlashCommandStringOption,
@@ -41,7 +42,22 @@ type ResponseData<T> =
           error: string | number;
       };
 
-const hyperlinkRegex = /\[([^[\]]+)\]/gmu;
+interface Pagination {
+    currentPage: number;
+    totalPages: number;
+}
+
+interface OutputOptions {
+    urbanDictionary: UrbanDictionary;
+    definition: Definition | null;
+    history: HistoryItem[];
+    pagination: Pagination;
+}
+
+interface ComponentBuilderOptions extends OutputOptions {
+    active: boolean;
+    locale: Locale;
+}
 
 abstract class Api {
     public abstract define(term: string): Promise<Definition[]>;
@@ -53,9 +69,13 @@ class ApiError extends Error {
 }
 
 class UrbanDictionaryApi implements Api {
-    private readonly axios = axios.create({
-        baseURL: 'https://api.urbandictionary.com/v0',
-    });
+    private readonly axios: axios.AxiosInstance;
+
+    public constructor() {
+        this.axios = axios.create({
+            baseURL: 'https://api.urbandictionary.com/v0',
+        });
+    }
 
     public async define(term: string) {
         const data = await this.get<{ list: Definition[] }>('/define', { params: { term } });
@@ -79,102 +99,60 @@ class UrbanDictionaryApi implements Api {
     }
 }
 
-// This class is a mess (kinda), but works well
-class UrbanDictionaryView {
-    private readonly api: Api;
-    private readonly cache: Map<string, Definition[]>;
-    private readonly history: { term: string; index: number }[];
-    private locale?: Locale;
-    private active: boolean;
+class UrbanDictionaryCachedApi extends UrbanDictionaryApi {
+    private readonly definitionsCache: Map<string, Definition[]>;
+    private readonly autocompleteCache: Map<string, string[]>;
 
-    public constructor(initialTerm: string, api: Api) {
-        this.api = api;
-        this.cache = new Map();
-        this.history = [{ term: initialTerm, index: 0 }];
-        this.active = true;
+    public constructor() {
+        super();
+        this.definitionsCache = new Map();
+        this.autocompleteCache = new Map();
     }
 
-    private get current() {
-        return this.history.at(-1) as { term: string; index: number };
-    }
-
-    private get definitions() {
-        return this.cache.get(this.current.term) as Definition[];
-    }
-
-    public async start(interaction: ChatInputCommandInteraction) {
-        this.locale = interaction.locale;
-
-        await this.loadDefinitions();
-
-        if (!this.definitions.length) {
-            await interaction.reply({
-                content: i18next.t('commands:urban-dictionary.notFound', { lng: this.locale }),
-                flags: MessageFlags.Ephemeral,
-            });
-            return;
+    public override async define(term: string) {
+        if (this.definitionsCache.has(term)) {
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            return this.definitionsCache.get(term)!;
         }
 
-        const response = await interaction.reply({
-            components: this.buildComponents(),
-            flags: MessageFlags.IsComponentsV2,
-            withResponse: true,
-        });
+        const result = await super.define(term);
 
-        if (!response.resource?.message) {
-            console.error('Error...');
-            return;
-        }
+        this.definitionsCache.set(term, result);
 
-        const collector = response.resource.message
-            .createMessageComponentCollector({
-                time: 60_000,
-                filter: (i) => i.user.id === interaction.user.id,
-            })
-            .on('collect', async (componentInteraction) => {
-                collector.resetTimer();
-
-                switch (componentInteraction.customId) {
-                    case 'previous':
-                        this.current.index--;
-                        break;
-
-                    case 'next':
-                        this.current.index++;
-                        break;
-
-                    case 'select':
-                        if (!componentInteraction.isStringSelectMenu()) {
-                            break;
-                        }
-
-                        this.history.push({ term: componentInteraction.values[0], index: 0 });
-                        await this.loadDefinitions();
-                        break;
-
-                    case 'back':
-                        this.history.pop();
-                        break;
-                }
-
-                await componentInteraction.update({ components: this.buildComponents() });
-            })
-            .on('end', async () => {
-                this.active = false;
-                await interaction.editReply({ components: this.buildComponents() });
-            });
+        return result;
     }
 
-    private async loadDefinitions() {
-        if (this.cache.has(this.current.term)) {
-            return;
+    public override async autocomplete(term: string) {
+        if (this.autocompleteCache.has(term)) {
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            return this.autocompleteCache.get(term)!;
         }
 
-        this.cache.set(this.current.term, await this.api.define(this.current.term));
-    }
+        const result = await super.autocomplete(term);
 
-    private buildComponents() {
-        const definition = this.definitions[this.current.index];
+        this.autocompleteCache.set(term, result);
+
+        return result;
+    }
+}
+
+class UrbanDictionaryComponentBuilder {
+    private readonly hyperlinkRegex = /\[([^[\]]+)\]/gmu;
+
+    public build({
+        definition,
+        history,
+        pagination: { currentPage, totalPages },
+        active,
+        locale,
+    }: ComponentBuilderOptions) {
+        if (!definition) {
+            return [
+                new ContainerBuilder().addTextDisplayComponents(
+                    new TextDisplayBuilder().setContent('Something went wrong!'),
+                ),
+            ];
+        }
 
         const hyperlinkTerms = [
             ...this.extractHyperlinks(definition.definition),
@@ -197,7 +175,7 @@ class UrbanDictionaryView {
                 .addSeparatorComponents(new SeparatorBuilder().setDivider(true))
                 .addTextDisplayComponents(
                     new TextDisplayBuilder().setContent(
-                        inlineCode(this.history.map((item) => item.term).join(' > ')),
+                        inlineCode(history.map((item) => item.term).join(' > ')),
                     ),
                 )
                 .addActionRowComponents(
@@ -206,7 +184,7 @@ class UrbanDictionaryView {
                             .setCustomId('select')
                             .setPlaceholder(
                                 i18next.t('commands:urban-dictionary.select', {
-                                    lng: this.locale,
+                                    lng: locale,
                                 }),
                             )
                             .addOptions(
@@ -222,16 +200,16 @@ class UrbanDictionaryView {
                                               .setValue('null'),
                                       ],
                             )
-                            .setDisabled(!hyperlinkTerms.length || !this.active),
+                            .setDisabled(!hyperlinkTerms.length || !active),
                     ),
                 )
                 .addActionRowComponents(
                     new ActionRowBuilder<ButtonBuilder>().addComponents(
                         new ButtonBuilder()
                             .setCustomId('back')
-                            .setLabel(i18next.t('back', { lng: this.locale }))
+                            .setLabel(i18next.t('back', { lng: locale }))
                             .setStyle(ButtonStyle.Danger)
-                            .setDisabled(this.history.length < 2 || !this.active),
+                            .setDisabled(history.length < 2 || !active),
                     ),
                 )
                 .addSeparatorComponents(new SeparatorBuilder().setDivider(true))
@@ -239,37 +217,35 @@ class UrbanDictionaryView {
                     new ActionRowBuilder<ButtonBuilder>().addComponents(
                         new ButtonBuilder()
                             .setCustomId('previous')
-                            .setLabel(i18next.t('previous', { lng: this.locale }))
+                            .setLabel(i18next.t('previous', { lng: locale }))
                             .setStyle(ButtonStyle.Primary)
-                            .setDisabled(this.current.index <= 0 || !this.active),
+                            .setDisabled(currentPage <= 0 || !active),
                         new ButtonBuilder()
                             .setCustomId('next')
-                            .setLabel(i18next.t('next', { lng: this.locale }))
+                            .setLabel(i18next.t('next', { lng: locale }))
                             .setStyle(ButtonStyle.Primary)
-                            .setDisabled(
-                                this.current.index + 1 >= this.definitions.length || !this.active,
-                            ),
+                            .setDisabled(currentPage + 1 >= totalPages || !active),
                         new ButtonBuilder()
                             .setStyle(ButtonStyle.Link)
-                            .setLabel(i18next.t('openInBrowser', { lng: this.locale }))
+                            .setLabel(i18next.t('openInBrowser', { lng: locale }))
                             .setURL(definition.permalink),
                     ),
                 )
                 .addTextDisplayComponents(
                     new TextDisplayBuilder().setContent(
-                        subtext(`${this.current.index + 1}/${this.definitions.length}`),
+                        subtext(`${currentPage + 1}/${totalPages}`),
                     ),
                 ),
         ];
     }
 
     private extractHyperlinks(text: string) {
-        return text.matchAll(hyperlinkRegex).map((match) => match[1]);
+        return text.matchAll(this.hyperlinkRegex).map((match) => match[1]);
     }
 
     private transformHyperlinks(text: string) {
         return text.replace(
-            hyperlinkRegex,
+            this.hyperlinkRegex,
             (_, term: string) => `[${term}](${this.getWebUrl(term)})`,
         );
     }
@@ -279,13 +255,216 @@ class UrbanDictionaryView {
     }
 }
 
+class InteractionHandler {
+    private active: boolean;
+
+    public constructor(
+        private readonly interaction: ChatInputCommandInteraction,
+        private readonly componentBuilder: UrbanDictionaryComponentBuilder,
+    ) {
+        this.active = false;
+    }
+
+    public async initiate(options: OutputOptions) {
+        this.active = true;
+
+        const { definition, pagination } = options;
+
+        const componentBuilderOptions: ComponentBuilderOptions = {
+            active: this.active,
+            locale: this.interaction.locale,
+            ...options,
+        };
+
+        if (!pagination.totalPages || !definition) {
+            await this.interaction.reply({
+                content: i18next.t('commands:urban-dictionary.notFound', {
+                    lng: this.interaction.locale,
+                }),
+                flags: MessageFlags.Ephemeral,
+            });
+            return;
+        }
+
+        const response = await this.interaction.reply({
+            components: this.componentBuilder.build(componentBuilderOptions),
+            flags: MessageFlags.IsComponentsV2,
+            withResponse: true,
+        });
+
+        if (!response.resource?.message) {
+            console.error('Error...');
+            return;
+        }
+
+        const collector = response.resource.message
+            .createMessageComponentCollector({
+                time: 60_000,
+                filter: (i) => i.user.id === this.interaction.user.id,
+            })
+            .on('collect', async (componentInteraction) => {
+                collector.resetTimer();
+
+                const newOptions = await this.handleComponentInteraction(
+                    componentInteraction,
+                    options,
+                );
+
+                if (!newOptions) {
+                    await componentInteraction.reply({
+                        flags: [MessageFlags.Ephemeral],
+                        content: 'Something went wrong...',
+                    });
+                    return;
+                }
+
+                await componentInteraction.update({
+                    components: this.componentBuilder.build({
+                        active: this.active,
+                        locale: this.interaction.locale,
+                        ...newOptions,
+                    }),
+                });
+            })
+            .on('end', async () => {
+                this.active = false;
+                await this.interaction.editReply({
+                    components: this.componentBuilder.build(componentBuilderOptions),
+                });
+            });
+    }
+
+    private async handleComponentInteraction(
+        interaction: MessageComponentInteraction,
+        { urbanDictionary }: OutputOptions,
+    ) {
+        switch (interaction.customId) {
+            case 'previous':
+                return await urbanDictionary.previousPage();
+
+            case 'next':
+                return await urbanDictionary.nextPage();
+
+            case 'select':
+                if (!interaction.isStringSelectMenu()) {
+                    break;
+                }
+
+                return await urbanDictionary.goToDefintion(interaction.values[0]);
+
+            case 'back':
+                return await urbanDictionary.goBack();
+        }
+    }
+}
+
+class HistoryItem {
+    public readonly term: string;
+    public readonly definitions: Definition[];
+    public index: number;
+
+    public constructor(term: string, definitions: Definition[]) {
+        this.term = term;
+        this.definitions = definitions;
+        this.index = 0;
+    }
+
+    public getDefinition(): Definition | null {
+        return this.definitions[this.index] ?? null;
+    }
+}
+
+class UrbanDictionary {
+    private readonly api: Api;
+    private readonly interactionHandler: InteractionHandler;
+    private readonly history: HistoryItem[];
+
+    public constructor(api: Api, interactionHandler: InteractionHandler) {
+        this.api = api;
+        this.interactionHandler = interactionHandler;
+        this.history = [];
+    }
+
+    public async start(term: string) {
+        const item = await this.addHistoryItem(term);
+
+        await this.interactionHandler.initiate({
+            urbanDictionary: this,
+            definition: item.getDefinition(),
+            history: this.history,
+            pagination: { currentPage: item.index, totalPages: item.definitions.length },
+        });
+    }
+
+    public async goToDefintion(term: string) {
+        await this.addHistoryItem(term);
+
+        return this.getOptions();
+    }
+
+    public async goBack() {
+        this.history.pop();
+
+        return this.getOptions();
+    }
+
+    public async previousPage() {
+        const item = this.history.at(-1);
+
+        if (item) {
+            item.index--;
+        }
+
+        return this.getOptions();
+    }
+
+    public async nextPage() {
+        const item = this.history.at(-1);
+
+        if (item) {
+            item.index++;
+        }
+
+        return this.getOptions();
+    }
+
+    private async addHistoryItem(term: string) {
+        const item = new HistoryItem(term, await this.api.define(term));
+
+        this.history.push(item);
+
+        return item;
+    }
+
+    private getOptions(): OutputOptions {
+        const item = this.history.at(-1);
+
+        return item
+            ? {
+                  urbanDictionary: this,
+                  definition: item.getDefinition(),
+                  history: this.history,
+                  pagination: {
+                      currentPage: item.index,
+                      totalPages: item.definitions.length,
+                  },
+              }
+            : {
+                  urbanDictionary: this,
+                  definition: null,
+                  history: this.history,
+                  pagination: { currentPage: 0, totalPages: 0 },
+              };
+    }
+}
+
 export default class UrbanDictionaryCommand extends SlashCommand {
     private readonly api: Api;
 
     public constructor() {
         super('urban-dictionary');
 
-        this.api = new UrbanDictionaryApi();
+        this.api = new UrbanDictionaryCachedApi();
 
         this.data
             .setNSFW(true)
@@ -297,9 +476,10 @@ export default class UrbanDictionaryCommand extends SlashCommand {
     }
 
     public override async execute(interaction: ChatInputCommandInteraction) {
-        await new UrbanDictionaryView(interaction.options.getString('term', true), this.api).start(
-            interaction,
-        );
+        await new UrbanDictionary(
+            this.api,
+            new InteractionHandler(interaction, new UrbanDictionaryComponentBuilder()),
+        ).start(interaction.options.getString('term', true));
     }
 
     public override async autocomplete(interaction: AutocompleteInteraction) {
