@@ -8,14 +8,40 @@ import {
     MessageFlags,
     SlashCommandStringOption,
     SlashCommandSubcommandBuilder,
+    type Snowflake,
     TextDisplayBuilder,
     bold,
     heading,
     inlineCode,
 } from 'discord.js';
-import { Tag } from '../database/models/Tag';
+import { db } from '../database/db';
+import type { TagRow } from '../types/database';
 import { CommandError, SlashCommand } from '../utils/command';
 
+abstract class TagManager {
+    public abstract list(guildId: Snowflake): Promise<TagRow[]>;
+    public abstract find(guildId: Snowflake, name: string): Promise<TagRow | null>;
+    public abstract find(
+        guildId: Snowflake,
+        name: string,
+        options: { fail?: true },
+    ): Promise<TagRow>;
+    public abstract create(data: {
+        guildId: Snowflake;
+        userId: Snowflake;
+        name: string;
+        content: string;
+    }): Promise<TagRow>;
+    public abstract update(
+        tagId: number,
+        data: {
+            name?: string;
+            content?: string;
+            uses?: number;
+        },
+    ): Promise<void>;
+    public abstract delete(tagId: number): Promise<void>;
+}
 class TagNotFoundError extends CommandError {
     public name: string;
 
@@ -24,10 +50,77 @@ class TagNotFoundError extends CommandError {
         this.name = name;
     }
 }
+class DatabaseTagManager implements TagManager {
+    public async list(guildId: Snowflake) {
+        return await db.selectFrom('tags').where('guild_id', '=', guildId).selectAll().execute();
+    }
+
+    public async find(guildId: Snowflake, name: string): Promise<TagRow | null>;
+    public async find(guildId: Snowflake, name: string, options: { fail?: true }): Promise<TagRow>;
+    public async find(guildId: Snowflake, name: string, options?: { fail?: true }) {
+        const query = db
+            .selectFrom('tags')
+            .where('guild_id', '=', guildId)
+            .where('name', '=', name)
+            .selectAll();
+
+        return (
+            (await (options?.fail
+                ? query.executeTakeFirstOrThrow(() => new TagNotFoundError(name))
+                : query.executeTakeFirst())) ?? null
+        );
+    }
+
+    public async create({
+        guildId,
+        userId,
+        name,
+        content,
+    }: {
+        guildId: Snowflake;
+        userId: Snowflake;
+        name: string;
+        content: string;
+    }) {
+        const result = await db
+            .insertInto('tags')
+            .values({ guild_id: guildId, user_id: userId, name, content })
+            .executeTakeFirstOrThrow();
+
+        if (!result.insertId) {
+            throw new Error('Failed to creaet tags');
+        }
+
+        return await db
+            .selectFrom('tags')
+            .where('id', '=', Number(result.insertId))
+            .selectAll()
+            .executeTakeFirstOrThrow();
+    }
+
+    public async update(
+        tagId: number,
+        data: {
+            name?: string;
+            content?: string;
+            uses?: number;
+        },
+    ) {
+        await db.updateTable('tags').where('id', '=', tagId).set(data).execute();
+    }
+
+    public async delete(tagId: number) {
+        await db.deleteFrom('tags').where('id', '=', tagId).execute();
+    }
+}
 
 export default class TagCommand extends SlashCommand {
+    private readonly tags: TagManager;
+
     public constructor() {
         super('tag');
+
+        this.tags = new DatabaseTagManager();
 
         this.data
             .setContexts(InteractionContextType.Guild)
@@ -114,7 +207,7 @@ export default class TagCommand extends SlashCommand {
             return [];
         }
 
-        const tags = await Tag.select((query) => query.where('guild_id', '=', interaction.guildId));
+        const tags = await this.tags.list(interaction.guildId);
 
         const q = interaction.options.getFocused().toLowerCase();
 
@@ -163,14 +256,20 @@ export default class TagCommand extends SlashCommand {
     }
 
     private async handleListSubcommand(interaction: ChatInputCommandInteraction<'cached'>) {
-        const tags = await Tag.select((query) => query.where('guild_id', '=', interaction.guildId));
-        await interaction.reply(tags.map((tag) => `${tag.id}: ${tag.content}`).join('\n'));
+        const tags = await this.tags.list(interaction.guildId);
+        await interaction.reply(
+            `Tags:\n${tags.map((tag) => `${tag.name}: ${tag.content}`).join('\n')}`,
+        );
     }
 
     private async handleGetSubcommand(interaction: ChatInputCommandInteraction<'cached'>) {
-        const tag = await this.findTagOrFail(interaction);
+        const tag = await this.tags.find(
+            interaction.guildId,
+            interaction.options.getString('name', true),
+            { fail: true },
+        );
 
-        await tag.update({
+        await this.tags.update(tag.id, {
             uses: tag.uses + 1,
         });
 
@@ -191,9 +290,9 @@ export default class TagCommand extends SlashCommand {
                             tag.name,
                             '',
                             bold('Created at'),
-                            String(tag.createdAt),
-                            // time(tag.createdAt),
-                            // time(tag.createdAt, TimestampStyles.RelativeTime),
+                            String(tag.created_at),
+                            // time(tag.created_at),
+                            // time(tag.created_at, TimestampStyles.RelativeTime),
                             '',
                             bold('Uses'),
                             tag.uses,
@@ -208,17 +307,17 @@ export default class TagCommand extends SlashCommand {
         const name = interaction.options.getString('name', true);
         const content = interaction.options.getString('content', true);
 
-        const existingTag = await this.findTag(interaction);
+        const existingTag = await this.tags.find(interaction.guildId, name);
 
         if (existingTag) {
             throw new CommandError('A tag with that name already exists.');
         }
 
-        await Tag.create({
+        await this.tags.create({
             name,
             content,
-            guild_id: interaction.guildId,
-            user_id: interaction.user.id,
+            guildId: interaction.guildId,
+            userId: interaction.user.id,
         });
 
         await interaction.reply('Tag created!');
@@ -227,7 +326,7 @@ export default class TagCommand extends SlashCommand {
     private async handleUpdateSubcommand(interaction: ChatInputCommandInteraction<'cached'>) {
         const tag = await this.findTagOrFail(interaction);
 
-        await tag.update({
+        await this.tags.update(tag.id, {
             content: interaction.options.getString('content', true),
         });
 
@@ -237,26 +336,16 @@ export default class TagCommand extends SlashCommand {
     private async handleDeleteSubcommand(interaction: ChatInputCommandInteraction<'cached'>) {
         const tag = await this.findTagOrFail(interaction);
 
-        await tag.delete();
+        await this.tags.delete(tag.id);
 
         await interaction.reply('Tag deleted!');
     }
 
-    private async findTag(interaction: ChatInputCommandInteraction<'cached'>) {
-        return await Tag.selectOne((query) =>
-            query
-                .where('guild_id', '=', interaction.guildId)
-                .where('name', '=', interaction.options.getString('name', true)),
-        );
-    }
-
     private async findTagOrFail(interaction: ChatInputCommandInteraction<'cached'>) {
-        const tag = await this.findTag(interaction);
-
-        if (!tag) {
-            throw new TagNotFoundError(interaction.options.getString('name', true));
-        }
-
-        return tag;
+        return await this.tags.find(
+            interaction.guildId,
+            interaction.options.getString('name', true),
+            { fail: true },
+        );
     }
 }
