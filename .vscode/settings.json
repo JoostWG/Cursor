@@ -11,5 +11,12 @@
     "eslint.format.enable": false,
     "[typescript]": {
         "editor.rulers": [100]
+    },
+    "files.readonlyInclude": {
+        "node_modules/**": true,
+        "dist/**": true,
+        "package-lock.json": true,
+        "tsconfig.tsbuildinfo": true,
+        "**/**.db": true
     }
 }
