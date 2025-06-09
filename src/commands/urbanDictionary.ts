@@ -270,12 +270,6 @@ class InteractionHandler {
 
         const { definition, pagination } = options;
 
-        const componentBuilderOptions: ComponentBuilderOptions = {
-            active: this.active,
-            locale: this.interaction.locale,
-            ...options,
-        };
-
         if (!pagination.totalPages || !definition) {
             await this.interaction.reply({
                 content: i18next.t('commands:urban-dictionary.notFound', {
@@ -287,7 +281,11 @@ class InteractionHandler {
         }
 
         const response = await this.interaction.reply({
-            components: this.componentBuilder.build(componentBuilderOptions),
+            components: this.componentBuilder.build({
+                active: this.active,
+                locale: this.interaction.locale,
+                ...options,
+            }),
             flags: MessageFlags.IsComponentsV2,
             withResponse: true,
         });
@@ -329,7 +327,11 @@ class InteractionHandler {
             .on('end', async () => {
                 this.active = false;
                 await this.interaction.editReply({
-                    components: this.componentBuilder.build(componentBuilderOptions),
+                    components: this.componentBuilder.build({
+                        active: this.active,
+                        locale: this.interaction.locale,
+                        ...options,
+                    }),
                 });
             });
     }
