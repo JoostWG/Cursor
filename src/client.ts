@@ -51,10 +51,6 @@ export class Client extends DiscordJsClient {
         });
     }
 
-    public getCommand(name: string) {
-        return this.commands.get(name);
-    }
-
     public getAllCommands() {
         return this.commands.values();
     }
@@ -70,7 +66,7 @@ export class Client extends DiscordJsClient {
     }
 
     private async handleCommandInteraction(interaction: CommandInteraction) {
-        const command = this.getCommand(interaction.commandName);
+        const command = this.commands.get(interaction.commandName);
 
         if (!command) {
             await interaction.reply({
@@ -122,7 +118,7 @@ export class Client extends DiscordJsClient {
     }
 
     private async handleAutocompleteInteraction(interaction: AutocompleteInteraction) {
-        const command = this.getCommand(interaction.commandName);
+        const command = this.commands.get(interaction.commandName);
         if (!command?.isSlashCommand() || !command.autocomplete) {
             console.error(`No command matching ${interaction.commandName} was found.`);
             return;
