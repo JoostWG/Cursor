@@ -24,13 +24,15 @@ import UserCommand from './commands/user';
 import type { Database } from './types/database';
 import { type BaseApplicationCommand, CommandError } from './utils/command';
 
+export type CursorKysely = Kysely<Database>;
+
 interface ClientOptions extends DiscordJsClientOptions {
-    db: Kysely<Database>;
+    db: CursorKysely;
     commands: BaseApplicationCommand[];
 }
 
 export class Client extends DiscordJsClient {
-    public readonly db: Kysely<Database>;
+    public readonly db: CursorKysely;
     private readonly commands: Collection<string, BaseApplicationCommand>;
 
     public constructor(options: ClientOptions) {
@@ -133,23 +135,29 @@ export class Client extends DiscordJsClient {
     }
 }
 
-export default new Client({
-    intents: [GatewayIntentBits.GuildMembers, GatewayIntentBits.Guilds],
-    commands: [
-        new RawCommand(),
-        new ChessCommand(),
-        new JokeCommand(),
-        new PingCommand(),
-        new RoleCommand(),
-        new RockPaperScissorsCommand(),
-        new TagCommand(),
-        new TriviaCommand(),
-        new UrbanDictionaryCommand(),
-        new UserCommand(),
-    ],
-    db: new Kysely<Database>({
+export function createClient() {
+    const db = new Kysely<Database>({
         dialect: new SqliteDialect({
             database: new SQLite('./database/database.db'),
         }),
-    }),
-});
+    });
+
+    return new Client({
+        intents: [GatewayIntentBits.GuildMembers, GatewayIntentBits.Guilds],
+        commands: [
+            new RawCommand(),
+            new ChessCommand(),
+            new JokeCommand(),
+            new PingCommand(),
+            new RoleCommand(),
+            new RockPaperScissorsCommand(db),
+            new TagCommand(db),
+            new TriviaCommand(),
+            new UrbanDictionaryCommand(),
+            new UserCommand(),
+        ],
+        db,
+    });
+}
+
+export default createClient();

@@ -14,7 +14,7 @@ import {
     heading,
     inlineCode,
 } from 'discord.js';
-import client from '../client';
+import type { CursorKysely } from '../client';
 import type { TagRow } from '../types/database';
 import { CommandError, SlashCommand } from '../utils/command';
 
@@ -51,8 +51,10 @@ class TagNotFoundError extends CommandError {
     }
 }
 class DatabaseTagManager implements TagManager {
+    public constructor(private readonly db: CursorKysely) {}
+
     public async list(guildId: Snowflake) {
-        return await client.db
+        return await this.db
             .selectFrom('tags')
             .where('guild_id', '=', guildId)
             .selectAll()
@@ -62,7 +64,7 @@ class DatabaseTagManager implements TagManager {
     public async find(guildId: Snowflake, name: string): Promise<TagRow | null>;
     public async find(guildId: Snowflake, name: string, options: { fail?: true }): Promise<TagRow>;
     public async find(guildId: Snowflake, name: string, options?: { fail?: true }) {
-        const query = client.db
+        const query = this.db
             .selectFrom('tags')
             .where('guild_id', '=', guildId)
             .where('name', '=', name)
@@ -86,7 +88,7 @@ class DatabaseTagManager implements TagManager {
         name: string;
         content: string;
     }) {
-        const result = await client.db
+        const result = await this.db
             .insertInto('tags')
             .values({ guild_id: guildId, user_id: userId, name, content })
             .executeTakeFirstOrThrow();
@@ -95,7 +97,7 @@ class DatabaseTagManager implements TagManager {
             throw new Error('Failed to creaet tags');
         }
 
-        return await client.db
+        return await this.db
             .selectFrom('tags')
             .where('id', '=', Number(result.insertId))
             .selectAll()
@@ -110,21 +112,21 @@ class DatabaseTagManager implements TagManager {
             uses?: number;
         },
     ) {
-        await client.db.updateTable('tags').where('id', '=', tagId).set(data).execute();
+        await this.db.updateTable('tags').where('id', '=', tagId).set(data).execute();
     }
 
     public async delete(tagId: number) {
-        await client.db.deleteFrom('tags').where('id', '=', tagId).execute();
+        await this.db.deleteFrom('tags').where('id', '=', tagId).execute();
     }
 }
 
 export default class TagCommand extends SlashCommand {
     private readonly tags: TagManager;
 
-    public constructor() {
+    public constructor(db: CursorKysely) {
         super('tag');
 
-        this.tags = new DatabaseTagManager();
+        this.tags = new DatabaseTagManager(db);
 
         this.data
             .setContexts(InteractionContextType.Guild)

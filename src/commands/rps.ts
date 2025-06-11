@@ -18,7 +18,7 @@ import {
     userMention,
 } from 'discord.js';
 import i18next from 'i18next';
-import client from '../client';
+import type { CursorKysely } from '../client';
 import { localize } from '../utils';
 import { CommandError, SlashCommand } from '../utils/command';
 
@@ -62,6 +62,7 @@ class Round {
 
 class Game {
     private readonly users: [User, User];
+    private readonly db: CursorKysely;
     private readonly rounds: [Round, Round, Round];
     private currentRoundIndex: number;
     private readonly timeout: number;
@@ -75,8 +76,9 @@ class Game {
         | 'gameFinished'
         | 'gameExpired';
 
-    public constructor(users: [User, User], options?: { timeout?: number }) {
+    public constructor(users: [User, User], db: CursorKysely, options?: { timeout?: number }) {
         this.users = users;
+        this.db = db;
         this.timeout = options?.timeout ?? 60_000;
         this.rounds = [new Round(), new Round(), new Round()];
         this.currentRoundIndex = 0;
@@ -134,7 +136,7 @@ class Game {
         }
 
         try {
-            await client.db.transaction().execute(async (transaction) => {
+            await this.db.transaction().execute(async (transaction) => {
                 const gameInsert = await transaction
                     .insertInto('rps_games')
                     .values({ user_id: interaction.user.id })
@@ -211,7 +213,7 @@ class Game {
                 round.set(userIndex, choice);
 
                 if (round.roundId) {
-                    await client.db
+                    await this.db
                         .insertInto('rps_choices')
                         .values({
                             rps_round_id: round.roundId,
@@ -361,7 +363,7 @@ class Game {
 }
 
 export default class RockPaperScissorsCommand extends SlashCommand {
-    public constructor() {
+    public constructor(private readonly db: CursorKysely) {
         super('rps');
 
         this.data
@@ -409,17 +411,17 @@ export default class RockPaperScissorsCommand extends SlashCommand {
             );
         }
 
-        await new Game([interaction.user, opponent]).start(interaction);
+        await new Game([interaction.user, opponent], this.db).start(interaction);
     }
 
     private async stats(interaction: ChatInputCommandInteraction) {
-        const games = await client.db
+        const games = await this.db
             .selectFrom('rps_games')
             .where('user_id', '=', interaction.user.id)
             .select(({ fn }) => fn.count('id').as('count'))
             .executeTakeFirst();
 
-        const choices = await client.db
+        const choices = await this.db
             .selectFrom('rps_choices')
             .where('user_id', '=', interaction.user.id)
             .select(['choice', ({ fn }) => fn.count('id').as('count')])
