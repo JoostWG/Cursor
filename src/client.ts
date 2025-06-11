@@ -28,7 +28,13 @@ export type CursorDatabase = Kysely<DatabaseTables>;
 
 interface ClientOptions extends DiscordJsClientOptions {
     db: CursorDatabase;
-    commands: BaseApplicationCommand[];
+    commands: CommandCollection<BaseApplicationCommand>;
+}
+
+class CommandCollection<T extends BaseApplicationCommand> extends Collection<string, T> {
+    public constructor(commands: T[]) {
+        super(commands.map((command) => [command.data.name, command]));
+    }
 }
 
 export class Client extends DiscordJsClient {
@@ -39,10 +45,7 @@ export class Client extends DiscordJsClient {
         super(options);
 
         this.db = options.db;
-
-        this.commands = new Collection(
-            options.commands.map((command) => [command.data.name, command]),
-        );
+        this.commands = options.commands;
 
         this.on(Events.ClientReady, () => {
             console.info('Ready!');
@@ -142,20 +145,22 @@ export function createClient() {
         }),
     });
 
+    const commands = new CommandCollection([
+        new RawCommand(),
+        new ChessCommand(),
+        new JokeCommand(),
+        new PingCommand(),
+        new RoleCommand(),
+        new RockPaperScissorsCommand(db),
+        new TagCommand(db),
+        new TriviaCommand(),
+        new UrbanDictionaryCommand(),
+        new UserCommand(),
+    ]);
+
     return new Client({
         intents: [GatewayIntentBits.GuildMembers, GatewayIntentBits.Guilds],
-        commands: [
-            new RawCommand(),
-            new ChessCommand(),
-            new JokeCommand(),
-            new PingCommand(),
-            new RoleCommand(),
-            new RockPaperScissorsCommand(db),
-            new TagCommand(db),
-            new TriviaCommand(),
-            new UrbanDictionaryCommand(),
-            new UserCommand(),
-        ],
+        commands,
         db,
     });
 }
