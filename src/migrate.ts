@@ -1,114 +1,39 @@
-import fs from 'fs/promises';
-import { type CreateTableBuilder, type SchemaModule, sql } from 'kysely';
-import path from 'path';
-import { pathToFileURL } from 'url';
-import client from './client';
+import type { SchemaModule } from 'kysely';
+import client, { type CursorDatabase } from './client';
+import { V1 } from './database/migrations/v1';
+import { V2 } from './database/migrations/v2';
+import { V3 } from './database/migrations/v3';
 
-const dirPath = path.join(__dirname, './database/migrations');
-
-type MigrationCallback = (schema: SchemaModule) => Promise<void>;
-
-interface MigrationOptions {
-    up: MigrationCallback;
-    down: MigrationCallback;
+export abstract class Migration {
+    public abstract up(schema: SchemaModule): Promise<void>;
+    public abstract down(schema: SchemaModule): Promise<void>;
 }
 
-class Migration {
-    readonly #up: MigrationCallback;
-    readonly #down: MigrationCallback;
+export class Migrator {
+    public constructor(
+        private readonly db: CursorDatabase,
+        private readonly migrations: Map<string, Migration>,
+    ) {}
 
-    public constructor(options: MigrationOptions) {
-        this.#up = options.up;
-        this.#down = options.down;
-    }
+    public async migrate(action: 'up' | 'down') {
+        await this.createMigrationTable().ifNotExists().execute();
 
-    public get up() {
-        return this.#up;
-    }
-
-    public get down() {
-        return this.#down;
-    }
-}
-
-export function defineMigration(options: MigrationOptions) {
-    return new Migration(options);
-}
-
-export function defineTables(
-    tables: Record<
-        string,
-        (builder: CreateTableBuilder<string, 'id'>) => CreateTableBuilder<string>
-    >,
-) {
-    return defineMigration({
-        async up(schema) {
-            for (const name of Object.keys(tables)) {
-                await tables[name](
-                    schema
-                        .createTable(name)
-                        .addColumn('id', 'integer', (col) =>
-                            col.primaryKey().autoIncrement().notNull(),
-                        ),
-                )
-                    .addColumn('created_at', 'text', (col) =>
-                        col.defaultTo(sql`CURRENT_TIMESTAMP`).notNull(),
-                    )
-                    .execute();
-            }
-        },
-
-        async down(schema) {
-            for (const name of Object.keys(tables).toReversed()) {
-                await schema.dropTable(name).execute();
-            }
-        },
-    });
-}
-
-(async () => {
-    // Create migrations table if it doesn't already exist
-    await client.db.schema
-        .createTable('migrations')
-        .ifNotExists()
-        .addColumn('id', 'integer', (col) => col.primaryKey().autoIncrement().notNull())
-        .addColumn('name', 'varchar(255)', (col) => col.notNull().unique())
-        .addColumn('batch', 'integer', (col) => col.unsigned().notNull())
-        .execute();
-
-    if (process.argv.includes('--up') && process.argv.includes('--down')) {
-        console.error('Cannot use both --up and --down');
-        return;
-    }
-
-    const existingMigrations = await client.db.selectFrom('migrations').selectAll().execute();
-
-    const migrationInstances = new Map<string, Migration>();
-
-    // Collect all migration instances from migrations directory
-    for (const dirent of await fs.readdir(dirPath, {
-        withFileTypes: true,
-    })) {
-        if (dirent.isDirectory()) {
-            continue;
-        }
-
-        const module = await import(pathToFileURL(path.join(dirPath, dirent.name)).href);
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-        const migration = module.default.default;
-
-        if (migration instanceof Migration) {
-            migrationInstances.set(dirent.name, migration);
+        if (action === 'up') {
+            await this.up();
+        } else {
+            await this.down();
         }
     }
 
-    if (process.argv.includes('--up')) {
+    private async up() {
+        const existingMigrations = await this.db.selectFrom('migrations').selectAll().execute();
+
         const existingNames = existingMigrations.map((migration) => migration.name);
         const lastBatchNumber = existingMigrations.length
             ? Math.max(...existingMigrations.map((migration) => migration.batch))
             : 0;
 
-        for await (const [name, migration] of migrationInstances) {
+        for await (const [name, migration] of this.migrations) {
             if (existingNames.includes(name)) {
                 continue;
             }
@@ -116,7 +41,7 @@ export function defineTables(
             console.info(`Migrating ${name}`);
 
             try {
-                await client.db.transaction().execute(async (transaction) => {
+                await this.db.transaction().execute(async (transaction) => {
                     await migration.up(transaction.schema);
                     await transaction
                         .insertInto('migrations')
@@ -133,14 +58,14 @@ export function defineTables(
         }
     }
 
-    if (process.argv.includes('--down')) {
-        const latestBatch = await client.db
+    private async down() {
+        const latestBatch = await this.db
             .selectFrom('migrations')
             .selectAll()
             .where(
                 'batch',
                 '=',
-                client.db
+                this.db
                     .selectFrom('migrations')
                     .select(({ fn }) => fn.max('batch').as('max_batch')),
             )
@@ -148,7 +73,7 @@ export function defineTables(
             .execute();
 
         for (const migration of latestBatch) {
-            const migrationInstance = migrationInstances.get(migration.name);
+            const migrationInstance = this.migrations.get(migration.name);
 
             if (!migrationInstance) {
                 console.error(`No migration instance found for ${migration.name}`);
@@ -158,7 +83,7 @@ export function defineTables(
             console.info(`Rollingback ${migration.name}`);
 
             try {
-                await client.db.transaction().execute(async (transaction) => {
+                await this.db.transaction().execute(async (transaction) => {
                     await migrationInstance.down(transaction.schema);
                     await transaction
                         .deleteFrom('migrations')
@@ -170,5 +95,35 @@ export function defineTables(
                 throw error;
             }
         }
+    }
+
+    private createMigrationTable() {
+        return this.db.schema
+            .createTable('migrations')
+            .addColumn('id', 'integer', (col) => col.primaryKey().autoIncrement().notNull())
+            .addColumn('name', 'varchar(255)', (col) => col.notNull().unique())
+            .addColumn('batch', 'integer', (col) => col.unsigned().notNull());
+    }
+}
+
+(async () => {
+    if (process.argv.includes('--up') && process.argv.includes('--down')) {
+        console.error('Cannot use both --up and --down');
+        return;
+    }
+
+    const migrator = new Migrator(
+        client.db,
+        new Map([
+            ['v1', new V1()],
+            ['v2', new V2()],
+            ['v3', new V3()],
+        ]),
+    );
+
+    if (process.argv.includes('--up')) {
+        await migrator.migrate('up');
+    } else if (process.argv.includes('--down')) {
+        await migrator.migrate('down');
     }
 })();
