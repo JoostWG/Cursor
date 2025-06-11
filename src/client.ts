@@ -1,3 +1,4 @@
+import SQLite from 'better-sqlite3';
 import {
     type AutocompleteInteraction,
     Collection,
@@ -9,6 +10,7 @@ import {
     type Interaction,
     MessageFlags,
 } from 'discord.js';
+import { Kysely, SqliteDialect } from 'kysely';
 import ChessCommand from './commands/chess';
 import RawCommand from './commands/context/message/raw';
 import JokeCommand from './commands/joke';
@@ -19,18 +21,22 @@ import TagCommand from './commands/tag';
 import TriviaCommand from './commands/trivia';
 import UrbanDictionaryCommand from './commands/urbanDictionary';
 import UserCommand from './commands/user';
-import { db } from './database/db';
+import type { Database } from './types/database';
 import { type BaseApplicationCommand, CommandError } from './utils/command';
 
 interface ClientOptions extends DiscordJsClientOptions {
+    db: Kysely<Database>;
     commands: BaseApplicationCommand[];
 }
 
 export class Client extends DiscordJsClient {
+    public readonly db: Kysely<Database>;
     private readonly commands: Collection<string, BaseApplicationCommand>;
 
     public constructor(options: ClientOptions) {
         super(options);
+
+        this.db = options.db;
 
         this.commands = new Collection(
             options.commands.map((command) => [command.data.name, command]),
@@ -75,7 +81,8 @@ export class Client extends DiscordJsClient {
             return;
         }
 
-        db.insertInto('command_logs')
+        this.db
+            .insertInto('command_logs')
             .values({
                 interaction_id: interaction.id,
                 user_id: interaction.user.id,
@@ -144,4 +151,9 @@ export default new Client({
         new UrbanDictionaryCommand(),
         new UserCommand(),
     ],
+    db: new Kysely<Database>({
+        dialect: new SqliteDialect({
+            database: new SQLite('./database/database.db'),
+        }),
+    }),
 });

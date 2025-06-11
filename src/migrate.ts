@@ -2,7 +2,7 @@ import fs from 'fs/promises';
 import { type CreateTableBuilder, type SchemaModule, sql } from 'kysely';
 import path from 'path';
 import { pathToFileURL } from 'url';
-import { db } from './database/db';
+import client from './client';
 
 const dirPath = path.join(__dirname, './database/migrations');
 
@@ -68,7 +68,7 @@ export function defineTables(
 
 (async () => {
     // Create migrations table if it doesn't already exist
-    await db.schema
+    await client.db.schema
         .createTable('migrations')
         .ifNotExists()
         .addColumn('id', 'integer', (col) => col.primaryKey().autoIncrement().notNull())
@@ -81,7 +81,7 @@ export function defineTables(
         return;
     }
 
-    const existingMigrations = await db.selectFrom('migrations').selectAll().execute();
+    const existingMigrations = await client.db.selectFrom('migrations').selectAll().execute();
 
     const migrationInstances = new Map<string, Migration>();
 
@@ -116,7 +116,7 @@ export function defineTables(
             console.info(`Migrating ${name}`);
 
             try {
-                await db.transaction().execute(async (transaction) => {
+                await client.db.transaction().execute(async (transaction) => {
                     await migration.up(transaction.schema);
                     await transaction
                         .insertInto('migrations')
@@ -134,13 +134,15 @@ export function defineTables(
     }
 
     if (process.argv.includes('--down')) {
-        const latestBatch = await db
+        const latestBatch = await client.db
             .selectFrom('migrations')
             .selectAll()
             .where(
                 'batch',
                 '=',
-                db.selectFrom('migrations').select(({ fn }) => fn.max('batch').as('max_batch')),
+                client.db
+                    .selectFrom('migrations')
+                    .select(({ fn }) => fn.max('batch').as('max_batch')),
             )
             .orderBy('id', 'desc')
             .execute();
@@ -156,7 +158,7 @@ export function defineTables(
             console.info(`Rollingback ${migration.name}`);
 
             try {
-                await db.transaction().execute(async (transaction) => {
+                await client.db.transaction().execute(async (transaction) => {
                     await migrationInstance.down(transaction.schema);
                     await transaction
                         .deleteFrom('migrations')

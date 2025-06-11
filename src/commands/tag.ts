@@ -14,7 +14,7 @@ import {
     heading,
     inlineCode,
 } from 'discord.js';
-import { db } from '../database/db';
+import client from '../client';
 import type { TagRow } from '../types/database';
 import { CommandError, SlashCommand } from '../utils/command';
 
@@ -52,13 +52,17 @@ class TagNotFoundError extends CommandError {
 }
 class DatabaseTagManager implements TagManager {
     public async list(guildId: Snowflake) {
-        return await db.selectFrom('tags').where('guild_id', '=', guildId).selectAll().execute();
+        return await client.db
+            .selectFrom('tags')
+            .where('guild_id', '=', guildId)
+            .selectAll()
+            .execute();
     }
 
     public async find(guildId: Snowflake, name: string): Promise<TagRow | null>;
     public async find(guildId: Snowflake, name: string, options: { fail?: true }): Promise<TagRow>;
     public async find(guildId: Snowflake, name: string, options?: { fail?: true }) {
-        const query = db
+        const query = client.db
             .selectFrom('tags')
             .where('guild_id', '=', guildId)
             .where('name', '=', name)
@@ -82,7 +86,7 @@ class DatabaseTagManager implements TagManager {
         name: string;
         content: string;
     }) {
-        const result = await db
+        const result = await client.db
             .insertInto('tags')
             .values({ guild_id: guildId, user_id: userId, name, content })
             .executeTakeFirstOrThrow();
@@ -91,7 +95,7 @@ class DatabaseTagManager implements TagManager {
             throw new Error('Failed to creaet tags');
         }
 
-        return await db
+        return await client.db
             .selectFrom('tags')
             .where('id', '=', Number(result.insertId))
             .selectAll()
@@ -106,11 +110,11 @@ class DatabaseTagManager implements TagManager {
             uses?: number;
         },
     ) {
-        await db.updateTable('tags').where('id', '=', tagId).set(data).execute();
+        await client.db.updateTable('tags').where('id', '=', tagId).set(data).execute();
     }
 
     public async delete(tagId: number) {
-        await db.deleteFrom('tags').where('id', '=', tagId).execute();
+        await client.db.deleteFrom('tags').where('id', '=', tagId).execute();
     }
 }
 

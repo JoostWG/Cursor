@@ -18,7 +18,7 @@ import {
     userMention,
 } from 'discord.js';
 import i18next from 'i18next';
-import { db } from '../database/db';
+import client from '../client';
 import { localize } from '../utils';
 import { CommandError, SlashCommand } from '../utils/command';
 
@@ -134,7 +134,7 @@ class Game {
         }
 
         try {
-            await db.transaction().execute(async (transaction) => {
+            await client.db.transaction().execute(async (transaction) => {
                 const gameInsert = await transaction
                     .insertInto('rps_games')
                     .values({ user_id: interaction.user.id })
@@ -211,7 +211,7 @@ class Game {
                 round.set(userIndex, choice);
 
                 if (round.roundId) {
-                    await db
+                    await client.db
                         .insertInto('rps_choices')
                         .values({
                             rps_round_id: round.roundId,
@@ -413,13 +413,13 @@ export default class RockPaperScissorsCommand extends SlashCommand {
     }
 
     private async stats(interaction: ChatInputCommandInteraction) {
-        const games = await db
+        const games = await client.db
             .selectFrom('rps_games')
             .where('user_id', '=', interaction.user.id)
             .select(({ fn }) => fn.count('id').as('count'))
             .executeTakeFirst();
 
-        const choices = await db
+        const choices = await client.db
             .selectFrom('rps_choices')
             .where('user_id', '=', interaction.user.id)
             .select(['choice', ({ fn }) => fn.count('id').as('count')])
