@@ -1,53 +1,76 @@
 import {
-    type ClientOptions,
+    type AutocompleteInteraction,
     Collection,
+    type CommandInteraction,
     Client as DiscordJsClient,
+    type ClientOptions as DiscordJsClientOptions,
     Events,
     GatewayIntentBits,
+    type Interaction,
     MessageFlags,
 } from 'discord.js';
+import ChessCommand from './commands/chess';
+import RawCommand from './commands/context/message/raw';
+import JokeCommand from './commands/joke';
+import PingCommand from './commands/ping';
+import RoleCommand from './commands/role';
+import RockPaperScissorsCommand from './commands/rps';
+import TagCommand from './commands/tag';
+import TriviaCommand from './commands/trivia';
+import UrbanDictionaryCommand from './commands/urbanDictionary';
+import UserCommand from './commands/user';
 import { db } from './database/db';
-import { getCommands } from './utils';
 import { type BaseApplicationCommand, CommandError } from './utils/command';
+
+interface ClientOptions extends DiscordJsClientOptions {
+    commands: BaseApplicationCommand[];
+}
 
 export class Client extends DiscordJsClient {
     private readonly commands: Collection<string, BaseApplicationCommand>;
 
     public constructor(options: ClientOptions) {
         super(options);
-        this.commands = new Collection();
 
-        void this.loadCommands();
+        this.commands = new Collection(
+            options.commands.map((command) => [command.data.name, command]),
+        );
+
+        this.on(Events.ClientReady, () => {
+            console.info('Ready!');
+        });
+
+        this.on(Events.InteractionCreate, async (interaction) => {
+            await this.handleInteraction(interaction);
+        });
     }
 
     public getCommand(name: string) {
         return this.commands.get(name);
     }
 
-    private async loadCommands() {
-        for await (const command of getCommands()) {
-            try {
-                this.commands.set(command.data.name, command);
-            } catch {
-                //
-            }
+    public getAllCommands() {
+        return this.commands.values();
+    }
+
+    // Commmand handling
+
+    private async handleInteraction(interaction: Interaction) {
+        if (interaction.isCommand()) {
+            await this.handleCommandInteraction(interaction);
+        } else if (interaction.isAutocomplete()) {
+            await this.handleAutocompleteInteraction(interaction);
         }
     }
-}
 
-const client = new Client({
-    intents: [GatewayIntentBits.GuildMembers, GatewayIntentBits.Guilds],
-});
-
-client.on(Events.ClientReady, async () => {
-    console.info('Ready!');
-});
-
-client.on(Events.InteractionCreate, async (interaction) => {
-    if (interaction.isCommand()) {
-        const command = client.getCommand(interaction.commandName);
+    private async handleCommandInteraction(interaction: CommandInteraction) {
+        const command = this.getCommand(interaction.commandName);
 
         if (!command) {
+            await interaction.reply({
+                content: 'Command not found.',
+                flags: MessageFlags.Ephemeral,
+            });
             console.error(`No command matching ${interaction.commandName} was found.`);
             return;
         }
@@ -89,8 +112,10 @@ client.on(Events.InteractionCreate, async (interaction) => {
                 });
             }
         }
-    } else if (interaction.isAutocomplete()) {
-        const command = client.getCommand(interaction.commandName);
+    }
+
+    private async handleAutocompleteInteraction(interaction: AutocompleteInteraction) {
+        const command = this.getCommand(interaction.commandName);
         if (!command?.isSlashCommand() || !command.autocomplete) {
             console.error(`No command matching ${interaction.commandName} was found.`);
             return;
@@ -103,6 +128,20 @@ client.on(Events.InteractionCreate, async (interaction) => {
             console.error(error);
         }
     }
-});
+}
 
-export default client;
+export default new Client({
+    intents: [GatewayIntentBits.GuildMembers, GatewayIntentBits.Guilds],
+    commands: [
+        new RawCommand(),
+        new ChessCommand(),
+        new JokeCommand(),
+        new PingCommand(),
+        new RoleCommand(),
+        new RockPaperScissorsCommand(),
+        new TagCommand(),
+        new TriviaCommand(),
+        new UrbanDictionaryCommand(),
+        new UserCommand(),
+    ],
+});

@@ -1,6 +1,30 @@
-import { REST, Routes } from 'discord.js';
+import {
+    REST,
+    type RESTPostAPIBaseApplicationCommandsJSONBody,
+    type RouteLike,
+    Routes,
+} from 'discord.js';
 import { devGuildId, discordAppId, discordToken } from '../config.json';
-import { getCommands, initI18Next } from './utils';
+import client from './client';
+import { initI18Next } from './utils';
+
+const api = new REST().setToken(discordToken);
+
+async function deploy(
+    type: 'dev' | 'global',
+    route: RouteLike,
+    commands: RESTPostAPIBaseApplicationCommandsJSONBody[],
+) {
+    console.info(`Syncing ${commands.length} ${type} commands`);
+
+    const data = await api.put(route, { body: commands });
+
+    if (Array.isArray(data)) {
+        console.info(`Succesfully synced ${data.length} dev commands`);
+    } else {
+        console.warn(`Unexpected return value when syncing ${type} commands:`, data);
+    }
+}
 
 (async () => {
     if (!discordToken || !discordAppId || !devGuildId) {
@@ -13,7 +37,7 @@ import { getCommands, initI18Next } from './utils';
     const globalCommands = [];
     const devCommands = [];
 
-    for await (const command of getCommands()) {
+    for (const command of client.getAllCommands()) {
         if (command.devOnly) {
             devCommands.push(command.data.toJSON());
         } else {
@@ -21,34 +45,11 @@ import { getCommands, initI18Next } from './utils';
         }
     }
 
-    const api = new REST().setToken(discordToken);
-
     if (process.argv.includes('--dev')) {
-        console.info(`Syncing ${devCommands.length} dev commands`);
-
-        const devCommandsData = await api.put(
-            Routes.applicationGuildCommands(discordAppId, devGuildId),
-            {
-                body: devCommands,
-            },
-        );
-
-        // Keep typescript happy
-        if (Array.isArray(devCommandsData)) {
-            console.info(`Succesfully synced ${devCommandsData.length} dev commands`);
-        }
+        await deploy('dev', Routes.applicationGuildCommands(discordAppId, devGuildId), devCommands);
     }
 
     if (process.argv.includes('--global')) {
-        console.info(`Syncing ${globalCommands.length} global commands`);
-
-        const globalCommandsData = await api.put(Routes.applicationCommands(discordAppId), {
-            body: globalCommands,
-        });
-
-        // Keep typescript happy
-        if (Array.isArray(globalCommandsData)) {
-            console.info(`Succesfully synced ${globalCommandsData.length} global commands`);
-        }
+        await deploy('dev', Routes.applicationCommands(discordAppId), globalCommands);
     }
 })();
