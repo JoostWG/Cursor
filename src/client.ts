@@ -21,18 +21,18 @@ import TagCommand from './commands/tag';
 import TriviaCommand from './commands/trivia';
 import UrbanDictionaryCommand from './commands/urbanDictionary';
 import UserCommand from './commands/user';
-import type { Database } from './types/database';
+import type { DatabaseTables } from './types/database';
 import { type BaseApplicationCommand, CommandError } from './utils/command';
 
-export type CursorKysely = Kysely<Database>;
+export type CursorDatabase = Kysely<DatabaseTables>;
 
 interface ClientOptions extends DiscordJsClientOptions {
-    db: CursorKysely;
+    db: CursorDatabase;
     commands: BaseApplicationCommand[];
 }
 
 export class Client extends DiscordJsClient {
-    public readonly db: CursorKysely;
+    public readonly db: CursorDatabase;
     private readonly commands: Collection<string, BaseApplicationCommand>;
 
     public constructor(options: ClientOptions) {
@@ -136,7 +136,7 @@ export class Client extends DiscordJsClient {
 }
 
 export function createClient() {
-    const db = new Kysely<Database>({
+    const db = new Kysely<DatabaseTables>({
         dialect: new SqliteDialect({
             database: new SQLite('./database/database.db'),
         }),

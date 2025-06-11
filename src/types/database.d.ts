@@ -8,7 +8,7 @@ import type {
     Updateable,
 } from 'kysely';
 
-export interface Database {
+export interface DatabaseTables {
     migrations: MigrationsTable;
     tags: TagsTable;
     rps_games: RpsGamesTable;

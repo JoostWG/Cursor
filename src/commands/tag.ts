@@ -14,7 +14,7 @@ import {
     heading,
     inlineCode,
 } from 'discord.js';
-import type { CursorKysely } from '../client';
+import type { CursorDatabase } from '../client';
 import type { TagRow } from '../types/database';
 import { CommandError, SlashCommand } from '../utils/command';
 
@@ -51,7 +51,7 @@ class TagNotFoundError extends CommandError {
     }
 }
 class DatabaseTagManager implements TagManager {
-    public constructor(private readonly db: CursorKysely) {}
+    public constructor(private readonly db: CursorDatabase) {}
 
     public async list(guildId: Snowflake) {
         return await this.db
@@ -123,7 +123,7 @@ class DatabaseTagManager implements TagManager {
 export default class TagCommand extends SlashCommand {
     private readonly tags: TagManager;
 
-    public constructor(db: CursorKysely) {
+    public constructor(db: CursorDatabase) {
         super('tag');
 
         this.tags = new DatabaseTagManager(db);

@@ -18,7 +18,7 @@ import {
     userMention,
 } from 'discord.js';
 import i18next from 'i18next';
-import type { CursorKysely } from '../client';
+import type { CursorDatabase } from '../client';
 import { localize } from '../utils';
 import { CommandError, SlashCommand } from '../utils/command';
 
@@ -62,7 +62,7 @@ class Round {
 
 class Game {
     private readonly users: [User, User];
-    private readonly db: CursorKysely;
+    private readonly db: CursorDatabase;
     private readonly rounds: [Round, Round, Round];
     private currentRoundIndex: number;
     private readonly timeout: number;
@@ -76,7 +76,7 @@ class Game {
         | 'gameFinished'
         | 'gameExpired';
 
-    public constructor(users: [User, User], db: CursorKysely, options?: { timeout?: number }) {
+    public constructor(users: [User, User], db: CursorDatabase, options?: { timeout?: number }) {
         this.users = users;
         this.db = db;
         this.timeout = options?.timeout ?? 60_000;
@@ -363,7 +363,7 @@ class Game {
 }
 
 export default class RockPaperScissorsCommand extends SlashCommand {
-    public constructor(private readonly db: CursorKysely) {
+    public constructor(private readonly db: CursorDatabase) {
         super('rps');
 
         this.data
