@@ -22,6 +22,7 @@ import TriviaCommand from './commands/trivia';
 import UrbanDictionaryCommand from './commands/urbanDictionary';
 import UserCommand from './commands/user';
 import type { DatabaseTables } from './types/database';
+import { initI18Next } from './utils';
 import { type BaseApplicationCommand, CommandError } from './utils/command';
 
 export type CursorDatabase = Kysely<DatabaseTables>;
@@ -138,12 +139,18 @@ export class Client extends DiscordJsClient {
     }
 }
 
-export function createClient() {
-    const db = new Kysely<DatabaseTables>({
+export function createDatabaseInstance() {
+    return new Kysely<DatabaseTables>({
         dialect: new SqliteDialect({
             database: new SQLite('./database/database.db'),
         }),
     });
+}
+
+export async function createClient() {
+    await initI18Next();
+
+    const db = createDatabaseInstance();
 
     const commands = new CommandCollection([
         new RawCommand(),
@@ -164,5 +171,3 @@ export function createClient() {
         db,
     });
 }
-
-export default createClient();

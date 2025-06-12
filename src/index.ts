@@ -1,8 +1,7 @@
 import { discordToken } from '../config.json';
-import client from './client';
-import { initI18Next } from './utils';
+import { createClient } from './client';
 
 (async () => {
-    await initI18Next();
+    const client = await createClient();
     await client.login(discordToken);
 })();

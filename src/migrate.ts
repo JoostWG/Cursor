@@ -1,5 +1,5 @@
 import type { SchemaModule } from 'kysely';
-import client, { type CursorDatabase } from './client';
+import { type CursorDatabase, createDatabaseInstance } from './client';
 import { V1 } from './database/migrations/v1';
 import { V2 } from './database/migrations/v2';
 import { V3 } from './database/migrations/v3';
@@ -113,7 +113,7 @@ export class Migrator {
     }
 
     const migrator = new Migrator(
-        client.db,
+        createDatabaseInstance(),
         new Map([
             ['v1', new V1()],
             ['v2', new V2()],

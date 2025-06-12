@@ -5,8 +5,7 @@ import {
     Routes,
 } from 'discord.js';
 import { devGuildId, discordAppId, discordToken } from '../config.json';
-import client from './client';
-import { initI18Next } from './utils';
+import { createClient } from './client';
 
 const api = new REST().setToken(discordToken);
 
@@ -32,7 +31,7 @@ async function deploy(
         return;
     }
 
-    await initI18Next();
+    const client = await createClient();
 
     const globalCommands = [];
     const devCommands = [];
