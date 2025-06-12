@@ -28,8 +28,8 @@ import {
     subtext,
     time,
 } from 'discord.js';
+import { CommandError, SlashCommand } from '../core/command';
 import { localize } from '../utils';
-import { CommandError, SlashCommand } from '../utils/command';
 
 class InvalidRoleError extends CommandError {
     //

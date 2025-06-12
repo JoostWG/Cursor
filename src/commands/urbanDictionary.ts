@@ -20,8 +20,8 @@ import {
     subtext,
 } from 'discord.js';
 import i18next from 'i18next';
+import { SlashCommand } from '../core/command';
 import { localize } from '../utils';
-import { SlashCommand } from '../utils/command';
 
 interface Definition {
     defid: number;

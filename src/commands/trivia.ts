@@ -22,8 +22,8 @@ import {
     QuestionTypes,
     getQuestions,
 } from 'open-trivia-db';
+import { SlashCommand } from '../core/command';
 import { stringTitle } from '../utils';
-import { SlashCommand } from '../utils/command';
 
 type Status = 'active' | 'finished';
 

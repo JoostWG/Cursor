@@ -25,7 +25,7 @@ import {
     subtext,
 } from 'discord.js';
 import path from 'path';
-import { SlashCommand } from '../utils/command';
+import { SlashCommand } from '../core/command';
 
 type ChessBoardColor = CanvasRenderingContext2D['fillStyle'];
 

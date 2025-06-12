@@ -11,8 +11,8 @@ import {
     spoiler,
 } from 'discord.js';
 import i18next from 'i18next';
+import { CommandError, SlashCommand } from '../core/command';
 import { getTranslations, localize } from '../utils';
-import { CommandError, SlashCommand } from '../utils/command';
 
 type JokeBlacklistFlag = 'nsfw' | 'religious' | 'political' | 'racist' | 'sexist' | 'explicit';
 

@@ -21,9 +21,9 @@ import TagCommand from './commands/tag';
 import TriviaCommand from './commands/trivia';
 import UrbanDictionaryCommand from './commands/urbanDictionary';
 import UserCommand from './commands/user';
+import { type BaseApplicationCommand, CommandError } from './core/command';
 import type { DatabaseTables } from './types/database';
 import { initI18Next } from './utils';
-import { type BaseApplicationCommand, CommandError } from './utils/command';
 
 export type CursorDatabase = Kysely<DatabaseTables>;
 

@@ -6,8 +6,8 @@ import {
     time,
 } from 'discord.js';
 import i18next from 'i18next';
+import { SlashCommand } from '../core/command';
 import { localize } from '../utils';
-import { SlashCommand } from '../utils/command';
 
 export default class UserCommand extends SlashCommand {
     public constructor() {

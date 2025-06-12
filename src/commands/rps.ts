@@ -19,8 +19,8 @@ import {
 } from 'discord.js';
 import i18next from 'i18next';
 import type { CursorDatabase } from '../client';
+import { CommandError, SlashCommand } from '../core/command';
 import { localize } from '../utils';
-import { CommandError, SlashCommand } from '../utils/command';
 
 const emojis = {
     rock: '🪨',

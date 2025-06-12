@@ -11,7 +11,7 @@ import {
     SlashCommandBuilder,
     type UserContextMenuCommandInteraction,
 } from 'discord.js';
-import { localize } from '.';
+import { localize } from '../utils';
 
 export class CommandError extends Error {
     //

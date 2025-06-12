@@ -15,8 +15,8 @@ import {
     inlineCode,
 } from 'discord.js';
 import type { CursorDatabase } from '../client';
+import { CommandError, SlashCommand } from '../core/command';
 import type { TagRow } from '../types/database';
-import { CommandError, SlashCommand } from '../utils/command';
 
 abstract class TagManager {
     public abstract list(guildId: Snowflake): Promise<TagRow[]>;

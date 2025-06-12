@@ -3,7 +3,7 @@ import {
     type MessageContextMenuCommandInteraction,
     MessageFlags,
 } from 'discord.js';
-import { MessageContextMenu } from '../../../utils/command';
+import { MessageContextMenu } from '../../../core/command';
 
 export default class RawCommand extends MessageContextMenu {
     public constructor() {
