@@ -7,7 +7,7 @@ export interface BotOptions {
     client: Client;
     db: CursorDatabase;
     commands: CommandCollection;
-    listeners: EventListener[];
+    listeners?: EventListener[];
 }
 
 export class Bot {
@@ -20,7 +20,10 @@ export class Bot {
         this.client = options.client;
         this.db = options.db;
         this.commandMap = options.commands;
-        this.listeners = [...this.commandMap.createListeners(this.db), ...options.listeners];
+        this.listeners = [
+            ...this.commandMap.createListeners(this.db),
+            ...(options.listeners ?? []),
+        ];
 
         for (const listener of this.listeners) {
             this.client.on(listener.event, (...args) => {

@@ -13,9 +13,6 @@ import UrbanDictionaryCommand from './commands/urban-dictionary';
 import UserCommand from './commands/user';
 import { Bot } from './core/bot';
 import { CommandCollection } from './core/command-collection';
-import type { EventListener } from './core/event-listener';
-import { AutocompleteListener } from './core/listeners/autocomplete-listener';
-import { CommandListener } from './core/listeners/command-listener';
 import type { DatabaseTables } from './types/database';
 import { initI18Next } from './utils';
 
@@ -57,15 +54,9 @@ export async function createBot() {
         new UserCommand(),
     ]);
 
-    const listeners: EventListener[] = [
-        new CommandListener(commands, db),
-        new AutocompleteListener(commands),
-    ];
-
     return new Bot({
         client,
         commands,
-        listeners,
         db,
     });
 }
