@@ -9,7 +9,7 @@ import RoleCommand from './commands/role';
 import RockPaperScissorsCommand from './commands/rps';
 import TagCommand from './commands/tag';
 import TriviaCommand from './commands/trivia';
-import UrbanDictionaryCommand from './commands/urbanDictionary';
+import UrbanDictionaryCommand from './commands/urban-dictionary';
 import UserCommand from './commands/user';
 import { Bot } from './core/bot';
 import { CommandCollection } from './core/command-collection';

@@ -3,7 +3,7 @@ import eslintPluginPrettier from 'eslint-plugin-prettier';
 import { defineConfig, globalIgnores } from 'eslint/config';
 import tseslint from 'typescript-eslint';
 import stylistic from '@stylistic/eslint-plugin';
-
+import checkFile from 'eslint-plugin-check-file';
 export default defineConfig(
     globalIgnores(['dist/*', 'eslint.config.mjs', 'prettier.config.js']),
     js.configs.all,
@@ -14,6 +14,7 @@ export default defineConfig(
             js,
             prettier: eslintPluginPrettier,
             stylistic,
+            'check-file': checkFile,
         },
         languageOptions: {
             parser: tseslint.parser,
@@ -23,6 +24,11 @@ export default defineConfig(
         },
         rules: {
             'prettier/prettier': 'warn',
+            'check-file/filename-naming-convention': [
+                'error',
+                { '**/*.ts': 'KEBAB_CASE' },
+                { 'ignoreMiddleExtensions': true },
+            ],
 
             // JS
             'prefer-template': 'warn',
