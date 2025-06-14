@@ -5,8 +5,6 @@ import type { CommandCollection } from '../command-collection';
 import { eventListener } from '../event-listener';
 
 export class CommandListener extends eventListener(Events.InteractionCreate) {
-    public readonly event = Events.InteractionCreate;
-
     public constructor(
         private readonly commands: CommandCollection,
         private readonly db: CursorDatabase,
