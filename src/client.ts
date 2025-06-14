@@ -32,7 +32,9 @@ interface ClientOptions extends DiscordJsClientOptions {
     commands: CommandCollection<BaseApplicationCommand>;
 }
 
-class CommandCollection<T extends BaseApplicationCommand> extends Collection<string, T> {
+class CommandCollection<
+    T extends BaseApplicationCommand = BaseApplicationCommand,
+> extends Collection<string, T> {
     public constructor(commands: T[]) {
         super(commands.map((command) => [command.data.name, command]));
     }
@@ -40,7 +42,7 @@ class CommandCollection<T extends BaseApplicationCommand> extends Collection<str
 
 export class Client extends DiscordJsClient {
     public readonly db: CursorDatabase;
-    private readonly commands: Collection<string, BaseApplicationCommand>;
+    private readonly commands: CommandCollection;
 
     public constructor(options: ClientOptions) {
         super(options);
