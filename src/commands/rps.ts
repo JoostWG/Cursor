@@ -357,6 +357,7 @@ class Game {
                             ),
                         ),
                     );
+                break;
         }
 
         return [builder];
