@@ -1,6 +1,6 @@
 import { Events, type Interaction } from 'discord.js';
 import type { CommandCollection } from '../command-collection';
-import { eventListener } from '../listener';
+import { eventListener } from '../event-listener';
 
 export class AutocompleteListener extends eventListener(Events.InteractionCreate) {
     public constructor(private readonly commands: CommandCollection) {

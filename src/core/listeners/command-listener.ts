@@ -2,7 +2,7 @@ import { type CommandInteraction, Events, type Interaction, MessageFlags } from 
 import type { CursorDatabase } from '../../setup';
 import { CommandError } from '../command';
 import type { CommandCollection } from '../command-collection';
-import { eventListener } from '../listener';
+import { eventListener } from '../event-listener';
 
 export class CommandListener extends eventListener(Events.InteractionCreate) {
     public readonly event = Events.InteractionCreate;

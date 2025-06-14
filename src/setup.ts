@@ -13,7 +13,7 @@ import UrbanDictionaryCommand from './commands/urbanDictionary';
 import UserCommand from './commands/user';
 import { Bot } from './core/bot';
 import { CommandCollection } from './core/command-collection';
-import type { EventListener } from './core/listener';
+import type { EventListener } from './core/event-listener';
 import { AutocompleteListener } from './core/listeners/autocomplete-listener';
 import { CommandListener } from './core/listeners/command-listener';
 import type { DatabaseTables } from './types/database';

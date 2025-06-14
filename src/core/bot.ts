@@ -1,7 +1,7 @@
 import type { Client } from 'discord.js';
 import type { CursorDatabase } from '../setup';
 import type { CommandCollection } from './command-collection';
-import type { EventListener } from './listener';
+import type { EventListener } from './event-listener';
 
 export interface BotOptions {
     client: Client;
