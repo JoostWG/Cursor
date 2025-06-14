@@ -42,7 +42,7 @@ export interface MediaItem {
 
 export interface BaseComponent {
     type: ComponentType;
-    id?: string;
+    id?: number;
 }
 
 export interface ActionRowComponent extends BaseComponent {
