@@ -4,13 +4,14 @@ import {
     MessageFlags,
 } from 'discord.js';
 import { MessageContextMenu } from '../../../core/command';
+import type { Context } from '../../../core/context';
 
 export default class RawCommand extends MessageContextMenu {
     public constructor() {
         super('Get raw message JSON');
     }
 
-    public override async execute(interaction: MessageContextMenuCommandInteraction) {
+    public override async execute({ interaction }: Context<MessageContextMenuCommandInteraction>) {
         await interaction.reply({
             flags: MessageFlags.Ephemeral,
             files: [

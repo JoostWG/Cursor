@@ -15,6 +15,7 @@ import {
     inlineCode,
 } from 'discord.js';
 import { CommandError, SlashCommand } from '../core/command';
+import type { Context } from '../core/context';
 import type { CursorDatabase } from '../setup';
 import type { TagRow } from '../types/database';
 
@@ -222,7 +223,7 @@ export default class TagCommand extends SlashCommand {
             .map((tag) => ({ name: tag.name, value: tag.name }));
     }
 
-    public override async execute(interaction: ChatInputCommandInteraction) {
+    public override async execute({ interaction }: Context<ChatInputCommandInteraction>) {
         if (!interaction.inCachedGuild()) {
             return;
         }

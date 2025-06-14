@@ -19,6 +19,7 @@ import {
 } from 'discord.js';
 import i18next from 'i18next';
 import { CommandError, SlashCommand } from '../core/command';
+import type { Context } from '../core/context';
 import type { CursorDatabase } from '../setup';
 import { localize } from '../utils';
 
@@ -384,7 +385,7 @@ export default class RockPaperScissorsCommand extends SlashCommand {
             );
     }
 
-    public override async execute(interaction: ChatInputCommandInteraction) {
+    public override async execute({ interaction }: Context<ChatInputCommandInteraction>) {
         switch (interaction.options.getSubcommand()) {
             case 'play':
                 await this.play(interaction);

@@ -29,6 +29,7 @@ import {
     time,
 } from 'discord.js';
 import { CommandError, SlashCommand } from '../core/command';
+import type { Context } from '../core/context';
 import { localize } from '../utils';
 
 class InvalidRoleError extends CommandError {
@@ -131,7 +132,7 @@ export default class RoleCommand extends SlashCommand {
             );
     }
 
-    public override async execute(interaction: ChatInputCommandInteraction) {
+    public override async execute({ interaction }: Context<ChatInputCommandInteraction>) {
         if (!interaction.inCachedGuild()) {
             throw new CommandError('Must use in guild');
         }

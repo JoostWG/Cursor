@@ -12,6 +12,7 @@ import {
 } from 'discord.js';
 import i18next from 'i18next';
 import { CommandError, SlashCommand } from '../core/command';
+import type { Context } from '../core/context';
 import { getTranslations, localize } from '../utils';
 
 type JokeBlacklistFlag = 'nsfw' | 'religious' | 'political' | 'racist' | 'sexist' | 'explicit';
@@ -97,7 +98,7 @@ export default class JokeCommand extends SlashCommand {
         });
     }
 
-    public override async execute(interaction: ChatInputCommandInteraction) {
+    public override async execute({ interaction }: Context<ChatInputCommandInteraction>) {
         const category = interaction.options.getString('category') ?? 'Any';
         const safe = interaction.options.getBoolean('safe') ?? true;
 

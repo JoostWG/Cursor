@@ -2,6 +2,7 @@ import { type CommandInteraction, Events, type Interaction, MessageFlags } from 
 import type { CursorDatabase } from '../../setup';
 import { CommandError } from '../command';
 import type { CommandCollection } from '../command-collection';
+import { Context } from '../context';
 import { eventListener } from '../event-listener';
 
 export class CommandListener extends eventListener(Events.InteractionCreate) {
@@ -31,7 +32,7 @@ export class CommandListener extends eventListener(Events.InteractionCreate) {
         this.logInteractionToDatabase(interaction).catch(console.error);
 
         try {
-            await command.execute(interaction);
+            await command.execute(new Context(interaction));
         } catch (error) {
             let message: string;
 

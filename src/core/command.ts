@@ -12,6 +12,7 @@ import {
     type UserContextMenuCommandInteraction,
 } from 'discord.js';
 import { localize } from '../utils';
+import type { Context } from './context';
 
 export class CommandError extends Error {
     //
@@ -45,7 +46,7 @@ export abstract class BaseApplicationCommand {
         return this.isUserContextMenu() || this.isMessageContextMenu();
     }
 
-    public abstract execute(interaction: CommandInteraction): Promise<void>;
+    public abstract execute(ctx: Context<CommandInteraction>): Promise<void>;
 }
 
 export abstract class SlashCommand extends BaseApplicationCommand {
@@ -57,7 +58,7 @@ export abstract class SlashCommand extends BaseApplicationCommand {
         this.data = localize(SlashCommandBuilder, name, name);
     }
 
-    public abstract override execute(interaction: ChatInputCommandInteraction): Promise<void>;
+    public abstract override execute(ctx: Context<ChatInputCommandInteraction>): Promise<void>;
 
     public autocomplete?(
         interaction: AutocompleteInteraction,
@@ -76,7 +77,7 @@ export abstract class ContextMenu extends BaseApplicationCommand {
         this.data = new ContextMenuCommandBuilder().setName(name).setType(type);
     }
 
-    public abstract override execute(interaction: ContextMenuCommandInteraction): Promise<void>;
+    public abstract override execute(ctx: Context<ContextMenuCommandInteraction>): Promise<void>;
 }
 
 export abstract class UserContextMenu extends ContextMenu {
@@ -84,7 +85,9 @@ export abstract class UserContextMenu extends ContextMenu {
         super(name, ApplicationCommandType.User);
     }
 
-    public abstract override execute(interaction: UserContextMenuCommandInteraction): Promise<void>;
+    public abstract override execute(
+        ctx: Context<UserContextMenuCommandInteraction>,
+    ): Promise<void>;
 }
 
 export abstract class MessageContextMenu extends ContextMenu {
@@ -93,6 +96,6 @@ export abstract class MessageContextMenu extends ContextMenu {
     }
 
     public abstract override execute(
-        interaction: MessageContextMenuCommandInteraction,
+        ctx: Context<MessageContextMenuCommandInteraction>,
     ): Promise<void>;
 }
