@@ -1,4 +1,4 @@
-import { Events, type Interaction, MessageFlags } from 'discord.js';
+import { type CommandInteraction, Events, type Interaction, MessageFlags } from 'discord.js';
 import type { CursorDatabase } from '../../setup';
 import { CommandError } from '../command';
 import type { CommandCollection } from '../command-collection';
@@ -30,19 +30,7 @@ export class CommandListener extends eventListener(Events.InteractionCreate) {
             return;
         }
 
-        this.db
-            .insertInto('command_logs')
-            .values({
-                interaction_id: interaction.id,
-                user_id: interaction.user.id,
-                channel_id: interaction.channelId,
-                guild_id: interaction.inGuild() ? interaction.guildId : null,
-                command_name: interaction.commandName,
-                command_type: interaction.commandType,
-                options: JSON.stringify(interaction.options.data),
-            })
-            .execute()
-            .catch(console.error);
+        this.logInteractionToDatabase(interaction).catch(console.error);
 
         try {
             await command.execute(interaction);
@@ -68,5 +56,20 @@ export class CommandListener extends eventListener(Events.InteractionCreate) {
                 });
             }
         }
+    }
+
+    private async logInteractionToDatabase(interaction: CommandInteraction) {
+        await this.db
+            .insertInto('command_logs')
+            .values({
+                interaction_id: interaction.id,
+                user_id: interaction.user.id,
+                channel_id: interaction.channelId,
+                guild_id: interaction.inGuild() ? interaction.guildId : null,
+                command_name: interaction.commandName,
+                command_type: interaction.commandType,
+                options: JSON.stringify(interaction.options.data),
+            })
+            .execute();
     }
 }
