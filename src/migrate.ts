@@ -1,8 +1,8 @@
 import type { SchemaModule } from 'kysely';
-import { type CursorDatabase, createDatabaseInstance } from './client';
 import { V1 } from './database/migrations/v1';
 import { V2 } from './database/migrations/v2';
 import { V3 } from './database/migrations/v3';
+import { type CursorDatabase, createDatabaseInstance } from './setup';
 
 export abstract class Migration {
     public abstract up(schema: SchemaModule): Promise<void>;

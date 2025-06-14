@@ -1,7 +1,7 @@
 import { discordToken } from '../config.json';
-import { createClient } from './client';
+import { createBot } from './setup';
 
 (async () => {
-    const client = await createClient();
-    await client.login(discordToken);
+    const bot = await createBot();
+    await bot.run(discordToken);
 })();

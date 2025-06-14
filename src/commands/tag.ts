@@ -14,8 +14,8 @@ import {
     heading,
     inlineCode,
 } from 'discord.js';
-import type { CursorDatabase } from '../client';
 import { CommandError, SlashCommand } from '../core/command';
+import type { CursorDatabase } from '../setup';
 import type { TagRow } from '../types/database';
 
 abstract class TagManager {

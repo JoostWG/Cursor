@@ -5,7 +5,7 @@ import {
     Routes,
 } from 'discord.js';
 import { devGuildId, discordAppId, discordToken } from '../config.json';
-import { createClient } from './client';
+import { createBot } from './setup';
 
 const api = new REST().setToken(discordToken);
 
@@ -31,12 +31,12 @@ async function deploy(
         return;
     }
 
-    const client = await createClient();
+    const bot = await createBot();
 
     const globalCommands = [];
     const devCommands = [];
 
-    for (const command of client.getAllCommands()) {
+    for (const command of bot.getCommands()) {
         if (command.devOnly) {
             devCommands.push(command.data.toJSON());
         } else {

@@ -18,8 +18,8 @@ import {
     userMention,
 } from 'discord.js';
 import i18next from 'i18next';
-import type { CursorDatabase } from '../client';
 import { CommandError, SlashCommand } from '../core/command';
+import type { CursorDatabase } from '../setup';
 import { localize } from '../utils';
 
 const emojis = {
