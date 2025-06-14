@@ -1,12 +1,9 @@
 import {
-    ActionRowBuilder,
     type AutocompleteInteraction,
-    ButtonBuilder,
     ButtonStyle,
     type ChatInputCommandInteraction,
     Collection,
     Colors,
-    ContainerBuilder,
     DiscordAPIError,
     HeadingLevel,
     type Interaction,
@@ -31,6 +28,7 @@ import {
 import { CommandError, SlashCommand } from '../core/command';
 import type { Context } from '../core/context';
 import { localize } from '../utils';
+import { actionRow, button, container, textDisplay } from '../utils/components';
 
 class InvalidRoleError extends CommandError {
     //
@@ -203,9 +201,9 @@ export default class RoleCommand extends SlashCommand {
         await interaction.reply({
             flags: [MessageFlags.IsComponentsV2, MessageFlags.Ephemeral],
             components: [
-                new ContainerBuilder().addTextDisplayComponents(
-                    new TextDisplayBuilder().setContent(
-                        [
+                container({
+                    components: textDisplay({
+                        content: [
                             heading(`Updated ${roleMention(role.id)}`, HeadingLevel.Three),
                             ...changes.map((value, key) =>
                                 [
@@ -229,8 +227,8 @@ export default class RoleCommand extends SlashCommand {
                             bold('Reason'),
                             reason ?? 'No reason given',
                         ].join('\n'),
-                    ),
-                ),
+                    }),
+                }),
             ],
         });
     }
@@ -246,37 +244,36 @@ export default class RoleCommand extends SlashCommand {
             flags: [MessageFlags.IsComponentsV2, MessageFlags.Ephemeral],
             withResponse: true,
             components: [
-                new ContainerBuilder()
-                    .setAccentColor(Colors.Red)
-                    .addTextDisplayComponents(
-                        new TextDisplayBuilder().setContent(
-                            [
+                container({
+                    accent_color: Colors.Red,
+                    components: [
+                        textDisplay({
+                            content: [
                                 heading('⚠️ Hold up!'),
                                 `Are you sure you want to delete ${roleMention(role.id)}?`,
                                 subtext('This action cannot be undone.'),
                             ].join('\n'),
-                        ),
-                    )
-                    .addActionRowComponents(
-                        new ActionRowBuilder<ButtonBuilder>().addComponents(
-                            new ButtonBuilder()
-                                .setCustomId('cancel')
-                                .setStyle(ButtonStyle.Secondary)
-                                .setLabel('Cancel'),
-                            new ButtonBuilder()
-                                .setCustomId('confirm')
-                                .setStyle(ButtonStyle.Danger)
-                                .setLabel('Delete role'),
-                        ),
-                    )
-                    .addTextDisplayComponents(
-                        new TextDisplayBuilder().setContent(
-                            subtext(
-                                // + 1 because it lines up better
-                                `This message disappears ${time(Math.floor(Date.now() / 1000 + timeout + 1), TimestampStyles.RelativeTime)}`,
-                            ),
-                        ),
-                    ),
+                        }),
+                        actionRow({
+                            components: [
+                                button({
+                                    custom_id: 'cancel',
+                                    style: ButtonStyle.Secondary,
+                                    label: 'Cancel',
+                                }),
+                                button({
+                                    custom_id: 'confirm',
+                                    style: ButtonStyle.Danger,
+                                    label: 'Delete role',
+                                }),
+                            ],
+                        }),
+                        textDisplay({
+                            // + 1 because it lines up better
+                            content: `This message disappears ${time(Math.floor(Date.now() / 1000 + timeout + 1), TimestampStyles.RelativeTime)}`,
+                        }),
+                    ],
+                }),
             ],
         });
 
@@ -326,19 +323,20 @@ export default class RoleCommand extends SlashCommand {
 
                 await confirmInteraction.update({
                     components: [
-                        new ContainerBuilder()
-                            .setAccentColor(Colors.Green)
-                            .addTextDisplayComponents(
-                                new TextDisplayBuilder().setContent(
-                                    [
+                        container({
+                            accent_color: Colors.Green,
+                            components: [
+                                textDisplay({
+                                    content: [
                                         heading('Role deleted'),
                                         'The role was deleted successfully.',
                                         '',
                                         bold('Reason'),
                                         reason,
                                     ].join('\n'),
-                                ),
-                            ),
+                                }),
+                            ],
+                        }),
                     ],
                 });
         }

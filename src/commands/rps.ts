@@ -1,14 +1,10 @@
 import {
-    ActionRowBuilder,
-    ButtonBuilder,
     ButtonStyle,
     type ChatInputCommandInteraction,
     Colors,
-    ContainerBuilder,
     HeadingLevel,
     type Locale,
     MessageFlags,
-    SeparatorBuilder,
     SlashCommandSubcommandBuilder,
     SlashCommandUserOption,
     TextDisplayBuilder,
@@ -22,6 +18,7 @@ import { CommandError, SlashCommand } from '../core/command';
 import type { Context } from '../core/context';
 import type { CursorDatabase } from '../setup';
 import { localize } from '../utils';
+import { actionRow, button, container, separator, textDisplay } from '../utils/components';
 
 const emojis = {
     rock: '🪨',
@@ -237,13 +234,13 @@ class Game {
     }
 
     private buildComponents() {
-        const builder = new ContainerBuilder();
-
-        builder.addTextDisplayComponents(
-            new TextDisplayBuilder().setContent(
-                heading(i18next.t('commands:rps.game.name', { lng: this.locale })),
-            ),
-        );
+        const builder = container({
+            components: [
+                textDisplay({
+                    content: heading(i18next.t('commands:rps.game.name', { lng: this.locale })),
+                }),
+            ],
+        });
 
         switch (this.status) {
             case 'invitePending':
@@ -251,112 +248,119 @@ class Game {
             case 'inviteExpired':
                 switch (this.status) {
                     case 'invitePending':
-                        builder.setAccentColor(Colors.Blue).addTextDisplayComponents(
-                            new TextDisplayBuilder().setContent(
-                                i18next.t('commands:rps.game.invitePending', {
+                        builder.accent_color = Colors.Blue;
+                        builder.components.push(
+                            textDisplay({
+                                content: i18next.t('commands:rps.game.invitePending', {
                                     lng: this.locale,
                                     user: userMention(this.player1.id),
                                 }),
-                            ),
+                            }),
                         );
                         break;
 
                     case 'inviteDenied':
-                        builder.setAccentColor(Colors.Red).addTextDisplayComponents(
-                            new TextDisplayBuilder().setContent(
-                                i18next.t('commands:rps.game.inviteDenied', {
+                        builder.accent_color = Colors.Red;
+                        builder.components.push(
+                            textDisplay({
+                                content: i18next.t('commands:rps.game.inviteDenied', {
                                     lng: this.locale,
                                 }),
-                            ),
+                            }),
                         );
                         break;
 
                     case 'inviteExpired':
-                        builder.setAccentColor(Colors.Red).addTextDisplayComponents(
-                            new TextDisplayBuilder().setContent(
-                                i18next.t('commands:rps.game.inviteExpired', {
+                        builder.accent_color = Colors.Red;
+                        builder.components.push(
+                            textDisplay({
+                                content: i18next.t('commands:rps.game.inviteExpired', {
                                     lng: this.locale,
                                 }),
-                            ),
+                            }),
                         );
                         break;
                 }
 
-                builder.addActionRowComponents(
-                    new ActionRowBuilder<ButtonBuilder>().addComponents(
-                        new ButtonBuilder()
-                            .setCustomId('deny')
-                            .setLabel(i18next.t('commands:rps.game.deny', { lng: this.locale }))
-                            .setStyle(ButtonStyle.Danger)
-                            .setDisabled(this.status !== 'invitePending'),
-                        new ButtonBuilder()
-                            .setCustomId('accept')
-                            .setLabel(i18next.t('commands:rps.game.accept', { lng: this.locale }))
-                            .setStyle(ButtonStyle.Success)
-                            .setDisabled(this.status !== 'invitePending'),
-                    ),
+                builder.components.push(
+                    actionRow({
+                        components: [
+                            button({
+                                custom_id: 'deny',
+                                label: i18next.t('commands:rps.game.deny', { lng: this.locale }),
+                                style: ButtonStyle.Danger,
+                                disabled: this.status !== 'invitePending',
+                            }),
+                            button({
+                                custom_id: 'accept',
+                                label: i18next.t('commands:rps.game.accept', { lng: this.locale }),
+                                style: ButtonStyle.Success,
+                                disabled: this.status !== 'invitePending',
+                            }),
+                        ],
+                    }),
                 );
                 break;
 
             case 'gameExpired':
             case 'gameActive':
             case 'gameFinished':
-                builder
-                    .setAccentColor(Colors.Gold)
-                    .addTextDisplayComponents(
-                        new TextDisplayBuilder().setContent(
-                            this.rounds
-                                .map((round, roundIndex) => [
-                                    heading(
-                                        i18next.t('commands:rps.game.round', {
-                                            lng: this.locale,
-                                            round: roundIndex + 1,
-                                        }),
-                                        HeadingLevel.Three,
-                                    ),
-                                    ...round.choices.map((choice, choiceIndex) => {
-                                        const choiceString = choice
-                                            ? round.isFinished()
-                                                ? emojis[choice]
-                                                : '???'
-                                            : roundIndex === this.currentRoundIndex
-                                              ? `${i18next.t('commands:rps.game.waiting', {
-                                                    lng: this.locale,
-                                                })}...`
-                                              : '...';
-
-                                        return `${this.users[choiceIndex].displayName}: ${choiceString}`;
+                builder.accent_color = Colors.Gold;
+                builder.components = builder.components.concat([
+                    textDisplay({
+                        content: this.rounds
+                            .map((round, roundIndex) => [
+                                heading(
+                                    i18next.t('commands:rps.game.round', {
+                                        lng: this.locale,
+                                        round: roundIndex + 1,
                                     }),
-                                    [
-                                        i18next.t('commands:rps.game.tie', {
-                                            lng: this.locale,
-                                        }),
-                                        i18next.t('commands:rps.game.win', {
-                                            lng: this.locale,
-                                            user: this.player1.displayName,
-                                        }),
-                                        i18next.t('commands:rps.game.win', {
-                                            lng: this.locale,
-                                            user: this.player2.displayName,
-                                        }),
-                                    ][round.getResult()] ?? '',
-                                ])
-                                .flat()
-                                .join('\n'),
+                                    HeadingLevel.Three,
+                                ),
+                                ...round.choices.map((choice, choiceIndex) => {
+                                    const choiceString = choice
+                                        ? round.isFinished()
+                                            ? emojis[choice]
+                                            : '???'
+                                        : roundIndex === this.currentRoundIndex
+                                          ? `${i18next.t('commands:rps.game.waiting', {
+                                                lng: this.locale,
+                                            })}...`
+                                          : '...';
+
+                                    return `${this.users[choiceIndex].displayName}: ${choiceString}`;
+                                }),
+                                [
+                                    i18next.t('commands:rps.game.tie', {
+                                        lng: this.locale,
+                                    }),
+                                    i18next.t('commands:rps.game.win', {
+                                        lng: this.locale,
+                                        user: this.player1.displayName,
+                                    }),
+                                    i18next.t('commands:rps.game.win', {
+                                        lng: this.locale,
+                                        user: this.player2.displayName,
+                                    }),
+                                ][round.getResult()] ?? '',
+                            ])
+                            .flat()
+                            .join('\n'),
+                    }),
+                    separator({ divider: true }),
+                    actionRow({
+                        components: Object.entries(emojis).map(([key, emoji]) =>
+                            button({
+                                custom_id: key,
+                                label: emoji,
+                                style: ButtonStyle.Primary,
+                                disabled: this.status !== 'gameActive',
+                            }),
                         ),
-                    )
-                    .addSeparatorComponents(new SeparatorBuilder().setDivider(true))
-                    .addActionRowComponents(
-                        new ActionRowBuilder<ButtonBuilder>().addComponents(
-                            ...Object.entries(emojis).map(([key, emoji]) =>
-                                new ButtonBuilder()
-                                    .setCustomId(key)
-                                    .setLabel(emoji)
-                                    .setStyle(ButtonStyle.Primary)
-                                    .setDisabled(this.status !== 'gameActive'),
-                            ),
-                        ),
-                    );
+                    }),
+                ]);
+
+                break;
         }
 
         return [builder];
@@ -434,21 +438,23 @@ export default class RockPaperScissorsCommand extends SlashCommand {
         await interaction.reply({
             flags: MessageFlags.IsComponentsV2,
             components: [
-                new ContainerBuilder().addTextDisplayComponents(
-                    new TextDisplayBuilder().setContent(
-                        [
-                            heading('RPS Stats'),
-                            bold('Games played'),
-                            games?.count ?? 0,
-                            '',
-                            bold('Choice stats'),
-                            ...Object.entries(emojis).map(
-                                ([name, emoji]) =>
-                                    `${emoji} ${choiceCounts.get(name as Choice) ?? 0}`,
-                            ),
-                        ].join('\n'),
-                    ),
-                ),
+                container({
+                    components: [
+                        textDisplay({
+                            content: [
+                                heading('RPS Stats'),
+                                bold('Games played'),
+                                games?.count ?? 0,
+                                '',
+                                bold('Choice stats'),
+                                ...Object.entries(emojis).map(
+                                    ([name, emoji]) =>
+                                        `${emoji} ${choiceCounts.get(name as Choice) ?? 0}`,
+                                ),
+                            ].join('\n'),
+                        }),
+                    ],
+                }),
             ],
         });
     }
