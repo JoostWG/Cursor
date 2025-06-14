@@ -2,15 +2,17 @@ import { Events, type Interaction, MessageFlags } from 'discord.js';
 import type { CursorDatabase } from '../../setup';
 import { CommandError } from '../command';
 import type { CommandCollection } from '../command-collection';
-import type { EventListener } from '../listener';
+import { eventListener } from '../listener';
 
-export class CommandListener implements EventListener<Events.InteractionCreate> {
+export class CommandListener extends eventListener(Events.InteractionCreate) {
     public readonly event = Events.InteractionCreate;
 
     public constructor(
         private readonly commands: CommandCollection,
         private readonly db: CursorDatabase,
-    ) {}
+    ) {
+        super();
+    }
 
     public async execute(interaction: Interaction) {
         if (!interaction.isCommand()) {
