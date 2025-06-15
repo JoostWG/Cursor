@@ -13,6 +13,7 @@ export class AutocompleteListener extends eventListener(Events.InteractionCreate
         }
 
         const command = this.commands.get(interaction.commandName);
+
         if (!command?.isSlashCommand() || !command.autocomplete) {
             console.error(`No command matching ${interaction.commandName} was found.`);
             return;

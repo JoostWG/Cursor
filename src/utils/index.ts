@@ -33,6 +33,7 @@ export function getTranslations(key: string): LocalizationMap {
                 .filter(([_, t]) => t !== ''),
         );
     }
+
     return {};
 }
 

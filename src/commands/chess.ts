@@ -118,6 +118,7 @@ class DefaultChessBoard implements ChessBoard {
         ctx.textBaseline = 'middle';
         ctx.textAlign = 'center';
         ctx.font = `${borderWidth / 1.5}px Arial`;
+
         for (const [rowIndex, row] of chess.board().entries()) {
             ctx.fillStyle = 'white';
 
