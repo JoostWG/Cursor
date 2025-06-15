@@ -43,6 +43,7 @@ abstract class TagManager {
     ): Promise<void>;
     public abstract delete(tagId: number): Promise<void>;
 }
+
 class TagNotFoundError extends CommandError {
     public name: string;
 
@@ -51,6 +52,7 @@ class TagNotFoundError extends CommandError {
         this.name = name;
     }
 }
+
 class DatabaseTagManager implements TagManager {
     public constructor(private readonly db: CursorDatabase) {}
 

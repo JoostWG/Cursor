@@ -147,6 +147,7 @@ export default class JokeCommand extends SlashCommand {
                     embeds: [this.buildErrorEmbed(data)],
                 });
             }
+
             if (data.error || 'jokes' in data) {
                 throw new CommandError('Something went wrong...');
             }

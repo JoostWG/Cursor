@@ -114,6 +114,14 @@ export default defineConfig(
                     { prev: 'field', next: 'field', blankLine: 'never' },
                 ],
             }],
+            'stylistic/padding-line-between-statements': [
+                'warn',
+                { 'blankLine': 'always', 'prev': 'block-like', 'next': 'block-like' },
+                { 'blankLine': 'always', 'prev': '*', 'next': 'class' },
+                { 'blankLine': 'always', 'prev': 'class', 'next': '*' },
+                { 'blankLine': 'always', 'prev': '*', 'next': 'function' },
+                { 'blankLine': 'always', 'prev': 'function', 'next': '*' },
+            ]
         },
     },
 );
