@@ -8,7 +8,7 @@
         "rollback": "node ./dist/migrate.js --down",
         "watch": "tsc --watch --sourceMap",
         "build": "tsc --build --sourceMap",
-        "format": "prettier --write src/",
+        "format": "prettier --write .",
         "lint": "eslint .",
         "l-f": "npm run lint -- --fix && npm run format -- --log-level warn"
     },

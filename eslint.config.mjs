@@ -1,9 +1,10 @@
 import js from '@eslint/js';
+import stylistic from '@stylistic/eslint-plugin';
+import checkFile from 'eslint-plugin-check-file';
 import eslintPluginPrettier from 'eslint-plugin-prettier';
 import { defineConfig, globalIgnores } from 'eslint/config';
 import tseslint from 'typescript-eslint';
-import stylistic from '@stylistic/eslint-plugin';
-import checkFile from 'eslint-plugin-check-file';
+
 export default defineConfig(
     globalIgnores(['dist/*', 'eslint.config.mjs', 'prettier.config.js']),
     js.configs.all,
@@ -12,7 +13,7 @@ export default defineConfig(
         files: ['**/*.ts'],
         plugins: {
             js,
-            prettier: eslintPluginPrettier,
+            'prettier': eslintPluginPrettier,
             stylistic,
             'check-file': checkFile,
         },
@@ -27,7 +28,7 @@ export default defineConfig(
             'check-file/filename-naming-convention': [
                 'error',
                 { '**/*.ts': 'KEBAB_CASE' },
-                { 'ignoreMiddleExtensions': true },
+                { ignoreMiddleExtensions: true },
             ],
 
             // JS
@@ -66,7 +67,10 @@ export default defineConfig(
 
             // TS
             '@typescript-eslint/no-floating-promises': ['warn', { ignoreIIFE: true }],
-            '@typescript-eslint/consistent-type-imports': ['error', { fixStyle: 'inline-type-imports' }],
+            '@typescript-eslint/consistent-type-imports': [
+                'error',
+                { fixStyle: 'inline-type-imports' },
+            ],
             '@typescript-eslint/prefer-nullish-coalescing': 'warn',
             '@typescript-eslint/member-ordering': 'warn',
             '@typescript-eslint/no-shadow': 'error',
@@ -75,8 +79,15 @@ export default defineConfig(
                 'warn',
                 { selector: ['typeLike'], format: ['PascalCase'] },
                 { selector: ['enumMember'], format: ['PascalCase', 'camelCase'] },
-                { selector: ['typeProperty', 'parameterProperty', 'objectLiteralProperty'], format: ['PascalCase', 'camelCase', 'snake_case'] },
-                { selector: ['variableLike', 'method', 'property', 'memberLike'], format: ['camelCase'], filter: { regex: '^_$', match: false } },
+                {
+                    selector: ['typeProperty', 'parameterProperty', 'objectLiteralProperty'],
+                    format: ['PascalCase', 'camelCase', 'snake_case'],
+                },
+                {
+                    selector: ['variableLike', 'method', 'property', 'memberLike'],
+                    format: ['camelCase'],
+                    filter: { regex: '^_$', match: false },
+                },
             ],
             '@typescript-eslint/explicit-member-accessibility': 'error',
             '@typescript-eslint/prefer-regexp-exec': 'warn',
@@ -107,21 +118,24 @@ export default defineConfig(
             '@typescript-eslint/parameter-properties': 'off',
 
             // Things prettier doesn' cover
-            'stylistic/lines-between-class-members': ['warn', {
-                enforce: [
-                    { prev: '*', next: 'method', blankLine: 'always' },
-                    { prev: 'method', next: '*', blankLine: 'always' },
-                    { prev: 'field', next: 'field', blankLine: 'never' },
-                ],
-            }],
+            'stylistic/lines-between-class-members': [
+                'warn',
+                {
+                    enforce: [
+                        { prev: '*', next: 'method', blankLine: 'always' },
+                        { prev: 'method', next: '*', blankLine: 'always' },
+                        { prev: 'field', next: 'field', blankLine: 'never' },
+                    ],
+                },
+            ],
             'stylistic/padding-line-between-statements': [
                 'warn',
-                { 'blankLine': 'always', 'prev': 'block-like', 'next': 'block-like' },
-                { 'blankLine': 'always', 'prev': '*', 'next': 'class' },
-                { 'blankLine': 'always', 'prev': 'class', 'next': '*' },
-                { 'blankLine': 'always', 'prev': '*', 'next': 'function' },
-                { 'blankLine': 'always', 'prev': 'function', 'next': '*' },
-            ]
+                { blankLine: 'always', prev: 'block-like', next: 'block-like' },
+                { blankLine: 'always', prev: '*', next: 'class' },
+                { blankLine: 'always', prev: 'class', next: '*' },
+                { blankLine: 'always', prev: '*', next: 'function' },
+                { blankLine: 'always', prev: 'function', next: '*' },
+            ],
         },
     },
 );
