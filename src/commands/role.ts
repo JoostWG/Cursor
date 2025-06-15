@@ -202,32 +202,34 @@ export default class RoleCommand extends SlashCommand {
             flags: [MessageFlags.IsComponentsV2, MessageFlags.Ephemeral],
             components: [
                 container({
-                    components: textDisplay({
-                        content: [
-                            heading(`Updated ${roleMention(role.id)}`, HeadingLevel.Three),
-                            ...changes.map((value, key) =>
-                                [
-                                    'Set',
-                                    bold(key),
-                                    'from',
-                                    inlineCode(
-                                        key === 'color'
-                                            ? `#${value.old.toString(16)}`
-                                            : value.old.toString(),
-                                    ),
-                                    'to',
-                                    inlineCode(
-                                        key === 'color'
-                                            ? `#${value.new.toString(16)}`
-                                            : value.new.toString(),
-                                    ),
-                                ].join(' '),
-                            ),
-                            '',
-                            bold('Reason'),
-                            reason ?? 'No reason given',
-                        ].join('\n'),
-                    }),
+                    components: [
+                        textDisplay({
+                            content: [
+                                heading(`Updated ${roleMention(role.id)}`, HeadingLevel.Three),
+                                ...changes.map((value, key) =>
+                                    [
+                                        'Set',
+                                        bold(key),
+                                        'from',
+                                        inlineCode(
+                                            key === 'color'
+                                                ? `#${value.old.toString(16)}`
+                                                : value.old.toString(),
+                                        ),
+                                        'to',
+                                        inlineCode(
+                                            key === 'color'
+                                                ? `#${value.new.toString(16)}`
+                                                : value.new.toString(),
+                                        ),
+                                    ].join(' '),
+                                ),
+                                '',
+                                bold('Reason'),
+                                reason ?? 'No reason given',
+                            ].join('\n'),
+                        }),
+                    ],
                 }),
             ],
         });
