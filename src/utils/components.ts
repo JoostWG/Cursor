@@ -21,10 +21,10 @@ import {
     ComponentType,
 } from 'discord.js';
 
-type Data<T extends APIBaseComponent<ComponentType>> = Omit<T, 'type'>;
+type OmitType<T extends APIBaseComponent<ComponentType>> = Omit<T, 'type'>;
 
 export function actionRow<T extends APIComponentInActionRow>(
-    data: Data<APIActionRowComponent<T>>,
+    data: OmitType<APIActionRowComponent<T>>,
 ): APIActionRowComponent<T> {
     return {
         type: ComponentType.ActionRow,
@@ -32,14 +32,16 @@ export function actionRow<T extends APIComponentInActionRow>(
     };
 }
 
-export function button(data: Data<APIButtonComponentWithCustomId>): APIButtonComponentWithCustomId;
-export function button(data: Data<APIButtonComponentWithURL>): APIButtonComponentWithURL;
-export function button(data: Data<APIButtonComponentWithSKUId>): APIButtonComponentWithSKUId;
+export function button(
+    data: OmitType<APIButtonComponentWithCustomId>,
+): APIButtonComponentWithCustomId;
+export function button(data: OmitType<APIButtonComponentWithURL>): APIButtonComponentWithURL;
+export function button(data: OmitType<APIButtonComponentWithSKUId>): APIButtonComponentWithSKUId;
 export function button(
     data:
-        | Data<APIButtonComponentWithCustomId>
-        | Data<APIButtonComponentWithURL>
-        | Data<APIButtonComponentWithSKUId>,
+        | OmitType<APIButtonComponentWithCustomId>
+        | OmitType<APIButtonComponentWithURL>
+        | OmitType<APIButtonComponentWithSKUId>,
 ): APIButtonComponentWithCustomId | APIButtonComponentWithURL | APIButtonComponentWithSKUId {
     return {
         type: ComponentType.Button,
@@ -47,28 +49,28 @@ export function button(
     };
 }
 
-export function textInput(data: Data<APITextInputComponent>): APITextInputComponent {
+export function textInput(data: OmitType<APITextInputComponent>): APITextInputComponent {
     return {
         type: ComponentType.TextInput,
         ...data,
     };
 }
 
-export function stringSelect(data: Data<APIStringSelectComponent>): APIStringSelectComponent {
+export function stringSelect(data: OmitType<APIStringSelectComponent>): APIStringSelectComponent {
     return {
         type: ComponentType.StringSelect,
         ...data,
     };
 }
 
-export function userSelect(data: Data<APIUserSelectComponent>): APIUserSelectComponent {
+export function userSelect(data: OmitType<APIUserSelectComponent>): APIUserSelectComponent {
     return {
         type: ComponentType.UserSelect,
         ...data,
     };
 }
 
-export function roleSelect(data: Data<APIRoleSelectComponent>): APIRoleSelectComponent {
+export function roleSelect(data: OmitType<APIRoleSelectComponent>): APIRoleSelectComponent {
     return {
         type: ComponentType.RoleSelect,
         ...data,
@@ -76,7 +78,7 @@ export function roleSelect(data: Data<APIRoleSelectComponent>): APIRoleSelectCom
 }
 
 export function mentionableSelect(
-    data: Data<APIMentionableSelectComponent>,
+    data: OmitType<APIMentionableSelectComponent>,
 ): APIMentionableSelectComponent {
     return {
         type: ComponentType.MentionableSelect,
@@ -84,56 +86,58 @@ export function mentionableSelect(
     };
 }
 
-export function channelSelect(data: Data<APIChannelSelectComponent>): APIChannelSelectComponent {
+export function channelSelect(
+    data: OmitType<APIChannelSelectComponent>,
+): APIChannelSelectComponent {
     return {
         type: ComponentType.ChannelSelect,
         ...data,
     };
 }
 
-export function section(data: Data<APISectionComponent>): APISectionComponent {
+export function section(data: OmitType<APISectionComponent>): APISectionComponent {
     return {
         type: ComponentType.Section,
         ...data,
     };
 }
 
-export function textDisplay(data: Data<APITextDisplayComponent>): APITextDisplayComponent {
+export function textDisplay(data: OmitType<APITextDisplayComponent>): APITextDisplayComponent {
     return {
         type: ComponentType.TextDisplay,
         ...data,
     };
 }
 
-export function thumbnail(data: Data<APIThumbnailComponent>): APIThumbnailComponent {
+export function thumbnail(data: OmitType<APIThumbnailComponent>): APIThumbnailComponent {
     return {
         type: ComponentType.Thumbnail,
         ...data,
     };
 }
 
-export function mediaGallery(data: Data<APIMediaGalleryComponent>): APIMediaGalleryComponent {
+export function mediaGallery(data: OmitType<APIMediaGalleryComponent>): APIMediaGalleryComponent {
     return {
         type: ComponentType.MediaGallery,
         ...data,
     };
 }
 
-export function file(data: Data<APIFileComponent>): APIFileComponent {
+export function file(data: OmitType<APIFileComponent>): APIFileComponent {
     return {
         type: ComponentType.File,
         ...data,
     };
 }
 
-export function separator(data: Data<APISeparatorComponent>): APISeparatorComponent {
+export function separator(data: OmitType<APISeparatorComponent>): APISeparatorComponent {
     return {
         type: ComponentType.Separator,
         ...data,
     };
 }
 
-export function container(data: Data<APIContainerComponent>): APIContainerComponent {
+export function container(data: OmitType<APIContainerComponent>): APIContainerComponent {
     return {
         type: ComponentType.Container,
         ...data,
