@@ -31,6 +31,7 @@ export function actionRow<T extends APIComponentInActionRow>(
         ...data,
     };
 }
+
 export function button(data: Data<APIButtonComponentWithCustomId>): APIButtonComponentWithCustomId;
 export function button(data: Data<APIButtonComponentWithURL>): APIButtonComponentWithURL;
 export function button(data: Data<APIButtonComponentWithSKUId>): APIButtonComponentWithSKUId;
