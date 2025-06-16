@@ -4,6 +4,7 @@ import {
     type AutocompleteInteraction,
     type CommandInteraction,
     ContextMenuCommandBuilder,
+    InteractionContextType,
     type RESTPostAPIBaseApplicationCommandsJSONBody,
     SlashCommandBuilder,
 } from 'discord.js';
@@ -65,6 +66,14 @@ export abstract class SlashCommand extends BaseApplicationCommand {
     public autocomplete?(
         interaction: AutocompleteInteraction,
     ): Promise<ApplicationCommandOptionChoiceData[]>;
+}
+
+export abstract class GuildSlashCommand extends SlashCommand {
+    public constructor(name: string) {
+        super(name);
+
+        this.data.setContexts(InteractionContextType.Guild);
+    }
 }
 
 export abstract class ContextMenu extends BaseApplicationCommand {

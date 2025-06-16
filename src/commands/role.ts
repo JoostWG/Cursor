@@ -7,7 +7,6 @@ import {
     DiscordAPIError,
     HeadingLevel,
     type Interaction,
-    InteractionContextType,
     MessageFlags,
     PermissionFlagsBits,
     type Role,
@@ -24,7 +23,7 @@ import {
     subtext,
     time,
 } from 'discord.js';
-import { CommandError, SlashCommand } from '../core/command';
+import { CommandError, GuildSlashCommand } from '../core/command';
 import type { ChatInputContext } from '../core/context';
 import { localize } from '../utils';
 import { actionRow, button, container, textDisplay } from '../utils/components';
@@ -35,13 +34,12 @@ class InvalidRoleError extends CommandError {
 
 type AllowedRoleProps = 'name' | 'color' | 'hoist' | 'mentionable';
 
-export default class RoleCommand extends SlashCommand {
+export default class RoleCommand extends GuildSlashCommand {
     public constructor() {
         super('role');
 
         this.data
             .setDefaultMemberPermissions(PermissionFlagsBits.ManageRoles)
-            .setContexts(InteractionContextType.Guild)
             .addSubcommand(
                 localize(SlashCommandSubcommandBuilder, 'role', 'role.subcommands.update')
                     .addRoleOption(

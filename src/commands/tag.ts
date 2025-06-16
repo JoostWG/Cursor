@@ -3,7 +3,6 @@ import {
     type AutocompleteInteraction,
     type ChatInputCommandInteraction,
     HeadingLevel,
-    InteractionContextType,
     MessageFlags,
     SlashCommandStringOption,
     SlashCommandSubcommandBuilder,
@@ -12,7 +11,7 @@ import {
     heading,
     inlineCode,
 } from 'discord.js';
-import { CommandError, SlashCommand } from '../core/command';
+import { CommandError, GuildSlashCommand } from '../core/command';
 import type { ChatInputContext } from '../core/context';
 import type { CursorDatabase } from '../setup';
 import type { TagRow } from '../types/database';
@@ -122,7 +121,7 @@ class DatabaseTagManager implements TagManager {
     }
 }
 
-export default class TagCommand extends SlashCommand {
+export default class TagCommand extends GuildSlashCommand {
     private readonly tags: TagManager;
 
     public constructor(db: CursorDatabase) {
@@ -131,7 +130,6 @@ export default class TagCommand extends SlashCommand {
         this.tags = new DatabaseTagManager(db);
 
         this.data
-            .setContexts(InteractionContextType.Guild)
             .addSubcommand(
                 new SlashCommandSubcommandBuilder().setName('list').setDescription('List of tags'),
             )
