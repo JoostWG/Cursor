@@ -2,7 +2,7 @@ import { type CommandInteraction, Events, type Interaction, MessageFlags } from 
 import type { CursorDatabase } from '../../setup';
 import { CommandError } from '../command';
 import type { CommandCollection } from '../command-collection';
-import { Context } from '../context';
+import { ChatInputContext, MessageContextMenuContext, UserContextMenuContext } from '../context';
 import { eventListener } from '../event-listener';
 
 export class CommandListener extends eventListener(Events.InteractionCreate) {
@@ -32,7 +32,23 @@ export class CommandListener extends eventListener(Events.InteractionCreate) {
         this.logInteractionToDatabase(interaction).catch(console.error);
 
         try {
-            await command.execute(new Context(interaction));
+            if (interaction.isChatInputCommand() && command.isSlashCommand()) {
+                await command.execute(new ChatInputContext(interaction));
+            } else if (interaction.isUserContextMenuCommand() && command.isUserContextMenu()) {
+                await command.execute(new UserContextMenuContext(interaction));
+            } else if (
+                interaction.isMessageContextMenuCommand() &&
+                command.isMessageContextMenu()
+            ) {
+                await command.execute(new MessageContextMenuContext(interaction));
+            } else {
+                await interaction.reply({
+                    content: 'Command not found.',
+                    flags: MessageFlags.Ephemeral,
+                });
+
+                console.error(`No valid command handler found for ${interaction.commandName}.`);
+            }
         } catch (error) {
             let message: string;
 

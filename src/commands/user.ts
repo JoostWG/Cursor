@@ -1,13 +1,7 @@
-import {
-    type ChatInputCommandInteraction,
-    EmbedBuilder,
-    SlashCommandUserOption,
-    TimestampStyles,
-    time,
-} from 'discord.js';
+import { EmbedBuilder, SlashCommandUserOption, TimestampStyles, time } from 'discord.js';
 import i18next from 'i18next';
 import { SlashCommand } from '../core/command';
-import type { Context } from '../core/context';
+import type { ChatInputContext } from '../core/context';
 import { localize } from '../utils';
 
 export default class UserCommand extends SlashCommand {
@@ -17,7 +11,7 @@ export default class UserCommand extends SlashCommand {
         this.data.addUserOption(localize(SlashCommandUserOption, 'user', 'user.options.user'));
     }
 
-    public override async execute({ interaction }: Context<ChatInputCommandInteraction>) {
+    public override async execute({ interaction }: ChatInputContext) {
         const user = interaction.options.getUser('user') ?? interaction.user;
 
         const builder = new EmbedBuilder()

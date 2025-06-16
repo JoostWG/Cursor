@@ -21,7 +21,7 @@ import {
 } from 'discord.js';
 import path from 'path';
 import { SlashCommand } from '../core/command';
-import type { Context } from '../core/context';
+import type { ChatInputContext } from '../core/context';
 import { container, mediaGallery, textDisplay } from '../utils/components';
 
 type ChessBoardColor = CanvasRenderingContext2D['fillStyle'];
@@ -323,7 +323,7 @@ export default class ChessCommand extends SlashCommand {
             .map((move) => ({ name: move, value: move }));
     }
 
-    public override async execute({ interaction }: Context<ChatInputCommandInteraction>) {
+    public override async execute({ interaction }: ChatInputContext) {
         switch (interaction.options.getSubcommand()) {
             case 'start':
                 await this.handleStart(interaction);

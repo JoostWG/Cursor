@@ -19,7 +19,7 @@ import {
     getQuestions,
 } from 'open-trivia-db';
 import { SlashCommand } from '../core/command';
-import type { Context } from '../core/context';
+import type { ChatInputContext } from '../core/context';
 import { stringTitle } from '../utils';
 import { actionRow, button, container, textDisplay } from '../utils/components';
 
@@ -167,7 +167,7 @@ export default class TriviaCommand extends SlashCommand {
             );
     }
 
-    public override async execute({ interaction }: Context<ChatInputCommandInteraction>) {
+    public override async execute({ interaction }: ChatInputContext) {
         const difficulty = interaction.options.getString('difficulty');
         const category = interaction.options.getString('category');
 

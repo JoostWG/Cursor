@@ -2,17 +2,19 @@ import {
     type ApplicationCommandOptionChoiceData,
     ApplicationCommandType,
     type AutocompleteInteraction,
-    type ChatInputCommandInteraction,
     type CommandInteraction,
     ContextMenuCommandBuilder,
-    type ContextMenuCommandInteraction,
-    type MessageContextMenuCommandInteraction,
     type RESTPostAPIBaseApplicationCommandsJSONBody,
     SlashCommandBuilder,
-    type UserContextMenuCommandInteraction,
 } from 'discord.js';
 import { localize } from '../utils';
-import type { Context } from './context';
+import type {
+    ChatInputContext,
+    Context,
+    ContextMenuContext,
+    MessageContextMenuContext,
+    UserContextMenuContext,
+} from './context';
 
 export class CommandError extends Error {
     //
@@ -58,7 +60,7 @@ export abstract class SlashCommand extends BaseApplicationCommand {
         this.data = localize(SlashCommandBuilder, name, name);
     }
 
-    public abstract override execute(ctx: Context<ChatInputCommandInteraction>): Promise<void>;
+    public abstract override execute(ctx: ChatInputContext): Promise<void>;
 
     public autocomplete?(
         interaction: AutocompleteInteraction,
@@ -77,7 +79,7 @@ export abstract class ContextMenu extends BaseApplicationCommand {
         this.data = new ContextMenuCommandBuilder().setName(name).setType(type);
     }
 
-    public abstract override execute(ctx: Context<ContextMenuCommandInteraction>): Promise<void>;
+    public abstract override execute(ctx: ContextMenuContext): Promise<void>;
 }
 
 export abstract class UserContextMenu extends ContextMenu {
@@ -85,9 +87,7 @@ export abstract class UserContextMenu extends ContextMenu {
         super(name, ApplicationCommandType.User);
     }
 
-    public abstract override execute(
-        ctx: Context<UserContextMenuCommandInteraction>,
-    ): Promise<void>;
+    public abstract override execute(ctx: UserContextMenuContext): Promise<void>;
 }
 
 export abstract class MessageContextMenu extends ContextMenu {
@@ -95,7 +95,5 @@ export abstract class MessageContextMenu extends ContextMenu {
         super(name, ApplicationCommandType.Message);
     }
 
-    public abstract override execute(
-        ctx: Context<MessageContextMenuCommandInteraction>,
-    ): Promise<void>;
+    public abstract override execute(ctx: MessageContextMenuContext): Promise<void>;
 }

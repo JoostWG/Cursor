@@ -14,7 +14,7 @@ import {
 } from 'discord.js';
 import i18next from 'i18next';
 import { SlashCommand } from '../core/command';
-import type { Context } from '../core/context';
+import type { ChatInputContext } from '../core/context';
 import { localize } from '../utils';
 import {
     actionRow,
@@ -465,7 +465,7 @@ export default class UrbanDictionaryCommand extends SlashCommand {
             );
     }
 
-    public override async execute({ interaction }: Context<ChatInputCommandInteraction>) {
+    public override async execute({ interaction }: ChatInputContext) {
         await new UrbanDictionary(
             this.api,
             new InteractionHandler(interaction, new UrbanDictionaryComponentBuilder()),
