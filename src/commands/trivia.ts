@@ -1,14 +1,10 @@
 import {
-    ActionRowBuilder,
-    ButtonBuilder,
     ButtonStyle,
     type ChatInputCommandInteraction,
     ComponentType,
-    ContainerBuilder,
     HeadingLevel,
     MessageFlags,
     SlashCommandStringOption,
-    TextDisplayBuilder,
     heading,
     subtext,
 } from 'discord.js';
@@ -25,6 +21,7 @@ import {
 import { SlashCommand } from '../core/command';
 import type { Context } from '../core/context';
 import { stringTitle } from '../utils';
+import { actionRow, button, container, textDisplay } from '../utils/components';
 
 type Status = 'active' | 'finished';
 
@@ -106,39 +103,35 @@ class QuestionView {
 
     private buildComponents() {
         return [
-            new ContainerBuilder()
-                .addTextDisplayComponents(
-                    new TextDisplayBuilder().setContent(
-                        heading(this.question.value, HeadingLevel.Three),
-                    ),
-                )
-                .addActionRowComponents(
-                    this.answers
-                        .values()
-                        .map((answer) =>
-                            new ActionRowBuilder<ButtonBuilder>().addComponents(
-                                new ButtonBuilder()
-                                    .setStyle(
-                                        answer.revealed
-                                            ? answer.correct
-                                                ? ButtonStyle.Success
-                                                : ButtonStyle.Danger
-                                            : ButtonStyle.Secondary,
-                                    )
-                                    .setLabel(answer.value)
-                                    .setCustomId(answer.id)
-                                    .setDisabled(answer.revealed || this.status === 'finished'),
-                            ),
-                        )
-                        .toArray(),
-                )
-                .addTextDisplayComponents(
-                    new TextDisplayBuilder().setContent(
-                        subtext(
+            container({
+                components: [
+                    textDisplay({
+                        content: heading(this.question.value, HeadingLevel.Three),
+                    }),
+                    actionRow({
+                        components: this.answers
+                            .values()
+                            .map((answer) =>
+                                button({
+                                    style: answer.revealed
+                                        ? answer.correct
+                                            ? ButtonStyle.Success
+                                            : ButtonStyle.Danger
+                                        : ButtonStyle.Secondary,
+                                    label: answer.value,
+                                    custom_id: answer.id,
+                                    disabled: answer.revealed || this.status === 'finished',
+                                }),
+                            )
+                            .toArray(),
+                    }),
+                    textDisplay({
+                        content: subtext(
                             `${this.question.category.name} - ${stringTitle(this.question.difficulty)}`,
                         ),
-                    ),
-                ),
+                    }),
+                ],
+            }),
         ];
     }
 }

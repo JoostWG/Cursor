@@ -1,20 +1,13 @@
 import axios from 'axios';
 import {
-    ActionRowBuilder,
     type AutocompleteInteraction,
-    ButtonBuilder,
     ButtonStyle,
     type ChatInputCommandInteraction,
-    ContainerBuilder,
     HeadingLevel,
     type Locale,
     type MessageComponentInteraction,
     MessageFlags,
-    SeparatorBuilder,
     SlashCommandStringOption,
-    StringSelectMenuBuilder,
-    StringSelectMenuOptionBuilder,
-    TextDisplayBuilder,
     heading,
     inlineCode,
     subtext,
@@ -23,6 +16,14 @@ import i18next from 'i18next';
 import { SlashCommand } from '../core/command';
 import type { Context } from '../core/context';
 import { localize } from '../utils';
+import {
+    actionRow,
+    button,
+    container,
+    separator,
+    stringSelect,
+    textDisplay,
+} from '../utils/components';
 
 interface Definition {
     defid: number;
@@ -148,11 +149,7 @@ class UrbanDictionaryComponentBuilder {
         locale,
     }: ComponentBuilderOptions) {
         if (!definition) {
-            return [
-                new ContainerBuilder().addTextDisplayComponents(
-                    new TextDisplayBuilder().setContent('Something went wrong!'),
-                ),
-            ];
+            return [container({ components: [textDisplay({ content: 'Something went wrong!' })] })];
         }
 
         const hyperlinkTerms = [
@@ -161,82 +158,72 @@ class UrbanDictionaryComponentBuilder {
         ];
 
         return [
-            new ContainerBuilder()
-                .addTextDisplayComponents(
-                    new TextDisplayBuilder().setContent(
-                        [
+            container({
+                components: [
+                    textDisplay({
+                        content: [
                             heading(definition.word),
                             subtext(`By ${definition.author}`),
                             this.transformHyperlinks(definition.definition),
                             heading('Example', HeadingLevel.Three),
                             this.transformHyperlinks(definition.example),
                         ].join('\n'),
-                    ),
-                )
-                .addSeparatorComponents(new SeparatorBuilder().setDivider(true))
-                .addTextDisplayComponents(
-                    new TextDisplayBuilder().setContent(
-                        inlineCode(history.map((item) => item.term).join(' > ')),
-                    ),
-                )
-                .addActionRowComponents(
-                    new ActionRowBuilder<StringSelectMenuBuilder>().addComponents(
-                        new StringSelectMenuBuilder()
-                            .setCustomId('select')
-                            .setPlaceholder(
-                                i18next.t('commands:urban-dictionary.select', {
+                    }),
+                    separator({ divider: true }),
+                    textDisplay({
+                        content: inlineCode(history.map((item) => item.term).join(' > ')),
+                    }),
+                    actionRow({
+                        components: [
+                            stringSelect({
+                                placeholder: i18next.t('commands:urban-dictionary.select', {
                                     lng: locale,
                                 }),
-                            )
-                            .addOptions(
-                                hyperlinkTerms.length
-                                    ? hyperlinkTerms.map((term) =>
-                                          new StringSelectMenuOptionBuilder()
-                                              .setLabel(term)
-                                              .setValue(term),
-                                      )
-                                    : [
-                                          new StringSelectMenuOptionBuilder()
-                                              .setLabel('null')
-                                              .setValue('null'),
-                                      ],
-                            )
-                            .setDisabled(!hyperlinkTerms.length || !active),
-                    ),
-                )
-                .addActionRowComponents(
-                    new ActionRowBuilder<ButtonBuilder>().addComponents(
-                        new ButtonBuilder()
-                            .setCustomId('back')
-                            .setLabel(i18next.t('back', { lng: locale }))
-                            .setStyle(ButtonStyle.Danger)
-                            .setDisabled(history.length < 2 || !active),
-                    ),
-                )
-                .addSeparatorComponents(new SeparatorBuilder().setDivider(true))
-                .addActionRowComponents(
-                    new ActionRowBuilder<ButtonBuilder>().addComponents(
-                        new ButtonBuilder()
-                            .setCustomId('previous')
-                            .setLabel(i18next.t('previous', { lng: locale }))
-                            .setStyle(ButtonStyle.Primary)
-                            .setDisabled(currentPage <= 0 || !active),
-                        new ButtonBuilder()
-                            .setCustomId('next')
-                            .setLabel(i18next.t('next', { lng: locale }))
-                            .setStyle(ButtonStyle.Primary)
-                            .setDisabled(currentPage + 1 >= totalPages || !active),
-                        new ButtonBuilder()
-                            .setStyle(ButtonStyle.Link)
-                            .setLabel(i18next.t('openInBrowser', { lng: locale }))
-                            .setURL(definition.permalink),
-                    ),
-                )
-                .addTextDisplayComponents(
-                    new TextDisplayBuilder().setContent(
-                        subtext(`${currentPage + 1}/${totalPages}`),
-                    ),
-                ),
+                                custom_id: 'select',
+                                options: hyperlinkTerms.length
+                                    ? hyperlinkTerms.map((term) => ({ label: term, value: term }))
+                                    : [{ label: 'null', value: 'null' }],
+                                disabled: !hyperlinkTerms.length || !active,
+                            }),
+                        ],
+                    }),
+                    actionRow({
+                        components: [
+                            button({
+                                style: ButtonStyle.Danger,
+                                label: i18next.t('back', { lng: locale }),
+                                custom_id: 'back',
+                                disabled: history.length < 2 || !active,
+                            }),
+                        ],
+                    }),
+                    separator({ divider: true }),
+                    actionRow({
+                        components: [
+                            button({
+                                style: ButtonStyle.Primary,
+                                label: i18next.t('previous', { lng: locale }),
+                                custom_id: 'previous',
+                                disabled: currentPage <= 0 || !active,
+                            }),
+                            button({
+                                style: ButtonStyle.Primary,
+                                label: i18next.t('next', { lng: locale }),
+                                custom_id: 'next',
+                                disabled: currentPage + 1 >= totalPages || !active,
+                            }),
+                            button({
+                                style: ButtonStyle.Link,
+                                label: i18next.t('openInBrowser', { lng: locale }),
+                                url: definition.permalink,
+                            }),
+                        ],
+                    }),
+                    textDisplay({
+                        content: subtext(`${currentPage + 1}/${totalPages}`),
+                    }),
+                ],
+            }),
         ];
     }
 

@@ -2,14 +2,12 @@ import {
     type ApplicationCommandOptionChoiceData,
     type AutocompleteInteraction,
     type ChatInputCommandInteraction,
-    ContainerBuilder,
     HeadingLevel,
     InteractionContextType,
     MessageFlags,
     SlashCommandStringOption,
     SlashCommandSubcommandBuilder,
     type Snowflake,
-    TextDisplayBuilder,
     bold,
     heading,
     inlineCode,
@@ -18,6 +16,7 @@ import { CommandError, SlashCommand } from '../core/command';
 import type { Context } from '../core/context';
 import type { CursorDatabase } from '../setup';
 import type { TagRow } from '../types/database';
+import { container, textDisplay } from '../utils/components';
 
 abstract class TagManager {
     public abstract list(guildId: Snowflake): Promise<TagRow[]>;
@@ -291,23 +290,25 @@ export default class TagCommand extends SlashCommand {
         await interaction.reply({
             flags: MessageFlags.IsComponentsV2,
             components: [
-                new ContainerBuilder().addTextDisplayComponents(
-                    new TextDisplayBuilder().setContent(
-                        [
-                            heading('Tag info', HeadingLevel.Three),
-                            bold('Name'),
-                            tag.name,
-                            '',
-                            bold('Created at'),
-                            String(tag.created_at),
-                            // time(tag.created_at),
-                            // time(tag.created_at, TimestampStyles.RelativeTime),
-                            '',
-                            bold('Uses'),
-                            tag.uses,
-                        ].join('\n'),
-                    ),
-                ),
+                container({
+                    components: [
+                        textDisplay({
+                            content: [
+                                heading('Tag info', HeadingLevel.Three),
+                                bold('Name'),
+                                tag.name,
+                                '',
+                                bold('Created at'),
+                                String(tag.created_at),
+                                // time(tag.created_at),
+                                // time(tag.created_at, TimestampStyles.RelativeTime),
+                                '',
+                                bold('Uses'),
+                                tag.uses,
+                            ].join('\n'),
+                        }),
+                    ],
+                }),
             ],
         });
     }

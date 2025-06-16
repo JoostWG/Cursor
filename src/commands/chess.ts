@@ -10,23 +10,19 @@ import {
     AttachmentBuilder,
     type AutocompleteInteraction,
     type ChatInputCommandInteraction,
-    ContainerBuilder,
     HeadingLevel,
     type InteractionReplyOptions,
     type Locale,
-    MediaGalleryBuilder,
-    MediaGalleryItemBuilder,
     MessageFlags,
     SlashCommandStringOption,
     SlashCommandSubcommandBuilder,
     type Snowflake,
-    TextDisplayBuilder,
     heading,
-    subtext,
 } from 'discord.js';
 import path from 'path';
 import { SlashCommand } from '../core/command';
 import type { Context } from '../core/context';
+import { container, mediaGallery, textDisplay } from '../utils/components';
 
 type ChessBoardColor = CanvasRenderingContext2D['fillStyle'];
 
@@ -230,20 +226,22 @@ class InteractionHandler implements OutputHandler {
             flags: MessageFlags.IsComponentsV2,
             files: [file],
             components: [
-                new ContainerBuilder()
-                    .addTextDisplayComponents(
-                        new TextDisplayBuilder().setContent(
-                            heading(this.messageFactory.getMessage(chess), HeadingLevel.Three),
-                        ),
-                    )
-                    .addMediaGalleryComponents(
-                        new MediaGalleryBuilder().addItems(
-                            new MediaGalleryItemBuilder().setURL(`attachment://${file.name}`),
-                        ),
-                    )
-                    .addTextDisplayComponents(
-                        new TextDisplayBuilder().setContent(subtext(chess.fen())),
-                    ),
+                container({
+                    components: [
+                        textDisplay({
+                            content: heading(
+                                this.messageFactory.getMessage(chess),
+                                HeadingLevel.Three,
+                            ),
+                        }),
+                        mediaGallery({
+                            items: [{ media: { url: `attachment://${file.name}` } }],
+                        }),
+                        textDisplay({
+                            content: chess.fen(),
+                        }),
+                    ],
+                }),
             ],
         } satisfies InteractionReplyOptions;
     }
