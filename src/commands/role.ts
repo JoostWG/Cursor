@@ -41,7 +41,7 @@ export default class RoleCommand extends GuildSlashCommand {
             .setDefaultMemberPermissions(PermissionFlagsBits.ManageRoles)
             .addSubcommand(
                 new SlashCommandSubcommandBuilder()
-                    .setName('role')
+                    .setName('update')
                     .setDescription('Update a role')
                     .addRoleOption(
                         new SlashCommandRoleOption()
