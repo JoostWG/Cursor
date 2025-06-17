@@ -4,8 +4,6 @@ import {
     type ChatInputCommandInteraction,
     HeadingLevel,
     MessageFlags,
-    SlashCommandStringOption,
-    SlashCommandSubcommandBuilder,
     type Snowflake,
     bold,
     heading,
@@ -15,6 +13,7 @@ import { CommandError, GuildSlashCommand } from '../core/command';
 import type { ChatInputContext } from '../core/context';
 import type { CursorDatabase } from '../setup';
 import type { TagRow } from '../types/database';
+import { stringOption, subcommand } from '../utils/command-options';
 import { container, textDisplay } from '../utils/components';
 
 abstract class TagManager {
@@ -125,87 +124,91 @@ export default class TagCommand extends GuildSlashCommand {
     private readonly tags: TagManager;
 
     public constructor(db: CursorDatabase) {
-        super('tag', 'Manage tags');
+        super({
+            name: 'tag',
+            description: 'Manage tags',
+            options: [
+                subcommand({
+                    name: 'list',
+                    description: 'List of tags',
+                }),
+                subcommand({
+                    name: 'get',
+                    description: 'Get single tag',
+                    options: [
+                        stringOption({
+                            name: 'name',
+                            description: 'tag name',
+                            required: true,
+                            autocomplete: true,
+                        }),
+                    ],
+                }),
+                subcommand({
+                    name: 'info',
+                    description: 'tag info',
+                    options: [
+                        stringOption({
+                            name: 'name',
+                            description: 'tag name',
+                            required: true,
+                            autocomplete: true,
+                        }),
+                    ],
+                }),
+                subcommand({
+                    name: 'create',
+                    description: 'Create a tag',
+                    options: [
+                        stringOption({
+                            name: 'name',
+                            description: 'tag name',
+                            required: true,
+                        }),
+                        stringOption({
+                            name: 'content',
+                            description: 'The tag content',
+                            required: true,
+                            autocomplete: true,
+                        }),
+                    ],
+                }),
+                subcommand({
+                    name: 'update',
+                    description: 'Update a tag',
+                    options: [
+                        stringOption({
+                            name: 'name',
+                            description: 'tag name',
+                            required: true,
+                            autocomplete: true,
+                        }),
+                        stringOption({
+                            name: 'content',
+                            description: 'The tag content',
+                            required: true,
+                            autocomplete: true,
+                        }),
+                    ],
+                }),
+                subcommand({
+                    name: 'delete',
+                    description: 'Delete a tag',
+                    options: [
+                        stringOption({
+                            name: 'name',
+                            description: 'tag name',
+                            required: true,
+                            autocomplete: true,
+                        }),
+                    ],
+                }),
+            ],
+        });
 
         // Instantiating here doesn't really follow DI, however I think it's inconvenient and
         // doesn't make that much sense to pass this dependency in setup.ts.
         this.tags = new DatabaseTagManager(db);
-
-        this.data
-            .addSubcommand(
-                new SlashCommandSubcommandBuilder().setName('list').setDescription('List of tags'),
-            )
-            .addSubcommand(
-                new SlashCommandSubcommandBuilder()
-                    .setName('get')
-                    .setDescription('Get single tag')
-                    .addStringOption(
-                        new SlashCommandStringOption()
-                            .setName('name')
-                            .setDescription('tag name')
-                            .setRequired(true)
-                            .setAutocomplete(true),
-                    ),
-            )
-            .addSubcommand(
-                new SlashCommandSubcommandBuilder()
-                    .setName('info')
-                    .setDescription('tag info')
-                    .addStringOption(
-                        new SlashCommandStringOption()
-                            .setName('name')
-                            .setDescription('tag name')
-                            .setRequired(true)
-                            .setAutocomplete(true),
-                    ),
-            )
-            .addSubcommand(
-                new SlashCommandSubcommandBuilder()
-                    .setName('create')
-                    .setDescription('Create a tag')
-                    .addStringOption(
-                        new SlashCommandStringOption()
-                            .setName('name')
-                            .setDescription('tag name')
-                            .setRequired(true),
-                    )
-                    .addStringOption(
-                        new SlashCommandStringOption()
-                            .setName('content')
-                            .setDescription('The tag content')
-                            .setRequired(true),
-                    ),
-            )
-            .addSubcommand(
-                new SlashCommandSubcommandBuilder()
-                    .setName('update')
-                    .setDescription('Update a tag')
-                    .addStringOption(
-                        new SlashCommandStringOption()
-                            .setName('name')
-                            .setDescription('tag name')
-                            .setRequired(true)
-                            .setAutocomplete(true),
-                    )
-                    .addStringOption(
-                        new SlashCommandStringOption()
-                            .setName('content')
-                            .setDescription('The tag content')
-                            .setRequired(true),
-                    ),
-            )
-            .addSubcommand(
-                new SlashCommandSubcommandBuilder()
-                    .setName('delete')
-                    .setDescription('Delete a tag')
-                    .addStringOption(
-                        new SlashCommandStringOption()
-                            .setName('name')
-                            .setDescription('tag name')
-                            .setRequired(true)
-                            .setAutocomplete(true),
-                    ),
-            );
     }
 
     public override async autocomplete(

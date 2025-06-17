@@ -1,16 +1,8 @@
 import axios from 'axios';
-import {
-    Colors,
-    EmbedBuilder,
-    Locale,
-    SlashCommandBooleanOption,
-    SlashCommandStringOption,
-    TextChannel,
-    bold,
-    spoiler,
-} from 'discord.js';
+import { Colors, EmbedBuilder, Locale, TextChannel, bold, spoiler } from 'discord.js';
 import { CommandError, SlashCommand } from '../core/command';
 import type { ChatInputContext } from '../core/context';
+import { booleanOption, stringOption } from '../utils/command-options';
 
 type JokeBlacklistFlag = 'nsfw' | 'religious' | 'political' | 'racist' | 'sexist' | 'explicit';
 
@@ -76,27 +68,28 @@ export default class JokeCommand extends SlashCommand {
     private readonly api: axios.AxiosInstance;
 
     public constructor() {
-        super('joke', 'Have a laugh!');
-
-        this.data
-            .addStringOption(
-                new SlashCommandStringOption()
-                    .setName('category')
-                    .setDescription('The joke category')
-                    .addChoices(
-                        Object.entries(JokeCategory).map(([name, key]) => ({
-                            name,
-                            value: key,
-                        })),
-                    ),
-            )
-            .addBooleanOption(
-                new SlashCommandBooleanOption()
-                    .setName('safe')
-                    .setDescription(
-                        'Whether the joke must be safe. Defaults to `True`. Setting this to `False` requires an NSFW channel.',
-                    ),
-            );
+        super({
+            name: 'joke',
+            description: 'Have a laugh!',
+            options: [
+                stringOption({
+                    name: 'category',
+                    description: 'The joke category',
+                    choices: Object.entries(JokeCategory).map(([name, key]) => ({
+                        name,
+                        value: key,
+                    })),
+                }),
+                booleanOption({
+                    name: 'safe',
+                    description: [
+                        'Whether the joke must be safe.',
+                        'Defaults to `True`.',
+                        'Setting this to `False` requires an NSFW channel.',
+                    ].join(' '),
+                }),
+            ],
+        });
 
         this.api = axios.create({
             baseURL: 'https://v2.jokeapi.dev',

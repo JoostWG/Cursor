@@ -3,10 +3,10 @@ import {
     ApplicationCommandType,
     type AutocompleteInteraction,
     type CommandInteraction,
-    ContextMenuCommandBuilder,
     InteractionContextType,
-    type RESTPostAPIBaseApplicationCommandsJSONBody,
-    SlashCommandBuilder,
+    type RESTPostAPIApplicationCommandsJSONBody,
+    type RESTPostAPIChatInputApplicationCommandsJSONBody,
+    type RESTPostAPIContextMenuApplicationCommandsJSONBody,
 } from 'discord.js';
 import type {
     ChatInputContext,
@@ -20,16 +20,16 @@ export class CommandError extends Error {
     //
 }
 
-export abstract class BaseApplicationCommand {
+export abstract class BaseApplicationCommand<
+    T extends RESTPostAPIApplicationCommandsJSONBody = RESTPostAPIApplicationCommandsJSONBody,
+> {
     public readonly type: ApplicationCommandType;
     public devOnly?: boolean;
-    public abstract readonly data: {
-        name: string;
-        toJSON: () => RESTPostAPIBaseApplicationCommandsJSONBody;
-    };
+    public readonly data: T;
 
-    public constructor(type: ApplicationCommandType) {
-        this.type = type;
+    public constructor(data: T & { type: ApplicationCommandType }) {
+        this.data = data;
+        this.type = data.type;
     }
 
     public isSlashCommand(): this is SlashCommand {
@@ -51,13 +51,12 @@ export abstract class BaseApplicationCommand {
     public abstract execute(ctx: Context<CommandInteraction>): Promise<void>;
 }
 
-export abstract class SlashCommand extends BaseApplicationCommand {
-    public override readonly data: SlashCommandBuilder;
-
-    public constructor(name: string, description: string) {
-        super(ApplicationCommandType.ChatInput);
-
-        this.data = new SlashCommandBuilder().setName(name).setDescription(description);
+export abstract class SlashCommand extends BaseApplicationCommand<RESTPostAPIChatInputApplicationCommandsJSONBody> {
+    public constructor(data: OmitType<RESTPostAPIChatInputApplicationCommandsJSONBody>) {
+        super({
+            type: ApplicationCommandType.ChatInput,
+            ...data,
+        });
     }
 
     public abstract override execute(ctx: ChatInputContext): Promise<void>;
@@ -68,39 +67,34 @@ export abstract class SlashCommand extends BaseApplicationCommand {
 }
 
 export abstract class GuildSlashCommand extends SlashCommand {
-    public constructor(name: string, description: string) {
-        super(name, description);
-
-        this.data.setContexts(InteractionContextType.Guild);
+    public constructor(
+        data: Omit<OmitType<RESTPostAPIChatInputApplicationCommandsJSONBody>, 'contexts'>,
+    ) {
+        super({ contexts: [InteractionContextType.Guild], ...data });
     }
 }
 
-export abstract class ContextMenu extends BaseApplicationCommand {
-    public override readonly data: ContextMenuCommandBuilder;
-
-    public constructor(
-        name: string,
-        type: ApplicationCommandType.User | ApplicationCommandType.Message,
-    ) {
-        super(type);
-
-        this.data = new ContextMenuCommandBuilder().setName(name).setType(type);
-    }
-
+export abstract class ContextMenu extends BaseApplicationCommand<RESTPostAPIContextMenuApplicationCommandsJSONBody> {
     public abstract override execute(ctx: ContextMenuContext): Promise<void>;
 }
 
 export abstract class UserContextMenu extends ContextMenu {
-    public constructor(name: string) {
-        super(name, ApplicationCommandType.User);
+    public constructor(data: OmitType<RESTPostAPIApplicationCommandsJSONBody>) {
+        super({
+            type: ApplicationCommandType.User,
+            ...data,
+        });
     }
 
     public abstract override execute(ctx: UserContextMenuContext): Promise<void>;
 }
 
 export abstract class MessageContextMenu extends ContextMenu {
-    public constructor(name: string) {
-        super(name, ApplicationCommandType.Message);
+    public constructor(data: OmitType<RESTPostAPIApplicationCommandsJSONBody>) {
+        super({
+            type: ApplicationCommandType.Message,
+            ...data,
+        });
     }
 
     public abstract override execute(ctx: MessageContextMenuContext): Promise<void>;

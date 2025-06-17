@@ -1,6 +1,5 @@
 import {
     type APIActionRowComponent,
-    type APIBaseComponent,
     type APIButtonComponentWithCustomId,
     type APIButtonComponentWithSKUId,
     type APIButtonComponentWithURL,
@@ -20,8 +19,6 @@ import {
     type APIUserSelectComponent,
     ComponentType,
 } from 'discord.js';
-
-type OmitType<T extends APIBaseComponent<ComponentType>> = Omit<T, 'type'>;
 
 export function actionRow<T extends APIComponentInActionRow>(
     data: OmitType<APIActionRowComponent<T>>,

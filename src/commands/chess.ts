@@ -13,14 +13,13 @@ import {
     HeadingLevel,
     type InteractionReplyOptions,
     MessageFlags,
-    SlashCommandStringOption,
-    SlashCommandSubcommandBuilder,
     type Snowflake,
     heading,
 } from 'discord.js';
 import path from 'path';
 import { SlashCommand } from '../core/command';
 import type { ChatInputContext } from '../core/context';
+import { stringOption, subcommand } from '../utils/command-options';
 import { container, mediaGallery, textDisplay } from '../utils/components';
 
 type ChessBoardColor = CanvasRenderingContext2D['fillStyle'];
@@ -283,26 +282,31 @@ export default class ChessCommand extends SlashCommand {
     private readonly games: Map<Snowflake, Game>;
 
     public constructor() {
-        super('chess', 'Play some chess!');
+        super({
+            name: 'chess',
+            description: 'Play some chess!',
+            options: [
+                subcommand({
+                    name: 'start',
+                    description: 'Start a game',
+                }),
+                subcommand({
+                    name: 'move',
+                    description: 'Play a move',
+                    options: [
+                        stringOption({
+                            name: 'move',
+                            description: 'Move notation',
+                            required: true,
+                            autocomplete: true,
+                        }),
+                    ],
+                }),
+            ],
+        });
+
         this.games = new Map();
         this.devOnly = true;
-
-        this.data
-            .addSubcommand(
-                new SlashCommandSubcommandBuilder().setName('start').setDescription('Start a game'),
-            )
-            .addSubcommand(
-                new SlashCommandSubcommandBuilder()
-                    .setName('move')
-                    .setDescription('Play a move')
-                    .addStringOption(
-                        new SlashCommandStringOption()
-                            .setName('move')
-                            .setDescription('Move notation')
-                            .setRequired(true)
-                            .setAutocomplete(true),
-                    ),
-            );
     }
 
     public override async autocomplete(interaction: AutocompleteInteraction) {

@@ -38,9 +38,9 @@ async function deploy(
 
     for (const command of bot.getCommands()) {
         if (command.devOnly) {
-            devCommands.push(command.data.toJSON());
+            devCommands.push(command.data);
         } else {
-            globalCommands.push(command.data.toJSON());
+            globalCommands.push(command.data);
         }
     }
 

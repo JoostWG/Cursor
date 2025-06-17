@@ -4,8 +4,6 @@ import {
     Colors,
     HeadingLevel,
     MessageFlags,
-    SlashCommandSubcommandBuilder,
-    SlashCommandUserOption,
     type User,
     bold,
     heading,
@@ -14,6 +12,7 @@ import {
 import { CommandError, SlashCommand } from '../core/command';
 import type { ChatInputContext } from '../core/context';
 import type { CursorDatabase } from '../setup';
+import { subcommand, userOption } from '../utils/command-options';
 import { actionRow, button, container, separator, textDisplay } from '../utils/components';
 
 const emojis = {
@@ -329,23 +328,26 @@ class Game {
 
 export default class RockPaperScissorsCommand extends SlashCommand {
     public constructor(private readonly db: CursorDatabase) {
-        super('rps', 'Rock Paper Scissors');
-
-        this.data
-            .addSubcommand(
-                new SlashCommandSubcommandBuilder()
-                    .setName('play')
-                    .setDescription('Play')
-                    .addUserOption(
-                        new SlashCommandUserOption()
-                            .setName('opponent')
-                            .setDescription('Choose your opponent')
-                            .setRequired(true),
-                    ),
-            )
-            .addSubcommand(
-                new SlashCommandSubcommandBuilder().setName('stats').setDescription('show stats'),
-            );
+        super({
+            name: 'rps',
+            description: 'Rock Paper Scissors',
+            options: [
+                subcommand({
+                    name: 'play',
+                    description: 'Play Rock Paper Scissors',
+                    options: [
+                        userOption({
+                            name: 'opponent',
+                            description: 'Choose your opponent',
+                        }),
+                    ],
+                }),
+                subcommand({
+                    name: 'stats',
+                    description: 'Shows game stats',
+                }),
+            ],
+        });
     }
 
     public override async execute({ interaction }: ChatInputContext) {

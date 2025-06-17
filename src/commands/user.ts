@@ -1,14 +1,20 @@
-import { EmbedBuilder, SlashCommandUserOption, TimestampStyles, time } from 'discord.js';
+import { EmbedBuilder, TimestampStyles, time } from 'discord.js';
 import { SlashCommand } from '../core/command';
 import type { ChatInputContext } from '../core/context';
+import { userOption } from '../utils/command-options';
 
 export default class UserCommand extends SlashCommand {
     public constructor() {
-        super('user', 'Get info on a user');
-
-        this.data.addUserOption(
-            new SlashCommandUserOption().setName('user').setDescription('Select a user'),
-        );
+        super({
+            name: 'user',
+            description: 'Get info on a user',
+            options: [
+                userOption({
+                    name: 'user',
+                    description: 'Select a user',
+                }),
+            ],
+        });
     }
 
     public override async execute({ interaction }: ChatInputContext) {

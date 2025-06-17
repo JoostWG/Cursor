@@ -4,7 +4,6 @@ import {
     ComponentType,
     HeadingLevel,
     MessageFlags,
-    SlashCommandStringOption,
     heading,
     subtext,
 } from 'discord.js';
@@ -21,6 +20,7 @@ import {
 import { SlashCommand } from '../core/command';
 import type { ChatInputContext } from '../core/context';
 import { stringTitle } from '../utils';
+import { stringOption } from '../utils/command-options';
 import { actionRow, button, container, textDisplay } from '../utils/components';
 
 type Status = 'active' | 'finished';
@@ -138,33 +138,29 @@ class QuestionView {
 
 export default class TriviaCommand extends SlashCommand {
     public constructor() {
-        super('trivia', 'Test your knowledge');
-
-        this.data
-            .setDescription('Test your knowledge!')
-            .addStringOption(
-                new SlashCommandStringOption()
-                    .setName('category')
-                    .setDescription('Choose a category')
-                    .setChoices(
-                        Category.allNames.map((name) => ({
-                            name,
-                            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                            value: Category.idByName(name)!.toString(),
-                        })),
-                    ),
-            )
-            .addStringOption(
-                new SlashCommandStringOption()
-                    .setName('difficulty')
-                    .setDescription('Choose difficulty')
-                    .addChoices(
-                        Object.entries(QuestionDifficulties).map(([name, value]) => ({
-                            name,
-                            value,
-                        })),
-                    ),
-            );
+        super({
+            name: 'trivia',
+            description: 'Test your knowledge!',
+            options: [
+                stringOption({
+                    name: 'category',
+                    description: 'Choose a category',
+                    choices: Category.allNames.map((name) => ({
+                        name,
+                        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                        value: Category.idByName(name)!.toString(),
+                    })),
+                }),
+                stringOption({
+                    name: 'difficulty',
+                    description: 'Choose difficulty',
+                    choices: Object.entries(QuestionDifficulties).map(([name, value]) => ({
+                        name,
+                        value,
+                    })),
+                }),
+            ],
+        });
     }
 
     public override async execute({ interaction }: ChatInputContext) {

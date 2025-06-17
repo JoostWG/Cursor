@@ -6,13 +6,13 @@ import {
     HeadingLevel,
     type MessageComponentInteraction,
     MessageFlags,
-    SlashCommandStringOption,
     heading,
     inlineCode,
     subtext,
 } from 'discord.js';
 import { SlashCommand } from '../core/command';
 import type { ChatInputContext } from '../core/context';
+import { stringOption } from '../utils/command-options';
 import {
     actionRow,
     button,
@@ -440,19 +440,21 @@ export default class UrbanDictionaryCommand extends SlashCommand {
     private readonly api: Api;
 
     public constructor() {
-        super('urban-dictionary', 'Urban dictionary');
+        super({
+            name: 'urban-dictionary',
+            description: 'Urban dictionary',
+            nsfw: true,
+            options: [
+                stringOption({
+                    name: 'term',
+                    description: 'The term to search for',
+                    required: true,
+                    autocomplete: true,
+                }),
+            ],
+        });
 
         this.api = new UrbanDictionaryCachedApi();
-
-        this.data
-            .setNSFW(true)
-            .addStringOption(
-                new SlashCommandStringOption()
-                    .setName('term')
-                    .setDescription('The term to search for')
-                    .setRequired(true)
-                    .setAutocomplete(true),
-            );
     }
 
     public override async execute({ interaction }: ChatInputContext) {

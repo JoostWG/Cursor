@@ -4,7 +4,9 @@ import type { MessageContextMenuContext } from '../../../core/context';
 
 export default class RawCommand extends MessageContextMenu {
     public constructor() {
-        super('Get raw message JSON');
+        super({
+            name: 'Get raw message JSON',
+        });
     }
 
     public override async execute({ interaction }: MessageContextMenuContext) {

@@ -11,10 +11,6 @@ import {
     PermissionFlagsBits,
     type Role,
     type RoleEditOptions,
-    SlashCommandBooleanOption,
-    SlashCommandRoleOption,
-    SlashCommandStringOption,
-    SlashCommandSubcommandBuilder,
     TimestampStyles,
     bold,
     heading,
@@ -25,6 +21,7 @@ import {
 } from 'discord.js';
 import { CommandError, GuildSlashCommand } from '../core/command';
 import type { ChatInputContext } from '../core/context';
+import { booleanOption, roleOption, stringOption, subcommand } from '../utils/command-options';
 import { actionRow, button, container, textDisplay } from '../utils/components';
 
 class InvalidRoleError extends CommandError {
@@ -35,64 +32,61 @@ type AllowedRoleProps = 'name' | 'color' | 'hoist' | 'mentionable';
 
 export default class RoleCommand extends GuildSlashCommand {
     public constructor() {
-        super('role', 'Role utility commands');
-
-        this.data
-            .setDefaultMemberPermissions(PermissionFlagsBits.ManageRoles)
-            .addSubcommand(
-                new SlashCommandSubcommandBuilder()
-                    .setName('update')
-                    .setDescription('Update a role')
-                    .addRoleOption(
-                        new SlashCommandRoleOption()
-                            .setName('role')
-                            .setDescription('The role to update')
-                            .setRequired(true),
-                    )
-                    .addStringOption(
-                        new SlashCommandStringOption()
-                            .setName('name')
-                            .setDescription('Change the name of the role')
-                            .setMaxLength(100),
-                    )
-                    .addStringOption(
-                        new SlashCommandStringOption()
-                            .setName('color')
-                            .setDescription('Change the color of the role')
-                            .setAutocomplete(true),
-                    )
-                    .addBooleanOption(
-                        new SlashCommandBooleanOption()
-                            .setName('hoisted')
-                            .setDescription('Change whether the role should be hoisted or not'),
-                    )
-                    .addBooleanOption(
-                        new SlashCommandBooleanOption()
-                            .setName('mentionable')
-                            .setDescription('Change whether the role should be mentionable or not'),
-                    )
-                    .addStringOption(
-                        new SlashCommandStringOption()
-                            .setName('reason')
-                            .setDescription('The reason for updating the role'),
-                    ),
-            )
-            .addSubcommand(
-                new SlashCommandSubcommandBuilder()
-                    .setName('delete')
-                    .setDescription('Delete a role')
-                    .addRoleOption(
-                        new SlashCommandRoleOption()
-                            .setName('role')
-                            .setDescription('The role to delete')
-                            .setRequired(true),
-                    )
-                    .addStringOption(
-                        new SlashCommandStringOption()
-                            .setName('reason')
-                            .setDescription('The reason for deleting the role'),
-                    ),
-            );
+        super({
+            name: 'role',
+            description: 'Role utility commands',
+            default_member_permissions: PermissionFlagsBits.ManageRoles.toString(),
+            options: [
+                subcommand({
+                    name: 'update',
+                    description: 'Updates a role',
+                    options: [
+                        roleOption({
+                            name: 'role',
+                            description: 'The role to update',
+                            required: true,
+                        }),
+                        stringOption({
+                            name: 'name',
+                            description: 'Change the name of the role',
+                            max_length: 100,
+                        }),
+                        stringOption({
+                            name: 'color',
+                            description: 'Change the color of the role',
+                            autocomplete: true,
+                        }),
+                        booleanOption({
+                            name: 'hoisted',
+                            description: 'Change whether the role should be hoisted or not',
+                        }),
+                        booleanOption({
+                            name: 'mentionable',
+                            description: 'Change whether the role should be mentionable or not',
+                        }),
+                        stringOption({
+                            name: 'reason',
+                            description: 'The reason for updating the role',
+                        }),
+                    ],
+                }),
+                subcommand({
+                    name: 'delete',
+                    description: 'Delete a role',
+                    options: [
+                        roleOption({
+                            name: 'role',
+                            description: 'The role to delete',
+                            required: true,
+                        }),
+                        stringOption({
+                            name: 'reason',
+                            description: 'The reason for deleting the role',
+                        }),
+                    ],
+                }),
+            ],
+        });
     }
 
     public override async autocomplete(interaction: AutocompleteInteraction) {
