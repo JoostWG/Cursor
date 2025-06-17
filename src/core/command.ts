@@ -8,7 +8,6 @@ import {
     type RESTPostAPIBaseApplicationCommandsJSONBody,
     SlashCommandBuilder,
 } from 'discord.js';
-import { localize } from '../utils';
 import type {
     ChatInputContext,
     Context,
@@ -55,10 +54,10 @@ export abstract class BaseApplicationCommand {
 export abstract class SlashCommand extends BaseApplicationCommand {
     public override readonly data: SlashCommandBuilder;
 
-    public constructor(name: string) {
+    public constructor(name: string, description: string) {
         super(ApplicationCommandType.ChatInput);
 
-        this.data = localize(SlashCommandBuilder, name, name);
+        this.data = new SlashCommandBuilder().setName(name).setDescription(description);
     }
 
     public abstract override execute(ctx: ChatInputContext): Promise<void>;
@@ -69,8 +68,8 @@ export abstract class SlashCommand extends BaseApplicationCommand {
 }
 
 export abstract class GuildSlashCommand extends SlashCommand {
-    public constructor(name: string) {
-        super(name);
+    public constructor(name: string, description: string) {
+        super(name, description);
 
         this.data.setContexts(InteractionContextType.Guild);
     }

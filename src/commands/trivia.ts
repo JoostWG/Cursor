@@ -138,7 +138,7 @@ class QuestionView {
 
 export default class TriviaCommand extends SlashCommand {
     public constructor() {
-        super('trivia');
+        super('trivia', 'Test your knowledge');
 
         this.data
             .setDescription('Test your knowledge!')

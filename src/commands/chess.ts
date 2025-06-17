@@ -12,7 +12,6 @@ import {
     type ChatInputCommandInteraction,
     HeadingLevel,
     type InteractionReplyOptions,
-    type Locale,
     MessageFlags,
     SlashCommandStringOption,
     SlashCommandSubcommandBuilder,
@@ -188,8 +187,6 @@ class DefaultChessBoard implements ChessBoard {
 }
 
 class DefaultMessageFactory implements MessageFactory {
-    public constructor(private readonly locale: Locale) {}
-
     public getMessage(chess: Chess) {
         const title = `${chess.turn() === 'w' ? 'White' : 'Black'} to move`;
 
@@ -286,7 +283,7 @@ export default class ChessCommand extends SlashCommand {
     private readonly games: Map<Snowflake, Game>;
 
     public constructor() {
-        super('chess');
+        super('chess', 'Play some chess!');
         this.games = new Map();
         this.devOnly = true;
 
@@ -338,7 +335,7 @@ export default class ChessCommand extends SlashCommand {
     private async handleStart(interaction: ChatInputCommandInteraction) {
         const game = new Game(
             new Chess(),
-            new InteractionHandler(interaction, new DefaultMessageFactory(interaction.locale)),
+            new InteractionHandler(interaction, new DefaultMessageFactory()),
             new DefaultChessBoard(
                 512,
                 new CheckerboardTheme({ light: '#ffcf9f', dark: '#d28c45', border: '#241302' }),

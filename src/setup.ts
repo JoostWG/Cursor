@@ -14,7 +14,6 @@ import UserCommand from './commands/user';
 import { Bot } from './core/bot';
 import { CommandCollection } from './core/command-collection';
 import type { DatabaseTables } from './types/database';
-import { initI18Next } from './utils';
 
 export type CursorDatabase = Kysely<DatabaseTables>;
 
@@ -27,8 +26,6 @@ export function createDatabaseInstance() {
 }
 
 export async function createBot() {
-    await initI18Next();
-
     const client = new Client({
         intents: [GatewayIntentBits.GuildMembers, GatewayIntentBits.Guilds],
     });

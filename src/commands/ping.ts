@@ -4,7 +4,7 @@ import type { ChatInputContext } from '../core/context';
 
 export default class PingCommand extends SlashCommand {
     public constructor() {
-        super('ping');
+        super('ping', 'Pong!');
     }
 
     public override async execute({ interaction }: ChatInputContext) {

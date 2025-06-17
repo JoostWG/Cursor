@@ -1,14 +1,14 @@
 import { EmbedBuilder, SlashCommandUserOption, TimestampStyles, time } from 'discord.js';
-import i18next from 'i18next';
 import { SlashCommand } from '../core/command';
 import type { ChatInputContext } from '../core/context';
-import { localize } from '../utils';
 
 export default class UserCommand extends SlashCommand {
     public constructor() {
-        super('user');
+        super('user', 'Get info on a user');
 
-        this.data.addUserOption(localize(SlashCommandUserOption, 'user', 'user.options.user'));
+        this.data.addUserOption(
+            new SlashCommandUserOption().setName('user').setDescription('Select a user'),
+        );
     }
 
     public override async execute({ interaction }: ChatInputContext) {
@@ -20,7 +20,7 @@ export default class UserCommand extends SlashCommand {
                 iconURL: user.avatarURL({ extension: 'png', size: 1024 }) ?? undefined,
             })
             .addFields({
-                name: i18next.t('commands:user.createdAt', { lng: interaction.locale }),
+                name: 'Created at',
                 value: [
                     time(user.createdAt),
                     time(user.createdAt, TimestampStyles.RelativeTime),

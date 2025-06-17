@@ -25,7 +25,6 @@ import {
 } from 'discord.js';
 import { CommandError, GuildSlashCommand } from '../core/command';
 import type { ChatInputContext } from '../core/context';
-import { localize } from '../utils';
 import { actionRow, button, container, textDisplay } from '../utils/components';
 
 class InvalidRoleError extends CommandError {
@@ -36,70 +35,62 @@ type AllowedRoleProps = 'name' | 'color' | 'hoist' | 'mentionable';
 
 export default class RoleCommand extends GuildSlashCommand {
     public constructor() {
-        super('role');
+        super('role', 'Role utility commands');
 
         this.data
             .setDefaultMemberPermissions(PermissionFlagsBits.ManageRoles)
             .addSubcommand(
-                localize(SlashCommandSubcommandBuilder, 'role', 'role.subcommands.update')
+                new SlashCommandSubcommandBuilder()
+                    .setName('role')
+                    .setDescription('Update a role')
                     .addRoleOption(
-                        localize(
-                            SlashCommandRoleOption,
-                            'role',
-                            'role.subcommands.update.options.role',
-                        ).setRequired(true),
+                        new SlashCommandRoleOption()
+                            .setName('role')
+                            .setDescription('The role to update')
+                            .setRequired(true),
                     )
                     .addStringOption(
-                        localize(
-                            SlashCommandStringOption,
-                            'name',
-                            'role.subcommands.update.options.name',
-                        ).setMaxLength(100),
+                        new SlashCommandStringOption()
+                            .setName('name')
+                            .setDescription('Change the name of the role')
+                            .setMaxLength(100),
                     )
                     .addStringOption(
-                        localize(
-                            SlashCommandStringOption,
-                            'color',
-                            'role.subcommands.update.options.color',
-                        ).setAutocomplete(true),
+                        new SlashCommandStringOption()
+                            .setName('color')
+                            .setDescription('Change the color of the role')
+                            .setAutocomplete(true),
                     )
                     .addBooleanOption(
-                        localize(
-                            SlashCommandBooleanOption,
-                            'hoisted',
-                            'role.subcommands.update.options.hoisted',
-                        ),
+                        new SlashCommandBooleanOption()
+                            .setName('hoisted')
+                            .setDescription('Change whether the role should be hoisted or not'),
                     )
                     .addBooleanOption(
-                        localize(
-                            SlashCommandBooleanOption,
-                            'mentionable',
-                            'role.subcommands.update.options.mentionable',
-                        ),
+                        new SlashCommandBooleanOption()
+                            .setName('mentionable')
+                            .setDescription('Change whether the role should be mentionable or not'),
                     )
                     .addStringOption(
-                        localize(
-                            SlashCommandStringOption,
-                            'reason',
-                            'role.subcommands.update.options.reason',
-                        ),
+                        new SlashCommandStringOption()
+                            .setName('reason')
+                            .setDescription('The reason for updating the role'),
                     ),
             )
             .addSubcommand(
-                localize(SlashCommandSubcommandBuilder, 'delete', 'role.subcommands.delete')
+                new SlashCommandSubcommandBuilder()
+                    .setName('delete')
+                    .setDescription('Delete a role')
                     .addRoleOption(
-                        localize(
-                            SlashCommandRoleOption,
-                            'role',
-                            'role.subcommands.delete.options.role',
-                        ).setRequired(true),
+                        new SlashCommandRoleOption()
+                            .setName('role')
+                            .setDescription('The role to delete')
+                            .setRequired(true),
                     )
                     .addStringOption(
-                        localize(
-                            SlashCommandStringOption,
-                            'reason',
-                            'role.subcommands.delete.options.reason',
-                        ),
+                        new SlashCommandStringOption()
+                            .setName('reason')
+                            .setDescription('The reason for deleting the role'),
                     ),
             );
     }

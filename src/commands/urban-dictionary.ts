@@ -4,7 +4,6 @@ import {
     ButtonStyle,
     type ChatInputCommandInteraction,
     HeadingLevel,
-    type Locale,
     type MessageComponentInteraction,
     MessageFlags,
     SlashCommandStringOption,
@@ -12,10 +11,8 @@ import {
     inlineCode,
     subtext,
 } from 'discord.js';
-import i18next from 'i18next';
 import { SlashCommand } from '../core/command';
 import type { ChatInputContext } from '../core/context';
-import { localize } from '../utils';
 import {
     actionRow,
     button,
@@ -58,7 +55,6 @@ interface OutputOptions {
 
 interface ComponentBuilderOptions extends OutputOptions {
     active: boolean;
-    locale: Locale;
 }
 
 abstract class Api {
@@ -146,7 +142,6 @@ class UrbanDictionaryComponentBuilder {
         history,
         pagination: { currentPage, totalPages },
         active,
-        locale,
     }: ComponentBuilderOptions) {
         if (!definition) {
             return [container({ components: [textDisplay({ content: 'Something went wrong!' })] })];
@@ -176,9 +171,7 @@ class UrbanDictionaryComponentBuilder {
                     actionRow({
                         components: [
                             stringSelect({
-                                placeholder: i18next.t('commands:urban-dictionary.select', {
-                                    lng: locale,
-                                }),
+                                placeholder: 'Select a term',
                                 custom_id: 'select',
                                 options: hyperlinkTerms.length
                                     ? hyperlinkTerms.map((term) => ({ label: term, value: term }))
@@ -191,7 +184,7 @@ class UrbanDictionaryComponentBuilder {
                         components: [
                             button({
                                 style: ButtonStyle.Danger,
-                                label: i18next.t('back', { lng: locale }),
+                                label: 'Back',
                                 custom_id: 'back',
                                 disabled: history.length < 2 || !active,
                             }),
@@ -202,19 +195,19 @@ class UrbanDictionaryComponentBuilder {
                         components: [
                             button({
                                 style: ButtonStyle.Primary,
-                                label: i18next.t('previous', { lng: locale }),
+                                label: 'Previous',
                                 custom_id: 'previous',
                                 disabled: currentPage <= 0 || !active,
                             }),
                             button({
                                 style: ButtonStyle.Primary,
-                                label: i18next.t('next', { lng: locale }),
+                                label: 'Next',
                                 custom_id: 'next',
                                 disabled: currentPage + 1 >= totalPages || !active,
                             }),
                             button({
                                 style: ButtonStyle.Link,
-                                label: i18next.t('openInBrowser', { lng: locale }),
+                                label: 'Open in browser',
                                 url: definition.permalink,
                             }),
                         ],
@@ -260,9 +253,7 @@ class InteractionHandler {
 
         if (!pagination.totalPages || !definition) {
             await this.interaction.reply({
-                content: i18next.t('commands:urban-dictionary.notFound', {
-                    lng: this.interaction.locale,
-                }),
+                content: 'No definitions found',
                 flags: MessageFlags.Ephemeral,
             });
             return;
@@ -271,7 +262,6 @@ class InteractionHandler {
         const response = await this.interaction.reply({
             components: this.componentBuilder.build({
                 active: this.active,
-                locale: this.interaction.locale,
                 ...options,
             }),
             flags: MessageFlags.IsComponentsV2,
@@ -307,7 +297,6 @@ class InteractionHandler {
                 await componentInteraction.update({
                     components: this.componentBuilder.build({
                         active: this.active,
-                        locale: this.interaction.locale,
                         ...newOptions,
                     }),
                 });
@@ -317,7 +306,6 @@ class InteractionHandler {
                 await this.interaction.editReply({
                     components: this.componentBuilder.build({
                         active: this.active,
-                        locale: this.interaction.locale,
                         ...options,
                     }),
                 });
@@ -452,14 +440,16 @@ export default class UrbanDictionaryCommand extends SlashCommand {
     private readonly api: Api;
 
     public constructor() {
-        super('urban-dictionary');
+        super('urban-dictionary', 'Urban dictionary');
 
         this.api = new UrbanDictionaryCachedApi();
 
         this.data
             .setNSFW(true)
             .addStringOption(
-                localize(SlashCommandStringOption, 'term', 'urban-dictionary.options.term')
+                new SlashCommandStringOption()
+                    .setName('term')
+                    .setDescription('The term to search for')
                     .setRequired(true)
                     .setAutocomplete(true),
             );

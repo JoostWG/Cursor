@@ -125,7 +125,7 @@ export default class TagCommand extends GuildSlashCommand {
     private readonly tags: TagManager;
 
     public constructor(db: CursorDatabase) {
-        super('tag');
+        super('tag', 'Manage tags');
 
         // Instantiating here doesn't really follow DI, however I think it's inconvenient and
         // doesn't make that much sense to pass this dependency in setup.ts.

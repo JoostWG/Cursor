@@ -9,10 +9,8 @@ import {
     bold,
     spoiler,
 } from 'discord.js';
-import i18next from 'i18next';
 import { CommandError, SlashCommand } from '../core/command';
 import type { ChatInputContext } from '../core/context';
-import { getTranslations, localize } from '../utils';
 
 type JokeBlacklistFlag = 'nsfw' | 'religious' | 'political' | 'racist' | 'sexist' | 'explicit';
 
@@ -78,19 +76,27 @@ export default class JokeCommand extends SlashCommand {
     private readonly api: axios.AxiosInstance;
 
     public constructor() {
-        super('joke');
+        super('joke', 'Have a laugh!');
 
         this.data
             .addStringOption(
-                localize(SlashCommandStringOption, 'category', 'joke.options.category').addChoices(
-                    Object.entries(JokeCategory).map(([name, key]) => ({
-                        name,
-                        value: key,
-                        name_localizations: getTranslations(`commands:joke.categories.${key}`),
-                    })),
-                ),
+                new SlashCommandStringOption()
+                    .setName('category')
+                    .setDescription('The joke category')
+                    .addChoices(
+                        Object.entries(JokeCategory).map(([name, key]) => ({
+                            name,
+                            value: key,
+                        })),
+                    ),
             )
-            .addBooleanOption(localize(SlashCommandBooleanOption, 'safe', 'joke.options.safe'));
+            .addBooleanOption(
+                new SlashCommandBooleanOption()
+                    .setName('safe')
+                    .setDescription(
+                        'Whether the joke must be safe. Defaults to `True`. Setting this to `False` requires an NSFW channel.',
+                    ),
+            );
 
         this.api = axios.create({
             baseURL: 'https://v2.jokeapi.dev',
@@ -109,11 +115,7 @@ export default class JokeCommand extends SlashCommand {
                 interaction.channel.nsfw
             )
         ) {
-            throw new CommandError(
-                i18next.t('commands:joke.nsfw', {
-                    lng: interaction.locale,
-                }),
-            );
+            throw new CommandError('Setting `safe` to `False` can only be done in NSFW channels.');
         }
 
         const blacklistFlags = safe ? 'nsfw,religious,political,racist,sexist,explicit' : '';
