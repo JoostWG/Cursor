@@ -1,6 +1,7 @@
 import type { Client } from 'discord.js';
 import type { CursorDatabase } from '../setup';
 import type { CommandCollection } from './command-collection';
+import type { CommandDeployHandler } from './command-deploy-handler';
 import type { EventListener } from './event-listener';
 
 export interface BotOptions {
@@ -9,6 +10,7 @@ export interface BotOptions {
     token: string;
     commands: CommandCollection;
     listeners?: EventListener[];
+    deployHandler: CommandDeployHandler;
 }
 
 export class Bot {
@@ -17,12 +19,14 @@ export class Bot {
     private readonly token: string;
     private readonly commands: CommandCollection;
     private readonly listeners: EventListener[];
+    private readonly deployHandler: CommandDeployHandler;
 
     public constructor(options: BotOptions) {
         this.client = options.client;
         this.db = options.db;
         this.token = options.token;
         this.commands = options.commands;
+        this.deployHandler = options.deployHandler;
         this.listeners = [...this.commands.createListeners(this.db), ...(options.listeners ?? [])];
 
         this.client.rest.setToken(this.token);
@@ -39,6 +43,8 @@ export class Bot {
     }
 
     public async run() {
-        await this.client.login(this.token);
+        await this.deployHandler.deployIfNeeded();
+
+        // await this.client.login(this.token);
     }
 }

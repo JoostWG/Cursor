@@ -1,9 +1,6 @@
 {
     "version": "7.0.0",
     "scripts": {
-        "deploy": "node ./dist/deploy.js --dev --global",
-        "deploy-dev": "node ./dist/deploy.js --dev",
-        "deploy-global": "node ./dist/deploy.js --global",
         "migrate": "node ./dist/migrate.js --up",
         "rollback": "node ./dist/migrate.js --down",
         "watch": "tsc --watch --sourceMap",
