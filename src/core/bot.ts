@@ -13,17 +13,14 @@ export interface BotOptions {
 export class Bot {
     public readonly client: Client;
     public readonly db: CursorDatabase;
-    private readonly commandMap: CommandCollection;
+    private readonly commands: CommandCollection;
     private readonly listeners: EventListener[];
 
     public constructor(options: BotOptions) {
         this.client = options.client;
         this.db = options.db;
-        this.commandMap = options.commands;
-        this.listeners = [
-            ...this.commandMap.createListeners(this.db),
-            ...(options.listeners ?? []),
-        ];
+        this.commands = options.commands;
+        this.listeners = [...this.commands.createListeners(this.db), ...(options.listeners ?? [])];
 
         for (const listener of this.listeners) {
             this.client.on(listener.event, (...args) => {
@@ -33,7 +30,7 @@ export class Bot {
     }
 
     public getCommands() {
-        return this.commandMap.values();
+        return this.commands.values();
     }
 
     public async run(token: string) {
