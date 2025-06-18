@@ -25,7 +25,7 @@ export function createDatabaseInstance() {
     });
 }
 
-export async function createBot() {
+export async function createBot({ token }: { token: string }) {
     const client = new Client({
         intents: [GatewayIntentBits.GuildMembers, GatewayIntentBits.Guilds],
     });
@@ -52,6 +52,7 @@ export async function createBot() {
     ]);
 
     return new Bot({
+        token,
         client,
         commands,
         db,

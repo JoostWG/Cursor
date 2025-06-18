@@ -6,6 +6,7 @@ import type { EventListener } from './event-listener';
 export interface BotOptions {
     client: Client;
     db: CursorDatabase;
+    token: string;
     commands: CommandCollection;
     listeners?: EventListener[];
 }
@@ -13,14 +14,18 @@ export interface BotOptions {
 export class Bot {
     public readonly client: Client;
     public readonly db: CursorDatabase;
+    private readonly token: string;
     private readonly commands: CommandCollection;
     private readonly listeners: EventListener[];
 
     public constructor(options: BotOptions) {
         this.client = options.client;
         this.db = options.db;
+        this.token = options.token;
         this.commands = options.commands;
         this.listeners = [...this.commands.createListeners(this.db), ...(options.listeners ?? [])];
+
+        this.client.rest.setToken(this.token);
 
         for (const listener of this.listeners) {
             this.client.on(listener.event, (...args) => {
@@ -33,7 +38,7 @@ export class Bot {
         return this.commands.values();
     }
 
-    public async run(token: string) {
-        await this.client.login(token);
+    public async run() {
+        await this.client.login(this.token);
     }
 }
