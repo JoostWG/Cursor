@@ -83,7 +83,9 @@ export class CommandListener extends eventListener(Events.InteractionCreate) {
                 guild_id: interaction.inGuild() ? interaction.guildId : null,
                 command_name: interaction.commandName,
                 command_type: interaction.commandType,
-                options: JSON.stringify(interaction.options.data),
+                options: JSON.stringify(
+                    interaction.isChatInputCommand() ? interaction.options.data : [],
+                ),
             })
             .execute();
     }
