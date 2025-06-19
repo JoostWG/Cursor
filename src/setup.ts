@@ -42,13 +42,13 @@ export async function createBot({ token }: { token: string }) {
     const commands = new CommandCollection([
         new RawCommand(),
         new ChessCommand(),
-        new JokeCommand(),
+        JokeCommand.create(),
         new PingCommand(),
         new RoleCommand(),
         new RockPaperScissorsCommand(db),
-        new TagCommand(db),
+        TagCommand.create({ db }),
         new TriviaCommand(),
-        new UrbanDictionaryCommand(),
+        UrbanDictionaryCommand.create(),
         new UserCommand(),
     ]);
 

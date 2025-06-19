@@ -65,9 +65,7 @@ type MultipleJokesResponse = SuccessResponse & {
 };
 
 export default class JokeCommand extends SlashCommand {
-    private readonly api: axios.AxiosInstance;
-
-    public constructor() {
+    public constructor(private readonly api: axios.AxiosInstance) {
         super({
             name: 'joke',
             description: 'Have a laugh!',
@@ -90,10 +88,14 @@ export default class JokeCommand extends SlashCommand {
                 }),
             ],
         });
+    }
 
-        this.api = axios.create({
-            baseURL: 'https://v2.jokeapi.dev',
-        });
+    public static create() {
+        return new this(
+            axios.create({
+                baseURL: 'https://v2.jokeapi.dev',
+            }),
+        );
     }
 
     public override async execute({ interaction }: ChatInputContext) {

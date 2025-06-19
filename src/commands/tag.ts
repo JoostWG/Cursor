@@ -121,9 +121,7 @@ class DatabaseTagManager implements TagManager {
 }
 
 export default class TagCommand extends GuildSlashCommand {
-    private readonly tags: TagManager;
-
-    public constructor(db: CursorDatabase) {
+    public constructor(private readonly tags: TagManager) {
         super({
             name: 'tag',
             description: 'Manage tags',
@@ -205,10 +203,10 @@ export default class TagCommand extends GuildSlashCommand {
                 }),
             ],
         });
+    }
 
-        // Instantiating here doesn't really follow DI, however I think it's inconvenient and
-        // doesn't make that much sense to pass this dependency in setup.ts.
-        this.tags = new DatabaseTagManager(db);
+    public static create({ db }: { db: CursorDatabase }) {
+        return new this(new DatabaseTagManager(db));
     }
 
     public override async autocomplete(

@@ -437,9 +437,7 @@ class UrbanDictionary {
 }
 
 export default class UrbanDictionaryCommand extends SlashCommand {
-    private readonly api: Api;
-
-    public constructor() {
+    public constructor(private readonly api: Api) {
         super({
             name: 'urban-dictionary',
             description: 'Urban dictionary',
@@ -453,8 +451,10 @@ export default class UrbanDictionaryCommand extends SlashCommand {
                 }),
             ],
         });
+    }
 
-        this.api = new UrbanDictionaryCachedApi();
+    public static create() {
+        return new this(new UrbanDictionaryCachedApi());
     }
 
     public override async execute({ interaction }: ChatInputContext) {
