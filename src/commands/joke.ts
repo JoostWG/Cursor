@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { Colors, EmbedBuilder, Locale, TextChannel, bold, spoiler } from 'discord.js';
+import { type APIEmbed, Colors, Locale, TextChannel, bold, spoiler } from 'discord.js';
 import { CommandError, SlashCommand } from '../core/command';
 import type { ChatInputContext } from '../core/context';
 import { booleanOption, stringOption } from '../utils/command-options';
@@ -165,14 +165,18 @@ export default class JokeCommand extends SlashCommand {
         }
     }
 
-    private buildErrorEmbed(error?: ErrorResponse) {
+    private buildErrorEmbed(error?: ErrorResponse): APIEmbed {
         if (error) {
-            return new EmbedBuilder()
-                .setColor(Colors.Red)
-                .setTitle(`${error.code} ${error.message}`)
-                .setDescription(`${error.causedBy.join('\n')}\n\n${error.additionalInfo}`);
+            return {
+                color: Colors.Red,
+                title: `${error.code} ${error.message}`,
+                description: `${error.causedBy.join('\n')}\n\n${error.additionalInfo}`,
+            };
         }
 
-        return new EmbedBuilder().setColor(Colors.Red).setTitle('Unknown error');
+        return {
+            color: Colors.Red,
+            title: 'Unknown error',
+        };
     }
 }
