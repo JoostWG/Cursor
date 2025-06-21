@@ -19,8 +19,7 @@ import {
 import path from 'path';
 import { SlashCommand } from '../core/command';
 import type { ChatInputContext } from '../core/context';
-import { stringOption, subcommand } from '../utils/command-options';
-import { container, mediaGallery, textDisplay } from '../utils/components';
+import { container, mediaGallery, stringOption, subcommand, textDisplay } from '../utils/builders';
 
 type ChessBoardColor = CanvasRenderingContext2D['fillStyle'];
 

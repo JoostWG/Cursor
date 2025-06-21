@@ -1,7 +1,7 @@
 import { TimestampStyles, time } from 'discord.js';
 import { SlashCommand } from '../core/command';
 import type { ChatInputContext } from '../core/context';
-import { userOption } from '../utils/command-options';
+import { userOption } from '../utils/builders';
 
 export default class UserCommand extends SlashCommand {
     public constructor() {

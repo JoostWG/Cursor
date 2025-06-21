@@ -12,15 +12,15 @@ import {
 } from 'discord.js';
 import { SlashCommand } from '../core/command';
 import type { ChatInputContext } from '../core/context';
-import { stringOption } from '../utils/command-options';
 import {
     actionRow,
     button,
     container,
     separator,
+    stringOption,
     stringSelect,
     textDisplay,
-} from '../utils/components';
+} from '../utils/builders';
 
 interface Definition {
     defid: number;

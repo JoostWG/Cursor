@@ -2,7 +2,7 @@ import axios from 'axios';
 import { type APIEmbed, Colors, Locale, TextChannel, bold, spoiler } from 'discord.js';
 import { CommandError, SlashCommand } from '../core/command';
 import type { ChatInputContext } from '../core/context';
-import { booleanOption, stringOption } from '../utils/command-options';
+import { booleanOption, stringOption } from '../utils/builders';
 
 type JokeBlacklistFlag = 'nsfw' | 'religious' | 'political' | 'racist' | 'sexist' | 'explicit';
 

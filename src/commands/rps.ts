@@ -12,8 +12,15 @@ import {
 import { CommandError, SlashCommand } from '../core/command';
 import type { ChatInputContext } from '../core/context';
 import type { CursorDatabase } from '../setup';
-import { subcommand, userOption } from '../utils/command-options';
-import { actionRow, button, container, separator, textDisplay } from '../utils/components';
+import {
+    actionRow,
+    button,
+    container,
+    separator,
+    subcommand,
+    textDisplay,
+    userOption,
+} from '../utils/builders';
 
 const emojis = {
     rock: '🪨',

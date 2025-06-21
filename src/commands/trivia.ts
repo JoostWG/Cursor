@@ -20,8 +20,7 @@ import {
 import { SlashCommand } from '../core/command';
 import type { ChatInputContext } from '../core/context';
 import { stringTitle } from '../utils';
-import { stringOption } from '../utils/command-options';
-import { actionRow, button, container, textDisplay } from '../utils/components';
+import { actionRow, button, container, stringOption, textDisplay } from '../utils/builders';
 
 type Status = 'active' | 'finished';
 

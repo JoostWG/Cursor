@@ -13,8 +13,7 @@ import { CommandError, GuildSlashCommand } from '../core/command';
 import type { ChatInputContext } from '../core/context';
 import type { CursorDatabase } from '../setup';
 import type { TagRow } from '../types/database';
-import { stringOption, subcommand } from '../utils/command-options';
-import { container, textDisplay } from '../utils/components';
+import { container, stringOption, subcommand, textDisplay } from '../utils/builders';
 
 abstract class TagManager {
     public abstract list(guildId: Snowflake): Promise<TagRow[]>;
