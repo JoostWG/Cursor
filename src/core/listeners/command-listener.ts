@@ -13,7 +13,7 @@ export class CommandListener extends eventListener(Events.InteractionCreate) {
         super();
     }
 
-    public async execute(interaction: Interaction) {
+    public override async execute(interaction: Interaction) {
         if (!interaction.isCommand()) {
             return;
         }

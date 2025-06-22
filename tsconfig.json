@@ -11,6 +11,7 @@
         "outDir": "./dist",
         "esModuleInterop": true,
         "resolveJsonModule": true,
-        "allowUnreachableCode": false
+        "allowUnreachableCode": false,
+        "noImplicitOverride": true
     }
 }

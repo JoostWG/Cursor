@@ -41,7 +41,7 @@ abstract class TagManager {
 }
 
 class TagNotFoundError extends CommandError {
-    public name: string;
+    public override name: string;
 
     public constructor(name: string) {
         super('Tag not found!');
