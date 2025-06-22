@@ -45,6 +45,6 @@ export class Bot {
     public async run() {
         await this.deployHandler.deployIfNeeded();
 
-        // await this.client.login(this.token);
+        await this.client.login(this.token);
     }
 }
