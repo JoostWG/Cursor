@@ -3,6 +3,7 @@ import {
     type AutocompleteInteraction,
     ButtonStyle,
     type ChatInputCommandInteraction,
+    Collection,
     HeadingLevel,
     type MessageComponentInteraction,
     MessageFlags,
@@ -98,39 +99,22 @@ class UrbanDictionaryApi implements Api {
 }
 
 class UrbanDictionaryCachedApi extends UrbanDictionaryApi {
-    private readonly definitionsCache: Map<string, Definition[]>;
-    private readonly autocompleteCache: Map<string, string[]>;
-
-    public constructor() {
+    public constructor(
+        private readonly definitionsCache: Collection<string, Promise<Definition[]>>,
+        private readonly autocompleteCache: Collection<string, Promise<string[]>>,
+    ) {
         super();
-        this.definitionsCache = new Map();
-        this.autocompleteCache = new Map();
     }
 
     public override async define(term: string) {
-        if (this.definitionsCache.has(term)) {
-            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-            return this.definitionsCache.get(term)!;
-        }
-
-        const result = await super.define(term);
-
-        this.definitionsCache.set(term, result);
-
-        return result;
+        return await this.definitionsCache.ensure(term, async () => await super.define(term));
     }
 
     public override async autocomplete(term: string) {
-        if (this.autocompleteCache.has(term)) {
-            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-            return this.autocompleteCache.get(term)!;
-        }
-
-        const result = await super.autocomplete(term);
-
-        this.autocompleteCache.set(term, result);
-
-        return result;
+        return await this.autocompleteCache.ensure(
+            term,
+            async () => await super.autocomplete(term),
+        );
     }
 }
 
@@ -454,7 +438,7 @@ export default class UrbanDictionaryCommand extends SlashCommand {
     }
 
     public static create() {
-        return new this(new UrbanDictionaryCachedApi());
+        return new this(new UrbanDictionaryCachedApi(new Collection(), new Collection()));
     }
 
     public override async execute({ interaction }: ChatInputContext) {
