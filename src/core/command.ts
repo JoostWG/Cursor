@@ -8,6 +8,7 @@ import {
     type RESTPostAPIChatInputApplicationCommandsJSONBody,
     type RESTPostAPIContextMenuApplicationCommandsJSONBody,
 } from 'discord.js';
+import type { OmitType } from '../types';
 import type {
     ChatInputContext,
     Context,
