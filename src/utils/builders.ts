@@ -46,13 +46,12 @@ export function actionRow<T extends APIComponentInActionRow>(
     };
 }
 
+/* eslint-disable stylistic/padding-line-between-statements */
 export function button(
     data: OmitType<APIButtonComponentWithCustomId>,
 ): APIButtonComponentWithCustomId;
-
 export function button(data: OmitType<APIButtonComponentWithURL>): APIButtonComponentWithURL;
 export function button(data: OmitType<APIButtonComponentWithSKUId>): APIButtonComponentWithSKUId;
-
 export function button(
     data:
         | OmitType<APIButtonComponentWithCustomId>
@@ -64,6 +63,7 @@ export function button(
         ...data,
     };
 }
+/* eslint-enable stylistic/padding-line-between-statements */
 
 export function textInput(data: OmitType<APITextInputComponent>): APITextInputComponent {
     return {
