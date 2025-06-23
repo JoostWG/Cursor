@@ -1,12 +1,5 @@
 import type { ApplicationCommandType, CommandInteractionOption } from 'discord.js';
-import type {
-    ColumnType,
-    Generated,
-    Insertable,
-    JSONColumnType,
-    Selectable,
-    Updateable,
-} from 'kysely';
+import type { ColumnType, Generated, JSONColumnType } from 'kysely';
 
 export interface DatabaseTables {
     migrations: MigrationsTable;
@@ -66,23 +59,3 @@ export interface CommandLogsTable extends BaseTable {
     command_name: string;
     options: JSONColumnType<CommandInteractionOption>;
 }
-
-export type TagRow = Selectable<TagsTable>;
-export type NewTag = Insertable<TagsTable>;
-export type TagUpdate = Updateable<TagsTable>;
-
-export type RpsGameRow = Selectable<RpsGamesTable>;
-export type NewRpsGame = Insertable<RpsGamesTable>;
-export type RpsGameUpdate = Updateable<RpsGamesTable>;
-
-export type RpsGameUserRow = Selectable<RpsGameUserTable>;
-export type NewRpsGameUser = Insertable<RpsGameUserTable>;
-export type RpsGameUserUpdate = Updateable<RpsGameUserTable>;
-
-export type RpsRoundRow = Selectable<RpsRoundsTable>;
-export type NewRpsRound = Insertable<RpsRoundsTable>;
-export type RpsRoundUpdate = Updateable<RpsRoundsTable>;
-
-export type RpsChoiceRow = Selectable<RpsChoicesTable>;
-export type NewRpsChoice = Insertable<RpsChoicesTable>;
-export type RpsChoiceUpdate = Updateable<RpsChoicesTable>;

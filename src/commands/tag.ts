@@ -9,26 +9,29 @@ import {
     type ChatInputCommandInteraction,
     type Snowflake,
 } from 'discord.js';
+import type { Selectable } from 'kysely';
 import { CommandError, GuildSlashCommand } from '../core/command';
 import type { ChatInputContext } from '../core/context';
 import type { CursorDatabase } from '../setup';
-import type { TagRow } from '../types/database';
+import type { TagsTable } from '../types/database';
 import { container, stringOption, subcommand, textDisplay } from '../utils/builders';
 
+type TagData = Selectable<TagsTable>;
+
 abstract class TagManager {
-    public abstract list(guildId: Snowflake): Promise<TagRow[]>;
-    public abstract find(guildId: Snowflake, name: string): Promise<TagRow | null>;
+    public abstract list(guildId: Snowflake): Promise<TagData[]>;
+    public abstract find(guildId: Snowflake, name: string): Promise<TagData | null>;
     public abstract find(
         guildId: Snowflake,
         name: string,
         options: { fail?: true },
-    ): Promise<TagRow>;
+    ): Promise<TagData>;
     public abstract create(data: {
         guildId: Snowflake;
         userId: Snowflake;
         name: string;
         content: string;
-    }): Promise<TagRow>;
+    }): Promise<TagData>;
     public abstract update(
         tagId: number,
         data: {
@@ -60,8 +63,8 @@ class DatabaseTagManager implements TagManager {
             .execute();
     }
 
-    public async find(guildId: Snowflake, name: string): Promise<TagRow | null>;
-    public async find(guildId: Snowflake, name: string, options: { fail?: true }): Promise<TagRow>;
+    public async find(guildId: Snowflake, name: string): Promise<TagData | null>;
+    public async find(guildId: Snowflake, name: string, options: { fail?: true }): Promise<TagData>;
     public async find(guildId: Snowflake, name: string, options?: { fail?: true }) {
         const query = this.db
             .selectFrom('tags')
