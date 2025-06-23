@@ -31,14 +31,11 @@ abstract class TagManager {
         name: string;
         content: string;
     }): Promise<TagData>;
-    public abstract update(
-        tagId: number,
-        data: {
-            name?: string;
-            content?: string;
-            uses?: number;
-        },
-    ): Promise<void>;
+    public abstract update(tagId: number, data: {
+        name?: string;
+        content?: string;
+        uses?: number;
+    }): Promise<void>;
     public abstract delete(tagId: number): Promise<void>;
 }
 
@@ -105,14 +102,11 @@ class DatabaseTagManager implements TagManager {
             .executeTakeFirstOrThrow();
     }
 
-    public async update(
-        tagId: number,
-        data: {
-            name?: string;
-            content?: string;
-            uses?: number;
-        },
-    ) {
+    public async update(tagId: number, data: {
+        name?: string;
+        content?: string;
+        uses?: number;
+    }) {
         await this.db.updateTable('tags').where('id', '=', tagId).set(data).execute();
     }
 
@@ -210,9 +204,7 @@ export class TagCommand extends GuildSlashCommand {
         return new this(new DatabaseTagManager(db));
     }
 
-    public override async autocomplete(
-        interaction: AutocompleteInteraction,
-    ) {
+    public override async autocomplete(interaction: AutocompleteInteraction) {
         if (!interaction.guildId) {
             return [];
         }
