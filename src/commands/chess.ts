@@ -277,7 +277,7 @@ class Game {
     }
 }
 
-export default class ChessCommand extends SlashCommand {
+export class ChessCommand extends SlashCommand {
     private readonly games: Map<Snowflake, Game>;
 
     public constructor() {

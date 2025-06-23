@@ -122,7 +122,7 @@ class DatabaseTagManager implements TagManager {
     }
 }
 
-export default class TagCommand extends GuildSlashCommand {
+export class TagCommand extends GuildSlashCommand {
     public constructor(private readonly tags: TagManager) {
         super({
             name: 'tag',

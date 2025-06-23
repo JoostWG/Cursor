@@ -38,7 +38,7 @@ class InvalidRoleError extends CommandError {
 
 type AllowedRoleProps = 'name' | 'color' | 'hoist' | 'mentionable';
 
-export default class RoleCommand extends GuildSlashCommand {
+export class RoleCommand extends GuildSlashCommand {
     public constructor() {
         super({
             name: 'role',

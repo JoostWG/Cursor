@@ -2,7 +2,7 @@ import { MessageFlags } from 'discord.js';
 import { SlashCommand } from '../core/command';
 import type { ChatInputContext } from '../core/context';
 
-export default class PingCommand extends SlashCommand {
+export class PingCommand extends SlashCommand {
     public constructor() {
         super({
             name: 'ping',

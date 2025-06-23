@@ -64,7 +64,7 @@ type MultipleJokesResponse = SuccessResponse & {
     jokes: (SingleTypeJoke | TwopartTypeJoke)[];
 };
 
-export default class JokeCommand extends SlashCommand {
+export class JokeCommand extends SlashCommand {
     public constructor(private readonly api: axios.AxiosInstance) {
         super({
             name: 'joke',

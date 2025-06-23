@@ -333,7 +333,7 @@ class Game {
     }
 }
 
-export default class RockPaperScissorsCommand extends SlashCommand {
+export class RockPaperScissorsCommand extends SlashCommand {
     public constructor(private readonly db: CursorDatabase) {
         super({
             name: 'rps',

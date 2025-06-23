@@ -134,7 +134,7 @@ class QuestionView {
     }
 }
 
-export default class TriviaCommand extends SlashCommand {
+export class TriviaCommand extends SlashCommand {
     public constructor() {
         super({
             name: 'trivia',

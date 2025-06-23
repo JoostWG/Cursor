@@ -3,7 +3,7 @@ import { SlashCommand } from '../core/command';
 import type { ChatInputContext } from '../core/context';
 import { userOption } from '../utils/builders';
 
-export default class UserCommand extends SlashCommand {
+export class UserCommand extends SlashCommand {
     public constructor() {
         super({
             name: 'user',

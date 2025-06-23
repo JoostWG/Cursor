@@ -2,7 +2,7 @@ import { AttachmentBuilder, MessageFlags } from 'discord.js';
 import { MessageContextMenu } from '../../../core/command';
 import type { MessageContextMenuContext } from '../../../core/context';
 
-export default class RawCommand extends MessageContextMenu {
+export class RawCommand extends MessageContextMenu {
     public constructor() {
         super({
             name: 'Get raw message JSON',

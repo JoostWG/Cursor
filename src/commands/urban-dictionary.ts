@@ -420,7 +420,7 @@ class UrbanDictionary {
     }
 }
 
-export default class UrbanDictionaryCommand extends SlashCommand {
+export class UrbanDictionaryCommand extends SlashCommand {
     public constructor(private readonly api: Api) {
         super({
             name: 'urban-dictionary',
