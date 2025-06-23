@@ -91,11 +91,9 @@ export default class JokeCommand extends SlashCommand {
     }
 
     public static create() {
-        return new this(
-            axios.create({
-                baseURL: 'https://v2.jokeapi.dev',
-            }),
-        );
+        return new this(axios.create({
+            baseURL: 'https://v2.jokeapi.dev',
+        }));
     }
 
     public override async execute({ interaction }: ChatInputContext) {

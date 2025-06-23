@@ -43,17 +43,15 @@ class QuestionView {
             ? ['True', 'False']
             : this.question.allAnswers;
 
-        this.answers = new Map(
-            allAnswers.map((answer, index) => [
-                index.toString(),
-                {
-                    value: answer,
-                    id: index.toString(),
-                    correct: question.checkAnswer(answer),
-                    revealed: false,
-                },
-            ]),
-        );
+        this.answers = new Map(allAnswers.map((answer, index) => [
+            index.toString(),
+            {
+                value: answer,
+                id: index.toString(),
+                correct: question.checkAnswer(answer),
+                revealed: false,
+            },
+        ]));
 
         this.status = 'active';
     }
@@ -109,18 +107,17 @@ class QuestionView {
                     actionRow({
                         components: this.answers
                             .values()
-                            .map(
-                                (answer) =>
-                                    button({
-                                        style: answer.revealed
-                                            ? answer.correct
-                                                ? ButtonStyle.Success
-                                                : ButtonStyle.Danger
-                                            : ButtonStyle.Secondary,
-                                        label: answer.value,
-                                        custom_id: answer.id,
-                                        disabled: answer.revealed || this.status === 'finished',
-                                    }),
+                            .map((answer) =>
+                                button({
+                                    style: answer.revealed
+                                        ? answer.correct
+                                            ? ButtonStyle.Success
+                                            : ButtonStyle.Danger
+                                        : ButtonStyle.Secondary,
+                                    label: answer.value,
+                                    custom_id: answer.id,
+                                    disabled: answer.revealed || this.status === 'finished',
+                                })
                             )
                             .toArray(),
                     }),

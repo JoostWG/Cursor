@@ -114,9 +114,8 @@ export default class RoleCommand extends GuildSlashCommand {
                 value: `#${value.toString(16)}`,
             }))
             .filter(({ name }) => name.toLowerCase().includes(q))
-            .toSorted(
-                ({ name: aName }, { name: bName }) =>
-                    aName.toLowerCase().indexOf(q) - bName.toLowerCase().indexOf(q),
+            .toSorted(({ name: aName }, { name: bName }) =>
+                aName.toLowerCase().indexOf(q) - bName.toLowerCase().indexOf(q)
             );
     }
 

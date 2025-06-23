@@ -243,16 +243,14 @@ class Game {
                 switch (this.status) {
                     case 'invitePending':
                         builder.accent_color = Colors.Blue;
-                        builder.components.push(
-                            textDisplay({
-                                content: [
-                                    `${
-                                        userMention(this.player1.id)
-                                    } has invited you to play Rock Paper Scissors`,
-                                    'Please accept or deny within 60 seconds.',
-                                ].join('\n'),
-                            }),
-                        );
+                        builder.components.push(textDisplay({
+                            content: [
+                                `${
+                                    userMention(this.player1.id)
+                                } has invited you to play Rock Paper Scissors`,
+                                'Please accept or deny within 60 seconds.',
+                            ].join('\n'),
+                        }));
                         break;
 
                     case 'inviteDenied':
@@ -266,24 +264,22 @@ class Game {
                         break;
                 }
 
-                builder.components.push(
-                    actionRow({
-                        components: [
-                            button({
-                                style: ButtonStyle.Danger,
-                                label: 'Deny',
-                                custom_id: 'deny',
-                                disabled: this.status !== 'invitePending',
-                            }),
-                            button({
-                                style: ButtonStyle.Success,
-                                label: 'Accept',
-                                custom_id: 'accept',
-                                disabled: this.status !== 'invitePending',
-                            }),
-                        ],
-                    }),
-                );
+                builder.components.push(actionRow({
+                    components: [
+                        button({
+                            style: ButtonStyle.Danger,
+                            label: 'Deny',
+                            custom_id: 'deny',
+                            disabled: this.status !== 'invitePending',
+                        }),
+                        button({
+                            style: ButtonStyle.Success,
+                            label: 'Accept',
+                            custom_id: 'accept',
+                            disabled: this.status !== 'invitePending',
+                        }),
+                    ],
+                }));
                 break;
 
             case 'gameExpired':
@@ -415,9 +411,8 @@ export default class RockPaperScissorsCommand extends SlashCommand {
                                 games?.count ?? 0,
                                 '',
                                 bold('Choice stats'),
-                                ...Object.entries(emojis).map(
-                                    ([name, emoji]) =>
-                                        `${emoji} ${choiceCounts.get(name as Choice) ?? 0}`,
+                                ...Object.entries(emojis).map(([name, emoji]) =>
+                                    `${emoji} ${choiceCounts.get(name as Choice) ?? 0}`
                                 ),
                             ].join('\n'),
                         }),
