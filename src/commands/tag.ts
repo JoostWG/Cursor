@@ -256,7 +256,9 @@ export default class TagCommand extends GuildSlashCommand {
 
             default:
                 await interaction.reply({
-                    content: `No corresponding subcommand handler found for ${inlineCode(interaction.options.getSubcommand())}.`,
+                    content: `No corresponding subcommand handler found for ${
+                        inlineCode(interaction.options.getSubcommand())
+                    }.`,
                     flags: MessageFlags.Ephemeral,
                 });
                 break;

@@ -103,11 +103,11 @@ export default class JokeCommand extends SlashCommand {
         const safe = interaction.options.getBoolean('safe') ?? true;
 
         if (
-            !safe &&
-            !(
-                interaction.channel &&
-                interaction.channel instanceof TextChannel &&
-                interaction.channel.nsfw
+            !safe
+            && !(
+                interaction.channel
+                && interaction.channel instanceof TextChannel
+                && interaction.channel.nsfw
             )
         ) {
             throw new CommandError('Setting `safe` to `False` can only be done in NSFW channels.');

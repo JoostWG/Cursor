@@ -136,7 +136,9 @@ export default class RoleCommand extends GuildSlashCommand {
 
             default:
                 throw new CommandError(
-                    `No corresponding subcommand handler found for ${inlineCode(interaction.options.getSubcommand())}.`,
+                    `No corresponding subcommand handler found for ${
+                        inlineCode(interaction.options.getSubcommand())
+                    }.`,
                 );
         }
     }
@@ -212,7 +214,7 @@ export default class RoleCommand extends GuildSlashCommand {
                                                 ? `#${value.new.toString(16)}`
                                                 : value.new.toString(),
                                         ),
-                                    ].join(' '),
+                                    ].join(' ')
                                 ),
                                 '',
                                 bold('Reason'),
@@ -263,7 +265,12 @@ export default class RoleCommand extends GuildSlashCommand {
                         textDisplay({
                             content: subtext(
                                 // + 1 because it lines up better
-                                `This message disappears ${time(Math.floor(Date.now() / 1000 + timeout + 1), TimestampStyles.RelativeTime)}`,
+                                `This message disappears ${
+                                    time(
+                                        Math.floor(Date.now() / 1000 + timeout + 1),
+                                        TimestampStyles.RelativeTime,
+                                    )
+                                }`,
                             ),
                         }),
                     ],

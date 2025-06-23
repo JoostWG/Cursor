@@ -246,7 +246,9 @@ class Game {
                         builder.components.push(
                             textDisplay({
                                 content: [
-                                    `${userMention(this.player1.id)} has invited you to play Rock Paper Scissors`,
+                                    `${
+                                        userMention(this.player1.id)
+                                    } has invited you to play Rock Paper Scissors`,
                                     'Please accept or deny within 60 seconds.',
                                 ].join('\n'),
                             }),
@@ -299,10 +301,12 @@ class Game {
                                             ? emojis[choice]
                                             : '???'
                                         : roundIndex === this.currentRoundIndex
-                                          ? 'Waiting...'
-                                          : '...';
+                                        ? 'Waiting...'
+                                        : '...';
 
-                                    return `${this.users[choiceIndex].displayName}: ${choiceString}`;
+                                    return `${
+                                        this.users[choiceIndex].displayName
+                                    }: ${choiceString}`;
                                 }),
                                 [
                                     'Tie',
@@ -321,7 +325,7 @@ class Game {
                                 label: emoji,
                                 custom_id: key,
                                 disabled: this.status !== 'gameActive',
-                            }),
+                            })
                         ),
                     }),
                 ]);
