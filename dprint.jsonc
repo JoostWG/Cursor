@@ -1,5 +1,6 @@
 {
     "typescript": {
+        "locked": true,
         "indentWidth": 4,
         "lineWidth": 100,
         "useTabs": false,
@@ -8,6 +9,8 @@
         "importDeclaration.sortNamedImports": "caseSensitive",
         "importDeclaration.sortTypeOnlyImports": "last",
         "arguments.preferSingleLine": true,
+        "useBraces": "always",
+        "singleBodyPosition": "nextLine",
     },
     "json": {
         "indentWidth": 4,
