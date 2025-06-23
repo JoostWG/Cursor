@@ -1,4 +1,4 @@
-import { type CommandInteraction, Events, type Interaction, MessageFlags } from 'discord.js';
+import { Events, MessageFlags, type CommandInteraction, type Interaction } from 'discord.js';
 import type { CursorDatabase } from '../../setup';
 import { CommandError } from '../command';
 import type { CommandCollection } from '../command-collection';

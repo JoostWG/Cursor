@@ -6,6 +6,7 @@
         "quoteProps": "consistent",
         "quoteStyle": "preferSingle",
         "importDeclaration.sortNamedImports": "caseSensitive",
+        "importDeclaration.sortTypeOnlyImports": "last",
     },
     "json": {
         "indentWidth": 4,

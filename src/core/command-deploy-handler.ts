@@ -1,8 +1,8 @@
 import {
+    Routes,
     type REST,
     type RESTPostAPIApplicationCommandsJSONBody,
     type RouteLike,
-    Routes,
 } from 'discord.js';
 import fs from 'fs/promises';
 import path from 'path';

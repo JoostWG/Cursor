@@ -1,4 +1,4 @@
-import { type SchemaModule, sql } from 'kysely';
+import { sql, type SchemaModule } from 'kysely';
 import type { Migration } from '../../migrate';
 
 export class V2 implements Migration {

@@ -1,13 +1,13 @@
 import {
-    type ApplicationCommandOptionChoiceData,
-    type AutocompleteInteraction,
-    type ChatInputCommandInteraction,
     HeadingLevel,
     MessageFlags,
-    type Snowflake,
     bold,
     heading,
     inlineCode,
+    type ApplicationCommandOptionChoiceData,
+    type AutocompleteInteraction,
+    type ChatInputCommandInteraction,
+    type Snowflake,
 } from 'discord.js';
 import { CommandError, GuildSlashCommand } from '../core/command';
 import type { ChatInputContext } from '../core/context';

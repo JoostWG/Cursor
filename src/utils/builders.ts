@@ -1,4 +1,6 @@
 import {
+    ApplicationCommandOptionType,
+    ComponentType,
     type APIActionRowComponent,
     type APIApplicationCommandAttachmentOption,
     type APIApplicationCommandBooleanOption,
@@ -31,8 +33,6 @@ import {
     type APITextInputComponent,
     type APIThumbnailComponent,
     type APIUserSelectComponent,
-    ApplicationCommandOptionType,
-    ComponentType,
     type RESTPostAPIApplicationCommandsJSONBody,
 } from 'discord.js';
 import type { OmitType } from '../types';

@@ -1,15 +1,15 @@
 import axios from 'axios';
 import {
-    type AutocompleteInteraction,
     ButtonStyle,
-    type ChatInputCommandInteraction,
     Collection,
     HeadingLevel,
-    type MessageComponentInteraction,
     MessageFlags,
     heading,
     inlineCode,
     subtext,
+    type AutocompleteInteraction,
+    type ChatInputCommandInteraction,
+    type MessageComponentInteraction,
 } from 'discord.js';
 import { SlashCommand } from '../core/command';
 import type { ChatInputContext } from '../core/context';

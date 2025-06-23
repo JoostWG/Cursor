@@ -1,16 +1,11 @@
 import {
-    type AutocompleteInteraction,
     ButtonStyle,
-    type ChatInputCommandInteraction,
     Collection,
     Colors,
     DiscordAPIError,
     HeadingLevel,
-    type Interaction,
     MessageFlags,
     PermissionFlagsBits,
-    type Role,
-    type RoleEditOptions,
     TimestampStyles,
     bold,
     heading,
@@ -18,6 +13,11 @@ import {
     roleMention,
     subtext,
     time,
+    type AutocompleteInteraction,
+    type ChatInputCommandInteraction,
+    type Interaction,
+    type Role,
+    type RoleEditOptions,
 } from 'discord.js';
 import { CommandError, GuildSlashCommand } from '../core/command';
 import type { ChatInputContext } from '../core/context';

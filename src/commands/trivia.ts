@@ -1,21 +1,21 @@
 import {
     ButtonStyle,
-    type ChatInputCommandInteraction,
     ComponentType,
     HeadingLevel,
     MessageFlags,
     heading,
     subtext,
+    type ChatInputCommandInteraction,
 } from 'discord.js';
 import {
     Category,
-    type CategoryNames,
-    type Question,
     QuestionDifficulties,
     QuestionEncodings,
-    type QuestionOptions,
     QuestionTypes,
     getQuestions,
+    type CategoryNames,
+    type Question,
+    type QuestionOptions,
 } from 'open-trivia-db';
 import { SlashCommand } from '../core/command';
 import type { ChatInputContext } from '../core/context';

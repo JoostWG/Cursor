@@ -1,13 +1,13 @@
 import {
     ButtonStyle,
-    type ChatInputCommandInteraction,
     Colors,
     HeadingLevel,
     MessageFlags,
-    type User,
     bold,
     heading,
     userMention,
+    type ChatInputCommandInteraction,
+    type User,
 } from 'discord.js';
 import { CommandError, SlashCommand } from '../core/command';
 import type { ChatInputContext } from '../core/context';

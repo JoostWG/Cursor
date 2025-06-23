@@ -1,20 +1,20 @@
 import {
+    createCanvas,
+    loadImage,
     type Canvas,
     type CanvasRenderingContext2D,
     type Image,
-    createCanvas,
-    loadImage,
 } from 'canvas';
 import { Chess, type Piece } from 'chess.js';
 import {
     AttachmentBuilder,
+    HeadingLevel,
+    MessageFlags,
+    heading,
     type AutocompleteInteraction,
     type ChatInputCommandInteraction,
-    HeadingLevel,
     type InteractionReplyOptions,
-    MessageFlags,
     type Snowflake,
-    heading,
 } from 'discord.js';
 import path from 'path';
 import { SlashCommand } from '../core/command';

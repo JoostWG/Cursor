@@ -1,9 +1,9 @@
 import {
-    type ApplicationCommandOptionChoiceData,
     ApplicationCommandType,
+    InteractionContextType,
+    type ApplicationCommandOptionChoiceData,
     type AutocompleteInteraction,
     type CommandInteraction,
-    InteractionContextType,
     type RESTPostAPIApplicationCommandsJSONBody,
     type RESTPostAPIChatInputApplicationCommandsJSONBody,
     type RESTPostAPIContextMenuApplicationCommandsJSONBody,
