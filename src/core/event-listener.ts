@@ -11,7 +11,7 @@ export function eventListener<Event extends keyof ClientEvents>(event: Event) {
         public readonly event = event;
 
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        public async execute(...args: ClientEvents[Event]): Promise<void> {
+        public async execute(...args: ClientEvents[Event]) {
             //
         }
     };

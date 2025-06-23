@@ -4,7 +4,6 @@ import {
     bold,
     heading,
     inlineCode,
-    type ApplicationCommandOptionChoiceData,
     type AutocompleteInteraction,
     type ChatInputCommandInteraction,
     type Snowflake,
@@ -213,7 +212,7 @@ export class TagCommand extends GuildSlashCommand {
 
     public override async autocomplete(
         interaction: AutocompleteInteraction,
-    ): Promise<ApplicationCommandOptionChoiceData[]> {
+    ) {
         if (!interaction.guildId) {
             return [];
         }
