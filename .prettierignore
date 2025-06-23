@@ -1,7 +1,0 @@
-/.idea
-/node_modules
-/dist
-database/database.db
-tsconfig.tsbuildinfo
-package.json
-package-lock.json

@@ -1,19 +1,17 @@
 import js from '@eslint/js';
 import stylistic from '@stylistic/eslint-plugin';
 import checkFile from 'eslint-plugin-check-file';
-import eslintPluginPrettier from 'eslint-plugin-prettier';
 import { defineConfig, globalIgnores } from 'eslint/config';
 import tseslint from 'typescript-eslint';
 
 export default defineConfig(
-    globalIgnores(['dist/*', 'eslint.config.mjs', 'prettier.config.js']),
+    globalIgnores(['dist/*', 'eslint.config.mjs']),
     js.configs.all,
     tseslint.configs.all,
     {
         files: ['**/*.ts'],
         plugins: {
             js,
-            'prettier': eslintPluginPrettier,
             stylistic,
             'check-file': checkFile,
         },
@@ -24,7 +22,6 @@ export default defineConfig(
             },
         },
         rules: {
-            'prettier/prettier': 'warn',
             'check-file/filename-naming-convention': [
                 'error',
                 { '**/*.ts': 'KEBAB_CASE' },
@@ -39,7 +36,9 @@ export default defineConfig(
             'no-param-reassign': 'warn',
             'require-unicode-regexp': 'warn',
             'func-style': ['error', 'declaration'],
-            'no-console': ['warn', { allow: ['error', 'warn', 'debug', 'info'] }],
+            'no-console': ['warn', {
+                allow: ['error', 'warn', 'debug', 'info'],
+            }],
             'no-duplicate-imports': 'error',
             // Below is all disabled
             'default-case': 'off', // I want to enable this but I also don't want to implement default cases will never be used in theory
@@ -66,7 +65,9 @@ export default defineConfig(
             'no-void': 'off',
 
             // TS
-            '@typescript-eslint/no-floating-promises': ['warn', { ignoreIIFE: true }],
+            '@typescript-eslint/no-floating-promises': ['warn', {
+                ignoreIIFE: true,
+            }],
             '@typescript-eslint/consistent-type-imports': [
                 'error',
                 { fixStyle: 'inline-type-imports' },
@@ -78,13 +79,25 @@ export default defineConfig(
             '@typescript-eslint/naming-convention': [
                 'warn',
                 { selector: ['typeLike'], format: ['PascalCase'] },
-                { selector: ['enumMember'], format: ['PascalCase', 'camelCase'] },
                 {
-                    selector: ['typeProperty', 'parameterProperty', 'objectLiteralProperty'],
+                    selector: ['enumMember'],
+                    format: ['PascalCase', 'camelCase'],
+                },
+                {
+                    selector: [
+                        'typeProperty',
+                        'parameterProperty',
+                        'objectLiteralProperty',
+                    ],
                     format: ['PascalCase', 'camelCase', 'snake_case'],
                 },
                 {
-                    selector: ['variableLike', 'method', 'property', 'memberLike'],
+                    selector: [
+                        'variableLike',
+                        'method',
+                        'property',
+                        'memberLike',
+                    ],
                     format: ['camelCase'],
                     filter: { regex: '^_$', match: false },
                 },
@@ -133,11 +146,23 @@ export default defineConfig(
                 {
                     blankLine: 'always',
                     prev: '*',
-                    next: ['class', 'function', 'block', 'block-like', 'multiline-export'],
+                    next: [
+                        'class',
+                        'function',
+                        'block',
+                        'block-like',
+                        'multiline-export',
+                    ],
                 },
                 {
                     blankLine: 'always',
-                    prev: ['class', 'function', 'block', 'block-like', 'multiline-export'],
+                    prev: [
+                        'class',
+                        'function',
+                        'block',
+                        'block-like',
+                        'multiline-export',
+                    ],
                     next: '*',
                 },
             ],
