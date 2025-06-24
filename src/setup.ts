@@ -13,7 +13,7 @@ import { UrbanDictionaryCommand } from './commands/urban-dictionary';
 import { UserCommand } from './commands/user';
 import { Bot } from './core/bot';
 import { CommandCollection } from './core/command-collection';
-import { CommandDataCahce, CommandDeployHandler } from './core/command-deploy-handler';
+import { CommandDataCache, CommandDeployHandler } from './core/command-deploy-handler';
 import type { DatabaseTables } from './types/database';
 
 export type CursorDatabase = Kysely<DatabaseTables>;
@@ -58,7 +58,7 @@ export async function createBot({ token }: { token: string }) {
         commands,
         db,
         deployHandler: new CommandDeployHandler(
-            new CommandDataCahce('./cache/deployed-commands'),
+            new CommandDataCache('./cache/deployed-commands'),
             client.rest,
             commands,
         ),

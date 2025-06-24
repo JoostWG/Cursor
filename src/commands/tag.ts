@@ -92,7 +92,7 @@ class DatabaseTagManager implements TagManager {
             .executeTakeFirstOrThrow();
 
         if (!result.insertId) {
-            throw new Error('Failed to creaet tags');
+            throw new Error('Failed to create tags');
         }
 
         return await this.db

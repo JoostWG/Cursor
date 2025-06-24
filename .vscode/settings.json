@@ -23,5 +23,12 @@
         "package-lock.json": true,
         "tsconfig.tsbuildinfo": true,
         "**/**.db": true
-    }
+    },
+    "cSpell.words": [
+        "defid",
+        "Joost",
+        "kysely",
+        "LATAM",
+        "twopart"
+    ]
 }

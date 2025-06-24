@@ -373,11 +373,11 @@ export class RockPaperScissorsCommand extends SlashCommand {
         const opponent = interaction.options.getUser('opponent', true);
 
         if (opponent.bot) {
-            throw new CommandError('You cannot play agains bots.');
+            throw new CommandError('You cannot play against bots.');
         }
 
         if (opponent.id === interaction.user.id) {
-            throw new CommandError('You cannot play agains yourself.');
+            throw new CommandError('You cannot play against yourself.');
         }
 
         await new Game([interaction.user, opponent], this.db).start(interaction);

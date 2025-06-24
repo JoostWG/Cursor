@@ -130,7 +130,7 @@ export default defineConfig(
             '@typescript-eslint/require-await': 'off',
             '@typescript-eslint/parameter-properties': 'off',
 
-            // Things prettier doesn' cover
+            // Things dprint doesn't cover
             'stylistic/lines-between-class-members': [
                 'warn',
                 {

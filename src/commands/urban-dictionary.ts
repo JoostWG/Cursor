@@ -312,7 +312,7 @@ class InteractionHandler {
                     break;
                 }
 
-                return await urbanDictionary.goToDefintion(interaction.values[0]);
+                return await urbanDictionary.goToDefinition(interaction.values[0]);
 
             case 'back':
                 return await urbanDictionary.goBack();
@@ -358,7 +358,7 @@ class UrbanDictionary {
         });
     }
 
-    public async goToDefintion(term: string) {
+    public async goToDefinition(term: string) {
         await this.addHistoryItem(term);
 
         return this.getOptions();

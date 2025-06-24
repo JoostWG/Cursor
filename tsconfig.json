@@ -7,7 +7,7 @@
         "lib": ["ESNext"],
         "target": "ESNext",
         "module": "NodeNext",
-        "moduleResolution": "nodenext",
+        "moduleResolution": "NodeNext",
         "outDir": "./dist",
         "esModuleInterop": true,
         "resolveJsonModule": true,

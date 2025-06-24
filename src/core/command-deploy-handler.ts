@@ -10,7 +10,7 @@ import path from 'path';
 import { devGuildId, discordAppId } from '../../config.json';
 import type { CommandCollection } from './command-collection';
 
-export class CommandDataCahce {
+export class CommandDataCache {
     public constructor(private readonly dirPath: string) {}
 
     public async get(key: string) {
@@ -35,7 +35,7 @@ export class CommandDataCahce {
 
 export class CommandDeployHandler {
     public constructor(
-        private readonly cache: CommandDataCahce,
+        private readonly cache: CommandDataCache,
         private readonly api: REST,
         private readonly commands: CommandCollection,
     ) {}
@@ -97,7 +97,7 @@ export class CommandDeployHandler {
         const data = await this.api.put(route, { body: commands });
 
         if (Array.isArray(data)) {
-            this.log(`Succesfully synced ${data.length} ${type} commands`);
+            this.log(`Successfully synced ${data.length} ${type} commands`);
         } else {
             console.warn(`[commands] Unexpected return value when syncing ${type} commands:`, data);
         }

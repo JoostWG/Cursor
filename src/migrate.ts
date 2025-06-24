@@ -80,7 +80,7 @@ export class Migrator {
                 return;
             }
 
-            console.info(`Rollingback ${migration.name}`);
+            console.info(`Rolling back ${migration.name}`);
 
             try {
                 await this.db.transaction().execute(async (transaction) => {
