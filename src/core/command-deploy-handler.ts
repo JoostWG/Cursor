@@ -1,13 +1,8 @@
-import {
-    Routes,
-    type REST,
-    type RESTPostAPIApplicationCommandsJSONBody,
-    type RouteLike,
-} from 'discord.js';
+import { Routes, type REST, type RESTPostAPIApplicationCommandsJSONBody } from 'discord.js';
+import { deepEqual } from 'fast-equals';
 import fs from 'fs/promises';
 import path from 'path';
-// TODO: Convert to dependency
-import { devGuildId, discordAppId } from '../../config.json';
+import { devGuildId, discordAppId } from '../../config.json'; // TODO: Convert to dependency
 import type { CommandCollection } from './command-collection';
 
 export class CommandDataCache {
@@ -52,106 +47,37 @@ export class CommandDeployHandler {
             }
         }
 
-        this.log('Fetching global commands from cache...');
         const existingGlobalCommands = await this.cache.get('global');
 
-        if (!existingGlobalCommands || !this.compare(existingGlobalCommands, globalCommands)) {
-            this.log(
-                'Cached commands do not match loaded commands.',
-                'Sending data from loaded commands to Discord.',
+        if (!existingGlobalCommands || !this.equal(existingGlobalCommands, globalCommands)) {
+            console.info('[commands] Global command mismatch. Redeploying...');
+
+            await this.api.put(
+                Routes.applicationCommands(discordAppId),
+                { body: globalCommands },
             );
-            await this.deploy('global', Routes.applicationCommands(discordAppId), globalCommands);
+
             await this.cache.set('global', globalCommands);
-            this.log('Deployed global commands and updated cache.');
-        } else {
-            this.log('No global redeploy needed.');
         }
 
-        this.log('Fetching dev commands from cache...');
         const existingDevCommands = await this.cache.get('dev');
 
-        if (!existingDevCommands || !this.compare(existingDevCommands, devCommands)) {
-            this.log(
-                'Cached commands do not match loaded commands.',
-                'Sending data from loaded commands to Discord.',
-            );
-            await this.deploy(
-                'dev',
+        if (!existingDevCommands || !this.equal(existingDevCommands, devCommands)) {
+            console.info('[commands] Dev command mismatch. Redeploying...');
+
+            await this.api.put(
                 Routes.applicationGuildCommands(discordAppId, devGuildId),
-                devCommands,
+                { body: devCommands },
             );
+
             await this.cache.set('dev', devCommands);
-            this.log('Deployed dev commands and updated cache.');
-        } else {
-            this.log('No dev redeploy needed.');
         }
     }
 
-    private async deploy(
-        type: 'dev' | 'global',
-        route: RouteLike,
-        commands: RESTPostAPIApplicationCommandsJSONBody[],
-    ) {
-        this.log(`Syncing ${commands.length} ${type} commands`);
-
-        const data = await this.api.put(route, { body: commands });
-
-        if (Array.isArray(data)) {
-            this.log(`Successfully synced ${data.length} ${type} commands`);
-        } else {
-            console.warn(`[commands] Unexpected return value when syncing ${type} commands:`, data);
-        }
-    }
-
-    private compare<T>(a: T, b: T) {
-        if (a === b) {
-            return true;
-        }
-
-        if (typeof a !== typeof b || a === null || b === null) {
-            return false;
-        }
-
-        if (Array.isArray(a) && Array.isArray(b)) {
-            if (a.length !== b.length) {
-                return false;
-            }
-
-            for (let i = 0; i < a.length; i++) {
-                if (!this.compare(a[i], b[i])) {
-                    return false;
-                }
-            }
-
-            return true;
-        }
-
-        if (typeof a === 'object' && typeof b === 'object') {
-            const keysA = Object.keys(a);
-            const keysB = Object.keys(b);
-
-            if (keysA.length !== keysB.length) {
-                return false;
-            }
-
-            for (const key of keysA) {
-                if (!(key in b)) {
-                    return false;
-                }
-
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access
-                if (!this.compare((a as any)[key], (b as any)[key])) {
-                    return false;
-                }
-            }
-
-            return true;
-        }
-
-        return false;
-    }
-
-    private log(...message: string[]) {
-        console.info(`[commands] ${message.join(' ')}`);
+    private equal<T extends RESTPostAPIApplicationCommandsJSONBody[]>(a: T, b: T) {
+        return deepEqual(
+            Object.fromEntries(a.map((command) => [command.name, command])),
+            Object.fromEntries(b.map((command) => [command.name, command])),
+        );
     }
 }
