@@ -13,6 +13,8 @@
         "parameters.preferSingleLine": true,
         "importDeclaration.preferSingleLine": true,
         "conditionalType.preferSingleLine": true,
+        "constructSignature.spaceAfterNewKeyword": true,
+        "constructorType.spaceAfterNewKeyword": true,
     },
     "json": {
         "indentWidth": 4,
