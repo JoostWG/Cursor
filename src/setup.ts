@@ -18,7 +18,7 @@ import type { DatabaseTables } from './types/database';
 
 export type CursorDatabase = Kysely<DatabaseTables>;
 
-export function createDatabaseInstance() {
+export function createDatabaseInstance(): Kysely<DatabaseTables> {
     return new Kysely<DatabaseTables>({
         dialect: new SqliteDialect({
             database: new SQLite('./database/database.db'),
@@ -26,7 +26,7 @@ export function createDatabaseInstance() {
     });
 }
 
-export async function createBot({ token }: { token: string }) {
+export async function createBot({ token }: { token: string }): Promise<Bot> {
     const client = new Client({
         intents: [GatewayIntentBits.GuildMembers, GatewayIntentBits.Guilds],
     });

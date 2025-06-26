@@ -5,6 +5,7 @@ import {
     MessageFlags,
     heading,
     subtext,
+    type APIBaseComponent,
     type ChatInputCommandInteraction,
 } from 'discord.js';
 import {
@@ -59,7 +60,7 @@ class QuestionView {
         this.status = 'active';
     }
 
-    public async start(interaction: ChatInputCommandInteraction) {
+    public async start(interaction: ChatInputCommandInteraction): Promise<void> {
         const response = await interaction.reply({
             withResponse: true,
             flags: MessageFlags.IsComponentsV2,
@@ -100,7 +101,7 @@ class QuestionView {
             });
     }
 
-    private buildComponents() {
+    private buildComponents(): APIBaseComponent<ComponentType>[] {
         return [
             container({
                 components: [
@@ -164,7 +165,7 @@ export class TriviaCommand extends SlashCommand {
         });
     }
 
-    public override async execute({ interaction }: ChatInputContext) {
+    public override async execute({ interaction }: ChatInputContext): Promise<void> {
         const difficulty = interaction.options.getString('difficulty');
         const category = interaction.options.getString('category');
 

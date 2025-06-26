@@ -2,7 +2,7 @@ import { sql, type SchemaModule } from 'kysely';
 import type { Migration } from '../../migrate';
 
 export class V3 implements Migration {
-    public async up(schema: SchemaModule) {
+    public async up(schema: SchemaModule): Promise<void> {
         await schema
             .createTable('command_logs')
             .addColumn('interaction_id', 'varchar(255)', (col) => col.notNull().unique())
@@ -18,7 +18,7 @@ export class V3 implements Migration {
             .execute();
     }
 
-    public async down(schema: SchemaModule) {
+    public async down(schema: SchemaModule): Promise<void> {
         await schema.dropTable('command_logs').execute();
     }
 }

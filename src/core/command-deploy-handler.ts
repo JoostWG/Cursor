@@ -8,7 +8,7 @@ import type { CommandCollection } from './command-collection';
 export class CommandDataCache {
     public constructor(private readonly dirPath: string) {}
 
-    public async get(key: string) {
+    public async get(key: string): Promise<RESTPostAPIApplicationCommandsJSONBody[] | null> {
         try {
             return JSON.parse(
                 await fs.readFile(this.getPath(key), { encoding: 'utf-8' }),
@@ -18,12 +18,12 @@ export class CommandDataCache {
         }
     }
 
-    public async set(key: string, value: RESTPostAPIApplicationCommandsJSONBody[]) {
+    public async set(key: string, value: RESTPostAPIApplicationCommandsJSONBody[]): Promise<void> {
         await fs.mkdir(path.dirname(this.getPath(key)), { recursive: true });
         await fs.writeFile(this.getPath(key), JSON.stringify(value), { encoding: 'utf-8' });
     }
 
-    private getPath(key: string) {
+    private getPath(key: string): string {
         return `${this.dirPath}/${key}.json`;
     }
 }
@@ -35,7 +35,7 @@ export class CommandDeployHandler {
         private readonly commands: CommandCollection,
     ) {}
 
-    public async deployIfNeeded() {
+    public async deployIfNeeded(): Promise<void> {
         const globalCommands: RESTPostAPIApplicationCommandsJSONBody[] = [];
         const devCommands: RESTPostAPIApplicationCommandsJSONBody[] = [];
 
@@ -70,7 +70,7 @@ export class CommandDeployHandler {
         }
     }
 
-    private equal<T extends RESTPostAPIApplicationCommandsJSONBody[]>(a: T, b: T) {
+    private equal<T extends RESTPostAPIApplicationCommandsJSONBody[]>(a: T, b: T): boolean {
         return deepEqual(
             Object.fromEntries(a.map((command) => [command.name, command])),
             Object.fromEntries(b.map((command) => [command.name, command])),

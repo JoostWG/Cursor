@@ -11,6 +11,7 @@ import {
     HeadingLevel,
     MessageFlags,
     heading,
+    type ApplicationCommandOptionChoiceData,
     type AutocompleteInteraction,
     type ChatInputCommandInteraction,
     type InteractionReplyOptions,
@@ -54,11 +55,11 @@ class CheckerboardTheme implements ChessBoardTheme {
         },
     ) {}
 
-    public squareColor(x: number, y: number) {
+    public squareColor(x: number, y: number): ChessBoardColor {
         return (x + y) % 2 ? this.colors.dark : this.colors.light;
     }
 
-    public borderColor() {
+    public borderColor(): ChessBoardColor {
         return this.colors.border;
     }
 }
@@ -79,7 +80,7 @@ class DefaultChessPieceFactory implements ChessPieceFactory {
 
     public constructor(private readonly dirPath: string) {}
 
-    public async getPieceImage(piece: Piece) {
+    public async getPieceImage(piece: Piece): Promise<Image> {
         return await loadImage(
             path.join(
                 __dirname,
@@ -98,7 +99,7 @@ class DefaultChessBoard implements ChessBoard {
         private readonly chessPieceFactory: ChessPieceFactory,
     ) {}
 
-    public async render(chess: Chess) {
+    public async render(chess: Chess): Promise<Buffer> {
         const cellSize = this.size / 8;
         const borderWidth = this.size / 16;
         const canvas = createCanvas(this.size + borderWidth * 2, this.size + borderWidth * 2);
@@ -176,7 +177,7 @@ class DefaultChessBoard implements ChessBoard {
         ctx: CanvasRenderingContext2D,
         fillStyle: CanvasRenderingContext2D['fillStyle'],
         ...args: Parameters<CanvasRenderingContext2D['rect']>
-    ) {
+    ): void {
         ctx.beginPath();
         ctx.fillStyle = fillStyle;
         ctx.rect(...args);
@@ -185,7 +186,7 @@ class DefaultChessBoard implements ChessBoard {
 }
 
 class DefaultMessageFactory implements MessageFactory {
-    public getMessage(chess: Chess) {
+    public getMessage(chess: Chess): string {
         const title = `${chess.turn() === 'w' ? 'White' : 'Black'} to move`;
 
         if (chess.isCheckmate()) {
@@ -206,14 +207,15 @@ class InteractionHandler implements OutputHandler {
         private readonly messageFactory: MessageFactory,
     ) {}
 
-    public async initiate(chess: Chess, boardImageData: Buffer) {
+    public async initiate(chess: Chess, boardImageData: Buffer): Promise<void> {
         await this.interaction.reply(await this.buildMessage(chess, boardImageData));
     }
 
-    public async update(chess: Chess, boardImageData: Buffer) {
+    public async update(chess: Chess, boardImageData: Buffer): Promise<void> {
         await this.interaction.editReply(await this.buildMessage(chess, boardImageData));
     }
 
+    // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
     private async buildMessage(chess: Chess, boardImageData: Buffer) {
         const file = new AttachmentBuilder(boardImageData, { name: 'board.png' });
 
@@ -258,11 +260,11 @@ class Game {
         private readonly board: ChessBoard,
     ) {}
 
-    public async start() {
+    public async start(): Promise<void> {
         await this.output.initiate(this.chess, await this.board.render(this.chess));
     }
 
-    public async move(move: string) {
+    public async move(move: string): Promise<void> {
         if (!this.chess.moves().includes(move)) {
             throw new InvalidMove(move);
         }
@@ -272,7 +274,7 @@ class Game {
         await this.output.update(this.chess, await this.board.render(this.chess));
     }
 
-    public getValidMoves() {
+    public getValidMoves(): string[] {
         return this.chess.moves();
     }
 }
@@ -308,7 +310,9 @@ export class ChessCommand extends SlashCommand {
         this.devOnly = true;
     }
 
-    public override async autocomplete(interaction: AutocompleteInteraction) {
+    public override async autocomplete(
+        interaction: AutocompleteInteraction,
+    ): Promise<ApplicationCommandOptionChoiceData[]> {
         const game = this.games.get(interaction.user.id);
 
         if (!game) {
@@ -323,7 +327,7 @@ export class ChessCommand extends SlashCommand {
             .map((move) => ({ name: move, value: move }));
     }
 
-    public override async execute({ interaction }: ChatInputContext) {
+    public override async execute({ interaction }: ChatInputContext): Promise<void> {
         switch (interaction.options.getSubcommand()) {
             case 'start':
                 await this.handleStart(interaction);
@@ -335,7 +339,7 @@ export class ChessCommand extends SlashCommand {
         }
     }
 
-    private async handleStart(interaction: ChatInputCommandInteraction) {
+    private async handleStart(interaction: ChatInputCommandInteraction): Promise<void> {
         const game = new Game(
             new Chess(),
             new InteractionHandler(interaction, new DefaultMessageFactory()),
@@ -351,7 +355,7 @@ export class ChessCommand extends SlashCommand {
         await game.start();
     }
 
-    private async handleMove(interaction: ChatInputCommandInteraction) {
+    private async handleMove(interaction: ChatInputCommandInteraction): Promise<void> {
         const game = this.games.get(interaction.user.id);
         const move = interaction.options.getString('move', true);
 

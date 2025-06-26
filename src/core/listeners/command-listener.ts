@@ -13,7 +13,7 @@ export class CommandListener extends eventListener(Events.InteractionCreate) {
         super();
     }
 
-    public override async execute(interaction: Interaction) {
+    public override async execute(interaction: Interaction): Promise<void> {
         if (!interaction.isCommand()) {
             return;
         }
@@ -73,7 +73,7 @@ export class CommandListener extends eventListener(Events.InteractionCreate) {
         }
     }
 
-    private async logInteractionToDatabase(interaction: CommandInteraction) {
+    private async logInteractionToDatabase(interaction: CommandInteraction): Promise<void> {
         await this.db
             .insertInto('command_logs')
             .values({

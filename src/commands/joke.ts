@@ -90,7 +90,7 @@ export class JokeCommand extends SlashCommand {
         });
     }
 
-    public static create() {
+    public static create(): JokeCommand {
         return new this(
             axios.create({
                 baseURL: 'https://v2.jokeapi.dev',
@@ -98,7 +98,7 @@ export class JokeCommand extends SlashCommand {
         );
     }
 
-    public override async execute({ interaction }: ChatInputContext) {
+    public override async execute({ interaction }: ChatInputContext): Promise<void> {
         const category = interaction.options.getString('category') ?? 'Any';
         const safe = interaction.options.getBoolean('safe') ?? true;
 

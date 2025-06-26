@@ -106,13 +106,18 @@ export default defineConfig(
             '@typescript-eslint/prefer-readonly': 'warn',
             '@typescript-eslint/no-unsafe-member-access': 'error',
             '@typescript-eslint/no-extraneous-class': 'warn',
+            '@typescript-eslint/explicit-function-return-type': [
+                'error',
+                {
+                    allowExpressions: true,
+                },
+            ],
             // Below is all disabled
             '@typescript-eslint/no-unsafe-type-assertion': 'off',
             '@typescript-eslint/non-nullable-type-assertion-style': 'off',
             '@typescript-eslint/strict-boolean-expressions': 'off',
             '@typescript-eslint/no-magic-numbers': 'off',
             '@typescript-eslint/prefer-readonly-parameter-types': 'off',
-            '@typescript-eslint/explicit-function-return-type': 'off',
             '@typescript-eslint/explicit-module-boundary-types': 'off',
             '@typescript-eslint/no-unsafe-call': 'off',
             '@typescript-eslint/no-unsafe-assignment': 'off',

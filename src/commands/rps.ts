@@ -6,7 +6,9 @@ import {
     bold,
     heading,
     userMention,
+    type APIBaseComponent,
     type ChatInputCommandInteraction,
+    type ComponentType,
     type User,
 } from 'discord.js';
 import { CommandError, SlashCommand } from '../core/command';
@@ -38,19 +40,19 @@ class Round {
         this.choices = [null, null];
     }
 
-    public get(index: number) {
+    public get(index: number): Choice | null {
         return this.choices[index];
     }
 
-    public set(index: number, choice: Choice) {
+    public set(index: number, choice: Choice): void {
         this.choices[index] = choice;
     }
 
-    public isFinished(): this is 3 {
+    public isFinished(): boolean {
         return !this.choices.includes(null);
     }
 
-    public getResult() {
+    public getResult(): number {
         if (!this.choices[0] || !this.choices[1]) {
             return -1;
         }
@@ -84,15 +86,15 @@ class Game {
         this.status = 'invitePending';
     }
 
-    private get player1() {
+    private get player1(): User {
         return this.users[0];
     }
 
-    private get player2() {
+    private get player2(): User {
         return this.users[1];
     }
 
-    public async start(interaction: ChatInputCommandInteraction) {
+    public async start(interaction: ChatInputCommandInteraction): Promise<void> {
         const response = await interaction.reply({
             flags: MessageFlags.IsComponentsV2,
             components: this.buildComponents(),
@@ -227,7 +229,7 @@ class Game {
             });
     }
 
-    private buildComponents() {
+    private buildComponents(): APIBaseComponent<ComponentType>[] {
         const builder = container({
             components: [
                 textDisplay({
@@ -361,7 +363,7 @@ export class RockPaperScissorsCommand extends SlashCommand {
         });
     }
 
-    public override async execute({ interaction }: ChatInputContext) {
+    public override async execute({ interaction }: ChatInputContext): Promise<void> {
         switch (interaction.options.getSubcommand()) {
             case 'play':
                 await this.play(interaction);
@@ -373,7 +375,7 @@ export class RockPaperScissorsCommand extends SlashCommand {
         }
     }
 
-    private async play(interaction: ChatInputCommandInteraction) {
+    private async play(interaction: ChatInputCommandInteraction): Promise<void> {
         const opponent = interaction.options.getUser('opponent', true);
 
         if (opponent.bot) {
@@ -387,7 +389,7 @@ export class RockPaperScissorsCommand extends SlashCommand {
         await new Game([interaction.user, opponent], this.db).start(interaction);
     }
 
-    private async stats(interaction: ChatInputCommandInteraction) {
+    private async stats(interaction: ChatInputCommandInteraction): Promise<void> {
         const games = await this.db
             .selectFrom('rps_games')
             .where('user_id', '=', interaction.user.id)

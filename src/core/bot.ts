@@ -1,5 +1,6 @@
 import type { Client } from 'discord.js';
 import type { CursorDatabase } from '../setup';
+import type { BaseApplicationCommand } from './command';
 import type { CommandCollection } from './command-collection';
 import type { CommandDeployHandler } from './command-deploy-handler';
 import type { EventListener } from './event-listener';
@@ -38,11 +39,11 @@ export class Bot {
         }
     }
 
-    public getCommands() {
+    public getCommands(): Iterable<BaseApplicationCommand> {
         return this.commands.values();
     }
 
-    public async run() {
+    public async run(): Promise<void> {
         await this.deployHandler.deployIfNeeded();
 
         await this.client.login(this.token);

@@ -7,8 +7,11 @@ import {
     heading,
     inlineCode,
     subtext,
+    type APIBaseComponent,
+    type ApplicationCommandOptionChoiceData,
     type AutocompleteInteraction,
     type ChatInputCommandInteraction,
+    type ComponentType,
     type MessageComponentInteraction,
 } from 'discord.js';
 import { SlashCommand } from '../core/command';
@@ -76,17 +79,17 @@ class UrbanDictionaryApi implements Api {
         });
     }
 
-    public async define(term: string) {
+    public async define(term: string): Promise<Definition[]> {
         const data = await this.get<{ list: Definition[] }>('/define', { params: { term } });
 
         return data.list;
     }
 
-    public async autocomplete(term: string) {
+    public async autocomplete(term: string): Promise<string[]> {
         return await this.get<string[]>('/autocomplete', { params: { term } });
     }
 
-    private async get<T>(url: string, config?: axios.AxiosRequestConfig) {
+    private async get<T>(url: string, config?: axios.AxiosRequestConfig): Promise<T> {
         const { data } = await this.axios.get<ResponseData<T>>(url, config);
 
         // `data` can be anything
@@ -106,11 +109,11 @@ class UrbanDictionaryCachedApi extends UrbanDictionaryApi {
         super();
     }
 
-    public override async define(term: string) {
+    public override async define(term: string): Promise<Definition[]> {
         return await this.definitionsCache.ensure(term, async () => await super.define(term));
     }
 
-    public override async autocomplete(term: string) {
+    public override async autocomplete(term: string): Promise<string[]> {
         return await this.autocompleteCache.ensure(
             term,
             async () => await super.autocomplete(term),
@@ -126,7 +129,7 @@ class UrbanDictionaryComponentBuilder {
         history,
         pagination: { currentPage, totalPages },
         active,
-    }: ComponentBuilderOptions) {
+    }: ComponentBuilderOptions): APIBaseComponent<ComponentType>[] {
         if (!definition) {
             return [container({ components: [textDisplay({ content: 'Something went wrong!' })] })];
         }
@@ -204,18 +207,18 @@ class UrbanDictionaryComponentBuilder {
         ];
     }
 
-    private extractHyperlinks(text: string) {
+    private extractHyperlinks(text: string): Iterable<string> {
         return text.matchAll(this.hyperlinkRegex).map((match) => match[1]);
     }
 
-    private transformHyperlinks(text: string) {
+    private transformHyperlinks(text: string): string {
         return text.replace(
             this.hyperlinkRegex,
             (_, term: string) => `[${term}](${this.getWebUrl(term)})`,
         );
     }
 
-    private getWebUrl(term: string) {
+    private getWebUrl(term: string): string {
         return `https://urbandictionary.com/define.php?term=${encodeURIComponent(term)}`;
     }
 }
@@ -230,7 +233,7 @@ class InteractionHandler {
         this.active = false;
     }
 
-    public async initiate(options: OutputOptions) {
+    public async initiate(options: OutputOptions): Promise<void> {
         this.active = true;
 
         const { definition, pagination } = options;
@@ -299,7 +302,7 @@ class InteractionHandler {
     private async handleComponentInteraction(
         interaction: MessageComponentInteraction,
         { urbanDictionary }: OutputOptions,
-    ) {
+    ): Promise<OutputOptions | undefined> {
         switch (interaction.customId) {
             case 'previous':
                 return await urbanDictionary.previousPage();
@@ -347,7 +350,7 @@ class UrbanDictionary {
         this.history = [];
     }
 
-    public async start(term: string) {
+    public async start(term: string): Promise<void> {
         const item = await this.addHistoryItem(term);
 
         await this.interactionHandler.initiate({
@@ -358,19 +361,19 @@ class UrbanDictionary {
         });
     }
 
-    public async goToDefinition(term: string) {
+    public async goToDefinition(term: string): Promise<OutputOptions> {
         await this.addHistoryItem(term);
 
         return this.getOptions();
     }
 
-    public async goBack() {
+    public async goBack(): Promise<OutputOptions> {
         this.history.pop();
 
         return this.getOptions();
     }
 
-    public async previousPage() {
+    public async previousPage(): Promise<OutputOptions> {
         const item = this.history.at(-1);
 
         if (item) {
@@ -380,7 +383,7 @@ class UrbanDictionary {
         return this.getOptions();
     }
 
-    public async nextPage() {
+    public async nextPage(): Promise<OutputOptions> {
         const item = this.history.at(-1);
 
         if (item) {
@@ -390,7 +393,7 @@ class UrbanDictionary {
         return this.getOptions();
     }
 
-    private async addHistoryItem(term: string) {
+    private async addHistoryItem(term: string): Promise<HistoryItem> {
         const item = new HistoryItem(term, await this.api.define(term));
 
         this.history.push(item);
@@ -437,18 +440,20 @@ export class UrbanDictionaryCommand extends SlashCommand {
         });
     }
 
-    public static create() {
+    public static create(): UrbanDictionaryCommand {
         return new this(new UrbanDictionaryCachedApi(new Collection(), new Collection()));
     }
 
-    public override async execute({ interaction }: ChatInputContext) {
+    public override async execute({ interaction }: ChatInputContext): Promise<void> {
         await new UrbanDictionary(
             this.api,
             new InteractionHandler(interaction, new UrbanDictionaryComponentBuilder()),
         ).start(interaction.options.getString('term', true));
     }
 
-    public override async autocomplete(interaction: AutocompleteInteraction) {
+    public override async autocomplete(
+        interaction: AutocompleteInteraction,
+    ): Promise<ApplicationCommandOptionChoiceData[]> {
         const term = interaction.options.getFocused();
 
         if (!term) {

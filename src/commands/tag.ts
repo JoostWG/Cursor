@@ -4,6 +4,7 @@ import {
     bold,
     heading,
     inlineCode,
+    type ApplicationCommandOptionChoiceData,
     type AutocompleteInteraction,
     type ChatInputCommandInteraction,
     type Snowflake,
@@ -54,7 +55,7 @@ class TagNotFoundError extends CommandError {
 class DatabaseTagManager implements TagManager {
     public constructor(private readonly db: CursorDatabase) {}
 
-    public async list(guildId: Snowflake) {
+    public async list(guildId: Snowflake): Promise<TagData[]> {
         return await this.db
             .selectFrom('tags')
             .where('guild_id', '=', guildId)
@@ -64,7 +65,11 @@ class DatabaseTagManager implements TagManager {
 
     public async find(guildId: Snowflake, name: string): Promise<TagData | null>;
     public async find(guildId: Snowflake, name: string, options: { fail?: true }): Promise<TagData>;
-    public async find(guildId: Snowflake, name: string, options?: { fail?: true }) {
+    public async find(
+        guildId: Snowflake,
+        name: string,
+        options?: { fail?: true },
+    ): Promise<TagData | null> {
         const query = this.db
             .selectFrom('tags')
             .where('guild_id', '=', guildId)
@@ -88,7 +93,7 @@ class DatabaseTagManager implements TagManager {
         userId: Snowflake;
         name: string;
         content: string;
-    }) {
+    }): Promise<TagData> {
         const result = await this.db
             .insertInto('tags')
             .values({ guild_id: guildId, user_id: userId, name, content })
@@ -112,11 +117,11 @@ class DatabaseTagManager implements TagManager {
             content?: string;
             uses?: number;
         },
-    ) {
+    ): Promise<void> {
         await this.db.updateTable('tags').where('id', '=', tagId).set(data).execute();
     }
 
-    public async delete(tagId: number) {
+    public async delete(tagId: number): Promise<void> {
         await this.db.deleteFrom('tags').where('id', '=', tagId).execute();
     }
 }
@@ -206,11 +211,13 @@ export class TagCommand extends GuildSlashCommand {
         });
     }
 
-    public static create({ db }: { db: CursorDatabase }) {
+    public static create({ db }: { db: CursorDatabase }): TagCommand {
         return new this(new DatabaseTagManager(db));
     }
 
-    public override async autocomplete(interaction: AutocompleteInteraction) {
+    public override async autocomplete(
+        interaction: AutocompleteInteraction,
+    ): Promise<ApplicationCommandOptionChoiceData[]> {
         if (!interaction.guildId) {
             return [];
         }
@@ -224,7 +231,7 @@ export class TagCommand extends GuildSlashCommand {
             .map((tag) => ({ name: tag.name, value: tag.name }));
     }
 
-    public override async execute({ interaction }: ChatInputContext) {
+    public override async execute({ interaction }: ChatInputContext): Promise<void> {
         if (!interaction.inCachedGuild()) {
             return;
         }
@@ -265,14 +272,18 @@ export class TagCommand extends GuildSlashCommand {
         }
     }
 
-    private async handleListSubcommand(interaction: ChatInputCommandInteraction<'cached'>) {
+    private async handleListSubcommand(
+        interaction: ChatInputCommandInteraction<'cached'>,
+    ): Promise<void> {
         const tags = await this.tags.list(interaction.guildId);
         await interaction.reply(
             `Tags:\n${tags.map((tag) => `${tag.name}: ${tag.content}`).join('\n')}`,
         );
     }
 
-    private async handleGetSubcommand(interaction: ChatInputCommandInteraction<'cached'>) {
+    private async handleGetSubcommand(
+        interaction: ChatInputCommandInteraction<'cached'>,
+    ): Promise<void> {
         const tag = await this.tags.find(
             interaction.guildId,
             interaction.options.getString('name', true),
@@ -286,7 +297,9 @@ export class TagCommand extends GuildSlashCommand {
         await interaction.reply(tag.content);
     }
 
-    private async handleInfoSubcommand(interaction: ChatInputCommandInteraction<'cached'>) {
+    private async handleInfoSubcommand(
+        interaction: ChatInputCommandInteraction<'cached'>,
+    ): Promise<void> {
         const tag = await this.findTagOrFail(interaction);
 
         await interaction.reply({
@@ -315,7 +328,9 @@ export class TagCommand extends GuildSlashCommand {
         });
     }
 
-    private async handleCreateSubcommand(interaction: ChatInputCommandInteraction<'cached'>) {
+    private async handleCreateSubcommand(
+        interaction: ChatInputCommandInteraction<'cached'>,
+    ): Promise<void> {
         const name = interaction.options.getString('name', true);
         const content = interaction.options.getString('content', true);
 
@@ -335,7 +350,9 @@ export class TagCommand extends GuildSlashCommand {
         await interaction.reply('Tag created!');
     }
 
-    private async handleUpdateSubcommand(interaction: ChatInputCommandInteraction<'cached'>) {
+    private async handleUpdateSubcommand(
+        interaction: ChatInputCommandInteraction<'cached'>,
+    ): Promise<void> {
         const tag = await this.findTagOrFail(interaction);
 
         await this.tags.update(tag.id, {
@@ -345,7 +362,9 @@ export class TagCommand extends GuildSlashCommand {
         await interaction.reply('Tag updated!');
     }
 
-    private async handleDeleteSubcommand(interaction: ChatInputCommandInteraction<'cached'>) {
+    private async handleDeleteSubcommand(
+        interaction: ChatInputCommandInteraction<'cached'>,
+    ): Promise<void> {
         const tag = await this.findTagOrFail(interaction);
 
         await this.tags.delete(tag.id);
@@ -353,7 +372,9 @@ export class TagCommand extends GuildSlashCommand {
         await interaction.reply('Tag deleted!');
     }
 
-    private async findTagOrFail(interaction: ChatInputCommandInteraction<'cached'>) {
+    private async findTagOrFail(
+        interaction: ChatInputCommandInteraction<'cached'>,
+    ): Promise<TagData> {
         return await this.tags.find(
             interaction.guildId,
             interaction.options.getString('name', true),

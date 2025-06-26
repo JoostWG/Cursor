@@ -1,4 +1,4 @@
-export function stringTitle(string: string) {
+export function stringTitle(string: string): string {
     return string
         .toLowerCase()
         .split(' ')

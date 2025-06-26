@@ -13,6 +13,7 @@ import {
     roleMention,
     subtext,
     time,
+    type ApplicationCommandOptionChoiceData,
     type AutocompleteInteraction,
     type ChatInputCommandInteraction,
     type Interaction,
@@ -97,7 +98,9 @@ export class RoleCommand extends GuildSlashCommand {
         });
     }
 
-    public override async autocomplete(interaction: AutocompleteInteraction) {
+    public override async autocomplete(
+        interaction: AutocompleteInteraction,
+    ): Promise<ApplicationCommandOptionChoiceData[]> {
         if (interaction.options.getFocused(true).name !== 'color') {
             return [];
         }
@@ -120,7 +123,7 @@ export class RoleCommand extends GuildSlashCommand {
             );
     }
 
-    public override async execute({ interaction }: ChatInputContext) {
+    public override async execute({ interaction }: ChatInputContext): Promise<void> {
         if (!interaction.inCachedGuild()) {
             throw new CommandError('Must use in guild');
         }
@@ -143,7 +146,9 @@ export class RoleCommand extends GuildSlashCommand {
         }
     }
 
-    private async handleUpdateSubcommand(interaction: ChatInputCommandInteraction<'cached'>) {
+    private async handleUpdateSubcommand(
+        interaction: ChatInputCommandInteraction<'cached'>,
+    ): Promise<void> {
         const role = interaction.options.getRole('role', true);
 
         this.validateRole(interaction, role, { allowManaged: true });
@@ -227,7 +232,9 @@ export class RoleCommand extends GuildSlashCommand {
         });
     }
 
-    private async handleDeleteSubcommand(interaction: ChatInputCommandInteraction<'cached'>) {
+    private async handleDeleteSubcommand(
+        interaction: ChatInputCommandInteraction<'cached'>,
+    ): Promise<void> {
         const timeout = 10; // Show confirmation modal for 10 seconds
         const role = interaction.options.getRole('role', true);
         const reason = interaction.options.getString('reason') ?? undefined;
@@ -343,7 +350,7 @@ export class RoleCommand extends GuildSlashCommand {
         interaction: Interaction<'cached'>,
         role: Role,
         options?: { allowManaged?: boolean; allowEveryone?: boolean },
-    ) {
+    ): void {
         // TODO
         // I'm not sure, but this function may need some more checks to also work properly
         // when the user is server owner

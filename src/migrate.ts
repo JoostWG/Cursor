@@ -15,7 +15,7 @@ export class Migrator {
         private readonly migrations: Map<string, Migration>,
     ) {}
 
-    public async migrate(action: 'up' | 'down') {
+    public async migrate(action: 'up' | 'down'): Promise<void> {
         await this.createMigrationTable().ifNotExists().execute();
 
         if (action === 'up') {
@@ -25,7 +25,7 @@ export class Migrator {
         }
     }
 
-    private async up() {
+    private async up(): Promise<void> {
         const existingMigrations = await this.db.selectFrom('migrations').selectAll().execute();
 
         const existingNames = existingMigrations.map((migration) => migration.name);
@@ -58,7 +58,7 @@ export class Migrator {
         }
     }
 
-    private async down() {
+    private async down(): Promise<void> {
         const latestBatch = await this.db
             .selectFrom('migrations')
             .selectAll()
@@ -97,6 +97,7 @@ export class Migrator {
         }
     }
 
+    // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
     private createMigrationTable() {
         return this.db.schema
             .createTable('migrations')
