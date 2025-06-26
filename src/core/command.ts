@@ -52,9 +52,7 @@ export abstract class BaseApplicationCommand<
     public abstract execute(ctx: Context<CommandInteraction>): Promise<void>;
 }
 
-export abstract class SlashCommand
-    extends BaseApplicationCommand<RESTPostAPIChatInputApplicationCommandsJSONBody>
-{
+export abstract class SlashCommand extends BaseApplicationCommand<RESTPostAPIChatInputApplicationCommandsJSONBody> {
     public constructor(data: OmitType<RESTPostAPIChatInputApplicationCommandsJSONBody>) {
         super({
             type: ApplicationCommandType.ChatInput,
@@ -77,9 +75,7 @@ export abstract class GuildSlashCommand extends SlashCommand {
     }
 }
 
-export abstract class ContextMenu
-    extends BaseApplicationCommand<RESTPostAPIContextMenuApplicationCommandsJSONBody>
-{
+export abstract class ContextMenu extends BaseApplicationCommand<RESTPostAPIContextMenuApplicationCommandsJSONBody> {
     public abstract override execute(ctx: ContextMenuContext): Promise<void>;
 }
 

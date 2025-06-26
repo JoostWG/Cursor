@@ -39,19 +39,22 @@ class QuestionView {
     public constructor(question: Question) {
         this.question = question;
 
-        const allAnswers = this.question.type === QuestionTypes.Boolean
-            ? ['True', 'False']
-            : this.question.allAnswers;
+        const allAnswers =
+            this.question.type === QuestionTypes.Boolean
+                ? ['True', 'False']
+                : this.question.allAnswers;
 
-        this.answers = new Map(allAnswers.map((answer, index) => [
-            index.toString(),
-            {
-                value: answer,
-                id: index.toString(),
-                correct: question.checkAnswer(answer),
-                revealed: false,
-            },
-        ]));
+        this.answers = new Map(
+            allAnswers.map((answer, index) => [
+                index.toString(),
+                {
+                    value: answer,
+                    id: index.toString(),
+                    correct: question.checkAnswer(answer),
+                    revealed: false,
+                },
+            ]),
+        );
 
         this.status = 'active';
     }
@@ -117,15 +120,15 @@ class QuestionView {
                                     label: answer.value,
                                     custom_id: answer.id,
                                     disabled: answer.revealed || this.status === 'finished',
-                                })
+                                }),
                             )
                             .toArray(),
                     }),
                     textDisplay({
                         content: subtext(
-                            `${this.question.category.name} - ${
-                                stringTitle(this.question.difficulty)
-                            }`,
+                            `${this.question.category.name} - ${stringTitle(
+                                this.question.difficulty,
+                            )}`,
                         ),
                     }),
                 ],

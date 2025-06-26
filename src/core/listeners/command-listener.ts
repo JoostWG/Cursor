@@ -37,8 +37,8 @@ export class CommandListener extends eventListener(Events.InteractionCreate) {
             } else if (interaction.isUserContextMenuCommand() && command.isUserContextMenu()) {
                 await command.execute(new UserContextMenuContext(interaction));
             } else if (
-                interaction.isMessageContextMenuCommand()
-                && command.isMessageContextMenu()
+                interaction.isMessageContextMenuCommand() &&
+                command.isMessageContextMenu()
             ) {
                 await command.execute(new MessageContextMenuContext(interaction));
             } else {

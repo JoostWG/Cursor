@@ -24,8 +24,6 @@ export class UserContextMenuContext extends ContextMenuContext<UserContextMenuCo
     //
 }
 
-export class MessageContextMenuContext
-    extends ContextMenuContext<MessageContextMenuCommandInteraction>
-{
+export class MessageContextMenuContext extends ContextMenuContext<MessageContextMenuCommandInteraction> {
     //
 }

@@ -36,9 +36,12 @@ export default defineConfig(
             'no-param-reassign': 'warn',
             'require-unicode-regexp': 'warn',
             'func-style': ['error', 'declaration'],
-            'no-console': ['warn', {
-                allow: ['error', 'warn', 'debug', 'info'],
-            }],
+            'no-console': [
+                'warn',
+                {
+                    allow: ['error', 'warn', 'debug', 'info'],
+                },
+            ],
             'no-duplicate-imports': 'error',
             // Below is all disabled
             'default-case': 'off', // I want to enable this but I also don't want to implement default cases will never be used in theory
@@ -65,9 +68,12 @@ export default defineConfig(
             'no-void': 'off',
 
             // TS
-            '@typescript-eslint/no-floating-promises': ['warn', {
-                ignoreIIFE: true,
-            }],
+            '@typescript-eslint/no-floating-promises': [
+                'warn',
+                {
+                    ignoreIIFE: true,
+                },
+            ],
             '@typescript-eslint/consistent-type-imports': [
                 'error',
                 { fixStyle: 'inline-type-imports' },
@@ -84,20 +90,11 @@ export default defineConfig(
                     format: ['PascalCase', 'camelCase'],
                 },
                 {
-                    selector: [
-                        'typeProperty',
-                        'parameterProperty',
-                        'objectLiteralProperty',
-                    ],
+                    selector: ['typeProperty', 'parameterProperty', 'objectLiteralProperty'],
                     format: ['PascalCase', 'camelCase', 'snake_case'],
                 },
                 {
-                    selector: [
-                        'variableLike',
-                        'method',
-                        'property',
-                        'memberLike',
-                    ],
+                    selector: ['variableLike', 'method', 'property', 'memberLike'],
                     format: ['camelCase'],
                     filter: { regex: '^_$', match: false },
                 },
@@ -146,23 +143,11 @@ export default defineConfig(
                 {
                     blankLine: 'always',
                     prev: '*',
-                    next: [
-                        'class',
-                        'function',
-                        'block',
-                        'block-like',
-                        'multiline-export',
-                    ],
+                    next: ['class', 'function', 'block', 'block-like', 'multiline-export'],
                 },
                 {
                     blankLine: 'always',
-                    prev: [
-                        'class',
-                        'function',
-                        'block',
-                        'block-like',
-                        'multiline-export',
-                    ],
+                    prev: ['class', 'function', 'block', 'block-like', 'multiline-export'],
                     next: '*',
                 },
             ],

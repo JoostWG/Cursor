@@ -27,11 +27,5 @@
         "tsconfig.tsbuildinfo": true,
         "**/**.db": true
     },
-    "cSpell.words": [
-        "defid",
-        "Joost",
-        "kysely",
-        "LATAM",
-        "twopart"
-    ]
+    "cSpell.words": ["defid", "Joost", "kysely", "LATAM", "twopart"]
 }

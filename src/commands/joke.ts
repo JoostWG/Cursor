@@ -91,9 +91,11 @@ export class JokeCommand extends SlashCommand {
     }
 
     public static create() {
-        return new this(axios.create({
-            baseURL: 'https://v2.jokeapi.dev',
-        }));
+        return new this(
+            axios.create({
+                baseURL: 'https://v2.jokeapi.dev',
+            }),
+        );
     }
 
     public override async execute({ interaction }: ChatInputContext) {
@@ -101,11 +103,11 @@ export class JokeCommand extends SlashCommand {
         const safe = interaction.options.getBoolean('safe') ?? true;
 
         if (
-            !safe
-            && !(
-                interaction.channel
-                && interaction.channel instanceof TextChannel
-                && interaction.channel.nsfw
+            !safe &&
+            !(
+                interaction.channel &&
+                interaction.channel instanceof TextChannel &&
+                interaction.channel.nsfw
             )
         ) {
             throw new CommandError('Setting `safe` to `False` can only be done in NSFW channels.');

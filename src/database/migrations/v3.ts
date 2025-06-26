@@ -12,10 +12,8 @@ export class V3 implements Migration {
             .addColumn('command_name', 'varchar(255)')
             .addColumn('command_type', 'integer', (col) => col.unsigned().notNull())
             .addColumn('options', 'json', (col) => col.notNull())
-            .addColumn(
-                'created_at',
-                'text',
-                (col) => col.defaultTo(sql`CURRENT_TIMESTAMP`).notNull(),
+            .addColumn('created_at', 'text', (col) =>
+                col.defaultTo(sql`CURRENT_TIMESTAMP`).notNull(),
             )
             .execute();
     }

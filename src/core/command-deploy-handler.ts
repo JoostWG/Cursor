@@ -52,10 +52,7 @@ export class CommandDeployHandler {
         if (!existingGlobalCommands || !this.equal(existingGlobalCommands, globalCommands)) {
             console.info('[commands] Global command mismatch. Redeploying...');
 
-            await this.api.put(
-                Routes.applicationCommands(discordAppId),
-                { body: globalCommands },
-            );
+            await this.api.put(Routes.applicationCommands(discordAppId), { body: globalCommands });
 
             await this.cache.set('global', globalCommands);
         }
@@ -65,10 +62,9 @@ export class CommandDeployHandler {
         if (!existingDevCommands || !this.equal(existingDevCommands, devCommands)) {
             console.info('[commands] Dev command mismatch. Redeploying...');
 
-            await this.api.put(
-                Routes.applicationGuildCommands(discordAppId, devGuildId),
-                { body: devCommands },
-            );
+            await this.api.put(Routes.applicationGuildCommands(discordAppId, devGuildId), {
+                body: devCommands,
+            });
 
             await this.cache.set('dev', devCommands);
         }

@@ -114,8 +114,9 @@ export class RoleCommand extends GuildSlashCommand {
                 value: `#${value.toString(16)}`,
             }))
             .filter(({ name }) => name.toLowerCase().includes(q))
-            .toSorted(({ name: aName }, { name: bName }) =>
-                aName.toLowerCase().indexOf(q) - bName.toLowerCase().indexOf(q)
+            .toSorted(
+                ({ name: aName }, { name: bName }) =>
+                    aName.toLowerCase().indexOf(q) - bName.toLowerCase().indexOf(q),
             );
     }
 
@@ -135,9 +136,9 @@ export class RoleCommand extends GuildSlashCommand {
 
             default:
                 throw new CommandError(
-                    `No corresponding subcommand handler found for ${
-                        inlineCode(interaction.options.getSubcommand())
-                    }.`,
+                    `No corresponding subcommand handler found for ${inlineCode(
+                        interaction.options.getSubcommand(),
+                    )}.`,
                 );
         }
     }
@@ -213,7 +214,7 @@ export class RoleCommand extends GuildSlashCommand {
                                                 ? `#${value.new.toString(16)}`
                                                 : value.new.toString(),
                                         ),
-                                    ].join(' ')
+                                    ].join(' '),
                                 ),
                                 '',
                                 bold('Reason'),
@@ -264,12 +265,10 @@ export class RoleCommand extends GuildSlashCommand {
                         textDisplay({
                             content: subtext(
                                 // + 1 because it lines up better
-                                `This message disappears ${
-                                    time(
-                                        Math.floor(Date.now() / 1000 + timeout + 1),
-                                        TimestampStyles.RelativeTime,
-                                    )
-                                }`,
+                                `This message disappears ${time(
+                                    Math.floor(Date.now() / 1000 + timeout + 1),
+                                    TimestampStyles.RelativeTime,
+                                )}`,
                             ),
                         }),
                     ],
