@@ -6,12 +6,14 @@ export interface TableCell {
 }
 
 export type TableRow =
-    | {
-          cells: TableCell[];
-      }
-    | {
-          divider: true;
-      }
+    | ({ after?: string } & (
+          | {
+                cells: TableCell[];
+            }
+          | {
+                divider: true;
+            }
+      ))
     | {
           split: true;
       };
@@ -88,6 +90,10 @@ export function stringTable({ rows }: { rows: TableRow[] }): string {
                     .map((width) => Line.Horizontal.repeat(width + 2))
                     .join(CrossSection.Top);
                 yield Corner.TopRight;
+            }
+
+            if ('after' in row) {
+                yield ` ${row.after}`;
             }
 
             yield '\n';

@@ -120,7 +120,7 @@ abstract class ScoreCategory {
     }
 
     public check(dice: Dice): boolean {
-        return this.isOpen() && this.validate(dice);
+        return this.isOpen() && dice.isRolled() && this.validate(dice);
     }
 
     public isOpen(): boolean {
@@ -381,6 +381,7 @@ type GameOptions = Readonly<{
 
 class Game {
     private rollCount: number;
+    private isCancelled: boolean;
 
     // eslint-disable-next-line @typescript-eslint/max-params
     public constructor(
@@ -392,6 +393,7 @@ class Game {
         },
     ) {
         this.rollCount = 0;
+        this.isCancelled = false;
     }
 
     public async start(): Promise<void> {
@@ -408,17 +410,39 @@ class Game {
         const collector = response.resource.message
             .createMessageComponentCollector({
                 filter: (inter) => inter.user.id === this.interaction.user.id,
+                time: 60_000,
             })
             .on('collect', async (componentInteraction) => {
-                this.handleComponentInteraction(componentInteraction);
-                collector.resetTimer();
-
-                if (this.scoreCard.isComplete()) {
+                if (componentInteraction.customId === 'cancel') {
+                    await this.cancel(false);
                     collector.stop();
+                } else {
+                    this.handleComponentInteraction(componentInteraction);
+
+                    collector.resetTimer();
+
+                    if (this.scoreCard.isComplete()) {
+                        collector.stop();
+                    }
                 }
 
                 await componentInteraction.update({ components: [this.buildContainer()] });
+            })
+            .on('end', async () => {
+                await this.cancel();
             });
+    }
+
+    private async cancel(updateMessage = true): Promise<void> {
+        if (this.isCancelled) {
+            return;
+        }
+
+        this.isCancelled = true;
+
+        if (updateMessage) {
+            await this.interaction.editReply({ components: [this.buildContainer()] });
+        }
     }
 
     private handleComponentInteraction(interaction: Interaction): void {
@@ -429,6 +453,8 @@ class Game {
                 this.handleDieButton(Number(match[1]));
             } else if (interaction.customId === 'roll') {
                 this.handleRollButton();
+            } else if (interaction.customId === 'toggle') {
+                this.handleToggleButton();
             }
         } else if (interaction.isStringSelectMenu()) {
             this.handleSelectMenu(interaction);
@@ -447,6 +473,12 @@ class Game {
 
         this.dice.roll();
         this.rollCount++;
+    }
+
+    private handleToggleButton(): void {
+        for (const die of this.dice) {
+            die.isHolding = !die.isHolding;
+        }
     }
 
     private handleSelectMenu({
@@ -470,75 +502,126 @@ class Game {
     }
 
     private canRoll(): boolean {
-        return this.rollCount < this.options.maxRollCount;
+        return (
+            this.rollCount < this.options.maxRollCount && this.dice.some((die) => !die.isHolding)
+        );
     }
 
     private buildContainer(): APIContainerComponent {
-        const actions = this.scoreCard.getActions(this.dice);
-        const scratchOptions = this.scoreCard.getScratchOptions(this.dice);
+        const actionRows: APIComponentInContainer[] = [];
 
-        const actionRows: APIComponentInContainer[] = this.scoreCard.isComplete()
-            ? []
-            : [
-                  actionRow({
-                      components: [
-                          button({
-                              style: ButtonStyle.Success,
-                              label: `Roll ${this.rollCount}/${this.options.maxRollCount}`,
-                              custom_id: 'roll',
-                              disabled: !this.canRoll(),
-                          }),
-                      ],
-                  }),
-                  actionRow({
-                      components: this.dice.map((die, index) =>
-                          button({
-                              style: die.isHolding ? ButtonStyle.Primary : ButtonStyle.Secondary,
-                              label: die.value ? die.value.toString() : '?',
-                              custom_id: `dice${index}`,
-                              disabled: !die.value,
-                          }),
-                      ),
-                  }),
-                  actionRow({
-                      components: [
-                          stringSelect({
-                              placeholder: actions.length ? 'Action' : 'No actions available',
-                              custom_id: 'action',
-                              options: actions.length
-                                  ? actions.map((category) => ({
-                                        label: `${category.name} - ${category.points(this.dice)}`,
-                                        value: category.id,
-                                    }))
-                                  : [{ label: 'null', value: 'null' }],
-                              disabled: !actions.length,
-                          }),
-                      ],
-                  }),
-                  actionRow({
-                      components: [
-                          stringSelect({
-                              placeholder: scratchOptions.length
-                                  ? 'Scratch'
-                                  : 'No scratches available',
-                              custom_id: 'scratch',
-                              options: scratchOptions.length
-                                  ? scratchOptions.map((category) => ({
-                                        label: category.name,
-                                        value: category.id,
-                                    }))
-                                  : [{ label: 'null', value: 'null' }],
-                              disabled: !scratchOptions.length,
-                          }),
-                      ],
-                  }),
-              ];
+        if (!this.scoreCard.isComplete() && !this.isCancelled) {
+            actionRows.push(
+                actionRow({
+                    components: [
+                        button({
+                            style: ButtonStyle.Success,
+                            label: `Roll ${this.rollCount}/${this.options.maxRollCount}`,
+                            custom_id: 'roll',
+                            disabled: !this.canRoll(),
+                        }),
+                        button({
+                            style: ButtonStyle.Primary,
+                            label: 'Toggle all dice',
+                            custom_id: 'toggle',
+                            disabled: !this.dice.isRolled(),
+                        }),
+                        button({
+                            style: ButtonStyle.Danger,
+                            label: 'Stop game',
+                            custom_id: 'cancel',
+                            disabled: this.isCancelled, // Redundant
+                        }),
+                    ],
+                }),
+                actionRow({
+                    components: this.dice.map((die, index) =>
+                        button({
+                            style: die.isHolding ? ButtonStyle.Primary : ButtonStyle.Secondary,
+                            label: die.value ? die.value.toString() : '?',
+                            custom_id: `dice${index}`,
+                            disabled: !die.value,
+                        }),
+                    ),
+                }),
+            );
+
+            if (this.dice.isRolled()) {
+                const actions = this.scoreCard.getActions(this.dice);
+                const scratchOptions = this.scoreCard.getScratchOptions(this.dice);
+
+                actionRows.push(
+                    actionRow({
+                        components: [
+                            actions.length
+                                ? stringSelect({
+                                      placeholder: 'Action',
+                                      custom_id: 'action',
+                                      options: actions.map((category) => ({
+                                          label: `${category.name} - ${category.points(this.dice)}`,
+                                          value: category.id,
+                                      })),
+                                  })
+                                : stringSelect({
+                                      placeholder: 'No actions available',
+                                      custom_id: 'action',
+                                      options: [{ label: 'null', value: 'null' }],
+                                      disabled: true,
+                                  }),
+                        ],
+                    }),
+                    actionRow({
+                        components: [
+                            scratchOptions.length
+                                ? stringSelect({
+                                      placeholder: 'Scratch',
+                                      custom_id: 'scratch',
+                                      options: scratchOptions.map((category) => ({
+                                          label: category.name,
+                                          value: category.id,
+                                      })),
+                                  })
+                                : stringSelect({
+                                      placeholder: 'No scratches available',
+                                      custom_id: 'scratch',
+                                      options: [{ label: 'null', value: 'null' }],
+                                      disabled: true,
+                                  }),
+                        ],
+                    }),
+                );
+            } else {
+                actionRows.push(
+                    actionRow({
+                        components: [
+                            stringSelect({
+                                placeholder: 'Roll dice to see actions',
+                                custom_id: 'action',
+                                options: [{ label: 'null', value: 'null' }],
+                                disabled: true,
+                            }),
+                        ],
+                    }),
+                    actionRow({
+                        components: [
+                            stringSelect({
+                                placeholder: 'Roll dice to see scratches',
+                                custom_id: 'scratch',
+                                options: [{ label: 'null', value: 'null' }],
+                                disabled: true,
+                            }),
+                        ],
+                    }),
+                );
+            }
+        }
 
         const tableRows = this.scoreCard.scoreCategories.reduce<TableRow[]>((output, category) => {
             output.push({
+                after: category.check(this.dice) ? `[${category.points(this.dice)}]` : '',
                 cells: [
                     {
-                        content: `${this.dice.isRolled() && category.check(this.dice) ? '>' : ' '} ${category.name}`,
+                        content: `${category.check(this.dice) ? '>' : ' '} ${category.name}`,
                     },
                     {
                         align: 'right',
