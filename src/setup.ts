@@ -11,6 +11,7 @@ import { TagCommand } from './commands/tag';
 import { TriviaCommand } from './commands/trivia';
 import { UrbanDictionaryCommand } from './commands/urban-dictionary';
 import { UserCommand } from './commands/user';
+import { YahtzeeCommand } from './commands/yahtzee';
 import { Bot } from './core/bot';
 import { CommandCollection } from './core/command-collection';
 import { CommandDataCache, CommandDeployHandler } from './core/command-deploy-handler';
@@ -50,6 +51,7 @@ export async function createBot({ token }: { token: string }): Promise<Bot> {
         new TriviaCommand(),
         UrbanDictionaryCommand.create(),
         new UserCommand(),
+        new YahtzeeCommand(),
     ]);
 
     return new Bot({
