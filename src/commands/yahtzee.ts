@@ -537,7 +537,9 @@ class Game {
         const tableRows = this.scoreCard.scoreCategories.reduce<TableRow[]>((output, category) => {
             output.push({
                 cells: [
-                    { content: category.name },
+                    {
+                        content: `${this.dice.isRolled() && category.check(this.dice) ? '>' : ' '} ${category.name}`,
+                    },
                     {
                         align: 'right',
                         content: category.isOpen()
