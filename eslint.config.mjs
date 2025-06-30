@@ -100,7 +100,6 @@ export default defineConfig(
                 },
             ],
             '@typescript-eslint/explicit-member-accessibility': 'error',
-            '@typescript-eslint/prefer-regexp-exec': 'warn',
             '@typescript-eslint/prefer-optional-chain': 'warn',
             '@typescript-eslint/no-non-null-assertion': 'error',
             '@typescript-eslint/prefer-readonly': 'warn',
@@ -113,6 +112,8 @@ export default defineConfig(
                 },
             ],
             // Below is all disabled
+            '@typescript-eslint/prefer-regexp-exec': 'off',
+            '@typescript-eslint/require-array-sort-compare': 'off',
             '@typescript-eslint/no-unsafe-type-assertion': 'off',
             '@typescript-eslint/non-nullable-type-assertion-style': 'off',
             '@typescript-eslint/strict-boolean-expressions': 'off',
