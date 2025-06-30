@@ -296,10 +296,21 @@ class Chance extends ScoreCategory {
     }
 }
 
+type ScoreCardOptions = Readonly<{
+    bonus: Readonly<{
+        threshold: number;
+        reward: number;
+    }>;
+}>;
+
 class ScoreCard {
     public readonly scoreCategories: ScoreCategory[];
 
-    public constructor() {
+    public constructor(
+        public readonly options: ScoreCardOptions = {
+            bonus: { threshold: 63, reward: 35 },
+        },
+    ) {
         this.scoreCategories = [
             new UpperSectionScoreCategory(1, 'Ones'),
             new UpperSectionScoreCategory(2, 'Twos'),
@@ -340,7 +351,9 @@ class ScoreCard {
     }
 
     public getUpperSectionBonus(): number {
-        return this.getUpperSectionSubtotal() >= 63 ? 35 : 0;
+        return this.getUpperSectionSubtotal() >= this.options.bonus.threshold
+            ? this.options.bonus.reward
+            : 0;
     }
 
     public getUpperSectionTotal(): number {
@@ -362,13 +375,21 @@ class ScoreCard {
     }
 }
 
+type GameOptions = Readonly<{
+    maxRollCount: number;
+}>;
+
 class Game {
     private rollCount: number;
 
+    // eslint-disable-next-line @typescript-eslint/max-params
     public constructor(
         private readonly interaction: ChatInputCommandInteraction,
         private readonly scoreCard: ScoreCard,
         private readonly dice: Dice,
+        private readonly options: GameOptions = {
+            maxRollCount: 3,
+        },
     ) {
         this.rollCount = 0;
     }
@@ -449,7 +470,7 @@ class Game {
     }
 
     private canRoll(): boolean {
-        return this.rollCount < 3;
+        return this.rollCount < this.options.maxRollCount;
     }
 
     private buildContainer(): APIContainerComponent {
@@ -463,7 +484,7 @@ class Game {
                       components: [
                           button({
                               style: ButtonStyle.Success,
-                              label: `Roll ${this.rollCount}/3`,
+                              label: `Roll ${this.rollCount}/${this.options.maxRollCount}`,
                               custom_id: 'roll',
                               disabled: !this.canRoll(),
                           }),
@@ -543,7 +564,9 @@ class Game {
                         },
                         {
                             cells: [
-                                { content: 'Bonus' },
+                                {
+                                    content: `Bonus (+${this.scoreCard.options.bonus.reward} if >= ${this.scoreCard.options.bonus.threshold})`,
+                                },
                                 {
                                     align: 'right',
                                     content: this.scoreCard.getUpperSectionBonus().toString(),
