@@ -11,8 +11,10 @@ export class V1 implements Migration {
             .addColumn('name', 'varchar(255)', (col) => col.notNull())
             .addColumn('content', 'text', (col) => col.notNull())
             .addColumn('uses', 'integer', (col) => col.unsigned().defaultTo(0))
-            .addColumn('created_at', 'text', (col) =>
-                col.defaultTo(sql`CURRENT_TIMESTAMP`).notNull(),
+            .addColumn(
+                'created_at',
+                'text',
+                (col) => col.defaultTo(sql`CURRENT_TIMESTAMP`).notNull(),
             )
             .addUniqueConstraint('guild_id_name', ['guild_id', 'name'])
             .execute();

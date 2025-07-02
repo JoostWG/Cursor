@@ -1,18 +1,18 @@
 import {
-    type APIComponentInContainer,
-    type APIContainerComponent,
     ButtonStyle,
-    type ChatInputCommandInteraction,
+    MessageFlags,
     codeBlock,
     heading,
+    type APIComponentInContainer,
+    type APIContainerComponent,
+    type ChatInputCommandInteraction,
     type Interaction,
-    MessageFlags,
     type StringSelectMenuInteraction,
 } from 'discord.js';
 import { SlashCommand } from '../core/command';
 import type { ChatInputContext } from '../core/context';
-import { stringTable, type TableRow } from '../utils/table';
 import { actionRow, button, container, stringSelect, textDisplay } from '../utils/builders';
+import { stringTable, type TableRow } from '../utils/table';
 
 type DieValue = 1 | 2 | 3 | 4 | 5 | 6;
 type ScoreCardSection = 'upper' | 'lower';
@@ -147,10 +147,7 @@ class UpperSectionScoreCategory extends ScoreCategory {
     public override readonly section = 'upper';
     public override readonly id: string;
 
-    public constructor(
-        private readonly value: DieValue,
-        public override readonly name: string,
-    ) {
+    public constructor(private readonly value: DieValue, public override readonly name: string) {
         super();
         this.id = this.name.toLowerCase();
     }
@@ -241,9 +238,9 @@ class SmallStraight extends ScoreCategory {
 
     protected override validate(dice: Dice): boolean {
         return (
-            dice.includesAll([1, 2, 3, 4]) ||
-            dice.includesAll([2, 3, 4, 5]) ||
-            dice.includesAll([3, 4, 5, 6])
+            dice.includesAll([1, 2, 3, 4])
+            || dice.includesAll([2, 3, 4, 5])
+            || dice.includesAll([3, 4, 5, 6])
         );
     }
 }
@@ -541,7 +538,7 @@ class Game {
                             label: die.value ? die.value.toString() : '?',
                             custom_id: `dice${index}`,
                             disabled: !die.value,
-                        }),
+                        })
                     ),
                 }),
             );
@@ -555,38 +552,38 @@ class Game {
                         components: [
                             actions.length
                                 ? stringSelect({
-                                      placeholder: 'Action',
-                                      custom_id: 'action',
-                                      options: actions.map((category) => ({
-                                          label: `${category.name} - ${category.points(this.dice)}`,
-                                          value: category.id,
-                                      })),
-                                  })
+                                    placeholder: 'Action',
+                                    custom_id: 'action',
+                                    options: actions.map((category) => ({
+                                        label: `${category.name} - ${category.points(this.dice)}`,
+                                        value: category.id,
+                                    })),
+                                })
                                 : stringSelect({
-                                      placeholder: 'No actions available',
-                                      custom_id: 'action',
-                                      options: [{ label: 'null', value: 'null' }],
-                                      disabled: true,
-                                  }),
+                                    placeholder: 'No actions available',
+                                    custom_id: 'action',
+                                    options: [{ label: 'null', value: 'null' }],
+                                    disabled: true,
+                                }),
                         ],
                     }),
                     actionRow({
                         components: [
                             scratchOptions.length
                                 ? stringSelect({
-                                      placeholder: 'Scratch',
-                                      custom_id: 'scratch',
-                                      options: scratchOptions.map((category) => ({
-                                          label: category.name,
-                                          value: category.id,
-                                      })),
-                                  })
+                                    placeholder: 'Scratch',
+                                    custom_id: 'scratch',
+                                    options: scratchOptions.map((category) => ({
+                                        label: category.name,
+                                        value: category.id,
+                                    })),
+                                })
                                 : stringSelect({
-                                      placeholder: 'No scratches available',
-                                      custom_id: 'scratch',
-                                      options: [{ label: 'null', value: 'null' }],
-                                      disabled: true,
-                                  }),
+                                    placeholder: 'No scratches available',
+                                    custom_id: 'scratch',
+                                    options: [{ label: 'null', value: 'null' }],
+                                    disabled: true,
+                                }),
                         ],
                     }),
                 );
@@ -628,8 +625,8 @@ class Game {
                         content: category.isOpen()
                             ? ' '
                             : category.isScratched()
-                              ? 'X'
-                              : String(category.getScoredPoints() ?? ''),
+                            ? 'X'
+                            : String(category.getScoredPoints() ?? ''),
                     },
                 ],
             });
@@ -650,7 +647,8 @@ class Game {
                         {
                             cells: [
                                 {
-                                    content: `Bonus (+${this.scoreCard.options.bonus.reward} if >= ${this.scoreCard.options.bonus.threshold})`,
+                                    content:
+                                        `Bonus (+${this.scoreCard.options.bonus.reward} if >= ${this.scoreCard.options.bonus.threshold})`,
                                 },
                                 {
                                     align: 'right',

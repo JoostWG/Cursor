@@ -40,10 +40,9 @@ class QuestionView {
     public constructor(question: Question) {
         this.question = question;
 
-        const allAnswers =
-            this.question.type === QuestionTypes.Boolean
-                ? ['True', 'False']
-                : this.question.allAnswers;
+        const allAnswers = this.question.type === QuestionTypes.Boolean
+            ? ['True', 'False']
+            : this.question.allAnswers;
 
         this.answers = new Map(
             allAnswers.map((answer, index) => [
@@ -121,15 +120,17 @@ class QuestionView {
                                     label: answer.value,
                                     custom_id: answer.id,
                                     disabled: answer.revealed || this.status === 'finished',
-                                }),
+                                })
                             )
                             .toArray(),
                     }),
                     textDisplay({
                         content: subtext(
-                            `${this.question.category.name} - ${stringTitle(
-                                this.question.difficulty,
-                            )}`,
+                            `${this.question.category.name} - ${
+                                stringTitle(
+                                    this.question.difficulty,
+                                )
+                            }`,
                         ),
                     }),
                 ],

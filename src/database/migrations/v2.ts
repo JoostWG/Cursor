@@ -7,45 +7,59 @@ export class V2 implements Migration {
             .createTable('rps_games')
             .addColumn('id', 'integer', (col) => col.primaryKey().autoIncrement().notNull())
             .addColumn('user_id', 'varchar(255)', (col) => col.notNull())
-            .addColumn('created_at', 'text', (col) =>
-                col.defaultTo(sql`CURRENT_TIMESTAMP`).notNull(),
+            .addColumn(
+                'created_at',
+                'text',
+                (col) => col.defaultTo(sql`CURRENT_TIMESTAMP`).notNull(),
             )
             .execute();
 
         await schema
             .createTable('rps_game_user')
             .addColumn('id', 'integer', (col) => col.primaryKey().autoIncrement().notNull())
-            .addColumn('rps_game_id', 'integer', (col) =>
-                col.notNull().references('rps_games.id').onDelete('cascade'),
+            .addColumn(
+                'rps_game_id',
+                'integer',
+                (col) => col.notNull().references('rps_games.id').onDelete('cascade'),
             )
             .addColumn('user_id', 'varchar(255)', (col) => col.notNull())
-            .addColumn('created_at', 'text', (col) =>
-                col.defaultTo(sql`CURRENT_TIMESTAMP`).notNull(),
+            .addColumn(
+                'created_at',
+                'text',
+                (col) => col.defaultTo(sql`CURRENT_TIMESTAMP`).notNull(),
             )
             .execute();
 
         await schema
             .createTable('rps_rounds')
             .addColumn('id', 'integer', (col) => col.primaryKey().autoIncrement().notNull())
-            .addColumn('rps_game_id', 'integer', (col) =>
-                col.notNull().references('rps_games.id').onDelete('cascade'),
+            .addColumn(
+                'rps_game_id',
+                'integer',
+                (col) => col.notNull().references('rps_games.id').onDelete('cascade'),
             )
             .addColumn('nr', 'integer', (col) => col.unsigned().notNull())
-            .addColumn('created_at', 'text', (col) =>
-                col.defaultTo(sql`CURRENT_TIMESTAMP`).notNull(),
+            .addColumn(
+                'created_at',
+                'text',
+                (col) => col.defaultTo(sql`CURRENT_TIMESTAMP`).notNull(),
             )
             .execute();
 
         await schema
             .createTable('rps_choices')
             .addColumn('id', 'integer', (col) => col.primaryKey().autoIncrement().notNull())
-            .addColumn('rps_round_id', 'integer', (col) =>
-                col.notNull().references('rps_rounds.id').onDelete('cascade'),
+            .addColumn(
+                'rps_round_id',
+                'integer',
+                (col) => col.notNull().references('rps_rounds.id').onDelete('cascade'),
             )
             .addColumn('user_id', 'varchar(255)', (col) => col.notNull())
             .addColumn('choice', 'varchar(255)', (col) => col.notNull())
-            .addColumn('created_at', 'text', (col) =>
-                col.defaultTo(sql`CURRENT_TIMESTAMP`).notNull(),
+            .addColumn(
+                'created_at',
+                'text',
+                (col) => col.defaultTo(sql`CURRENT_TIMESTAMP`).notNull(),
             )
             .execute();
     }

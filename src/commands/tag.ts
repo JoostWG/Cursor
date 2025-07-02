@@ -32,14 +32,11 @@ abstract class TagManager {
         name: string;
         content: string;
     }): Promise<TagData>;
-    public abstract update(
-        tagId: number,
-        data: {
-            name?: string;
-            content?: string;
-            uses?: number;
-        },
-    ): Promise<void>;
+    public abstract update(tagId: number, data: {
+        name?: string;
+        content?: string;
+        uses?: number;
+    }): Promise<void>;
     public abstract delete(tagId: number): Promise<void>;
 }
 
@@ -110,14 +107,11 @@ class DatabaseTagManager implements TagManager {
             .executeTakeFirstOrThrow();
     }
 
-    public async update(
-        tagId: number,
-        data: {
-            name?: string;
-            content?: string;
-            uses?: number;
-        },
-    ): Promise<void> {
+    public async update(tagId: number, data: {
+        name?: string;
+        content?: string;
+        uses?: number;
+    }): Promise<void> {
         await this.db.updateTable('tags').where('id', '=', tagId).set(data).execute();
     }
 
@@ -263,9 +257,11 @@ export class TagCommand extends GuildSlashCommand {
 
             default:
                 await interaction.reply({
-                    content: `No corresponding subcommand handler found for ${inlineCode(
-                        interaction.options.getSubcommand(),
-                    )}.`,
+                    content: `No corresponding subcommand handler found for ${
+                        inlineCode(
+                            interaction.options.getSubcommand(),
+                        )
+                    }.`,
                     flags: MessageFlags.Ephemeral,
                 });
                 break;

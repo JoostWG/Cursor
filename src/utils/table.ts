@@ -6,17 +6,20 @@ export interface TableCell {
 }
 
 export type TableRow =
-    | ({ after?: string } & (
-          | {
+    | (
+        & { after?: string }
+        & (
+            | {
                 cells: TableCell[];
             }
-          | {
+            | {
                 divider: true;
             }
-      ))
+        )
+    )
     | {
-          split: true;
-      };
+        split: true;
+    };
 
 /* eslint-disable @typescript-eslint/naming-convention */
 const Corner = {
@@ -45,7 +48,7 @@ export function stringTable({ rows }: { rows: TableRow[] }): string {
     const columnCount = Math.max(...dataRows.map((row) => row.cells.length));
     const columnWidths = range(columnCount)
         .map((columnIndex) =>
-            Math.max(...dataRows.map((row) => row.cells[columnIndex].content.length)),
+            Math.max(...dataRows.map((row) => row.cells[columnIndex].content.length))
         )
         .toArray();
 
@@ -62,7 +65,16 @@ export function stringTable({ rows }: { rows: TableRow[] }): string {
                 yield row.cells
                     .map(
                         (cell, index) =>
-                            ` ${cell.content[cell.align === 'right' ? 'padStart' : 'padEnd'](columnWidths[index], ' ')} `,
+                            ` ${
+                                cell.content[
+                                    cell.align === 'right'
+                                        ? 'padStart'
+                                        : 'padEnd'
+                                ](
+                                    columnWidths[index],
+                                    ' ',
+                                )
+                            } `,
                     )
                     .join(Line.Vertical);
                 yield Line.Vertical;

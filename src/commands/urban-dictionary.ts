@@ -42,8 +42,8 @@ interface Definition {
 type ResponseData<T> =
     | T
     | {
-          error: string | number;
-      };
+        error: string | number;
+    };
 
 interface Pagination {
     currentPage: number;
@@ -406,20 +406,20 @@ class UrbanDictionary {
 
         return item
             ? {
-                  urbanDictionary: this,
-                  definition: item.getDefinition(),
-                  history: this.history,
-                  pagination: {
-                      currentPage: item.index,
-                      totalPages: item.definitions.length,
-                  },
-              }
+                urbanDictionary: this,
+                definition: item.getDefinition(),
+                history: this.history,
+                pagination: {
+                    currentPage: item.index,
+                    totalPages: item.definitions.length,
+                },
+            }
             : {
-                  urbanDictionary: this,
-                  definition: null,
-                  history: this.history,
-                  pagination: { currentPage: 0, totalPages: 0 },
-              };
+                urbanDictionary: this,
+                definition: null,
+                history: this.history,
+                pagination: { currentPage: 0, totalPages: 0 },
+            };
     }
 }
 
