@@ -43,7 +43,7 @@ const CrossSection = {
 };
 /* eslint-enable @typescript-eslint/naming-convention */
 
-export function stringTable({ rows }: { rows: TableRow[] }): string {
+export function stringTable(rows: TableRow[]): string {
     const dataRows = rows.filter((row) => 'cells' in row);
     const columnCount = Math.max(...dataRows.map((row) => row.cells.length));
     const columnWidths = range(columnCount)
@@ -122,3 +122,18 @@ export function stringTable({ rows }: { rows: TableRow[] }): string {
         .toArray()
         .join('');
 }
+
+export const table = {
+    cell(content: { toString: () => string }, options?: Omit<TableCell, 'content'>): TableCell {
+        return { content: content.toString(), ...(options ?? {}) };
+    },
+    row(cells: TableCell[], options?: { after?: string }): TableRow {
+        return { cells, ...(options ?? {}) };
+    },
+    divider(options?: { after?: string }): TableRow {
+        return { divider: true, ...(options ?? {}) };
+    },
+    split(): TableRow {
+        return { split: true };
+    },
+};

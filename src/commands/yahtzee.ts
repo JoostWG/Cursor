@@ -3,16 +3,22 @@ import {
     MessageFlags,
     codeBlock,
     heading,
-    type APIComponentInContainer,
+    type APIActionRowComponent,
+    type APIButtonComponentWithCustomId,
+    type APIComponentInMessageActionRow,
     type APIContainerComponent,
+    type APIStringSelectComponent,
     type ChatInputCommandInteraction,
-    type Interaction,
+    type CommandInteraction,
+    type InteractionCallbackResponse,
+    type MessageComponentInteraction,
     type StringSelectMenuInteraction,
 } from 'discord.js';
 import { SlashCommand } from '../core/command';
 import type { ChatInputContext } from '../core/context';
 import { actionRow, button, container, stringSelect, textDisplay } from '../utils/builders';
-import { stringTable, type TableRow } from '../utils/table';
+import { stringTable, table, type TableRow } from '../utils/table';
+import { ComponentUI } from '../utils/ui';
 
 type DieValue = 1 | 2 | 3 | 4 | 5 | 6;
 type ScoreCardSection = 'upper' | 'lower';
@@ -376,58 +382,54 @@ type GameOptions = Readonly<{
     maxRollCount: number;
 }>;
 
-class Game {
+class Game extends ComponentUI {
     private rollCount: number;
     private isCancelled: boolean;
 
     // eslint-disable-next-line @typescript-eslint/max-params
     public constructor(
-        private readonly interaction: ChatInputCommandInteraction,
+        interaction: ChatInputCommandInteraction,
         private readonly scoreCard: ScoreCard,
         private readonly dice: Dice,
         private readonly options: GameOptions = {
             maxRollCount: 3,
         },
     ) {
+        super(interaction, {
+            time: 60_000,
+        });
         this.rollCount = 0;
         this.isCancelled = false;
     }
 
-    public async start(): Promise<void> {
-        const response = await this.interaction.reply({
+    protected override async sendInitialMessage(
+        interaction: CommandInteraction,
+    ): Promise<InteractionCallbackResponse> {
+        return await interaction.reply({
             flags: [MessageFlags.IsComponentsV2],
             components: [this.buildContainer()],
             withResponse: true,
         });
+    }
 
-        if (!response.resource?.message) {
-            return;
+    protected override async after(interaction: MessageComponentInteraction): Promise<void> {
+        this.collector.resetTimer();
+
+        if (this.scoreCard.isComplete()) {
+            this.collector.stop();
         }
 
-        const collector = response.resource.message
-            .createMessageComponentCollector({
-                filter: (inter) => inter.user.id === this.interaction.user.id,
-                time: 60_000,
-            })
-            .on('collect', async (componentInteraction) => {
-                if (componentInteraction.customId === 'cancel') {
-                    await this.cancel(false);
-                    collector.stop();
-                } else {
-                    this.handleComponentInteraction(componentInteraction);
+        await interaction.update({ components: [this.buildContainer()] });
+    }
 
-                    collector.resetTimer();
+    protected override async onEnd(): Promise<void> {
+        await this.cancel();
+    }
 
-                    if (this.scoreCard.isComplete()) {
-                        collector.stop();
-                    }
-                }
-
-                await componentInteraction.update({ components: [this.buildContainer()] });
-            })
-            .on('end', async () => {
-                await this.cancel();
-            });
+    private canRoll(): boolean {
+        return (
+            this.rollCount < this.options.maxRollCount && this.dice.some((die) => !die.isHolding)
+        );
     }
 
     private async cancel(updateMessage = true): Promise<void> {
@@ -442,40 +444,136 @@ class Game {
         }
     }
 
-    private handleComponentInteraction(interaction: Interaction): void {
-        if (interaction.isButton()) {
-            const match = interaction.customId.match(/^dice([0-4])$/u);
+    private rollButton(): APIButtonComponentWithCustomId {
+        return this.listen(
+            button({
+                style: ButtonStyle.Success,
+                label: `Roll ${this.rollCount}/${this.options.maxRollCount}`,
+                custom_id: 'roll',
+                disabled: !this.canRoll(),
+            }),
+            async () => {
+                if (!this.canRoll()) {
+                    return;
+                }
 
-            if (match) {
-                this.handleDieButton(Number(match[1]));
-            } else if (interaction.customId === 'roll') {
-                this.handleRollButton();
-            } else if (interaction.customId === 'toggle') {
-                this.handleToggleButton();
-            }
-        } else if (interaction.isStringSelectMenu()) {
-            this.handleSelectMenu(interaction);
-        }
+                this.dice.roll();
+                this.rollCount++;
+            },
+        );
     }
 
-    private handleDieButton(dieIndex: number): void {
-        const die = this.dice[dieIndex];
-        die.isHolding = !die.isHolding;
+    private toggleDiceButton(): APIButtonComponentWithCustomId {
+        return this.listen(
+            button({
+                style: ButtonStyle.Primary,
+                label: 'Toggle all dice',
+                custom_id: 'toggle',
+                disabled: !this.dice.isRolled(),
+            }),
+            async () => {
+                for (const die of this.dice) {
+                    die.isHolding = !die.isHolding;
+                }
+            },
+        );
     }
 
-    private handleRollButton(): void {
-        if (!this.canRoll()) {
-            return;
-        }
-
-        this.dice.roll();
-        this.rollCount++;
+    private stopButton(): APIButtonComponentWithCustomId {
+        return this.listen(
+            button({
+                style: ButtonStyle.Danger,
+                label: 'Stop game',
+                custom_id: 'cancel',
+                disabled: this.isCancelled, // Redundant
+            }),
+            async () => {
+                await this.cancel(false);
+                this.collector.stop();
+            },
+        );
     }
 
-    private handleToggleButton(): void {
-        for (const die of this.dice) {
-            die.isHolding = !die.isHolding;
+    private dieButton(die: Die, index: number): APIButtonComponentWithCustomId {
+        return this.listen(
+            button({
+                style: die.isHolding ? ButtonStyle.Primary : ButtonStyle.Secondary,
+                label: die.value ? die.value.toString() : '?',
+                custom_id: `dice${index}`,
+                disabled: !die.value,
+            }),
+            async () => {
+                die.isHolding = !die.isHolding;
+            },
+        );
+    }
+
+    private actionSelectMenu(actions: ScoreCategory[]): APIStringSelectComponent {
+        if (!this.dice.isRolled()) {
+            return stringSelect({
+                placeholder: 'Roll dice to see actions',
+                custom_id: 'action',
+                options: [{ label: 'null', value: 'null' }],
+                disabled: true,
+            });
         }
+
+        if (!actions.length) {
+            return stringSelect({
+                placeholder: 'No actions available',
+                custom_id: 'action',
+                options: [{ label: 'null', value: 'null' }],
+                disabled: true,
+            });
+        }
+
+        return this.listen(
+            stringSelect({
+                placeholder: 'Action',
+                custom_id: 'action',
+                options: actions.map((category) => ({
+                    label: `${category.name} - ${category.points(this.dice)}`,
+                    value: category.id,
+                })),
+            }),
+            async (interaction) => {
+                this.handleSelectMenu(interaction);
+            },
+        );
+    }
+
+    private scratchSelectMenu(scratchOptions: ScoreCategory[]): APIStringSelectComponent {
+        if (!this.dice.isRolled()) {
+            return stringSelect({
+                placeholder: 'Roll dice to see scratches',
+                custom_id: 'scratch',
+                options: [{ label: 'null', value: 'null' }],
+                disabled: true,
+            });
+        }
+
+        if (!scratchOptions.length) {
+            return stringSelect({
+                placeholder: 'No scratches available',
+                custom_id: 'scratch',
+                options: [{ label: 'null', value: 'null' }],
+                disabled: true,
+            });
+        }
+
+        return this.listen(
+            stringSelect({
+                placeholder: 'Scratch',
+                custom_id: 'scratch',
+                options: scratchOptions.map((category) => ({
+                    label: category.name,
+                    value: category.id,
+                })),
+            }),
+            async (interaction) => {
+                this.handleSelectMenu(interaction);
+            },
+        );
     }
 
     private handleSelectMenu({
@@ -498,221 +596,106 @@ class Game {
         this.rollCount = 0;
     }
 
-    private canRoll(): boolean {
-        return (
-            this.rollCount < this.options.maxRollCount && this.dice.some((die) => !die.isHolding)
-        );
+    private buildActionRows(): APIActionRowComponent<APIComponentInMessageActionRow>[] {
+        if (this.scoreCard.isComplete() || this.isCancelled) {
+            return [];
+        }
+
+        return [
+            actionRow({
+                components: [
+                    this.rollButton(),
+                    this.toggleDiceButton(),
+                    this.stopButton(),
+                ],
+            }),
+            actionRow({
+                components: this.dice.map((die, index) => this.dieButton(die, index)),
+            }),
+            actionRow({
+                components: [
+                    this.actionSelectMenu(this.scoreCard.getActions(this.dice)),
+                ],
+            }),
+            actionRow({
+                components: [
+                    this.scratchSelectMenu(this.scoreCard.getScratchOptions(this.dice)),
+                ],
+            }),
+        ];
+    }
+
+    private buildCategoryTableRows(section: 'upper' | 'lower'): TableRow[] {
+        return this.scoreCard.scoreCategories
+            .filter((category) => category.section === section)
+            .map((category) =>
+                table.row(
+                    [
+                        table.cell(`${category.check(this.dice) ? '>' : ' '} ${category.name}`),
+                        table.cell(
+                            category.isOpen()
+                                ? ' '
+                                : category.isScratched()
+                                ? 'X'
+                                : String(category.getScoredPoints() ?? ''),
+                            { align: 'right' },
+                        ),
+                    ],
+                    { after: category.check(this.dice) ? `[${category.points(this.dice)}]` : '' },
+                )
+            );
+    }
+
+    private buildTable(): TableRow[] {
+        return [
+            ...this.buildCategoryTableRows('upper'),
+            table.divider(),
+            table.row(
+                [
+                    table.cell('Subtotal'),
+                    table.cell(this.scoreCard.getUpperSectionSubtotal(), {
+                        align: 'right',
+                    }),
+                ],
+            ),
+            table.row([
+                table.cell(
+                    `Bonus (+${this.scoreCard.options.bonus.reward} if >= ${this.scoreCard.options.bonus.threshold})`,
+                ),
+                table.cell(this.scoreCard.getUpperSectionBonus(), {
+                    align: 'right',
+                }),
+            ]),
+            table.row([
+                table.cell('Total'),
+                table.cell(this.scoreCard.getUpperSectionTotal(), {
+                    align: 'right',
+                }),
+            ]),
+            table.split(),
+            ...this.buildCategoryTableRows('lower'),
+            table.divider(),
+            table.row([
+                table.cell('Upper Section Total'),
+                table.cell(this.scoreCard.getUpperSectionTotal(), { align: 'right' }),
+            ]),
+            table.row([
+                table.cell('Lower Section Total'),
+                table.cell(this.scoreCard.getLowerSectionTotal(), { align: 'right' }),
+            ]),
+            table.row([
+                table.cell('Grand Total'),
+                table.cell(this.scoreCard.getGrandTotal(), { align: 'right' }),
+            ]),
+        ];
     }
 
     private buildContainer(): APIContainerComponent {
-        const actionRows: APIComponentInContainer[] = [];
-
-        if (!this.scoreCard.isComplete() && !this.isCancelled) {
-            actionRows.push(
-                actionRow({
-                    components: [
-                        button({
-                            style: ButtonStyle.Success,
-                            label: `Roll ${this.rollCount}/${this.options.maxRollCount}`,
-                            custom_id: 'roll',
-                            disabled: !this.canRoll(),
-                        }),
-                        button({
-                            style: ButtonStyle.Primary,
-                            label: 'Toggle all dice',
-                            custom_id: 'toggle',
-                            disabled: !this.dice.isRolled(),
-                        }),
-                        button({
-                            style: ButtonStyle.Danger,
-                            label: 'Stop game',
-                            custom_id: 'cancel',
-                            disabled: this.isCancelled, // Redundant
-                        }),
-                    ],
-                }),
-                actionRow({
-                    components: this.dice.map((die, index) =>
-                        button({
-                            style: die.isHolding ? ButtonStyle.Primary : ButtonStyle.Secondary,
-                            label: die.value ? die.value.toString() : '?',
-                            custom_id: `dice${index}`,
-                            disabled: !die.value,
-                        })
-                    ),
-                }),
-            );
-
-            if (this.dice.isRolled()) {
-                const actions = this.scoreCard.getActions(this.dice);
-                const scratchOptions = this.scoreCard.getScratchOptions(this.dice);
-
-                actionRows.push(
-                    actionRow({
-                        components: [
-                            actions.length
-                                ? stringSelect({
-                                    placeholder: 'Action',
-                                    custom_id: 'action',
-                                    options: actions.map((category) => ({
-                                        label: `${category.name} - ${category.points(this.dice)}`,
-                                        value: category.id,
-                                    })),
-                                })
-                                : stringSelect({
-                                    placeholder: 'No actions available',
-                                    custom_id: 'action',
-                                    options: [{ label: 'null', value: 'null' }],
-                                    disabled: true,
-                                }),
-                        ],
-                    }),
-                    actionRow({
-                        components: [
-                            scratchOptions.length
-                                ? stringSelect({
-                                    placeholder: 'Scratch',
-                                    custom_id: 'scratch',
-                                    options: scratchOptions.map((category) => ({
-                                        label: category.name,
-                                        value: category.id,
-                                    })),
-                                })
-                                : stringSelect({
-                                    placeholder: 'No scratches available',
-                                    custom_id: 'scratch',
-                                    options: [{ label: 'null', value: 'null' }],
-                                    disabled: true,
-                                }),
-                        ],
-                    }),
-                );
-            } else {
-                actionRows.push(
-                    actionRow({
-                        components: [
-                            stringSelect({
-                                placeholder: 'Roll dice to see actions',
-                                custom_id: 'action',
-                                options: [{ label: 'null', value: 'null' }],
-                                disabled: true,
-                            }),
-                        ],
-                    }),
-                    actionRow({
-                        components: [
-                            stringSelect({
-                                placeholder: 'Roll dice to see scratches',
-                                custom_id: 'scratch',
-                                options: [{ label: 'null', value: 'null' }],
-                                disabled: true,
-                            }),
-                        ],
-                    }),
-                );
-            }
-        }
-
-        const tableRows = this.scoreCard.scoreCategories.reduce<TableRow[]>((output, category) => {
-            output.push({
-                after: category.check(this.dice) ? `[${category.points(this.dice)}]` : '',
-                cells: [
-                    {
-                        content: `${category.check(this.dice) ? '>' : ' '} ${category.name}`,
-                    },
-                    {
-                        align: 'right',
-                        content: category.isOpen()
-                            ? ' '
-                            : category.isScratched()
-                            ? 'X'
-                            : String(category.getScoredPoints() ?? ''),
-                    },
-                ],
-            });
-
-            switch (category.id) {
-                case 'sixes':
-                    output.push(
-                        { divider: true },
-                        {
-                            cells: [
-                                { content: 'Subtotal' },
-                                {
-                                    align: 'right',
-                                    content: this.scoreCard.getUpperSectionSubtotal().toString(),
-                                },
-                            ],
-                        },
-                        {
-                            cells: [
-                                {
-                                    content:
-                                        `Bonus (+${this.scoreCard.options.bonus.reward} if >= ${this.scoreCard.options.bonus.threshold})`,
-                                },
-                                {
-                                    align: 'right',
-                                    content: this.scoreCard.getUpperSectionBonus().toString(),
-                                },
-                            ],
-                        },
-                        {
-                            cells: [
-                                { content: 'Total' },
-                                {
-                                    align: 'right',
-                                    content: this.scoreCard.getUpperSectionTotal().toString(),
-                                },
-                            ],
-                        },
-                        { split: true },
-                    );
-                    break;
-
-                case 'chance':
-                    output.push(
-                        { divider: true },
-                        {
-                            cells: [
-                                { content: 'Upper Section Total' },
-                                {
-                                    align: 'right',
-                                    content: this.scoreCard.getUpperSectionTotal().toString(),
-                                },
-                            ],
-                        },
-                        {
-                            cells: [
-                                { content: 'Lower Section Total' },
-                                {
-                                    align: 'right',
-                                    content: this.scoreCard.getLowerSectionTotal().toString(),
-                                },
-                            ],
-                        },
-                        {
-                            cells: [
-                                { content: 'Grand Total' },
-                                {
-                                    align: 'right',
-                                    content: this.scoreCard.getGrandTotal().toString(),
-                                },
-                            ],
-                        },
-                    );
-                    break;
-            }
-
-            return output;
-        }, []);
-
         return container({
             components: [
                 textDisplay({ content: heading('Yahtzee!') }),
-                textDisplay({
-                    content: codeBlock(stringTable({ rows: tableRows })),
-                }),
-                ...actionRows,
+                textDisplay({ content: codeBlock(stringTable(this.buildTable())) }),
+                ...this.buildActionRows(),
             ],
         });
     }
