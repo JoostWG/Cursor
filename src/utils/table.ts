@@ -5,21 +5,21 @@ export interface TableCell {
     content: string;
 }
 
-export type TableRow =
-    | (
-        & { after?: string }
-        & (
-            | {
-                cells: TableCell[];
-            }
-            | {
-                divider: true;
-            }
-        )
-    )
-    | {
-        split: true;
-    };
+export interface TableCells {
+    cells: TableCell[];
+    after?: string;
+}
+
+export interface TableDivider {
+    divider: true;
+    after?: string;
+}
+
+export interface TableSplit {
+    split: true;
+}
+
+export type TableRow = TableCells | TableDivider | TableSplit;
 
 /* eslint-disable @typescript-eslint/naming-convention */
 const Corner = {
@@ -43,97 +43,115 @@ const CrossSection = {
 };
 /* eslint-enable @typescript-eslint/naming-convention */
 
-export function stringTable(rows: TableRow[]): string {
-    const dataRows = rows.filter((row) => 'cells' in row);
-    const columnCount = Math.max(...dataRows.map((row) => row.cells.length));
-    const columnWidths = range(columnCount)
-        .map((columnIndex) =>
-            Math.max(...dataRows.map((row) => row.cells[columnIndex].content.length))
-        )
-        .toArray();
+export class Table {
+    private readonly columnWidths: number[];
 
-    return (function* _() {
-        yield Corner.TopLeft;
-        yield columnWidths.map((width) => Line.Horizontal.repeat(width + 2)).join(CrossSection.Top);
-        yield Corner.TopRight;
+    public constructor(private readonly rows: TableRow[]) {
+        const dataRows = this.rows.filter((row) => 'cells' in row);
 
-        yield '\n';
+        this.columnWidths = range(Math.max(...dataRows.map((row) => row.cells.length)))
+            .map((columnIndex) =>
+                Math.max(...dataRows.map((row) => row.cells[columnIndex].content.length))
+            )
+            .toArray();
+    }
 
-        for (const row of rows) {
-            if ('cells' in row) {
-                yield Line.Vertical;
-                yield row.cells
-                    .map(
-                        (cell, index) =>
-                            ` ${
-                                cell.content[
-                                    cell.align === 'right'
-                                        ? 'padStart'
-                                        : 'padEnd'
-                                ](
-                                    columnWidths[index],
-                                    ' ',
-                                )
-                            } `,
-                    )
-                    .join(Line.Vertical);
-                yield Line.Vertical;
-            }
-
-            if ('divider' in row) {
-                yield CrossSection.Left;
-                yield columnWidths
-                    .map((width) => Line.Horizontal.repeat(width + 2))
-                    .join(CrossSection.Center);
-                yield CrossSection.Right;
-            }
-
-            if ('split' in row) {
-                yield Corner.BottomLeft;
-                yield columnWidths
-                    .map((width) => Line.Horizontal.repeat(width + 2))
-                    .join(CrossSection.Bottom);
-                yield Corner.BottomRight;
-
-                yield '\n';
-
-                yield Corner.TopLeft;
-                yield columnWidths
-                    .map((width) => Line.Horizontal.repeat(width + 2))
-                    .join(CrossSection.Top);
-                yield Corner.TopRight;
-            }
-
-            if ('after' in row) {
-                yield ` ${row.after}`;
-            }
-
-            yield '\n';
-        }
-
-        //
-
-        yield Corner.BottomLeft;
-        yield columnWidths
-            .map((width) => Line.Horizontal.repeat(width + 2))
-            .join(CrossSection.Bottom);
-        yield Corner.BottomRight;
-    })()
-        .toArray()
-        .join('');
-}
-
-export const table = {
-    cell(content: { toString: () => string }, options?: Omit<TableCell, 'content'>): TableCell {
+    public static cell(
+        content: { toString: () => string },
+        options?: Omit<TableCell, 'content'>,
+    ): TableCell {
         return { content: content.toString(), ...(options ?? {}) };
-    },
-    row(cells: TableCell[], options?: { after?: string }): TableRow {
+    }
+
+    public static row(cells: TableCell[], options?: Omit<TableCells, 'cells'>): TableCells {
         return { cells, ...(options ?? {}) };
-    },
-    divider(options?: { after?: string }): TableRow {
+    }
+
+    public static divider(options?: Omit<TableDivider, 'divider'>): TableDivider {
         return { divider: true, ...(options ?? {}) };
-    },
-    split(): TableRow {
+    }
+
+    public static split(): TableSplit {
         return { split: true };
-    },
-};
+    }
+
+    public render(): string {
+        return [
+            this.tableTop(),
+            ...this.rows.flatMap((row) => {
+                if ('cells' in row) {
+                    return this.tableCells(row.cells, { after: row.after });
+                }
+
+                if ('divider' in row) {
+                    return this.tableDivider({ after: row.after });
+                }
+
+                if ('split' in row) {
+                    return this.tableSplit();
+                }
+
+                return [];
+            }),
+            this.tableBottom(),
+        ].join('\n');
+    }
+
+    private tableTop(): string {
+        return [
+            Corner.TopLeft,
+            this.columnWidths.map((width) => Line.Horizontal.repeat(width + 2)).join(
+                CrossSection.Top,
+            ),
+            Corner.TopRight,
+        ].join('');
+    }
+
+    private tableBottom(): string {
+        return [
+            Corner.BottomLeft,
+            this.columnWidths.map((width) => Line.Horizontal.repeat(width + 2)).join(
+                CrossSection.Bottom,
+            ),
+            Corner.BottomRight,
+        ].join('');
+    }
+
+    private tableCells(cells: TableCell[], options?: { after?: string }): string {
+        return [
+            Line.Vertical,
+            cells
+                .map(
+                    (cell, index) =>
+                        ` ${
+                            cell.content[
+                                cell.align === 'right'
+                                    ? 'padStart'
+                                    : 'padEnd'
+                            ](
+                                this.columnWidths[index],
+                                ' ',
+                            )
+                        } `,
+                )
+                .join(Line.Vertical),
+            Line.Vertical,
+            options?.after ? ` ${options.after}` : '',
+        ].join('');
+    }
+
+    private tableDivider(options?: { after?: string }): string {
+        return [
+            CrossSection.Left,
+            this.columnWidths
+                .map((width) => Line.Horizontal.repeat(width + 2))
+                .join(CrossSection.Center),
+            CrossSection.Right,
+            options?.after ? ` ${options.after}` : '',
+        ].join('');
+    }
+
+    private tableSplit(): string[] {
+        return [this.tableBottom(), this.tableTop()];
+    }
+}

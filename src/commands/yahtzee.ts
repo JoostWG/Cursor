@@ -17,7 +17,7 @@ import {
 import { SlashCommand } from '../core/command';
 import type { ChatInputContext } from '../core/context';
 import { actionRow, button, container, stringSelect, textDisplay } from '../utils/builders';
-import { stringTable, table, type TableRow } from '../utils/table';
+import { Table, type TableRow } from '../utils/table';
 import { ComponentUI } from '../utils/ui';
 
 type DieValue = 1 | 2 | 3 | 4 | 5 | 6;
@@ -629,10 +629,10 @@ class Game extends ComponentUI {
         return this.scoreCard.scoreCategories
             .filter((category) => category.section === section)
             .map((category) =>
-                table.row(
+                Table.row(
                     [
-                        table.cell(`${category.check(this.dice) ? '>' : ' '} ${category.name}`),
-                        table.cell(
+                        Table.cell(`${category.check(this.dice) ? '>' : ' '} ${category.name}`),
+                        Table.cell(
                             category.isOpen()
                                 ? ' '
                                 : category.isScratched()
@@ -649,43 +649,43 @@ class Game extends ComponentUI {
     private buildTable(): TableRow[] {
         return [
             ...this.buildCategoryTableRows('upper'),
-            table.divider(),
-            table.row(
+            Table.divider(),
+            Table.row(
                 [
-                    table.cell('Subtotal'),
-                    table.cell(this.scoreCard.getUpperSectionSubtotal(), {
+                    Table.cell('Subtotal'),
+                    Table.cell(this.scoreCard.getUpperSectionSubtotal(), {
                         align: 'right',
                     }),
                 ],
             ),
-            table.row([
-                table.cell(
+            Table.row([
+                Table.cell(
                     `Bonus (+${this.scoreCard.options.bonus.reward} if >= ${this.scoreCard.options.bonus.threshold})`,
                 ),
-                table.cell(this.scoreCard.getUpperSectionBonus(), {
+                Table.cell(this.scoreCard.getUpperSectionBonus(), {
                     align: 'right',
                 }),
             ]),
-            table.row([
-                table.cell('Total'),
-                table.cell(this.scoreCard.getUpperSectionTotal(), {
+            Table.row([
+                Table.cell('Total'),
+                Table.cell(this.scoreCard.getUpperSectionTotal(), {
                     align: 'right',
                 }),
             ]),
-            table.split(),
+            Table.split(),
             ...this.buildCategoryTableRows('lower'),
-            table.divider(),
-            table.row([
-                table.cell('Upper Section Total'),
-                table.cell(this.scoreCard.getUpperSectionTotal(), { align: 'right' }),
+            Table.divider(),
+            Table.row([
+                Table.cell('Upper Section Total'),
+                Table.cell(this.scoreCard.getUpperSectionTotal(), { align: 'right' }),
             ]),
-            table.row([
-                table.cell('Lower Section Total'),
-                table.cell(this.scoreCard.getLowerSectionTotal(), { align: 'right' }),
+            Table.row([
+                Table.cell('Lower Section Total'),
+                Table.cell(this.scoreCard.getLowerSectionTotal(), { align: 'right' }),
             ]),
-            table.row([
-                table.cell('Grand Total'),
-                table.cell(this.scoreCard.getGrandTotal(), { align: 'right' }),
+            Table.row([
+                Table.cell('Grand Total'),
+                Table.cell(this.scoreCard.getGrandTotal(), { align: 'right' }),
             ]),
         ];
     }
@@ -694,7 +694,7 @@ class Game extends ComponentUI {
         return container({
             components: [
                 textDisplay({ content: heading('Yahtzee!') }),
-                textDisplay({ content: codeBlock(stringTable(this.buildTable())) }),
+                textDisplay({ content: codeBlock(new Table(this.buildTable()).render()) }),
                 ...this.buildActionRows(),
             ],
         });
