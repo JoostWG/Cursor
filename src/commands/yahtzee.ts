@@ -307,7 +307,7 @@ type ScoreCardOptions = Readonly<{
 }>;
 
 class ScoreCard {
-    public readonly scoreCategories: ScoreCategory[];
+    public readonly scoreCategories: readonly ScoreCategory[];
 
     public constructor(
         public readonly options: ScoreCardOptions = {
