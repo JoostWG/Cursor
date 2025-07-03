@@ -25,41 +25,45 @@ type ScoreCardSection = 'upper' | 'lower';
 
 class Die {
     #value: DieValue | null;
-    #isHolding: boolean;
+    #isLocked: boolean;
 
     public constructor(value?: DieValue) {
         this.#value = value ?? null;
-        this.#isHolding = false;
+        this.#isLocked = false;
     }
 
     public get value(): DieValue | null {
         return this.#value;
     }
 
-    public get isHolding(): boolean {
-        return this.#isHolding;
-    }
-
-    public set isHolding(value: boolean) {
-        if (value && !this.#value) {
-            return;
-        }
-
-        this.#isHolding = value;
+    public isLocked(): boolean {
+        return this.#isLocked;
     }
 
     public roll(): void {
-        if (this.#value && this.#isHolding) {
+        if (this.#value && this.#isLocked) {
             return;
         }
 
         this.#value = (Math.floor(Math.random() * 6) + 1) as DieValue;
-        this.#isHolding = false;
+        this.#isLocked = false;
+    }
+
+    public lock(): void {
+        this.#isLocked = true;
+    }
+
+    public unlock(): void {
+        this.#isLocked = false;
+    }
+
+    public toggleLocked(): void {
+        this.#isLocked = !this.#isLocked;
     }
 
     public reset(): void {
         this.#value = null;
-        this.#isHolding = false;
+        this.#isLocked = false;
     }
 }
 
@@ -428,7 +432,7 @@ class Game extends ComponentUI {
 
     private canRoll(): boolean {
         return (
-            this.rollCount < this.options.maxRollCount && this.dice.some((die) => !die.isHolding)
+            this.rollCount < this.options.maxRollCount && this.dice.some((die) => !die.isLocked())
         );
     }
 
@@ -473,7 +477,7 @@ class Game extends ComponentUI {
             }),
             async () => {
                 for (const die of this.dice) {
-                    die.isHolding = !die.isHolding;
+                    die.toggleLocked();
                 }
             },
         );
@@ -497,13 +501,13 @@ class Game extends ComponentUI {
     private dieButton(die: Die, index: number): APIButtonComponentWithCustomId {
         return this.listen(
             button({
-                style: die.isHolding ? ButtonStyle.Primary : ButtonStyle.Secondary,
+                style: die.isLocked() ? ButtonStyle.Primary : ButtonStyle.Secondary,
                 label: die.value ? die.value.toString() : '?',
                 custom_id: `dice${index}`,
                 disabled: !die.value,
             }),
             async () => {
-                die.isHolding = !die.isHolding;
+                die.toggleLocked();
             },
         );
     }
