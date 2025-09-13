@@ -10,8 +10,8 @@
         "l-f": "npm run lint -- --fix && npm run format"
     },
     "dependencies": {
-        "axios": "^1.11.0",
-        "better-sqlite3": "^11.9.1",
+        "axios": "^1.12.1",
+        "better-sqlite3": "^12.2.0",
         "canvas": "^3.1.0",
         "chess.js": "^1.2.0",
         "discord.js": "^14.20.0",
@@ -21,7 +21,7 @@
     },
     "devDependencies": {
         "@eslint/js": "^9.25.1",
-        "@stylistic/eslint-plugin": "^4.2.0",
+        "@stylistic/eslint-plugin": "^5.3.1",
         "@types/better-sqlite3": "^7.6.13",
         "@typescript-eslint/eslint-plugin": "^8.31.1",
         "@typescript-eslint/parser": "^8.31.1",
