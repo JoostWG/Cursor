@@ -181,7 +181,6 @@ class ThreeOfAKind extends ScoreCategory {
     }
 
     protected override validate(dice: Dice): boolean {
-        // return dice.some((die) => dice.count(die.getValue()) >= 3);
         for (const die of dice) {
             if (die.value && dice.count(die.value) >= 3) {
                 return true;
@@ -222,7 +221,6 @@ class FullHouse extends ScoreCategory {
     }
 
     protected override validate(dice: Dice): boolean {
-        // TODO: Refactor count stuff into dice class
         const counts = new Map<number, number>();
 
         for (const die of dice) {
