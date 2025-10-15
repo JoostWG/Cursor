@@ -55,7 +55,7 @@ export abstract class BaseApplicationCommand<
 export abstract class SlashCommand
     extends BaseApplicationCommand<RESTPostAPIChatInputApplicationCommandsJSONBody>
 {
-    public constructor(data: OmitType<RESTPostAPIChatInputApplicationCommandsJSONBody>) {
+    protected constructor(data: OmitType<RESTPostAPIChatInputApplicationCommandsJSONBody>) {
         super({
             type: ApplicationCommandType.ChatInput,
             ...data,
@@ -70,7 +70,7 @@ export abstract class SlashCommand
 }
 
 export abstract class GuildSlashCommand extends SlashCommand {
-    public constructor(
+    protected constructor(
         data: Omit<OmitType<RESTPostAPIChatInputApplicationCommandsJSONBody>, 'contexts'>,
     ) {
         super({ contexts: [InteractionContextType.Guild], ...data });
@@ -84,7 +84,7 @@ export abstract class ContextMenu
 }
 
 export abstract class UserContextMenu extends ContextMenu {
-    public constructor(data: OmitType<RESTPostAPIApplicationCommandsJSONBody>) {
+    protected constructor(data: OmitType<RESTPostAPIApplicationCommandsJSONBody>) {
         super({
             type: ApplicationCommandType.User,
             ...data,
@@ -95,7 +95,7 @@ export abstract class UserContextMenu extends ContextMenu {
 }
 
 export abstract class MessageContextMenu extends ContextMenu {
-    public constructor(data: OmitType<RESTPostAPIApplicationCommandsJSONBody>) {
+    protected constructor(data: OmitType<RESTPostAPIApplicationCommandsJSONBody>) {
         super({
             type: ApplicationCommandType.Message,
             ...data,

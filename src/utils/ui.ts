@@ -20,7 +20,7 @@ export abstract class ComponentUI {
     protected collector!: InteractionCollector<MappedInteractionTypes[MessageComponentType]>;
     private readonly listeners: Map<string, Listener>;
 
-    public constructor(
+    protected constructor(
         protected readonly interaction: CommandInteraction,
         private readonly collectorOptions: Omit<
             MessageCollectorOptionsParams<MessageComponentType>,
