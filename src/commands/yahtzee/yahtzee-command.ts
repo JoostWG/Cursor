@@ -1,9 +1,7 @@
 import { SlashCommand } from '../../core/command';
 import type { ChatInputContext } from '../../core/context';
-import { Dice } from './dice';
-import { Die } from './die';
+import { Dice, Die, ScoreCard } from '../../modules/yahtzee';
 import { Game } from './game';
-import { ScoreCard } from './score-card';
 
 export class YahtzeeCommand extends SlashCommand {
     public constructor() {

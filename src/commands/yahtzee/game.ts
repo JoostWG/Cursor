@@ -14,14 +14,10 @@ import {
     type MessageComponentInteraction,
     type StringSelectMenuInteraction,
 } from 'discord.js';
+import type { Dice, Die, GameOptions, ScoreCard, ScoreCategory } from '../../modules/yahtzee';
 import { actionRow, button, container, stringSelect, textDisplay } from '../../utils/builders';
 import { ComponentUI } from '../../utils/ui';
-import type { Dice } from './dice';
-import type { Die } from './die';
-import type { ScoreCard } from './score-card';
 import { ScoreCardDisplay } from './score-card-display';
-import type { ScoreCategory } from './score-categories';
-import type { GameOptions } from './types';
 
 export class Game extends ComponentUI {
     private rollCount: number;

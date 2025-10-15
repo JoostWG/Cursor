@@ -1,6 +1,6 @@
 import type { Dice } from '../dice';
 import type { DieValue } from '../types';
-import { ScoreCategory } from '.';
+import { ScoreCategory } from './score-category';
 
 export class UpperSectionScoreCategory extends ScoreCategory {
     public override readonly section = 'upper';
