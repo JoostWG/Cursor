@@ -1,4 +1,5 @@
 import type { Dice } from './dice';
+import { ScoreCardSection } from './score-card-section';
 import {
     Chance,
     FourOfAKind,
@@ -10,7 +11,6 @@ import {
     Yahtzee,
     type ScoreCategory,
 } from './score-categories';
-
 import type { ScoreCardOptions } from './types';
 
 export class ScoreCard {
@@ -56,7 +56,7 @@ export class ScoreCard {
 
     public getUpperSectionSubtotal(): number {
         return this.scoreCategories
-            .filter((category) => category.section === 'upper')
+            .filter((category) => category.section === ScoreCardSection.Upper)
             .reduce((subtotal, category) => subtotal + (category.getScoredPoints() ?? 0), 0);
     }
 
@@ -72,7 +72,7 @@ export class ScoreCard {
 
     public getLowerSectionTotal(): number {
         return this.scoreCategories
-            .filter((category) => category.section === 'lower')
+            .filter((category) => category.section === ScoreCardSection.Lower)
             .reduce((total, category) => total + (category.getScoredPoints() ?? 0), 0);
     }
 

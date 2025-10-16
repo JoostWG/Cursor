@@ -1,5 +1,5 @@
 import type { Dice } from '../dice';
-import type { ScoreCardSection } from '../types';
+import type { ScoreCardSection } from '../score-card-section';
 
 export abstract class ScoreCategory {
     private scratched: boolean;

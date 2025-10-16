@@ -1,4 +1,9 @@
-import type { Dice, ScoreCard, ScoreCardSection, ScoreCategory } from '../../modules/yahtzee';
+import {
+    ScoreCardSection,
+    type Dice,
+    type ScoreCard,
+    type ScoreCategory,
+} from '../../modules/yahtzee';
 import { Table, type TableRow } from '../../utils/table';
 
 export class ScoreCardDisplay {
@@ -90,11 +95,11 @@ export class ScoreCardDisplay {
 
     private buildTable(): TableRow[] {
         return [
-            ...this.buildCategoryTableRows('upper'),
+            ...this.buildCategoryTableRows(ScoreCardSection.Upper),
             Table.divider(),
             ...this.buildUpperSectionTotals(),
             Table.split(),
-            ...this.buildCategoryTableRows('lower'),
+            ...this.buildCategoryTableRows(ScoreCardSection.Lower),
             Table.divider(),
             ...this.buildLowerSectionTotals(),
         ];

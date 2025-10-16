@@ -1,10 +1,11 @@
 import type { Dice } from '../dice';
+import { ScoreCardSection } from '../score-card-section';
 import { ScoreCategory } from './score-category';
 
 export class Yahtzee extends ScoreCategory {
     public override readonly name = 'Yahtzee';
     public override readonly id = 'yahtzee';
-    public override readonly section = 'lower';
+    public override readonly section = ScoreCardSection.Lower;
 
     public override points(): number {
         return 50;

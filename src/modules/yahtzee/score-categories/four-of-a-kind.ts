@@ -1,10 +1,11 @@
 import type { Dice } from '../dice';
+import { ScoreCardSection } from '../score-card-section';
 import { ScoreCategory } from './score-category';
 
 export class FourOfAKind extends ScoreCategory {
     public override readonly name = 'Four of a Kind';
     public override readonly id = 'fourOfAKind';
-    public override readonly section = 'lower';
+    public override readonly section = ScoreCardSection.Lower;
 
     public override points(dice: Dice): number {
         return dice.sum();

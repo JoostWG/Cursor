@@ -1,9 +1,10 @@
 import type { Dice } from '../dice';
+import { ScoreCardSection } from '../score-card-section';
 import type { DieValue } from '../types';
 import { ScoreCategory } from './score-category';
 
 export class UpperSectionScoreCategory extends ScoreCategory {
-    public override readonly section = 'upper';
+    public override readonly section = ScoreCardSection.Upper;
     public override readonly id: string;
 
     public constructor(private readonly value: DieValue, public override readonly name: string) {

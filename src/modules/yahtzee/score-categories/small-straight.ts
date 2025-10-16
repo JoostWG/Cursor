@@ -1,10 +1,11 @@
 import type { Dice } from '../dice';
+import { ScoreCardSection } from '../score-card-section';
 import { ScoreCategory } from './score-category';
 
 export class SmallStraight extends ScoreCategory {
     public override readonly name = 'Small Straight';
     public override readonly id = 'smallStraight';
-    public override readonly section = 'lower';
+    public override readonly section = ScoreCardSection.Lower;
 
     public override points(): number {
         return 30;
