@@ -3,7 +3,6 @@ import {
     Colors,
     HeadingLevel,
     MessageFlags,
-    bold,
     heading,
     userMention,
     type APIBaseComponent,
@@ -11,58 +10,13 @@ import {
     type ComponentType,
     type User,
 } from 'discord.js';
-import { CommandError, SlashCommand } from '../core/command';
-import type { ChatInputContext } from '../core/context';
-import type { CursorDatabase } from '../setup';
-import {
-    actionRow,
-    button,
-    container,
-    separator,
-    subcommand,
-    textDisplay,
-    userOption,
-} from '../utils/builders';
+import type { CursorDatabase } from '../../setup';
+import { actionRow, button, container, separator, textDisplay } from '../../utils/builders';
+import type { Choice } from './choice';
+import { emojis } from './emojis';
+import { Round } from './round';
 
-const emojis = {
-    rock: '🪨',
-    paper: '📄',
-    scissors: '✂️',
-} as const;
-
-type Choice = keyof typeof emojis;
-
-class Round {
-    public choices: [Choice | null, Choice | null];
-    public roundId?: number;
-
-    public constructor() {
-        this.choices = [null, null];
-    }
-
-    public get(index: number): Choice | null {
-        return this.choices[index];
-    }
-
-    public set(index: number, choice: Choice): void {
-        this.choices[index] = choice;
-    }
-
-    public isFinished(): boolean {
-        return !this.choices.includes(null);
-    }
-
-    public getResult(): number {
-        if (!this.choices[0] || !this.choices[1]) {
-            return -1;
-        }
-
-        const keys = Object.keys(emojis);
-        return (keys.indexOf(this.choices[0]) - keys.indexOf(this.choices[1])) % 3;
-    }
-}
-
-class Game {
+export class Game {
     private readonly users: [User, User];
     private readonly db: CursorDatabase;
     private readonly rounds: [Round, Round, Round];
@@ -338,96 +292,5 @@ class Game {
         }
 
         return [builder];
-    }
-}
-
-export class RockPaperScissorsCommand extends SlashCommand {
-    public constructor(private readonly db: CursorDatabase) {
-        super({
-            name: 'rps',
-            description: 'Rock Paper Scissors',
-            options: [
-                subcommand({
-                    name: 'play',
-                    description: 'Play Rock Paper Scissors',
-                    options: [
-                        userOption({
-                            name: 'opponent',
-                            description: 'Choose your opponent',
-                        }),
-                    ],
-                }),
-                subcommand({
-                    name: 'stats',
-                    description: 'Shows game stats',
-                }),
-            ],
-        });
-    }
-
-    public override async execute({ interaction }: ChatInputContext): Promise<void> {
-        switch (interaction.options.getSubcommand()) {
-            case 'play':
-                await this.play(interaction);
-                break;
-
-            case 'stats':
-                await this.stats(interaction);
-                break;
-        }
-    }
-
-    private async play(interaction: ChatInputCommandInteraction): Promise<void> {
-        const opponent = interaction.options.getUser('opponent', true);
-
-        if (opponent.bot) {
-            throw new CommandError('You cannot play against bots.');
-        }
-
-        if (opponent.id === interaction.user.id) {
-            throw new CommandError('You cannot play against yourself.');
-        }
-
-        await new Game([interaction.user, opponent], this.db).start(interaction);
-    }
-
-    private async stats(interaction: ChatInputCommandInteraction): Promise<void> {
-        const games = await this.db
-            .selectFrom('rps_games')
-            .where('user_id', '=', interaction.user.id)
-            .select(({ fn }) => fn.count('id').as('count'))
-            .executeTakeFirst();
-
-        const choices = await this.db
-            .selectFrom('rps_choices')
-            .where('user_id', '=', interaction.user.id)
-            .select(['choice', ({ fn }) => fn.count('id').as('count')])
-            .groupBy('choice')
-            .execute();
-
-        const choiceCounts = new Map(choices.map((choice) => [choice.choice, choice.count]));
-
-        await interaction.reply({
-            flags: MessageFlags.IsComponentsV2,
-            components: [
-                container({
-                    components: [
-                        textDisplay({
-                            content: [
-                                heading('RPS Stats'),
-                                bold('Games played'),
-                                games?.count ?? 0,
-                                '',
-                                bold('Choice stats'),
-                                ...Object.entries(emojis).map(
-                                    ([name, emoji]) =>
-                                        `${emoji} ${choiceCounts.get(name as Choice) ?? 0}`,
-                                ),
-                            ].join('\n'),
-                        }),
-                    ],
-                }),
-            ],
-        });
     }
 }
