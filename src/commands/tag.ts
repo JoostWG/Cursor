@@ -10,8 +10,7 @@ import {
     type Snowflake,
 } from 'discord.js';
 import type { Selectable } from 'kysely';
-import { CommandError, GuildSlashCommand } from '../core/command';
-import type { ChatInputContext } from '../core/context';
+import { CommandError, GuildSlashCommand, type ChatInputContext } from '../core';
 import type { CursorDatabase } from '../setup';
 import type { TagsTable } from '../types/database';
 import { container, stringOption, subcommand, textDisplay } from '../utils/builders';

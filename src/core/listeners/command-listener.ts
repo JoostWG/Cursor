@@ -1,8 +1,8 @@
 import { Events, MessageFlags, type CommandInteraction, type Interaction } from 'discord.js';
 import type { CursorDatabase } from '../../setup';
-import { CommandError } from '../command';
 import type { CommandCollection } from '../command-collection';
 import { ChatInputContext, MessageContextMenuContext, UserContextMenuContext } from '../context';
+import { CommandError } from '../errors';
 import { eventListener } from '../event-listener';
 
 export class CommandListener extends eventListener(Events.InteractionCreate) {

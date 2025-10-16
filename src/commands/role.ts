@@ -20,8 +20,7 @@ import {
     type Role,
     type RoleEditOptions,
 } from 'discord.js';
-import { CommandError, GuildSlashCommand } from '../core/command';
-import type { ChatInputContext } from '../core/context';
+import { CommandError, GuildSlashCommand, type ChatInputContext } from '../core';
 import {
     actionRow,
     booleanOption,

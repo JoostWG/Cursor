@@ -1,6 +1,5 @@
 import { MessageFlags, bold, heading, type ChatInputCommandInteraction } from 'discord.js';
-import { CommandError, SlashCommand } from '../../core/command';
-import type { ChatInputContext } from '../../core/context';
+import { CommandError, SlashCommand, type ChatInputContext } from '../../core';
 import type { CursorDatabase } from '../../setup';
 import { container, subcommand, textDisplay, userOption } from '../../utils/builders';
 import type { Choice } from './choice';

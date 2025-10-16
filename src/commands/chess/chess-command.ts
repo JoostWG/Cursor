@@ -6,8 +6,7 @@ import {
     type ChatInputCommandInteraction,
     type Snowflake,
 } from 'discord.js';
-import { SlashCommand } from '../../core/command';
-import type { ChatInputContext } from '../../core/context';
+import { SlashCommand, type ChatInputContext } from '../../core';
 import { stringOption, subcommand } from '../../utils/builders';
 import { CheckerboardTheme } from './checkerboard-theme';
 import { DefaultChessPieceFactory } from './default-chess-piece-factory';

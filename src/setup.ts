@@ -12,9 +12,7 @@ import { TriviaCommand } from './commands/trivia';
 import { UrbanDictionaryCommand } from './commands/urban-dictionary';
 import { UserCommand } from './commands/user';
 import { YahtzeeCommand } from './commands/yahtzee';
-import { Bot } from './core/bot';
-import { CommandCollection } from './core/command-collection';
-import { CommandDataCache, CommandDeployHandler } from './core/command-deploy-handler';
+import { Bot, CommandCollection, CommandDataCache, CommandDeployHandler } from './core';
 import type { DatabaseTables } from './types/database';
 
 export type CursorDatabase = Kysely<DatabaseTables>;

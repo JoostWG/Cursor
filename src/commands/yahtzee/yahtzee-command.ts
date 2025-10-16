@@ -1,5 +1,4 @@
-import { SlashCommand } from '../../core/command';
-import type { ChatInputContext } from '../../core/context';
+import { SlashCommand, type ChatInputContext } from '../../core';
 import { Dice, Die, ScoreCard } from '../../modules/yahtzee';
 import { Game } from './game';
 

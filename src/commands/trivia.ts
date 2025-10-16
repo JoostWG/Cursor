@@ -18,8 +18,7 @@ import {
     type Question,
     type QuestionOptions,
 } from 'open-trivia-db';
-import { SlashCommand } from '../core/command';
-import type { ChatInputContext } from '../core/context';
+import { SlashCommand, type ChatInputContext } from '../core';
 import { stringTitle } from '../utils';
 import { actionRow, button, container, stringOption, textDisplay } from '../utils/builders';
 
