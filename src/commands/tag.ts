@@ -121,7 +121,9 @@ class DatabaseTagManager implements TagManager {
 }
 
 export class TagCommand extends GuildSlashCommand {
-    public constructor(private readonly tags: TagManager) {
+    private readonly tags: TagManager;
+
+    public constructor(db: CursorDatabase) {
         super({
             name: 'tag',
             description: 'Manage tags',
@@ -203,10 +205,8 @@ export class TagCommand extends GuildSlashCommand {
                 }),
             ],
         });
-    }
 
-    public static create({ db }: { db: CursorDatabase }): TagCommand {
-        return new this(new DatabaseTagManager(db));
+        this.tags = new DatabaseTagManager(db);
     }
 
     public override async autocomplete(

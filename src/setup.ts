@@ -43,13 +43,13 @@ export async function createBot({ token }: { token: string }): Promise<Bot> {
     const commands = new CommandCollection([
         new RawCommand(),
         new ChessCommand(),
-        JokeCommand.create(),
+        new JokeCommand(),
         new PingCommand(),
         new RoleCommand(),
         new RockPaperScissorsCommand(db),
-        TagCommand.create({ db }),
+        new TagCommand(db),
         new TriviaCommand(),
-        UrbanDictionaryCommand.create(),
+        new UrbanDictionaryCommand(),
         new UserCommand(),
         new YahtzeeCommand(),
     ]);

@@ -1,12 +1,15 @@
-import type { Collection } from 'discord.js';
+import { Collection } from 'discord.js';
 import { Api, type Definition } from '../../modules/urban-dictionary';
 
 export class CachedApi extends Api {
-    public constructor(
-        private readonly definitionsCache: Collection<string, Promise<Definition[]>>,
-        private readonly autocompleteCache: Collection<string, Promise<string[]>>,
-    ) {
+    private readonly definitionsCache: Collection<string, Promise<Definition[]>>;
+    private readonly autocompleteCache: Collection<string, Promise<string[]>>;
+
+    public constructor() {
         super();
+
+        this.definitionsCache = new Collection();
+        this.autocompleteCache = new Collection();
     }
 
     public override async define(term: string): Promise<Definition[]> {

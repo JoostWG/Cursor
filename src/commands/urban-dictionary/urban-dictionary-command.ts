@@ -1,19 +1,17 @@
-import {
-    Collection,
-    type ApplicationCommandOptionChoiceData,
-    type AutocompleteInteraction,
-} from 'discord.js';
+import type { ApplicationCommandOptionChoiceData, AutocompleteInteraction } from 'discord.js';
 import { SlashCommand } from '../../core/command';
 import type { ChatInputContext } from '../../core/context';
 import type { Api } from '../../modules/urban-dictionary';
 import { stringOption } from '../../utils/builders';
-import { CachedApi } from './cahced-api';
+import { CachedApi } from './cached-api';
 import { ComponentBuilder } from './component-builder';
 import { InteractionHandler } from './interaction-handler';
 import { UrbanDictionary } from './urban-dictionary';
 
 export class UrbanDictionaryCommand extends SlashCommand {
-    public constructor(private readonly api: Api) {
+    private readonly api: Api;
+
+    public constructor() {
         super({
             name: 'urban-dictionary',
             description: 'Urban dictionary',
@@ -27,10 +25,8 @@ export class UrbanDictionaryCommand extends SlashCommand {
                 }),
             ],
         });
-    }
 
-    public static create(): UrbanDictionaryCommand {
-        return new this(new CachedApi(new Collection(), new Collection()));
+        this.api = new CachedApi();
     }
 
     public override async execute({ interaction }: ChatInputContext): Promise<void> {

@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios, { type AxiosInstance } from 'axios';
 import { Colors, Locale, TextChannel, bold, spoiler, type APIEmbed } from 'discord.js';
 import { CommandError, SlashCommand } from '../core/command';
 import type { ChatInputContext } from '../core/context';
@@ -65,7 +65,9 @@ type MultipleJokesResponse = SuccessResponse & {
 };
 
 export class JokeCommand extends SlashCommand {
-    public constructor(private readonly api: axios.AxiosInstance) {
+    private readonly api: AxiosInstance;
+
+    public constructor() {
         super({
             name: 'joke',
             description: 'Have a laugh!',
@@ -88,14 +90,10 @@ export class JokeCommand extends SlashCommand {
                 }),
             ],
         });
-    }
 
-    public static create(): JokeCommand {
-        return new this(
-            axios.create({
-                baseURL: 'https://v2.jokeapi.dev',
-            }),
-        );
+        this.api = axios.create({
+            baseURL: 'https://v2.jokeapi.dev',
+        });
     }
 
     public override async execute({ interaction }: ChatInputContext): Promise<void> {
