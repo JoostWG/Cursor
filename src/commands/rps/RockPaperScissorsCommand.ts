@@ -1,6 +1,6 @@
 import { MessageFlags, bold, heading, type ChatInputCommandInteraction } from 'discord.js';
 import { CommandError, SlashCommand, type ChatInputContext } from '../../core';
-import type { CursorDatabase } from '../../setup';
+import { CursorDatabase } from '../../database';
 import { container, subcommand, textDisplay, userOption } from '../../utils/builders';
 import type { Choice } from './Choice';
 import { emojis } from './emojis';

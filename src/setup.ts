@@ -13,11 +13,9 @@ import { UrbanDictionaryCommand } from './commands/urban-dictionary';
 import { UserCommand } from './commands/user';
 import { YahtzeeCommand } from './commands/yahtzee';
 import { Bot, CommandCollection, CommandDataCache, CommandDeployHandler } from './core';
-import type { DatabaseTables } from './types/database';
+import type { CursorDatabase, DatabaseTables } from './database/database';
 
-export type CursorDatabase = Kysely<DatabaseTables>;
-
-export function createDatabaseInstance(): Kysely<DatabaseTables> {
+export function createDatabaseInstance(): CursorDatabase {
     return new Kysely<DatabaseTables>({
         dialect: new SqliteDialect({
             database: new SQLite('./database/database.db'),

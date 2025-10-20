@@ -1,5 +1,7 @@
 import type { ApplicationCommandType, CommandInteractionOption } from 'discord.js';
-import type { ColumnType, Generated, JSONColumnType } from 'kysely';
+import type { ColumnType, Generated, JSONColumnType, Kysely } from 'kysely';
+
+export type CursorDatabase = Kysely<DatabaseTables>;
 
 export interface DatabaseTables {
     migrations: MigrationsTable;

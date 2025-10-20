@@ -10,7 +10,8 @@ import {
     type ComponentType,
     type User,
 } from 'discord.js';
-import type { CursorDatabase } from '../../setup';
+
+import { CursorDatabase } from '../../database';
 import { actionRow, button, container, separator, textDisplay } from '../../utils/builders';
 import type { Choice } from './Choice';
 import { emojis } from './emojis';

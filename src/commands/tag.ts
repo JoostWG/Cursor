@@ -11,8 +11,7 @@ import {
 } from 'discord.js';
 import type { Selectable } from 'kysely';
 import { CommandError, GuildSlashCommand, type ChatInputContext } from '../core';
-import type { CursorDatabase } from '../setup';
-import type { TagsTable } from '../types/database';
+import type { CursorDatabase, TagsTable } from '../database';
 import { container, stringOption, subcommand, textDisplay } from '../utils/builders';
 
 type TagData = Selectable<TagsTable>;
