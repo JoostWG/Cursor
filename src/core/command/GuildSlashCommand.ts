@@ -2,7 +2,7 @@ import {
     InteractionContextType,
     type RESTPostAPIChatInputApplicationCommandsJSONBody,
 } from 'discord.js';
-import type { OmitType } from '../../types';
+import type { OmitType } from '../../utils';
 import { SlashCommand } from './SlashCommand';
 
 export abstract class GuildSlashCommand extends SlashCommand {

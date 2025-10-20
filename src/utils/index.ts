@@ -1,3 +1,5 @@
+export type * from './types';
+
 export function stringTitle(string: string): string {
     return string
         .toLowerCase()

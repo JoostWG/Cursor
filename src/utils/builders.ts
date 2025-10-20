@@ -35,7 +35,7 @@ import {
     type APIUserSelectComponent,
     type RESTPostAPIApplicationCommandsJSONBody,
 } from 'discord.js';
-import type { OmitType } from '../types';
+import type { OmitType } from '.';
 
 // #region Components
 export function actionRow<T extends APIComponentInActionRow>(
