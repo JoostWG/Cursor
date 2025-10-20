@@ -1,1 +1,1 @@
-export * from './yahtzee-command';
+export * from './YahtzeeCommand';

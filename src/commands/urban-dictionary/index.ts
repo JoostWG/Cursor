@@ -1,1 +1,1 @@
-export * from './urban-dictionary-command';
+export * from './UrbanDictionaryCommand';

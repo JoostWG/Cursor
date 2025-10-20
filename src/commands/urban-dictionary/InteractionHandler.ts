@@ -3,7 +3,7 @@ import {
     type ChatInputCommandInteraction,
     type MessageComponentInteraction,
 } from 'discord.js';
-import type { ComponentBuilder } from './component-builder';
+import type { ComponentBuilder } from './ComponentBuilder';
 import type { OutputOptions } from './types';
 
 export class InteractionHandler {

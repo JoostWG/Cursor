@@ -1,2 +1,2 @@
-export * from './autocomplete-listener';
-export * from './command-listener';
+export * from './AutocompleteListener';
+export * from './CommandListener';

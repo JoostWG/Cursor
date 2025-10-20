@@ -12,9 +12,9 @@ import {
 } from 'discord.js';
 import type { CursorDatabase } from '../../setup';
 import { actionRow, button, container, separator, textDisplay } from '../../utils/builders';
-import type { Choice } from './choice';
+import type { Choice } from './Choice';
 import { emojis } from './emojis';
-import { Round } from './round';
+import { Round } from './Round';
 
 export class Game {
     private readonly users: [User, User];

@@ -1,6 +1,6 @@
-export * from './dice';
-export * from './die';
-export * from './score-card';
-export * from './score-card-section';
+export * from './Dice';
+export * from './Die';
 export * from './score-categories';
+export * from './ScoreCard';
+export * from './ScoreCardSection';
 export type * from './types';

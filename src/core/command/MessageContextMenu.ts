@@ -1,7 +1,7 @@
 import { ApplicationCommandType, type RESTPostAPIApplicationCommandsJSONBody } from 'discord.js';
 import type { OmitType } from '../../types';
 import type { MessageContextMenuContext } from '../context';
-import { ContextMenu } from './context-menu';
+import { ContextMenu } from './ContextMenu';
 
 export abstract class MessageContextMenu extends ContextMenu {
     protected constructor(data: OmitType<RESTPostAPIApplicationCommandsJSONBody>) {

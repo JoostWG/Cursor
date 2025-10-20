@@ -1,1 +1,1 @@
-export * from './chess-command';
+export * from './ChessCommand';

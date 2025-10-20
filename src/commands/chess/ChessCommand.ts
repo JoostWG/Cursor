@@ -8,12 +8,12 @@ import {
 } from 'discord.js';
 import { SlashCommand, type ChatInputContext } from '../../core';
 import { stringOption, subcommand } from '../../utils/builders';
-import { CheckerboardTheme } from './checkerboard-theme';
-import { DefaultChessPieceFactory } from './default-chess-piece-factory';
-import { DefaultChessBoard } from './default-chessboard';
-import { DefaultMessageFactory } from './default-message-factory';
-import { Game } from './game';
-import { InteractionHandler } from './interaction-handler';
+import { CheckerboardTheme } from './CheckerboardTheme';
+import { DefaultChessBoard } from './DefaultChessBoard';
+import { DefaultChessPieceFactory } from './DefaultChessPieceFactory';
+import { DefaultMessageFactory } from './DefaultMessageFactory';
+import { Game } from './Game';
+import { InteractionHandler } from './InteractionHandler';
 
 export class ChessCommand extends SlashCommand {
     private readonly games: Map<Snowflake, Game>;

@@ -1,5 +1,5 @@
-import type { Dice } from '../dice';
-import { ScoreCardSection } from '../score-card-section';
+import type { Dice } from '../Dice';
+import { ScoreCardSection } from '../ScoreCardSection';
 import { ScoreCategory } from './score-category';
 
 export class FourOfAKind extends ScoreCategory {

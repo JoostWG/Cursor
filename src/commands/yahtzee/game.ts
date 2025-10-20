@@ -17,7 +17,7 @@ import {
 import type { Dice, Die, GameOptions, ScoreCard, ScoreCategory } from '../../modules/yahtzee';
 import { actionRow, button, container, stringSelect, textDisplay } from '../../utils/builders';
 import { ComponentUI } from '../../utils/ui';
-import { ScoreCardDisplay } from './score-card-display';
+import { ScoreCardDisplay } from './ScoreCardDisplay';
 
 export class Game extends ComponentUI {
     private rollCount: number;

@@ -1,1 +1,1 @@
-export * from './rps-command';
+export * from './RockPaperScissorsCommand';

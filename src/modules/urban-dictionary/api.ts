@@ -1,5 +1,5 @@
 import axios, { type AxiosInstance, type AxiosRequestConfig } from 'axios';
-import { ApiError } from './api-error';
+import { ApiError } from './ApiError';
 import type { Definition, ResponseData } from './types';
 
 export class Api {

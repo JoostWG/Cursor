@@ -3,7 +3,7 @@ import {
     type RESTPostAPIChatInputApplicationCommandsJSONBody,
 } from 'discord.js';
 import type { OmitType } from '../../types';
-import { SlashCommand } from './slash-command';
+import { SlashCommand } from './SlashCommand';
 
 export abstract class GuildSlashCommand extends SlashCommand {
     protected constructor(

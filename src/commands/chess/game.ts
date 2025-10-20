@@ -1,5 +1,5 @@
 import type { Chess } from 'chess.js';
-import { InvalidMove } from './invalid-move';
+import { InvalidMove } from './InvalidMove';
 import type { ChessBoard, OutputHandler } from './types';
 
 export class Game {

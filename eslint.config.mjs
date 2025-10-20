@@ -24,7 +24,7 @@ export default defineConfig(
         rules: {
             'check-file/filename-naming-convention': [
                 'error',
-                { '**/*.ts': 'KEBAB_CASE' },
+                { '**/*.ts': ['KEBAB_CASE', 'PASCAL_CASE'] },
                 { ignoreMiddleExtensions: true },
             ],
 

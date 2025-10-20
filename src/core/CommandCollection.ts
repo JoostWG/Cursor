@@ -2,8 +2,8 @@ import { Collection } from 'discord.js';
 import type { CursorDatabase } from '../setup';
 import type { BaseApplicationCommand } from './command';
 import type { EventListener } from './event-listener';
-import { AutocompleteListener } from './listeners/autocomplete-listener';
-import { CommandListener } from './listeners/command-listener';
+import { AutocompleteListener } from './listeners/AutocompleteListener';
+import { CommandListener } from './listeners/CommandListener';
 
 export class CommandCollection<
     T extends BaseApplicationCommand = BaseApplicationCommand,

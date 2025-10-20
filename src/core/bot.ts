@@ -1,8 +1,8 @@
 import type { Client } from 'discord.js';
 import type { CursorDatabase } from '../setup';
 import type { BaseApplicationCommand } from './command';
-import type { CommandCollection } from './command-collection';
-import type { CommandDeployHandler } from './command-deploy-handler';
+import type { CommandCollection } from './CommandCollection';
+import type { CommandDeployHandler } from './CommandDeployHandler';
 import type { EventListener } from './event-listener';
 
 export interface BotOptions {

@@ -1,6 +1,6 @@
 import type { Definition } from '../../modules/urban-dictionary';
-import type { HistoryItem } from './history-item';
-import type { UrbanDictionary } from './urban-dictionary';
+import type { HistoryItem } from './HistoryItem';
+import type { UrbanDictionary } from './UrbanDictionary';
 
 export interface Pagination {
     currentPage: number;

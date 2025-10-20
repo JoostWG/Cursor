@@ -1,4 +1,4 @@
-export * from './api';
-export * from './api-error';
+export * from './Api';
+export * from './ApiError';
 export * from './helpers';
 export type * from './types';

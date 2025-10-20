@@ -2,10 +2,10 @@ import type { ApplicationCommandOptionChoiceData, AutocompleteInteraction } from
 import { SlashCommand, type ChatInputContext } from '../../core';
 import type { Api } from '../../modules/urban-dictionary';
 import { stringOption } from '../../utils/builders';
-import { CachedApi } from './cached-api';
-import { ComponentBuilder } from './component-builder';
-import { InteractionHandler } from './interaction-handler';
-import { UrbanDictionary } from './urban-dictionary';
+import { CachedApi } from './CachedApi';
+import { ComponentBuilder } from './ComponentBuilder';
+import { InteractionHandler } from './InteractionHandler';
+import { UrbanDictionary } from './UrbanDictionary';
 
 export class UrbanDictionaryCommand extends SlashCommand {
     private readonly api: Api;

@@ -4,9 +4,9 @@ import {
     type RESTPostAPIApplicationCommandsJSONBody,
 } from 'discord.js';
 import type { Context } from '../context';
-import type { MessageContextMenu } from './message-context-menu';
-import type { SlashCommand } from './slash-command';
-import type { UserContextMenu } from './user-context-menu';
+import type { MessageContextMenu } from './MessageContextMenu';
+import type { SlashCommand } from './SlashCommand';
+import type { UserContextMenu } from './UserContextMenu';
 
 export abstract class BaseApplicationCommand<
     T extends RESTPostAPIApplicationCommandsJSONBody = RESTPostAPIApplicationCommandsJSONBody,

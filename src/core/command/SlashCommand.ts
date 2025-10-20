@@ -6,7 +6,7 @@ import {
 } from 'discord.js';
 import type { OmitType } from '../../types';
 import type { ChatInputContext } from '../context';
-import { BaseApplicationCommand } from './base-application-command';
+import { BaseApplicationCommand } from './BaseApplicationCommand';
 
 export abstract class SlashCommand
     extends BaseApplicationCommand<RESTPostAPIChatInputApplicationCommandsJSONBody>

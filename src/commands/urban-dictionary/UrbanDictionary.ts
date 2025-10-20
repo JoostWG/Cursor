@@ -1,6 +1,6 @@
 import type { Api } from '../../modules/urban-dictionary';
-import { HistoryItem } from './history-item';
-import type { InteractionHandler } from './interaction-handler';
+import { HistoryItem } from './HistoryItem';
+import type { InteractionHandler } from './InteractionHandler';
 import type { OutputOptions } from './types';
 
 export class UrbanDictionary {

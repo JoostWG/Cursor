@@ -1,7 +1,7 @@
 import type { SchemaModule } from 'kysely';
-import { V1 } from './database/migrations/v1';
-import { V2 } from './database/migrations/v2';
-import { V3 } from './database/migrations/v3';
+import { V1 } from './database/migrations/V1';
+import { V2 } from './database/migrations/V2';
+import { V3 } from './database/migrations/V3';
 import { createDatabaseInstance, type CursorDatabase } from './setup';
 
 export abstract class Migration {

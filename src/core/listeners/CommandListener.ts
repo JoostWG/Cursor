@@ -1,6 +1,6 @@
 import { Events, MessageFlags, type CommandInteraction, type Interaction } from 'discord.js';
 import type { CursorDatabase } from '../../setup';
-import type { CommandCollection } from '../command-collection';
+import type { CommandCollection } from '../CommandCollection';
 import { ChatInputContext, MessageContextMenuContext, UserContextMenuContext } from '../context';
 import { CommandError } from '../errors';
 import { eventListener } from '../event-listener';

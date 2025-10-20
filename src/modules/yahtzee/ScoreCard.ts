@@ -1,5 +1,4 @@
-import type { Dice } from './dice';
-import { ScoreCardSection } from './score-card-section';
+import type { Dice } from './Dice';
 import {
     Chance,
     FourOfAKind,
@@ -11,6 +10,7 @@ import {
     Yahtzee,
     type ScoreCategory,
 } from './score-categories';
+import { ScoreCardSection } from './ScoreCardSection';
 import type { ScoreCardOptions } from './types';
 
 export class ScoreCard {
