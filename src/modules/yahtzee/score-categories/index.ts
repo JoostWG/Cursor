@@ -1,4 +1,4 @@
-export * from './chance';
+export * from './chance_temp';
 export * from './four-of-a-kind';
 export * from './full-house';
 export * from './large-straight';
@@ -6,4 +6,4 @@ export * from './score-category';
 export * from './small-straight';
 export * from './three-of-a-kind';
 export * from './upper-section-score-category';
-export * from './yahtzee';
+export * from './yahtzee_temp';

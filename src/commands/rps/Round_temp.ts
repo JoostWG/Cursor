@@ -1,4 +1,4 @@
-import type { Choice } from './Choice';
+import type { Choice } from './Choice_temp';
 import { emojis } from './emojis';
 
 export class Round {

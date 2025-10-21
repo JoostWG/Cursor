@@ -2,9 +2,9 @@ import { MessageFlags, bold, heading, type ChatInputCommandInteraction } from 'd
 import { CommandError, SlashCommand, type ChatInputContext } from '../../core';
 import { CursorDatabase } from '../../database';
 import { container, subcommand, textDisplay, userOption } from '../../utils/builders';
-import type { Choice } from './Choice';
+import type { Choice } from './Choice_temp';
 import { emojis } from './emojis';
-import { Game } from './Game';
+import { Game } from './Game_temp';
 
 export class RockPaperScissorsCommand extends SlashCommand {
     public constructor(private readonly db: CursorDatabase) {

@@ -1,4 +1,4 @@
-import { Choice } from './Choice';
+import { Choice } from './Choice_temp';
 
 export const emojis = {
     [Choice.Rock]: '🪨',

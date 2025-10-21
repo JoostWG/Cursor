@@ -1,4 +1,4 @@
-import type { Dice } from '../Dice';
+import type { Dice } from '../Dice_temp';
 import { ScoreCardSection } from '../ScoreCardSection';
 import type { DieValue } from '../types';
 import { ScoreCategory } from './score-category';
