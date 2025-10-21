@@ -1,5 +1,5 @@
 import { sql, type SchemaModule } from 'kysely';
-import { Migration } from '../Migration_temp';
+import { Migration } from '../Migration';
 
 export class V3 implements Migration {
     public async up(schema: SchemaModule): Promise<void> {

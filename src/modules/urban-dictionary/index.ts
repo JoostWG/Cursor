@@ -1,4 +1,4 @@
-export * from './Api_temp';
+export * from './Api';
 export * from './ApiError';
 export type * from './types';
 export * from './utils';

@@ -13,9 +13,9 @@ import {
 
 import { CursorDatabase } from '../../database';
 import { actionRow, button, container, separator, textDisplay } from '../../utils/builders';
-import type { Choice } from './Choice_temp';
+import type { Choice } from './Choice';
 import { emojis } from './emojis';
-import { Round } from './Round_temp';
+import { Round } from './Round';
 
 export class Game {
     private readonly users: [User, User];

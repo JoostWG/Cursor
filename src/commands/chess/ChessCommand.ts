@@ -12,7 +12,7 @@ import { CheckerboardTheme } from './CheckerboardTheme';
 import { DefaultChessBoard } from './DefaultChessBoard';
 import { DefaultChessPieceFactory } from './DefaultChessPieceFactory';
 import { DefaultMessageFactory } from './DefaultMessageFactory';
-import { Game } from './Game_temp';
+import { Game } from './Game';
 import { InteractionHandler } from './InteractionHandler';
 
 export class ChessCommand extends SlashCommand {

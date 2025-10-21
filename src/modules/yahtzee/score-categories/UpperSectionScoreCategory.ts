@@ -1,7 +1,7 @@
-import type { Dice } from '../Dice_temp';
+import type { Dice } from '../Dice';
 import { ScoreCardSection } from '../ScoreCardSection';
 import type { DieValue } from '../types';
-import { ScoreCategory } from './score-category';
+import { ScoreCategory } from './ScoreCategory';
 
 export class UpperSectionScoreCategory extends ScoreCategory {
     public override readonly section = ScoreCardSection.Upper;

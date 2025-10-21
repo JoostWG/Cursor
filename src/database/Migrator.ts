@@ -1,5 +1,5 @@
 import { CursorDatabase } from './database';
-import { Migration } from './Migration_temp';
+import { Migration } from './Migration';
 
 export class Migrator {
     public constructor(

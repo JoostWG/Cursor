@@ -1,4 +1,4 @@
-export * from './Bot';
+export * from './Bot_temp';
 export * from './command';
 export * from './CommandCollection';
 export * from './CommandDataCache';

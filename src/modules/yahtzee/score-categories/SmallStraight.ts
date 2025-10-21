@@ -1,6 +1,6 @@
-import type { Dice } from '../Dice_temp';
+import type { Dice } from '../Dice';
 import { ScoreCardSection } from '../ScoreCardSection';
-import { ScoreCategory } from './score-category';
+import { ScoreCategory } from './ScoreCategory';
 
 export class SmallStraight extends ScoreCategory {
     public override readonly name = 'Small Straight';

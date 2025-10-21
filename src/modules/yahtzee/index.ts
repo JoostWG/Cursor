@@ -1,5 +1,5 @@
-export * from './Dice_temp';
-export * from './Die_temp';
+export * from './Dice';
+export * from './Die';
 export * from './score-categories';
 export * from './ScoreCard';
 export * from './ScoreCardSection';

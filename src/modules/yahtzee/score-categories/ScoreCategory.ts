@@ -1,4 +1,4 @@
-import type { Dice } from '../Dice_temp';
+import type { Dice } from '../Dice';
 import type { ScoreCardSection } from '../ScoreCardSection';
 
 export abstract class ScoreCategory {
