@@ -36,5 +36,5 @@ export abstract class BaseApplicationCommand<
         return this.isUserContextMenu() || this.isMessageContextMenu();
     }
 
-    public abstract execute(ctx: Context<CommandInteraction>): Promise<void>;
+    public abstract handle(ctx: Context<CommandInteraction>): Promise<void>;
 }

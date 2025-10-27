@@ -63,7 +63,7 @@ export class ChessCommand extends SlashCommand {
             .map((move) => ({ name: move, value: move }));
     }
 
-    public override async execute({ interaction }: ChatInputContext): Promise<void> {
+    public override async handle({ interaction }: ChatInputContext): Promise<void> {
         switch (interaction.options.getSubcommand()) {
             case 'start':
                 await this.handleStart(interaction);

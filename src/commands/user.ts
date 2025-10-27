@@ -16,7 +16,7 @@ export class UserCommand extends SlashCommand {
         });
     }
 
-    public override async execute({ interaction }: ChatInputContext): Promise<void> {
+    public override async handle({ interaction }: ChatInputContext): Promise<void> {
         const user = interaction.options.getUser('user') ?? interaction.user;
 
         await interaction.reply({

@@ -95,7 +95,7 @@ export class JokeCommand extends SlashCommand {
         });
     }
 
-    public override async execute({ interaction }: ChatInputContext): Promise<void> {
+    public override async handle({ interaction }: ChatInputContext): Promise<void> {
         const category = interaction.options.getString('category') ?? 'Any';
         const safe = interaction.options.getBoolean('safe') ?? true;
 

@@ -11,5 +11,5 @@ export abstract class MessageContextMenu extends ContextMenu {
         });
     }
 
-    public abstract override execute(ctx: MessageContextMenuContext): Promise<void>;
+    public abstract override handle(ctx: MessageContextMenuContext): Promise<void>;
 }

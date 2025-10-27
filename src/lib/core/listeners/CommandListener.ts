@@ -13,7 +13,7 @@ export class CommandListener extends eventListener(Events.InteractionCreate) {
         super();
     }
 
-    public override async execute(interaction: Interaction): Promise<void> {
+    public override async handle(interaction: Interaction): Promise<void> {
         if (!interaction.isCommand()) {
             return;
         }
@@ -33,14 +33,14 @@ export class CommandListener extends eventListener(Events.InteractionCreate) {
 
         try {
             if (interaction.isChatInputCommand() && command.isSlashCommand()) {
-                await command.execute(new ChatInputContext(interaction));
+                await command.handle(new ChatInputContext(interaction));
             } else if (interaction.isUserContextMenuCommand() && command.isUserContextMenu()) {
-                await command.execute(new UserContextMenuContext(interaction));
+                await command.handle(new UserContextMenuContext(interaction));
             } else if (
                 interaction.isMessageContextMenuCommand()
                 && command.isMessageContextMenu()
             ) {
-                await command.execute(new MessageContextMenuContext(interaction));
+                await command.handle(new MessageContextMenuContext(interaction));
             } else {
                 await interaction.reply({
                     content: 'Command not found.',

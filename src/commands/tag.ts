@@ -223,7 +223,7 @@ export class TagCommand extends GuildSlashCommand {
             .map((tag) => ({ name: tag.name, value: tag.name }));
     }
 
-    public override async execute({ interaction }: ChatInputContext): Promise<void> {
+    public override async handle({ interaction }: ChatInputContext): Promise<void> {
         if (!interaction.inCachedGuild()) {
             return;
         }

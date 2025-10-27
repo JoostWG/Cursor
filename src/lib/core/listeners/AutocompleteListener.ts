@@ -7,7 +7,7 @@ export class AutocompleteListener extends eventListener(Events.InteractionCreate
         super();
     }
 
-    public override async execute(interaction: Interaction): Promise<void> {
+    public override async handle(interaction: Interaction): Promise<void> {
         if (!interaction.isAutocomplete()) {
             return;
         }

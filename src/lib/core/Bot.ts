@@ -34,7 +34,7 @@ export class Bot {
 
         for (const listener of this.listeners) {
             this.client.on(listener.event, (...args) => {
-                listener.execute(...args).catch(console.error);
+                listener.handle(...args).catch(console.error);
             });
         }
     }

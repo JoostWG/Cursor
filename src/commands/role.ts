@@ -122,7 +122,7 @@ export class RoleCommand extends GuildSlashCommand {
             );
     }
 
-    public override async execute({ interaction }: ChatInputContext): Promise<void> {
+    public override async handle({ interaction }: ChatInputContext): Promise<void> {
         if (!interaction.inCachedGuild()) {
             throw new CommandError('Must use in guild');
         }

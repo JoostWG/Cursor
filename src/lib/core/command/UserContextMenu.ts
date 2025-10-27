@@ -11,5 +11,5 @@ export abstract class UserContextMenu extends ContextMenu {
         });
     }
 
-    public abstract override execute(ctx: UserContextMenuContext): Promise<void>;
+    public abstract override handle(ctx: UserContextMenuContext): Promise<void>;
 }

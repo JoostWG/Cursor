@@ -9,7 +9,7 @@ export class PingCommand extends SlashCommand {
         });
     }
 
-    public override async execute({ interaction }: ChatInputContext): Promise<void> {
+    public override async handle({ interaction }: ChatInputContext): Promise<void> {
         await interaction.reply({
             content: 'Pong!',
             flags: MessageFlags.Ephemeral,

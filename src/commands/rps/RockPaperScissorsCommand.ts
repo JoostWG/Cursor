@@ -30,7 +30,7 @@ export class RockPaperScissorsCommand extends SlashCommand {
         });
     }
 
-    public override async execute({ interaction }: ChatInputContext): Promise<void> {
+    public override async handle({ interaction }: ChatInputContext): Promise<void> {
         switch (interaction.options.getSubcommand()) {
             case 'play':
                 await this.play(interaction);

@@ -165,7 +165,7 @@ export class TriviaCommand extends SlashCommand {
         });
     }
 
-    public override async execute({ interaction }: ChatInputContext): Promise<void> {
+    public override async handle({ interaction }: ChatInputContext): Promise<void> {
         const difficulty = interaction.options.getString('difficulty');
         const category = interaction.options.getString('category');
 

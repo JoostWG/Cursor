@@ -28,7 +28,7 @@ export class UrbanDictionaryCommand extends SlashCommand {
         this.api = new CachedApi();
     }
 
-    public override async execute({ interaction }: ChatInputContext): Promise<void> {
+    public override async handle({ interaction }: ChatInputContext): Promise<void> {
         await new UrbanDictionary(
             this.api,
             new InteractionHandler(interaction, new ComponentBuilder()),

@@ -8,7 +8,7 @@ export class RawCommand extends MessageContextMenu {
         });
     }
 
-    public override async execute({ interaction }: MessageContextMenuContext): Promise<void> {
+    public override async handle({ interaction }: MessageContextMenuContext): Promise<void> {
         await interaction.reply({
             flags: MessageFlags.Ephemeral,
             files: [

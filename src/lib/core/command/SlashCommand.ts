@@ -18,7 +18,7 @@ export abstract class SlashCommand
         });
     }
 
-    public abstract override execute(ctx: ChatInputContext): Promise<void>;
+    public abstract override handle(ctx: ChatInputContext): Promise<void>;
 
     public autocomplete?(
         interaction: AutocompleteInteraction,

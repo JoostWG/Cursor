@@ -10,7 +10,7 @@ export class YahtzeeCommand extends SlashCommand {
         });
     }
 
-    public override async execute({ interaction }: ChatInputContext): Promise<void> {
+    public override async handle({ interaction }: ChatInputContext): Promise<void> {
         const game = new Game(
             interaction,
             new ScoreCard(),
