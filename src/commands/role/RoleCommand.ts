@@ -172,14 +172,16 @@ export class RoleCommand extends GuildSlashCommand {
                 );
             }
 
-            options.color = parseInt(match[1], 16);
+            options.colors = {
+                primaryColor: parseInt(match[1], 16),
+            };
         }
 
         const reason = interaction.options.getString('reason') ?? undefined;
 
         const oldProps = new Collection<AllowedRoleProps, Role[AllowedRoleProps]>([
             ['name', role.name],
-            ['color', role.color],
+            ['colors', role.colors],
             ['hoist', role.hoist],
             ['mentionable', role.mentionable],
         ]);
@@ -209,14 +211,16 @@ export class RoleCommand extends GuildSlashCommand {
                                         bold(key),
                                         'from',
                                         inlineCode(
-                                            key === 'color'
-                                                ? `#${value.old.toString(16)}`
+                                            key === 'colors' && typeof value.old === 'object'
+                                                ? `#${value.old.primaryColor.toString(16)}`
+                                                // eslint-disable-next-line @typescript-eslint/no-base-to-string
                                                 : value.old.toString(),
                                         ),
                                         'to',
                                         inlineCode(
-                                            key === 'color'
-                                                ? `#${value.new.toString(16)}`
+                                            key === 'colors' && typeof value.new === 'object'
+                                                ? `#${value.new.primaryColor.toString(16)}`
+                                                // eslint-disable-next-line @typescript-eslint/no-base-to-string
                                                 : value.new.toString(),
                                         ),
                                     ].join(' ')

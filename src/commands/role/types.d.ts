@@ -1,1 +1,1 @@
-export type AllowedRoleProps = 'name' | 'color' | 'hoist' | 'mentionable';
+export type AllowedRoleProps = 'name' | 'colors' | 'hoist' | 'mentionable';
