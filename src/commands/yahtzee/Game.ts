@@ -1,5 +1,5 @@
 import { actionRow, button, container, stringSelect, textDisplay } from '@/lib/utils/builders';
-import { ComponentUI } from '@/lib/utils/ui';
+import { ComponentUI } from '@/lib/utils/ComponentUI';
 import type { Dice, Die, GameOptions, ScoreCard, ScoreCategory } from '@/modules/yahtzee';
 import {
     ButtonStyle,
