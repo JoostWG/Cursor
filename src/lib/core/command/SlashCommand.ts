@@ -1,11 +1,11 @@
 import type { OmitType } from '@/lib/utils';
 import {
     ApplicationCommandType,
+    ChatInputCommandInteraction,
     type ApplicationCommandOptionChoiceData,
     type AutocompleteInteraction,
     type RESTPostAPIChatInputApplicationCommandsJSONBody,
 } from 'discord.js';
-import type { ChatInputContext } from '../context';
 import { BaseApplicationCommand } from './BaseApplicationCommand';
 
 export abstract class SlashCommand
@@ -18,7 +18,7 @@ export abstract class SlashCommand
         });
     }
 
-    public abstract override handle(ctx: ChatInputContext): Promise<void>;
+    public abstract override handle(interaction: ChatInputCommandInteraction): Promise<void>;
 
     public autocomplete?(
         interaction: AutocompleteInteraction,

@@ -1,5 +1,5 @@
 import type { CursorDatabase, TagsTable } from '@/database';
-import { CommandError, GuildSlashCommand, type ChatInputContext } from '@/lib/core';
+import { CommandError, GuildSlashCommand } from '@/lib/core';
 import { container, stringOption, subcommand, textDisplay } from '@/lib/utils/builders';
 import {
     HeadingLevel,
@@ -223,7 +223,7 @@ export class TagCommand extends GuildSlashCommand {
             .map((tag) => ({ name: tag.name, value: tag.name }));
     }
 
-    public override async handle({ interaction }: ChatInputContext): Promise<void> {
+    public override async handle(interaction: ChatInputCommandInteraction): Promise<void> {
         if (!interaction.inCachedGuild()) {
             return;
         }

@@ -3,7 +3,6 @@ export * from './command';
 export * from './CommandCollection';
 export * from './CommandDataCache';
 export * from './CommandDeployHandler';
-export * from './context';
 export * from './errors';
 export * from './event-listener';
 export * from './listeners';

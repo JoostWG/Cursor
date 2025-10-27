@@ -1,4 +1,4 @@
-import { SlashCommand, type ChatInputContext } from '@/lib/core';
+import { SlashCommand } from '@/lib/core';
 import { stringOption, subcommand } from '@/lib/utils/builders';
 import { Chess } from 'chess.js';
 import {
@@ -63,7 +63,7 @@ export class ChessCommand extends SlashCommand {
             .map((move) => ({ name: move, value: move }));
     }
 
-    public override async handle({ interaction }: ChatInputContext): Promise<void> {
+    public override async handle(interaction: ChatInputCommandInteraction): Promise<void> {
         switch (interaction.options.getSubcommand()) {
             case 'start':
                 await this.handleStart(interaction);

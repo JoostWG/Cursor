@@ -3,7 +3,6 @@ import {
     type CommandInteraction,
     type RESTPostAPIApplicationCommandsJSONBody,
 } from 'discord.js';
-import type { Context } from '../context';
 import type { MessageContextMenu } from './MessageContextMenu';
 import type { SlashCommand } from './SlashCommand';
 import type { UserContextMenu } from './UserContextMenu';
@@ -36,5 +35,5 @@ export abstract class BaseApplicationCommand<
         return this.isUserContextMenu() || this.isMessageContextMenu();
     }
 
-    public abstract handle(ctx: Context<CommandInteraction>): Promise<void>;
+    public abstract handle(interaction: CommandInteraction): Promise<void>;
 }

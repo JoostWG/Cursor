@@ -1,7 +1,6 @@
 import { CursorDatabase } from '@/database';
 import { Events, MessageFlags, type CommandInteraction, type Interaction } from 'discord.js';
 import type { CommandCollection } from '../CommandCollection';
-import { ChatInputContext, MessageContextMenuContext, UserContextMenuContext } from '../context';
 import { CommandError } from '../errors';
 import { eventListener } from '../event-listener';
 
@@ -33,14 +32,14 @@ export class CommandListener extends eventListener(Events.InteractionCreate) {
 
         try {
             if (interaction.isChatInputCommand() && command.isSlashCommand()) {
-                await command.handle(new ChatInputContext(interaction));
+                await command.handle(interaction);
             } else if (interaction.isUserContextMenuCommand() && command.isUserContextMenu()) {
-                await command.handle(new UserContextMenuContext(interaction));
+                await command.handle(interaction);
             } else if (
                 interaction.isMessageContextMenuCommand()
                 && command.isMessageContextMenu()
             ) {
-                await command.handle(new MessageContextMenuContext(interaction));
+                await command.handle(interaction);
             } else {
                 await interaction.reply({
                     content: 'Command not found.',

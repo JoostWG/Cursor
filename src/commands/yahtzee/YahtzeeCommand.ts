@@ -1,5 +1,6 @@
-import { SlashCommand, type ChatInputContext } from '@/lib/core';
+import { SlashCommand } from '@/lib/core';
 import { Dice, Die, ScoreCard } from '@/modules/yahtzee';
+import { ChatInputCommandInteraction } from 'discord.js';
 import { Game } from './Game';
 
 export class YahtzeeCommand extends SlashCommand {
@@ -10,7 +11,7 @@ export class YahtzeeCommand extends SlashCommand {
         });
     }
 
-    public override async handle({ interaction }: ChatInputContext): Promise<void> {
+    public override async handle(interaction: ChatInputCommandInteraction): Promise<void> {
         const game = new Game(
             interaction,
             new ScoreCard(),

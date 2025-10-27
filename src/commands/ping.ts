@@ -1,5 +1,5 @@
-import { SlashCommand, type ChatInputContext } from '@/lib/core';
-import { MessageFlags } from 'discord.js';
+import { SlashCommand } from '@/lib/core';
+import { ChatInputCommandInteraction, MessageFlags } from 'discord.js';
 
 export class PingCommand extends SlashCommand {
     public constructor() {
@@ -9,7 +9,7 @@ export class PingCommand extends SlashCommand {
         });
     }
 
-    public override async handle({ interaction }: ChatInputContext): Promise<void> {
+    public override async handle(interaction: ChatInputCommandInteraction): Promise<void> {
         await interaction.reply({
             content: 'Pong!',
             flags: MessageFlags.Ephemeral,

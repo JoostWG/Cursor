@@ -1,4 +1,4 @@
-import { CommandError, GuildSlashCommand, type ChatInputContext } from '@/lib/core';
+import { CommandError, GuildSlashCommand } from '@/lib/core';
 import {
     actionRow,
     booleanOption,
@@ -122,7 +122,7 @@ export class RoleCommand extends GuildSlashCommand {
             );
     }
 
-    public override async handle({ interaction }: ChatInputContext): Promise<void> {
+    public override async handle(interaction: ChatInputCommandInteraction): Promise<void> {
         if (!interaction.inCachedGuild()) {
             throw new CommandError('Must use in guild');
         }

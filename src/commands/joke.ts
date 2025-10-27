@@ -1,7 +1,15 @@
-import { CommandError, SlashCommand, type ChatInputContext } from '@/lib/core';
+import { CommandError, SlashCommand } from '@/lib/core';
 import { booleanOption, stringOption } from '@/lib/utils/builders';
 import axios, { type AxiosInstance } from 'axios';
-import { Colors, Locale, TextChannel, bold, spoiler, type APIEmbed } from 'discord.js';
+import {
+    ChatInputCommandInteraction,
+    Colors,
+    Locale,
+    TextChannel,
+    bold,
+    spoiler,
+    type APIEmbed,
+} from 'discord.js';
 
 type JokeBlacklistFlag = 'nsfw' | 'religious' | 'political' | 'racist' | 'sexist' | 'explicit';
 
@@ -95,7 +103,7 @@ export class JokeCommand extends SlashCommand {
         });
     }
 
-    public override async handle({ interaction }: ChatInputContext): Promise<void> {
+    public override async handle(interaction: ChatInputCommandInteraction): Promise<void> {
         const category = interaction.options.getString('category') ?? 'Any';
         const safe = interaction.options.getBoolean('safe') ?? true;
 

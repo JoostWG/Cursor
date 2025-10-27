@@ -1,5 +1,5 @@
-import { MessageContextMenu, type MessageContextMenuContext } from '@/lib/core';
-import { AttachmentBuilder, MessageFlags } from 'discord.js';
+import { MessageContextMenu } from '@/lib/core';
+import { AttachmentBuilder, MessageContextMenuCommandInteraction, MessageFlags } from 'discord.js';
 
 export class RawCommand extends MessageContextMenu {
     public constructor() {
@@ -8,7 +8,7 @@ export class RawCommand extends MessageContextMenu {
         });
     }
 
-    public override async handle({ interaction }: MessageContextMenuContext): Promise<void> {
+    public override async handle(interaction: MessageContextMenuCommandInteraction): Promise<void> {
         await interaction.reply({
             flags: MessageFlags.Ephemeral,
             files: [

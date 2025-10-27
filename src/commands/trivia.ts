@@ -1,4 +1,4 @@
-import { SlashCommand, type ChatInputContext } from '@/lib/core';
+import { SlashCommand } from '@/lib/core';
 import { stringTitle } from '@/lib/utils';
 import { actionRow, button, container, stringOption, textDisplay } from '@/lib/utils/builders';
 import {
@@ -165,7 +165,7 @@ export class TriviaCommand extends SlashCommand {
         });
     }
 
-    public override async handle({ interaction }: ChatInputContext): Promise<void> {
+    public override async handle(interaction: ChatInputCommandInteraction): Promise<void> {
         const difficulty = interaction.options.getString('difficulty');
         const category = interaction.options.getString('category');
 

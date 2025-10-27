@@ -1,5 +1,5 @@
 import { CursorDatabase } from '@/database';
-import { CommandError, SlashCommand, type ChatInputContext } from '@/lib/core';
+import { CommandError, SlashCommand } from '@/lib/core';
 import { container, subcommand, textDisplay, userOption } from '@/lib/utils/builders';
 import { MessageFlags, bold, heading, type ChatInputCommandInteraction } from 'discord.js';
 import type { Choice } from './Choice';
@@ -30,7 +30,7 @@ export class RockPaperScissorsCommand extends SlashCommand {
         });
     }
 
-    public override async handle({ interaction }: ChatInputContext): Promise<void> {
+    public override async handle(interaction: ChatInputCommandInteraction): Promise<void> {
         switch (interaction.options.getSubcommand()) {
             case 'play':
                 await this.play(interaction);

@@ -1,7 +1,11 @@
-import { SlashCommand, type ChatInputContext } from '@/lib/core';
+import { SlashCommand } from '@/lib/core';
 import { stringOption } from '@/lib/utils/builders';
 import type { Api } from '@/modules/urban-dictionary';
-import type { ApplicationCommandOptionChoiceData, AutocompleteInteraction } from 'discord.js';
+import type {
+    ApplicationCommandOptionChoiceData,
+    AutocompleteInteraction,
+    ChatInputCommandInteraction,
+} from 'discord.js';
 import { CachedApi } from './CachedApi';
 import { ComponentBuilder } from './ComponentBuilder';
 import { InteractionHandler } from './InteractionHandler';
@@ -28,7 +32,7 @@ export class UrbanDictionaryCommand extends SlashCommand {
         this.api = new CachedApi();
     }
 
-    public override async handle({ interaction }: ChatInputContext): Promise<void> {
+    public override async handle(interaction: ChatInputCommandInteraction): Promise<void> {
         await new UrbanDictionary(
             this.api,
             new InteractionHandler(interaction, new ComponentBuilder()),

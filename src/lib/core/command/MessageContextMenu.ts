@@ -1,6 +1,9 @@
 import type { OmitType } from '@/lib/utils';
-import { ApplicationCommandType, type RESTPostAPIApplicationCommandsJSONBody } from 'discord.js';
-import type { MessageContextMenuContext } from '../context';
+import {
+    ApplicationCommandType,
+    MessageContextMenuCommandInteraction,
+    type RESTPostAPIApplicationCommandsJSONBody,
+} from 'discord.js';
 import { ContextMenu } from './ContextMenu';
 
 export abstract class MessageContextMenu extends ContextMenu {
@@ -11,5 +14,7 @@ export abstract class MessageContextMenu extends ContextMenu {
         });
     }
 
-    public abstract override handle(ctx: MessageContextMenuContext): Promise<void>;
+    public abstract override handle(
+        interaction: MessageContextMenuCommandInteraction,
+    ): Promise<void>;
 }

@@ -1,6 +1,6 @@
-import { SlashCommand, type ChatInputContext } from '@/lib/core';
+import { SlashCommand } from '@/lib/core';
 import { userOption } from '@/lib/utils/builders';
-import { TimestampStyles, time } from 'discord.js';
+import { ChatInputCommandInteraction, TimestampStyles, time } from 'discord.js';
 
 export class UserCommand extends SlashCommand {
     public constructor() {
@@ -16,7 +16,7 @@ export class UserCommand extends SlashCommand {
         });
     }
 
-    public override async handle({ interaction }: ChatInputContext): Promise<void> {
+    public override async handle(interaction: ChatInputCommandInteraction): Promise<void> {
         const user = interaction.options.getUser('user') ?? interaction.user;
 
         await interaction.reply({
