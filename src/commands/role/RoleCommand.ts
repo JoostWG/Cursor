@@ -27,14 +27,15 @@ import {
     type ApplicationCommandOptionChoiceData,
     type AutocompleteInteraction,
     type ChatInputCommandInteraction,
-    type Interaction,
     type Role,
     type RoleEditOptions,
 } from 'discord.js';
-import { InvalidRoleError } from './InvalidRoleError';
+import { RoleService } from './RoleService';
 import type { AllowedRoleProps } from './types';
 
 export class RoleCommand extends GuildSlashCommand {
+    private readonly roleService: RoleService;
+
     public constructor() {
         super({
             name: 'role',
@@ -91,6 +92,8 @@ export class RoleCommand extends GuildSlashCommand {
                 }),
             ],
         });
+
+        this.roleService = new RoleService();
     }
 
     public override async autocomplete(
@@ -148,7 +151,7 @@ export class RoleCommand extends GuildSlashCommand {
     ): Promise<void> {
         const role = interaction.options.getRole('role', true);
 
-        this.validateRole(interaction, role, { allowManaged: true });
+        this.roleService.validateRole(interaction, role, { allowManaged: true });
 
         const options: Partial<Pick<RoleEditOptions, AllowedRoleProps>> = {
             name: interaction.options.getString('name') ?? undefined,
@@ -236,7 +239,7 @@ export class RoleCommand extends GuildSlashCommand {
         const role = interaction.options.getRole('role', true);
         const reason = interaction.options.getString('reason') ?? undefined;
 
-        this.validateRole(interaction, role);
+        this.roleService.validateRole(interaction, role);
 
         const response = await interaction.reply({
             flags: [MessageFlags.IsComponentsV2, MessageFlags.Ephemeral],
@@ -342,40 +345,6 @@ export class RoleCommand extends GuildSlashCommand {
                         }),
                     ],
                 });
-        }
-    }
-
-    private validateRole(
-        interaction: Interaction<'cached'>,
-        role: Role,
-        options?: { allowManaged?: boolean; allowEveryone?: boolean },
-    ): void {
-        // TODO
-        // I'm not sure, but this function may need some more checks to also work properly
-        // when the user is server owner
-
-        if (role.id === interaction.guild.id && !options?.allowEveryone) {
-            throw new InvalidRoleError('Cannot modify @everyone role.');
-        }
-
-        if (role.managed && !options?.allowManaged) {
-            throw new InvalidRoleError('Target role is managed and cannot be modified.');
-        }
-
-        if (!interaction.guild.members.me?.permissions.has(PermissionFlagsBits.ManageRoles)) {
-            throw new InvalidRoleError('Bot missing Manage Roles permission.');
-        }
-
-        if (!interaction.member.permissions.has(PermissionFlagsBits.ManageRoles)) {
-            throw new InvalidRoleError('User missing Manage Roles permission.');
-        }
-
-        if (role.position >= interaction.guild.members.me.roles.highest.position) {
-            throw new InvalidRoleError('Bot highest role not above target role.');
-        }
-
-        if (role.position >= interaction.member.roles.highest.position) {
-            throw new InvalidRoleError('User highest role not above target role.');
         }
     }
 }
