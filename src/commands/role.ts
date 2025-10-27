@@ -1,3 +1,14 @@
+import { CommandError, GuildSlashCommand, type ChatInputContext } from '@/lib/core';
+import {
+    actionRow,
+    booleanOption,
+    button,
+    container,
+    roleOption,
+    stringOption,
+    subcommand,
+    textDisplay,
+} from '@/lib/utils/builders';
 import {
     ButtonStyle,
     Collection,
@@ -20,17 +31,6 @@ import {
     type Role,
     type RoleEditOptions,
 } from 'discord.js';
-import { CommandError, GuildSlashCommand, type ChatInputContext } from '../core';
-import {
-    actionRow,
-    booleanOption,
-    button,
-    container,
-    roleOption,
-    stringOption,
-    subcommand,
-    textDisplay,
-} from '../utils/builders';
 
 class InvalidRoleError extends CommandError {
     //

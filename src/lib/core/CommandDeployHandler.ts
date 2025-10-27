@@ -1,6 +1,6 @@
+import { devGuildId, discordAppId } from '@/config'; // TODO: Convert to dependency
 import { Routes, type REST, type RESTPostAPIApplicationCommandsJSONBody } from 'discord.js';
 import { deepEqual } from 'fast-equals';
-import { devGuildId, discordAppId } from '../../config.json'; // TODO: Convert to dependency
 import type { CommandCollection } from './CommandCollection';
 import { CommandDataCache } from './CommandDataCache';
 

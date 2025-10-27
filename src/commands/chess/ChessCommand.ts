@@ -1,3 +1,5 @@
+import { SlashCommand, type ChatInputContext } from '@/lib/core';
+import { stringOption, subcommand } from '@/lib/utils/builders';
 import { Chess } from 'chess.js';
 import {
     MessageFlags,
@@ -6,8 +8,6 @@ import {
     type ChatInputCommandInteraction,
     type Snowflake,
 } from 'discord.js';
-import { SlashCommand, type ChatInputContext } from '../../core';
-import { stringOption, subcommand } from '../../utils/builders';
 import { CheckerboardTheme } from './CheckerboardTheme';
 import { DefaultChessBoard } from './DefaultChessBoard';
 import { DefaultChessPieceFactory } from './DefaultChessPieceFactory';

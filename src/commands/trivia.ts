@@ -1,3 +1,6 @@
+import { SlashCommand, type ChatInputContext } from '@/lib/core';
+import { stringTitle } from '@/lib/utils';
+import { actionRow, button, container, stringOption, textDisplay } from '@/lib/utils/builders';
 import {
     ButtonStyle,
     ComponentType,
@@ -18,9 +21,6 @@ import {
     type Question,
     type QuestionOptions,
 } from 'open-trivia-db';
-import { SlashCommand, type ChatInputContext } from '../core';
-import { stringTitle } from '../utils';
-import { actionRow, button, container, stringOption, textDisplay } from '../utils/builders';
 
 type Status = 'active' | 'finished';
 

@@ -1,5 +1,5 @@
+import { CursorDatabase } from '@/database';
 import { Collection } from 'discord.js';
-import { CursorDatabase } from '../database';
 import type { BaseApplicationCommand } from './command';
 import type { EventListener } from './event-listener';
 import { AutocompleteListener } from './listeners/AutocompleteListener';

@@ -1,5 +1,5 @@
-import { SlashCommand, type ChatInputContext } from '../../core';
-import { Dice, Die, ScoreCard } from '../../modules/yahtzee';
+import { SlashCommand, type ChatInputContext } from '@/lib/core';
+import { Dice, Die, ScoreCard } from '@/modules/yahtzee';
 import { Game } from './Game';
 
 export class YahtzeeCommand extends SlashCommand {

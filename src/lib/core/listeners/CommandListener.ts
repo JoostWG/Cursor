@@ -1,5 +1,5 @@
+import { CursorDatabase } from '@/database';
 import { Events, MessageFlags, type CommandInteraction, type Interaction } from 'discord.js';
-import { CursorDatabase } from '../../database';
 import type { CommandCollection } from '../CommandCollection';
 import { ChatInputContext, MessageContextMenuContext, UserContextMenuContext } from '../context';
 import { CommandError } from '../errors';

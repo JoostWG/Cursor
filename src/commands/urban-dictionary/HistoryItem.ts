@@ -1,4 +1,4 @@
-import type { Definition } from '../../modules/urban-dictionary';
+import type { Definition } from '@/modules/urban-dictionary';
 
 export class HistoryItem {
     public readonly term: string;

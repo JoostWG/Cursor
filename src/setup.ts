@@ -1,3 +1,4 @@
+import { Bot, CommandCollection, CommandDataCache, CommandDeployHandler } from '@/lib/core';
 import SQLite from 'better-sqlite3';
 import { Client, Events, GatewayIntentBits } from 'discord.js';
 import { Kysely, SqliteDialect } from 'kysely';
@@ -12,7 +13,6 @@ import { TriviaCommand } from './commands/trivia';
 import { UrbanDictionaryCommand } from './commands/urban-dictionary';
 import { UserCommand } from './commands/user';
 import { YahtzeeCommand } from './commands/yahtzee';
-import { Bot, CommandCollection, CommandDataCache, CommandDeployHandler } from './core';
 import type { CursorDatabase, DatabaseTables } from './database/database';
 
 export function createDatabaseInstance(): CursorDatabase {

@@ -12,6 +12,13 @@
         "esModuleInterop": true,
         "resolveJsonModule": true,
         "allowUnreachableCode": false,
-        "noImplicitOverride": true
+        "noImplicitOverride": true,
+        "paths": {
+            "@/config": ["./config.json"],
+            "@/database": ["./src/database"],
+            "@/database/*": ["./src/database/*"],
+            "@/lib/*": ["./src/lib/*"],
+            "@/modules/*": ["./src/modules/*"]
+        }
     }
 }

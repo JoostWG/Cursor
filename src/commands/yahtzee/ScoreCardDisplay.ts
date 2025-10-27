@@ -1,10 +1,5 @@
-import {
-    ScoreCardSection,
-    type Dice,
-    type ScoreCard,
-    type ScoreCategory,
-} from '../../modules/yahtzee';
-import { Table, type TableRow } from '../../utils/table';
+import { Table, type TableRow } from '@/lib/utils/table';
+import { ScoreCardSection, type Dice, type ScoreCard, type ScoreCategory } from '@/modules/yahtzee';
 
 export class ScoreCardDisplay {
     public constructor(private readonly scoreCard: ScoreCard, private readonly dice: Dice) {}

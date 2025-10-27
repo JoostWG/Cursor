@@ -1,7 +1,7 @@
+import { CommandError, SlashCommand, type ChatInputContext } from '@/lib/core';
+import { booleanOption, stringOption } from '@/lib/utils/builders';
 import axios, { type AxiosInstance } from 'axios';
 import { Colors, Locale, TextChannel, bold, spoiler, type APIEmbed } from 'discord.js';
-import { CommandError, SlashCommand, type ChatInputContext } from '../core';
-import { booleanOption, stringOption } from '../utils/builders';
 
 type JokeBlacklistFlag = 'nsfw' | 'religious' | 'political' | 'racist' | 'sexist' | 'explicit';
 

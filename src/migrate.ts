@@ -1,5 +1,5 @@
-import { V1, V2, V3 } from './database/migrations';
-import { Migrator } from './database/Migrator';
+import { V1, V2, V3 } from '@/database/migrations';
+import { Migrator } from '@/database/Migrator';
 import { createDatabaseInstance } from './setup';
 
 (async () => {

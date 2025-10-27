@@ -1,5 +1,5 @@
+import { Api, type Definition } from '@/modules/urban-dictionary';
 import { Collection } from 'discord.js';
-import { Api, type Definition } from '../../modules/urban-dictionary';
 
 export class CachedApi extends Api {
     private readonly definitionsCache: Collection<string, Promise<Definition[]>>;

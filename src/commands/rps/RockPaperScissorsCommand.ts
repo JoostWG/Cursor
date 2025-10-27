@@ -1,7 +1,7 @@
+import { CursorDatabase } from '@/database';
+import { CommandError, SlashCommand, type ChatInputContext } from '@/lib/core';
+import { container, subcommand, textDisplay, userOption } from '@/lib/utils/builders';
 import { MessageFlags, bold, heading, type ChatInputCommandInteraction } from 'discord.js';
-import { CommandError, SlashCommand, type ChatInputContext } from '../../core';
-import { CursorDatabase } from '../../database';
-import { container, subcommand, textDisplay, userOption } from '../../utils/builders';
 import type { Choice } from './Choice';
 import { emojis } from './emojis';
 import { Game } from './Game';

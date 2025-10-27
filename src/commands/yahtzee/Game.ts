@@ -1,3 +1,6 @@
+import { actionRow, button, container, stringSelect, textDisplay } from '@/lib/utils/builders';
+import { ComponentUI } from '@/lib/utils/ui';
+import type { Dice, Die, GameOptions, ScoreCard, ScoreCategory } from '@/modules/yahtzee';
 import {
     ButtonStyle,
     MessageFlags,
@@ -14,9 +17,6 @@ import {
     type MessageComponentInteraction,
     type StringSelectMenuInteraction,
 } from 'discord.js';
-import type { Dice, Die, GameOptions, ScoreCard, ScoreCategory } from '../../modules/yahtzee';
-import { actionRow, button, container, stringSelect, textDisplay } from '../../utils/builders';
-import { ComponentUI } from '../../utils/ui';
 import { ScoreCardDisplay } from './ScoreCardDisplay';
 
 export class Game extends ComponentUI {

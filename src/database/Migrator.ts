@@ -1,4 +1,4 @@
-import { CursorDatabase } from './database';
+import { CursorDatabase } from '@/database';
 import { Migration } from './Migration';
 
 export class Migrator {

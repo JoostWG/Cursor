@@ -1,4 +1,13 @@
 import {
+    actionRow,
+    button,
+    container,
+    separator,
+    stringSelect,
+    textDisplay,
+} from '@/lib/utils/builders';
+import { extractHyperlinks } from '@/modules/urban-dictionary';
+import {
     ButtonStyle,
     HeadingLevel,
     heading,
@@ -7,15 +16,6 @@ import {
     type APIBaseComponent,
     type ComponentType,
 } from 'discord.js';
-import { extractHyperlinks } from '../../modules/urban-dictionary';
-import {
-    actionRow,
-    button,
-    container,
-    separator,
-    stringSelect,
-    textDisplay,
-} from '../../utils/builders';
 import type { ComponentBuilderOptions } from './types';
 
 export class ComponentBuilder {

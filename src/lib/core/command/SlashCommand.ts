@@ -1,10 +1,10 @@
+import type { OmitType } from '@/lib/utils';
 import {
     ApplicationCommandType,
     type ApplicationCommandOptionChoiceData,
     type AutocompleteInteraction,
     type RESTPostAPIChatInputApplicationCommandsJSONBody,
 } from 'discord.js';
-import type { OmitType } from '../../utils';
 import type { ChatInputContext } from '../context';
 import { BaseApplicationCommand } from './BaseApplicationCommand';
 

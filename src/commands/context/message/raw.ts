@@ -1,5 +1,5 @@
+import { MessageContextMenu, type MessageContextMenuContext } from '@/lib/core';
 import { AttachmentBuilder, MessageFlags } from 'discord.js';
-import { MessageContextMenu, type MessageContextMenuContext } from '../../../core';
 
 export class RawCommand extends MessageContextMenu {
     public constructor() {
