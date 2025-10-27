@@ -1,7 +1,7 @@
 import type { OmitType } from '@/lib/utils';
 import {
     ApplicationCommandType,
-    MessageContextMenuCommandInteraction,
+    type MessageContextMenuCommandInteraction,
     type RESTPostAPIApplicationCommandsJSONBody,
 } from 'discord.js';
 import { ContextMenu } from './ContextMenu';

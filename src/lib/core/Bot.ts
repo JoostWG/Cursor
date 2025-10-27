@@ -1,4 +1,4 @@
-import { CursorDatabase } from '@/database';
+import type { CursorDatabase } from '@/database';
 import type { Client } from 'discord.js';
 import type { BaseApplicationCommand } from './command';
 import type { CommandCollection } from './CommandCollection';

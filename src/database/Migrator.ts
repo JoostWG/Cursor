@@ -1,5 +1,5 @@
-import { CursorDatabase } from '@/database';
-import { Migration } from './Migration';
+import type { CursorDatabase } from '@/database';
+import type { Migration } from './Migration';
 
 export class Migrator {
     public constructor(

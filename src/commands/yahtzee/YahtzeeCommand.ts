@@ -1,6 +1,6 @@
 import { SlashCommand } from '@/lib/core';
 import { Dice, Die, ScoreCard } from '@/modules/yahtzee';
-import { ChatInputCommandInteraction } from 'discord.js';
+import type { ChatInputCommandInteraction } from 'discord.js';
 import { Game } from './Game';
 
 export class YahtzeeCommand extends SlashCommand {

@@ -1,4 +1,4 @@
-import { Die } from './Die';
+import type { Die } from './Die';
 import type { DieValue } from './types';
 
 export class Dice extends Array<Die> {

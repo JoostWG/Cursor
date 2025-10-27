@@ -1,4 +1,4 @@
-import { CursorDatabase } from '@/database';
+import type { CursorDatabase } from '@/database';
 import { CommandError, SlashCommand } from '@/lib/core';
 import { container, subcommand, textDisplay, userOption } from '@/lib/utils/builders';
 import { MessageFlags, bold, heading, type ChatInputCommandInteraction } from 'discord.js';

@@ -31,12 +31,8 @@ import {
     type Role,
     type RoleEditOptions,
 } from 'discord.js';
-
-class InvalidRoleError extends CommandError {
-    //
-}
-
-type AllowedRoleProps = 'name' | 'color' | 'hoist' | 'mentionable';
+import { InvalidRoleError } from './InvalidRoleError';
+import type { AllowedRoleProps } from './types';
 
 export class RoleCommand extends GuildSlashCommand {
     public constructor() {

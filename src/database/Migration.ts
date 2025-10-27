@@ -1,4 +1,4 @@
-import { SchemaModule } from 'kysely';
+import type { SchemaModule } from 'kysely';
 
 export abstract class Migration {
     public abstract up(schema: SchemaModule): Promise<void>;

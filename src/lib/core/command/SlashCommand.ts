@@ -1,7 +1,7 @@
 import type { OmitType } from '@/lib/utils';
 import {
     ApplicationCommandType,
-    ChatInputCommandInteraction,
+    type ChatInputCommandInteraction,
     type ApplicationCommandOptionChoiceData,
     type AutocompleteInteraction,
     type RESTPostAPIChatInputApplicationCommandsJSONBody,

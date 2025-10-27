@@ -2,7 +2,7 @@ import { devGuildId, discordAppId } from '@/config'; // TODO: Convert to depende
 import { Routes, type REST, type RESTPostAPIApplicationCommandsJSONBody } from 'discord.js';
 import { deepEqual } from 'fast-equals';
 import type { CommandCollection } from './CommandCollection';
-import { CommandDataCache } from './CommandDataCache';
+import type { CommandDataCache } from './CommandDataCache';
 
 export class CommandDeployHandler {
     public constructor(

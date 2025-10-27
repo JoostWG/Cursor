@@ -2,74 +2,17 @@ import { CommandError, SlashCommand } from '@/lib/core';
 import { booleanOption, stringOption } from '@/lib/utils/builders';
 import axios, { type AxiosInstance } from 'axios';
 import {
-    ChatInputCommandInteraction,
     Colors,
     Locale,
     TextChannel,
     bold,
     spoiler,
     type APIEmbed,
+    type ChatInputCommandInteraction,
 } from 'discord.js';
-
-type JokeBlacklistFlag = 'nsfw' | 'religious' | 'political' | 'racist' | 'sexist' | 'explicit';
-
-enum JokeCategory {
-    Programming = 'programming',
-    Miscellaneous = 'misc',
-    Dark = 'dark',
-    Pun = 'pun',
-    Spooky = 'spooky',
-    Christmas = 'christmas',
-}
-
-enum JokeLanguage {
-    Czech = 'cs',
-    German = 'de',
-    English = 'en',
-    Spanish = 'es',
-    French = 'fr',
-    Portuguese = 'pt',
-}
-
-interface ErrorResponse {
-    error: true;
-    internalError: boolean;
-    code: number;
-    message: string;
-    causedBy: string[];
-    additionalInfo: string;
-    timestamp: number;
-}
-
-interface SuccessResponse {
-    error: false;
-}
-
-interface Joke {
-    category: JokeCategory;
-    flags: Record<JokeBlacklistFlag, boolean>;
-    id: number;
-    safe: boolean;
-    lang: JokeLanguage;
-}
-
-interface SingleTypeJoke extends Joke {
-    type: 'single';
-    joke: string;
-}
-
-interface TwopartTypeJoke extends Joke {
-    type: 'twopart';
-    setup: string;
-    delivery: string;
-}
-
-type SingleJokeResponse = SuccessResponse & (SingleTypeJoke | TwopartTypeJoke);
-
-type MultipleJokesResponse = SuccessResponse & {
-    amount: number;
-    jokes: (SingleTypeJoke | TwopartTypeJoke)[];
-};
+import { JokeCategory } from './JokeCategory';
+import { JokeLanguage } from './JokeLanguage';
+import type { ErrorResponse, MultipleJokesResponse, SingleJokeResponse } from './types';
 
 export class JokeCommand extends SlashCommand {
     private readonly api: AxiosInstance;

@@ -1,4 +1,4 @@
-import { RESTPostAPIApplicationCommandsJSONBody } from 'discord.js';
+import type { RESTPostAPIApplicationCommandsJSONBody } from 'discord.js';
 import fs from 'fs/promises';
 import path from 'path';
 

@@ -22,11 +22,11 @@ export default defineConfig(
             },
         },
         rules: {
-            'check-file/filename-naming-convention': [
-                'error',
-                { '**/*.ts': ['KEBAB_CASE', 'PASCAL_CASE'] },
-                { ignoreMiddleExtensions: true },
-            ],
+            // 'check-file/filename-naming-convention': [
+            //     'error',
+            //     { '**/*.ts': '([a-z]([a-z-]+[a-z])?|[A-Z][a-zA-Z]*)(\.d)?\.ts' },
+            //     { ignoreMiddleExtensions: true },
+            // ],
 
             // JS
             'prefer-template': 'warn',
@@ -43,11 +43,11 @@ export default defineConfig(
                 },
             ],
             'no-duplicate-imports': 'error',
+            'max-classes-per-file': 'warn',
             // Below is all disabled
             'default-case': 'off', // I want to enable this but I also don't want to implement default cases will never be used in theory
             'sort-keys': 'off',
             'new-cap': 'off',
-            'max-classes-per-file': 'off',
             'sort-imports': 'off',
             'one-var': 'off',
             'id-length': 'off',

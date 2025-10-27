@@ -1,6 +1,5 @@
-import { SlashCommand } from '@/lib/core';
 import { stringTitle } from '@/lib/utils';
-import { actionRow, button, container, stringOption, textDisplay } from '@/lib/utils/builders';
+import { actionRow, button, container, textDisplay } from '@/lib/utils/builders';
 import {
     ButtonStyle,
     ComponentType,
@@ -11,27 +10,10 @@ import {
     type APIBaseComponent,
     type ChatInputCommandInteraction,
 } from 'discord.js';
-import {
-    Category,
-    QuestionDifficulties,
-    QuestionEncodings,
-    QuestionTypes,
-    getQuestions,
-    type CategoryNames,
-    type Question,
-    type QuestionOptions,
-} from 'open-trivia-db';
+import { QuestionTypes, type Question } from 'open-trivia-db';
+import type { Answer, Status } from './types';
 
-type Status = 'active' | 'finished';
-
-interface Answer {
-    readonly value: string;
-    readonly id: string;
-    readonly correct: boolean;
-    revealed: boolean;
-}
-
-class QuestionView {
+export class QuestionView {
     private readonly question: Question;
     private readonly answers: Map<string, Answer>;
     private status: Status;
@@ -39,6 +21,8 @@ class QuestionView {
     public constructor(question: Question) {
         this.question = question;
 
+        // TODO: Below
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-enum-comparison
         const allAnswers = this.question.type === QuestionTypes.Boolean
             ? ['True', 'False']
             : this.question.allAnswers;
@@ -135,60 +119,5 @@ class QuestionView {
                 ],
             }),
         ];
-    }
-}
-
-export class TriviaCommand extends SlashCommand {
-    public constructor() {
-        super({
-            name: 'trivia',
-            description: 'Test your knowledge!',
-            options: [
-                stringOption({
-                    name: 'category',
-                    description: 'Choose a category',
-                    choices: Category.allNames.map((name) => ({
-                        name,
-                        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                        value: Category.idByName(name)!.toString(),
-                    })),
-                }),
-                stringOption({
-                    name: 'difficulty',
-                    description: 'Choose difficulty',
-                    choices: Object.entries(QuestionDifficulties).map(([name, value]) => ({
-                        name,
-                        value,
-                    })),
-                }),
-            ],
-        });
-    }
-
-    public override async handle(interaction: ChatInputCommandInteraction): Promise<void> {
-        const difficulty = interaction.options.getString('difficulty');
-        const category = interaction.options.getString('category');
-
-        const options: Partial<QuestionOptions> = {
-            amount: 1,
-            encode: QuestionEncodings.None,
-            type: 'boolean',
-        };
-
-        if (difficulty) {
-            options.difficulty = difficulty as QuestionDifficulties;
-        }
-
-        if (category) {
-            options.category = Number(category) as CategoryNames;
-        }
-
-        const questions = await getQuestions(options);
-
-        if (!questions.length) {
-            return;
-        }
-
-        await new QuestionView(questions[0]).start(interaction);
     }
 }

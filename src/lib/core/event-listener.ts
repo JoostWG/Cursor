@@ -1,3 +1,4 @@
+/* eslint-disable max-classes-per-file */
 import type { ClientEvents } from 'discord.js';
 
 export abstract class EventListener<Event extends keyof ClientEvents = keyof ClientEvents> {
