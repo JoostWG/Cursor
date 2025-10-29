@@ -1,9 +1,9 @@
 import type { OmitType } from '@/lib/utils';
 import {
     ApplicationCommandType,
-    type ChatInputCommandInteraction,
     type ApplicationCommandOptionChoiceData,
     type AutocompleteInteraction,
+    type ChatInputCommandInteraction,
     type RESTPostAPIChatInputApplicationCommandsJSONBody,
 } from 'discord.js';
 import { BaseApplicationCommand } from './BaseApplicationCommand';
