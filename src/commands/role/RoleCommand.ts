@@ -162,18 +162,8 @@ export class RoleCommand extends GuildSlashCommand {
         const colorInput = interaction.options.getString('color');
 
         if (colorInput) {
-            // TODO: discord.js resolveColor
-            const pattern = /^(?:#|0x)?([0-9a-fA-F]{6})$/u;
-            const match = pattern.exec(colorInput);
-
-            if (!match) {
-                throw new CommandError(
-                    `Invalid color. Must match ${inlineCode(pattern.toString())}`,
-                );
-            }
-
             options.colors = {
-                primaryColor: parseInt(match[1], 16),
+                primaryColor: this.roleService.resolveColor(colorInput),
             };
         }
 

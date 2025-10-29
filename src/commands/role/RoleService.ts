@@ -1,7 +1,26 @@
-import { PermissionFlagsBits, type Interaction, type Role } from 'discord.js';
+import {
+    PermissionFlagsBits,
+    resolveColor,
+    type ColorResolvable,
+    type Interaction,
+    type Role,
+} from 'discord.js';
+import { CommandError } from '../../lib/core';
 import { InvalidRoleError } from './InvalidRoleError';
 
 export class RoleService {
+    public resolveColor(input: string): number {
+        try {
+            return resolveColor(parseInt(input) || input as ColorResolvable);
+        } catch (error) {
+            if (!(error instanceof TypeError)) {
+                throw error;
+            }
+
+            throw new CommandError('Invalid color');
+        }
+    }
+
     public validateRole(
         interaction: Interaction<'cached'>,
         role: Role,

@@ -66,6 +66,7 @@ export default defineConfig(
             'no-warning-comments': 'off',
             'no-inline-comments': 'off',
             'no-void': 'off',
+            'radix': 'off',
 
             // TS
             '@typescript-eslint/no-floating-promises': [
