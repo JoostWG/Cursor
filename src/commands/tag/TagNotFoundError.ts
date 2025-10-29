@@ -1,4 +1,4 @@
-import { CommandError } from '@/lib/core';
+import { CommandError } from '../../lib/core';
 
 export class TagNotFoundError extends CommandError {
     public override name: string;

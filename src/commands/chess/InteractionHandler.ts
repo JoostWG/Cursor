@@ -1,4 +1,3 @@
-import { container, mediaGallery, textDisplay } from '@/lib/utils/builders';
 import type { Chess } from 'chess.js';
 import {
     AttachmentBuilder,
@@ -8,6 +7,7 @@ import {
     type ChatInputCommandInteraction,
     type InteractionReplyOptions,
 } from 'discord.js';
+import { container, mediaGallery, textDisplay } from '../../lib/utils/builders';
 import type { MessageFactory, OutputHandler } from './types';
 
 export class InteractionHandler implements OutputHandler {

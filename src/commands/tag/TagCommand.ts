@@ -1,6 +1,3 @@
-import type { CursorDatabase } from '@/database';
-import { CommandError, GuildSlashCommand } from '@/lib/core';
-import { container, stringOption, subcommand, textDisplay } from '@/lib/utils/builders';
 import {
     HeadingLevel,
     MessageFlags,
@@ -11,6 +8,9 @@ import {
     type AutocompleteInteraction,
     type ChatInputCommandInteraction,
 } from 'discord.js';
+import type { CursorDatabase } from '../../database';
+import { CommandError, GuildSlashCommand } from '../../lib/core';
+import { container, stringOption, subcommand, textDisplay } from '../../lib/utils/builders';
 import { DatabaseTagManager } from './DatabaseTagManager';
 import type { TagManager } from './TagManager';
 import type { TagData } from './types';

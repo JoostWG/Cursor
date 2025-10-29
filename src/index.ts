@@ -1,4 +1,4 @@
-import { discordToken } from '@/config';
+import { discordToken } from '../config.json';
 import { createBot } from './setup';
 
 (async () => {

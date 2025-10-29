@@ -1,4 +1,4 @@
-import type { Definition } from '@/modules/urban-dictionary';
+import type { Definition } from '../../modules/urban-dictionary';
 import type { HistoryItem } from './HistoryItem';
 import type { UrbanDictionary } from './UrbanDictionary';
 

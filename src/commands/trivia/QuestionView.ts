@@ -1,5 +1,3 @@
-import { stringTitle } from '@/lib/utils';
-import { actionRow, button, container, textDisplay } from '@/lib/utils/builders';
 import {
     ButtonStyle,
     ComponentType,
@@ -11,6 +9,8 @@ import {
     type ChatInputCommandInteraction,
 } from 'discord.js';
 import { QuestionTypes, type Question } from 'open-trivia-db';
+import { stringTitle } from '../../lib/utils';
+import { actionRow, button, container, textDisplay } from '../../lib/utils/builders';
 import type { Answer, Status } from './types';
 
 export class QuestionView {

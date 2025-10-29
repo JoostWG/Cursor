@@ -1,11 +1,11 @@
-import { SlashCommand } from '@/lib/core';
-import { stringOption } from '@/lib/utils/builders';
-import type { Api } from '@/modules/urban-dictionary';
 import type {
     ApplicationCommandOptionChoiceData,
     AutocompleteInteraction,
     ChatInputCommandInteraction,
 } from 'discord.js';
+import { SlashCommand } from '../../lib/core';
+import { stringOption } from '../../lib/utils/builders';
+import type { Api } from '../../modules/urban-dictionary';
 import { CachedApi } from './CachedApi';
 import { ComponentBuilder } from './ComponentBuilder';
 import { InteractionHandler } from './InteractionHandler';

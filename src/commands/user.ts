@@ -1,6 +1,6 @@
-import { SlashCommand } from '@/lib/core';
-import { userOption } from '@/lib/utils/builders';
 import { TimestampStyles, time, type ChatInputCommandInteraction } from 'discord.js';
+import { SlashCommand } from '../lib/core';
+import { userOption } from '../lib/utils/builders';
 
 export class UserCommand extends SlashCommand {
     public constructor() {

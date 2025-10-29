@@ -1,5 +1,3 @@
-import { CommandError, SlashCommand } from '@/lib/core';
-import { booleanOption, stringOption } from '@/lib/utils/builders';
 import axios, { type AxiosInstance } from 'axios';
 import {
     Colors,
@@ -10,6 +8,8 @@ import {
     type APIEmbed,
     type ChatInputCommandInteraction,
 } from 'discord.js';
+import { CommandError, SlashCommand } from '../../lib/core';
+import { booleanOption, stringOption } from '../../lib/utils/builders';
 import { JokeCategory } from './JokeCategory';
 import { JokeLanguage } from './JokeLanguage';
 import type { ErrorResponse, MultipleJokesResponse, SingleJokeResponse } from './types';

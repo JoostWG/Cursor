@@ -1,5 +1,5 @@
-import { SlashCommand } from '@/lib/core';
 import { MessageFlags, type ChatInputCommandInteraction } from 'discord.js';
+import { SlashCommand } from '../lib/core';
 
 export class PingCommand extends SlashCommand {
     public constructor() {

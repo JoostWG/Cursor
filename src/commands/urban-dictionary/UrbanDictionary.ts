@@ -1,4 +1,4 @@
-import type { Api } from '@/modules/urban-dictionary';
+import type { Api } from '../../modules/urban-dictionary';
 import { HistoryItem } from './HistoryItem';
 import type { InteractionHandler } from './InteractionHandler';
 import type { OutputOptions } from './types';

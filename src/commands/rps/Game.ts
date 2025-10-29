@@ -11,8 +11,8 @@ import {
     type User,
 } from 'discord.js';
 
-import type { CursorDatabase } from '@/database';
-import { actionRow, button, container, separator, textDisplay } from '@/lib/utils/builders';
+import type { CursorDatabase } from '../../database';
+import { actionRow, button, container, separator, textDisplay } from '../../lib/utils/builders';
 import type { Choice } from './Choice';
 import { emojis } from './emojis';
 import { Round } from './Round';

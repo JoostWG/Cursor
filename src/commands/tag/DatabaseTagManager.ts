@@ -1,5 +1,5 @@
-import type { CursorDatabase } from '@/database';
 import type { Snowflake } from 'discord.js';
+import type { CursorDatabase } from '../../database';
 import type { TagManager } from './TagManager';
 import { TagNotFoundError } from './TagNotFoundError';
 import type { TagData } from './types';

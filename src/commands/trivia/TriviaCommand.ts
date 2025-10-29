@@ -1,5 +1,3 @@
-import { SlashCommand } from '@/lib/core';
-import { stringOption } from '@/lib/utils/builders';
 import type { ChatInputCommandInteraction } from 'discord.js';
 import {
     Category,
@@ -9,6 +7,8 @@ import {
     type CategoryNames,
     type QuestionOptions,
 } from 'open-trivia-db';
+import { SlashCommand } from '../../lib/core';
+import { stringOption } from '../../lib/utils/builders';
 import { QuestionView } from './QuestionView';
 
 export class TriviaCommand extends SlashCommand {

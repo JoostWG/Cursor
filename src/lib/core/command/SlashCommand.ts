@@ -1,4 +1,3 @@
-import type { OmitType } from '@/lib/utils';
 import {
     ApplicationCommandType,
     type ApplicationCommandOptionChoiceData,
@@ -6,6 +5,7 @@ import {
     type ChatInputCommandInteraction,
     type RESTPostAPIChatInputApplicationCommandsJSONBody,
 } from 'discord.js';
+import type { OmitType } from '../../../lib/utils';
 import { BaseApplicationCommand } from './BaseApplicationCommand';
 
 export abstract class SlashCommand

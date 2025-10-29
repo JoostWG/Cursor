@@ -1,14 +1,3 @@
-import { CommandError, GuildSlashCommand } from '@/lib/core';
-import {
-    actionRow,
-    booleanOption,
-    button,
-    container,
-    roleOption,
-    stringOption,
-    subcommand,
-    textDisplay,
-} from '@/lib/utils/builders';
 import {
     ButtonStyle,
     Collection,
@@ -30,6 +19,17 @@ import {
     type Role,
     type RoleEditOptions,
 } from 'discord.js';
+import { CommandError, GuildSlashCommand } from '../../lib/core';
+import {
+    actionRow,
+    booleanOption,
+    button,
+    container,
+    roleOption,
+    stringOption,
+    subcommand,
+    textDisplay,
+} from '../../lib/utils/builders';
 import { RoleService } from './RoleService';
 import type { AllowedRoleProps } from './types';
 
