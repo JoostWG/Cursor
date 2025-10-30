@@ -3,6 +3,7 @@ import { Client, Events, GatewayIntentBits } from 'discord.js';
 import { Kysely, SqliteDialect } from 'kysely';
 import { ChessCommand } from './commands/chess';
 import { RawCommand } from './commands/context/message/raw';
+import { F1Command } from './commands/f1';
 import { JokeCommand } from './commands/joke';
 import { PingCommand } from './commands/ping';
 import { RoleCommand } from './commands/role';
@@ -39,6 +40,7 @@ export async function createBot({ token }: { token: string }): Promise<Bot> {
     const commands = new CommandCollection([
         new RawCommand(),
         new ChessCommand(),
+        new F1Command(),
         new JokeCommand(),
         new PingCommand(),
         new RoleCommand(),
