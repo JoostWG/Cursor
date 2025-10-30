@@ -19,13 +19,6 @@ export class Client {
         });
     }
 
-    public async get<T>(path: string, pagination?: Pagination): Promise<AxiosResponse<T>> {
-        return this.api.get<T>(path, {
-            params: pagination,
-            headers: new AxiosHeaders().setContentType('application/json'),
-        });
-    }
-
     public async getCircuits(pagination?: Pagination): Promise<Circuit[]> {
         return await this.mapCircuits(this.get<CircuitsResponse>('/circuits', pagination));
     }
@@ -47,6 +40,13 @@ export class Client {
             .then(({ data }) =>
                 data.MRData.DriverTable.Drivers.map((driverData) => new Driver(driverData, this))
             );
+    }
+
+    private async get<T>(path: string, pagination?: Pagination): Promise<AxiosResponse<T>> {
+        return this.api.get<T>(path, {
+            params: pagination,
+            headers: new AxiosHeaders().setContentType('application/json'),
+        });
     }
 
     private async mapCircuits(
