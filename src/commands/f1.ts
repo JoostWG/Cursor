@@ -18,7 +18,7 @@ export class F1Command extends SlashCommand {
 
     public override async handle(interaction: ChatInputCommandInteraction): Promise<void> {
         const driver = await this.f1.getDriver('hamilton');
-        const circuits = await driver.getCircuits();
+        const circuits = await driver.getCircuits({ limit: 100 });
 
         await interaction.reply({
             embeds: [
