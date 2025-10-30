@@ -1,5 +1,5 @@
 import type { Client, DriverApiData, Pagination } from '../http';
-import { DriverProxy } from '../proxies/DriverProxy';
+import { DriverProxy } from '../proxies';
 import type { Circuit } from './Circuit';
 import { Model } from './Model';
 

@@ -1,6 +1,6 @@
 import axios, { AxiosHeaders, type AxiosInstance, type AxiosResponse } from 'axios';
 import { Circuit, Driver } from '../models';
-import { DriverProxy } from '../proxies/DriverProxy';
+import { DriverProxy } from '../proxies';
 import type { CircuitsResponse, DriversResponse, Pagination } from './types';
 
 // TODO
