@@ -1,5 +1,6 @@
 import axios, { AxiosHeaders, type AxiosInstance, type AxiosResponse } from 'axios';
 import { Circuit, Driver } from '../models';
+import { DriverProxy } from '../proxies/DriverProxy';
 import type { CircuitsResponse, DriversResponse, Pagination } from './types';
 
 // TODO
@@ -18,6 +19,8 @@ export class Client {
             baseURL: 'https://api.jolpi.ca/ergast/f1',
         });
     }
+
+    // API
 
     public async getCircuits(pagination?: Pagination): Promise<Circuit[]> {
         return await this.mapCircuits(this.get<CircuitsResponse>('/circuits', pagination));
@@ -41,6 +44,14 @@ export class Client {
                 data.MRData.DriverTable.Drivers.map((driverData) => new Driver(driverData, this))
             );
     }
+
+    // Proxy
+
+    public driver(id: string): DriverProxy {
+        return new DriverProxy(id, this);
+    }
+
+    // Private
 
     private async get<T>(path: string, pagination?: Pagination): Promise<AxiosResponse<T>> {
         return this.api.get<T>(path, {

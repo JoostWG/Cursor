@@ -1,4 +1,5 @@
 import type { Client, DriverApiData, Pagination } from '../http';
+import { DriverProxy } from '../proxies/DriverProxy';
 import type { Circuit } from './Circuit';
 import { Model } from './Model';
 
@@ -9,6 +10,7 @@ export class Driver extends Model<DriverApiData> {
     public readonly lastName: string;
     public readonly dateOfBirth: Date;
     public readonly nationality: string;
+    private readonly proxy: DriverProxy;
 
     public constructor(data: DriverApiData, client: Client) {
         super(data, client);
@@ -19,6 +21,8 @@ export class Driver extends Model<DriverApiData> {
         this.lastName = data.familyName;
         this.dateOfBirth = new Date(data.dateOfBirth);
         this.nationality = data.nationality;
+
+        this.proxy = new DriverProxy(this.id, this.client);
     }
 
     public get name(): string {
@@ -26,6 +30,6 @@ export class Driver extends Model<DriverApiData> {
     }
 
     public async getCircuits(pagination?: Pagination): Promise<Circuit[]> {
-        return await this.client.getDriverCircuits(this.id, pagination);
+        return await this.proxy.getCircuits(pagination);
     }
 }
