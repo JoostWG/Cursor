@@ -5,7 +5,7 @@ import { DriversUrlBuilder } from './DriversUrlBuilder';
 import { UrlBuilder } from './UrlBuilder';
 
 export class SeasonUrlBuilder extends UrlBuilder<SeasonsResponse, Season | null> {
-    public constructor(api: Api, public readonly year: string) {
+    public constructor(api: Api, private readonly year: string) {
         super(api);
     }
 
