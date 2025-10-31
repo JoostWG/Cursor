@@ -1,5 +1,6 @@
 import axios, { AxiosHeaders, type AxiosInstance, type AxiosResponse } from 'axios';
 import {
+    CircuitUrlBuilder,
     CircuitsUrlBuilder,
     ConstructorUrlBuilder,
     ConstructorsUrlBuilder,
@@ -22,6 +23,10 @@ export class Api {
 
     public circuits(): CircuitsUrlBuilder {
         return new CircuitsUrlBuilder(this);
+    }
+
+    public circuit(id: string): CircuitUrlBuilder {
+        return new CircuitUrlBuilder(this, id);
     }
 
     public constructors(): ConstructorsUrlBuilder {
