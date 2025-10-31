@@ -22,8 +22,6 @@ export class SeasonUrlBuilder extends UrlBuilder<SeasonsResponse, Season | null>
     }
 
     protected override transformResponse(data: SeasonsResponse): Season | null {
-        return data.MRData.SeasonTable.Seasons.length > 0
-            ? new Season(data.MRData.SeasonTable.Seasons[0], this.api)
-            : null;
+        return this.transformSingle(data.MRData.SeasonTable.Seasons, Season);
     }
 }

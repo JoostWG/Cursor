@@ -28,6 +28,6 @@ export class DriversUrlBuilder extends UrlBuilder<DriversResponse, Driver[]> {
     }
 
     protected override transformResponse(data: DriversResponse): Driver[] {
-        return data.MRData.DriverTable.Drivers.map((driver) => new Driver(driver, this.api));
+        return this.transformMultiple(data.MRData.DriverTable.Drivers, Driver);
     }
 }

@@ -17,8 +17,6 @@ export class DriverUrlBuilder extends UrlBuilder<DriversResponse, Driver | null>
     }
 
     protected override transformResponse(data: DriversResponse): Driver | null {
-        return data.MRData.DriverTable.Drivers.length > 0
-            ? new Driver(data.MRData.DriverTable.Drivers[0], this.api)
-            : null;
+        return this.transformSingle(data.MRData.DriverTable.Drivers, Driver);
     }
 }

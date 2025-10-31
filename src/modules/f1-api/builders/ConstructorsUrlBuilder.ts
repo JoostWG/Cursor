@@ -12,8 +12,6 @@ export class ConstructorsUrlBuilder extends UrlBuilder<ConstructorsResponse, Con
     }
 
     protected override transformResponse(data: ConstructorsResponse): Constructor[] {
-        return data.MRData.ConstructorTable.Constructors.map((constructor) =>
-            new Constructor(constructor, this.api)
-        );
+        return this.transformMultiple(data.MRData.ConstructorTable.Constructors, Constructor);
     }
 }

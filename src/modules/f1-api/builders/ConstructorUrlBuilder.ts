@@ -12,8 +12,6 @@ export class ConstructorUrlBuilder extends UrlBuilder<ConstructorsResponse, Cons
     }
 
     protected override transformResponse(data: ConstructorsResponse): Constructor | null {
-        return data.MRData.ConstructorTable.Constructors.length > 0
-            ? new Constructor(data.MRData.ConstructorTable.Constructors[0], this.api)
-            : null;
+        return this.transformSingle(data.MRData.ConstructorTable.Constructors, Constructor);
     }
 }

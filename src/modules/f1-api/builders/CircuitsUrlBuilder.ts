@@ -40,6 +40,6 @@ export class CircuitsUrlBuilder extends UrlBuilder<CircuitsResponse, Circuit[]> 
     }
 
     protected override transformResponse(data: CircuitsResponse): Circuit[] {
-        return data.MRData.CircuitTable.Circuits.map((circuit) => new Circuit(circuit, this.api));
+        return this.transformMultiple(data.MRData.CircuitTable.Circuits, Circuit);
     }
 }
