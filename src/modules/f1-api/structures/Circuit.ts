@@ -1,5 +1,5 @@
 import { CircuitLocation } from '../data/CircuitLocation';
-import type { Client } from '../http/Client';
+import type { Api } from '../http/Api';
 import type { CircuitApiData } from '../http/types';
 import { Model } from './Model';
 
@@ -9,8 +9,8 @@ export class Circuit extends Model<CircuitApiData> {
     public readonly name: string;
     public readonly location: CircuitLocation;
 
-    public constructor(data: CircuitApiData, client: Client) {
-        super(data, client);
+    public constructor(data: CircuitApiData, api: Api) {
+        super(data, api);
 
         this.id = data.circuitId;
         this.url = data.url;

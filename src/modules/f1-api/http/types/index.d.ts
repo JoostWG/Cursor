@@ -1,5 +1,11 @@
 export type * from './circuit';
 export type * from './driver';
+export type * from './season';
+
+export interface Pagination {
+    limit?: number;
+    offset?: number;
+}
 
 export type MRData<T> = T & {
     xmlns: '';
@@ -14,7 +20,6 @@ export interface SuccessResponse<T> {
     MRData: MRData<T>;
 }
 
-export interface Pagination {
-    limit?: number;
-    offset?: number;
+export interface BadRequestResponse {
+    detail: string;
 }

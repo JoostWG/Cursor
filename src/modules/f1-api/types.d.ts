@@ -1,1 +1,2 @@
-export type JsonValue = string | number | boolean | null | JsonValue[] | { [K: string]: JsonValue };
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type Constructor<T> = new (...args: any[]) => T;
