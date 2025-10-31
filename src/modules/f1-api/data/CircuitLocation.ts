@@ -1,4 +1,4 @@
-import type { LocationApiData } from '../http/types';
+import type { LocationApiData } from '../http';
 
 export class CircuitLocation {
     public readonly latitude: number;

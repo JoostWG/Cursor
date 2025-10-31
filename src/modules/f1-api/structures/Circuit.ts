@@ -1,6 +1,5 @@
-import { CircuitLocation } from '../data/CircuitLocation';
-import type { Api } from '../http/Api';
-import type { CircuitApiData } from '../http/types';
+import { CircuitLocation } from '../data';
+import type { Api, CircuitApiData } from '../http';
 import { Model } from './Model';
 
 export class Circuit extends Model<CircuitApiData> {
