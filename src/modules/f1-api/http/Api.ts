@@ -1,6 +1,8 @@
 import axios, { AxiosHeaders, type AxiosInstance, type AxiosResponse } from 'axios';
 import {
     CircuitsUrlBuilder,
+    ConstructorUrlBuilder,
+    ConstructorsUrlBuilder,
     DriverUrlBuilder,
     DriversUrlBuilder,
     SeasonUrlBuilder,
@@ -20,6 +22,16 @@ export class Api {
 
     public circuits(): CircuitsUrlBuilder {
         return new CircuitsUrlBuilder(this);
+    }
+
+    public constructors(): ConstructorsUrlBuilder {
+        return new ConstructorsUrlBuilder(this);
+    }
+
+    // FIXME: Idk what to do here. Can't name it constructor ofc but idk. Maybe I should rename it to team and teams
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    public _constructor(id: string): ConstructorUrlBuilder {
+        return new ConstructorUrlBuilder(this, id);
     }
 
     public drivers(): DriversUrlBuilder {

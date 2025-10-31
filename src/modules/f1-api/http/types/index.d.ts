@@ -1,4 +1,5 @@
 export type * from './circuit';
+export type * from './constructor';
 export type * from './driver';
 export type * from './season';
 
