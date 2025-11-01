@@ -1,10 +1,22 @@
 export type * from './circuit';
 export type * from './constructor';
 export type * from './driver';
+export type * from './driver-standing';
+export type * from './lap';
+export type * from './pit-stop';
+export type * from './qualifying-result';
+export type * from './race';
+export type * from './result';
 export type * from './season';
 
 export interface Pagination {
+    /**
+     * Maximum number of results results returned. Defaults to 30. Max is 100
+     */
     limit?: number;
+    /**
+     * Allows you to offset the results by the specified number for pagination. Defaults to 0.
+     */
     offset?: number;
 }
 
