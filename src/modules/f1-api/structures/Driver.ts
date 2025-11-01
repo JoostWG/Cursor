@@ -1,4 +1,3 @@
-import { CircuitsUrlBuilder } from '../builders';
 import type { Api, DriverApiData } from '../http';
 import { Model } from './Model';
 
@@ -27,9 +26,5 @@ export class Driver extends Model<DriverApiData> {
 
     public get name(): string {
         return `${this.firstName} ${this.lastName}`;
-    }
-
-    public circuits(): CircuitsUrlBuilder {
-        return new CircuitsUrlBuilder(this.api, { driverId: this.id });
     }
 }

@@ -1,12 +1,8 @@
-import type { Api, ConstructorsResponse } from '../http';
+import type { ConstructorsResponse } from '../http';
 import { Team } from '../structures';
 import { UrlBuilder } from './UrlBuilder';
 
 export class TeamsUrlBuilder extends UrlBuilder<ConstructorsResponse, Team[]> {
-    public constructor(api: Api) {
-        super(api);
-    }
-
     protected override path(): string {
         return `/constructors`;
     }

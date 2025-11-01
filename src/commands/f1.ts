@@ -17,14 +17,14 @@ export class F1Command extends SlashCommand {
     }
 
     public override async handle(interaction: ChatInputCommandInteraction): Promise<void> {
-        const circuits = await this.f1.driver('max_verstappen').circuits().get({ limit: 100 });
+        const statuses = await this.f1.statuses().year('2020').get();
 
         await interaction.reply({
             embeds: [
                 new EmbedBuilder()
                     .addFields({
-                        name: 'Circuits',
-                        value: circuits.map((circuit) => circuit.name).join('\n'),
+                        name: 'Whatever',
+                        value: statuses.map((status) => status.name).join('\n'),
                     }),
             ],
         });

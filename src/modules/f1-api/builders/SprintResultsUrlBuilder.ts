@@ -1,12 +1,8 @@
-import type { Api, SprintResultsResponse } from '../http';
+import type { SprintResultsResponse } from '../http';
 import { SprintResult } from '../structures';
 import { UrlBuilder } from './UrlBuilder';
 
 export class SprintResultsUrlBuilder extends UrlBuilder<SprintResultsResponse, SprintResult[]> {
-    public constructor(api: Api) {
-        super(api);
-    }
-
     protected override path(): string {
         return '/sprint';
     }

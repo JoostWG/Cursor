@@ -49,7 +49,7 @@ export class Api {
     }
 
     public race(year: string, round: number): RaceUrlBuilder {
-        return new RaceUrlBuilder(this, year, round);
+        return new RaceUrlBuilder(this, { year, round });
     }
 
     public results(): ResultsUrlBuilder {
@@ -61,7 +61,7 @@ export class Api {
     }
 
     public season(year: string): SeasonUrlBuilder {
-        return new SeasonUrlBuilder(this, year);
+        return new SeasonUrlBuilder(this, { year });
     }
 
     public sprintResults(): SprintResultsUrlBuilder {

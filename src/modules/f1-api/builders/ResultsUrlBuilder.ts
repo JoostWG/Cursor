@@ -1,12 +1,8 @@
-import type { Api, ResultsResponse } from '../http';
+import type { ResultsResponse } from '../http';
 import { Result } from '../structures';
 import { UrlBuilder } from './UrlBuilder';
 
 export class ResultsUrlBuilder extends UrlBuilder<ResultsResponse, Result[]> {
-    public constructor(api: Api) {
-        super(api);
-    }
-
     protected override path(): string {
         return '/results';
     }
