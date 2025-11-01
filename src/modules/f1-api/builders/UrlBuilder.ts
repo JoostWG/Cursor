@@ -1,6 +1,6 @@
-import type { Api, Pagination } from '../http';
+import type { Api, Pagination, SuccessResponse } from '../http';
 
-export abstract class UrlBuilder<TResponse, TData> {
+export abstract class UrlBuilder<TResponse extends SuccessResponse, TData> {
     protected constructor(public readonly api: Api) {
         //
     }

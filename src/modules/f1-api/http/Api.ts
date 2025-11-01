@@ -84,10 +84,7 @@ export class Api {
         return new TeamUrlBuilder(this, id);
     }
 
-    public async get<T extends SuccessResponse<unknown>>(
-        path: string,
-        pagination?: Pagination,
-    ): Promise<T> {
+    public async get<T extends SuccessResponse>(path: string, pagination?: Pagination): Promise<T> {
         const response = await this.api.get<T | BadRequestResponse>(path, { params: pagination });
 
         if (response.status === 404) {

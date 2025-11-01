@@ -33,7 +33,7 @@ export type MRData<T> = T & {
     total: `${number}`;
 };
 
-export interface SuccessResponse<T> {
+export interface SuccessResponse<T = unknown> {
     MRData: MRData<T>;
 }
 
