@@ -27,4 +27,8 @@ export class Driver extends Model<DriverApiData> {
     public get name(): string {
         return `${this.firstName} ${this.lastName}`;
     }
+
+    public override toString(): string {
+        return this.name;
+    }
 }

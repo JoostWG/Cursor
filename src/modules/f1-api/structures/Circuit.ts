@@ -16,4 +16,8 @@ export class Circuit extends Model<CircuitApiData> {
         this.name = data.circuitName;
         this.location = new CircuitLocation(data.Location);
     }
+
+    public override toString(): string {
+        return `${this.name} - ${this.location.locality}, ${this.location.country}`;
+    }
 }

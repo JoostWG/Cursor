@@ -1,7 +1,8 @@
+import type { StatusType } from '../../enums';
 import type { SuccessResponse } from '.';
 
 export interface StatusApiData {
-    statusId: string;
+    statusId: StatusType;
     count: string;
     status: string;
 }

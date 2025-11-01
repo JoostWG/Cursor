@@ -11,4 +11,8 @@ export class Season extends Model<SeasonApiData> {
         this.year = data.season;
         this.url = data.url;
     }
+
+    public override toString(): string {
+        return this.year;
+    }
 }

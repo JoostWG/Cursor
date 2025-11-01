@@ -11,7 +11,7 @@ export interface LapApiData {
     Timings: TimingApiData[];
 }
 
-export type LapsApiResponse = SuccessResponse<{
+export type LapsResponse = SuccessResponse<{
     RaceTable: {
         Races: (RaceApiData & { Laps: LapApiData[] })[];
     };

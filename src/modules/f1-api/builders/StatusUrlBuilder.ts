@@ -1,14 +1,21 @@
-import type { Api, StatusesResponse } from '../http';
+import type { StatusesResponse } from '../http';
 import { Status } from '../structures';
+import { CircuitsUrlBuilder } from './CircuitsUrlBuilder';
+import { DriversUrlBuilder } from './DriversUrlBuilder';
+import { TeamsUrlBuilder } from './TeamsUrlBuilder';
 import { UrlBuilder } from './UrlBuilder';
 
 export class StatusUrlBuilder extends UrlBuilder<StatusesResponse, Status | null> {
-    public constructor(api: Api, private readonly statusId: number) {
-        super(api);
+    public circuits(): CircuitsUrlBuilder {
+        return this.builder(CircuitsUrlBuilder);
     }
 
-    protected override path(): string {
-        return `/status${this.statusId}`;
+    public drivers(): DriversUrlBuilder {
+        return this.builder(DriversUrlBuilder);
+    }
+
+    public teams(): TeamsUrlBuilder {
+        return this.builder(TeamsUrlBuilder);
     }
 
     protected override transformResponse(data: StatusesResponse): Status | null {

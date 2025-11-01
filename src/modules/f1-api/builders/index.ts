@@ -1,7 +1,9 @@
 export * from './CircuitsUrlBuilder';
 export * from './CircuitUrlBuilder';
+export * from './DriverStandingsUrlBuilder';
 export * from './DriversUrlBuilder';
 export * from './DriverUrlBuilder';
+export * from './LapsUrlBuilder';
 export * from './RacesUrlBuilder';
 export * from './RaceUrlBuilder';
 export * from './ResultsUrlBuilder';
@@ -10,6 +12,7 @@ export * from './SeasonUrlBuilder';
 export * from './SprintResultsUrlBuilder';
 export * from './StatusesUrlBuilder';
 export * from './StatusUrlBuilder';
+export * from './TeamStandingsUrlBuilder';
 export * from './TeamsUrlBuilder';
 export * from './TeamUrlBuilder';
 export * from './UrlBuilder';

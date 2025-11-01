@@ -51,4 +51,8 @@ export class Race extends Model<RaceApiData> {
             ? new SessionDateTime(data.SprintShootout)
             : null;
     }
+
+    public override toString(): string {
+        return `${this.season} ${this.name}`;
+    }
 }

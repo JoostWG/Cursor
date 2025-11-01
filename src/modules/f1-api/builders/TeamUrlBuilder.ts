@@ -1,14 +1,26 @@
-import type { Api, ConstructorsResponse } from '../http';
+import type { ConstructorsResponse } from '../http';
 import { Team } from '../structures';
+import { CircuitsUrlBuilder } from './CircuitsUrlBuilder';
+import { DriversUrlBuilder } from './DriversUrlBuilder';
+import { LapsUrlBuilder } from './LapsUrlBuilder';
+import { TeamStandingsUrlBuilder } from './TeamStandingsUrlBuilder';
 import { UrlBuilder } from './UrlBuilder';
 
 export class TeamUrlBuilder extends UrlBuilder<ConstructorsResponse, Team | null> {
-    public constructor(api: Api, private readonly id: string) {
-        super(api);
+    public circuits(): CircuitsUrlBuilder {
+        return this.builder(CircuitsUrlBuilder);
     }
 
-    protected override path(): string {
-        return `/constructors/${this.id}`;
+    public drivers(): DriversUrlBuilder {
+        return this.builder(DriversUrlBuilder);
+    }
+
+    public teamStandings(): TeamStandingsUrlBuilder {
+        return this.builder(TeamStandingsUrlBuilder);
+    }
+
+    public laps(): LapsUrlBuilder {
+        return this.builder(LapsUrlBuilder);
     }
 
     protected override transformResponse(data: ConstructorsResponse): Team | null {

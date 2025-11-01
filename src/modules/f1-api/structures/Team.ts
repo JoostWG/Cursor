@@ -15,4 +15,8 @@ export class Team extends Model<ConstructorApiData> {
         this.name = data.name;
         this.nationality = data.nationality ?? null;
     }
+
+    public override toString(): string {
+        return this.name;
+    }
 }

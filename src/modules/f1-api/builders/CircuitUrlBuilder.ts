@@ -1,14 +1,21 @@
-import type { Api, CircuitsResponse } from '../http';
+import type { CircuitsResponse } from '../http';
 import { Circuit } from '../structures';
+import { DriversUrlBuilder } from './DriversUrlBuilder';
+import { SeasonsUrlBuilder } from './SeasonsUrlBuilder';
+import { TeamsUrlBuilder } from './TeamsUrlBuilder';
 import { UrlBuilder } from './UrlBuilder';
 
 export class CircuitUrlBuilder extends UrlBuilder<CircuitsResponse, Circuit | null> {
-    public constructor(api: Api, private readonly id: string) {
-        super(api);
+    public drivers(): DriversUrlBuilder {
+        return this.builder(DriversUrlBuilder);
     }
 
-    protected override path(): string {
-        return `/circuits/${this.id}`;
+    public teams(): TeamsUrlBuilder {
+        return this.builder(TeamsUrlBuilder);
+    }
+
+    public seasons(): SeasonsUrlBuilder {
+        return this.builder(SeasonsUrlBuilder);
     }
 
     protected override transformResponse(data: CircuitsResponse): Circuit | null {
