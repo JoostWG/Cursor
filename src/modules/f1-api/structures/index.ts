@@ -7,4 +7,5 @@ export * from './Model';
 export * from './PitStop';
 export * from './QualifyingResult';
 export * from './Race';
+export * from './Result';
 export * from './Season';
