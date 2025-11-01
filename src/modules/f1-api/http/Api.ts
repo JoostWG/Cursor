@@ -16,7 +16,7 @@ import {
     TeamsUrlBuilder,
 } from '../builders';
 import { BadRequest, HttpError, NotFound } from '../errors';
-import type { BadRequestResponse, Pagination } from './types';
+import type { BadRequestResponse, Pagination, SuccessResponse } from './types';
 
 export class Api {
     private readonly api: AxiosInstance;
@@ -84,7 +84,10 @@ export class Api {
         return new TeamUrlBuilder(this, id);
     }
 
-    public async get<T>(path: string, pagination?: Pagination): Promise<T> {
+    public async get<T extends SuccessResponse<unknown>>(
+        path: string,
+        pagination?: Pagination,
+    ): Promise<T> {
         const response = await this.api.get<T | BadRequestResponse>(path, { params: pagination });
 
         if (response.status === 404) {
