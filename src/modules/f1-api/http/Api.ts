@@ -2,11 +2,18 @@ import axios, { AxiosHeaders, type AxiosInstance, type AxiosResponse } from 'axi
 import {
     CircuitUrlBuilder,
     CircuitsUrlBuilder,
-    ConstructorUrlBuilder,
-    ConstructorsUrlBuilder,
     DriverUrlBuilder,
     DriversUrlBuilder,
+    RaceUrlBuilder,
+    RacesUrlBuilder,
+    ResultsUrlBuilder,
     SeasonUrlBuilder,
+    SeasonsUrlBuilder,
+    SprintResultsUrlBuilder,
+    StatusUrlBuilder,
+    StatusesUrlBuilder,
+    TeamUrlBuilder,
+    TeamsUrlBuilder,
 } from '../builders';
 import { BadRequest, HttpError, NotFound } from '../errors';
 import type { BadRequestResponse, Pagination } from './types';
@@ -29,16 +36,6 @@ export class Api {
         return new CircuitUrlBuilder(this, id);
     }
 
-    public constructors(): ConstructorsUrlBuilder {
-        return new ConstructorsUrlBuilder(this);
-    }
-
-    // FIXME: Idk what to do here. Can't name it constructor ofc but idk. Maybe I should rename it to team and teams
-    // eslint-disable-next-line @typescript-eslint/naming-convention
-    public _constructor(id: string): ConstructorUrlBuilder {
-        return new ConstructorUrlBuilder(this, id);
-    }
-
     public drivers(): DriversUrlBuilder {
         return new DriversUrlBuilder(this);
     }
@@ -47,8 +44,44 @@ export class Api {
         return new DriverUrlBuilder(this, id);
     }
 
+    public races(): RacesUrlBuilder {
+        return new RacesUrlBuilder(this);
+    }
+
+    public race(year: string, round: number): RaceUrlBuilder {
+        return new RaceUrlBuilder(this, year, round);
+    }
+
+    public results(): ResultsUrlBuilder {
+        return new ResultsUrlBuilder(this);
+    }
+
+    public seasons(): SeasonsUrlBuilder {
+        return new SeasonsUrlBuilder(this);
+    }
+
     public season(year: string): SeasonUrlBuilder {
         return new SeasonUrlBuilder(this, year);
+    }
+
+    public sprintResults(): SprintResultsUrlBuilder {
+        return new SprintResultsUrlBuilder(this);
+    }
+
+    public statuses(): StatusesUrlBuilder {
+        return new StatusesUrlBuilder(this);
+    }
+
+    public status(id: number): StatusUrlBuilder {
+        return new StatusUrlBuilder(this, id);
+    }
+
+    public teams(): TeamsUrlBuilder {
+        return new TeamsUrlBuilder(this);
+    }
+
+    public team(id: string): TeamUrlBuilder {
+        return new TeamUrlBuilder(this, id);
     }
 
     public async get<T>(path: string, pagination?: Pagination): Promise<T> {

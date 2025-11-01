@@ -1,4 +1,4 @@
-import type { FastestLapApiData } from '../http/types/result';
+import type { FastestLapApiData } from '../http';
 import { AverageSpeed } from './AverageSpeed';
 import { FastestLapTime } from './FastestLapTime';
 

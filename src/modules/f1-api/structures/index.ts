@@ -1,5 +1,4 @@
 export * from './Circuit';
-export * from './Constructor';
 export * from './Driver';
 export * from './DriverStanding';
 export * from './Lap';
@@ -9,3 +8,7 @@ export * from './QualifyingResult';
 export * from './Race';
 export * from './Result';
 export * from './Season';
+export * from './SprintResult';
+export * from './Status';
+export * from './Team';
+export * from './TeamStanding';

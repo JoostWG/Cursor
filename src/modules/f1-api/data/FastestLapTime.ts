@@ -1,4 +1,4 @@
-import type { FastestLapTimeApiData } from '../http/types/result';
+import type { FastestLapTimeApiData } from '../http';
 
 export class FastestLapTime {
     public readonly time: string;

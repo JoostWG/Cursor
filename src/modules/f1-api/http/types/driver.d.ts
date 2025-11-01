@@ -7,6 +7,8 @@ export interface DriverApiData {
     familyName: string;
     dateOfBirth: string;
     nationality: string;
+    permanentNUmber?: string;
+    code?: string;
 }
 
 export type DriversResponse = SuccessResponse<{

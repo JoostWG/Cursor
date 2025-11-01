@@ -3,7 +3,7 @@ import type { FastestLapApiData, FinishingTimeApiData } from './common';
 import type { ConstructorApiData } from './constructor';
 import type { DriverApiData } from './driver';
 
-export interface ResultApiData {
+export interface SprintResultApiData {
     number: string;
     position: string;
     positionText: string;
@@ -13,14 +13,14 @@ export interface ResultApiData {
     grid?: string;
     laps?: string;
     status?: string;
-    FastestLap: FastestLapApiData;
     Time?: FinishingTimeApiData;
+    FastestLap?: FastestLapApiData;
 }
 
-export type ResultsResponse = SuccessResponse<{
+export type SprintResultsResponse = SuccessResponse<{
     RaceTable: {
         Races: (RaceApiData & {
-            Results: ResultApiData[];
+            SprintResults: SprintResultApiData[];
         })[];
     };
 }>;

@@ -1,7 +1,7 @@
 import type { Api, DriverStandingApiData } from '../http';
-import { Constructor } from './Constructor';
 import { Driver } from './Driver';
 import { Model } from './Model';
+import { Constructor } from './Team';
 
 export class DriverStanding extends Model<DriverStandingApiData> {
     public readonly position: number | null;

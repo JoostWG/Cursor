@@ -18,7 +18,7 @@ export class SeasonUrlBuilder extends UrlBuilder<SeasonsResponse, Season | null>
     }
 
     protected override path(): string {
-        return `/${this.year}`;
+        return `/${this.year}/seasons`;
     }
 
     protected override transformResponse(data: SeasonsResponse): Season | null {

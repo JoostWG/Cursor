@@ -1,4 +1,4 @@
-import type { AverageSpeedApiData } from '../http/types/result';
+import type { AverageSpeedApiData } from '../http';
 
 export class AverageSpeed {
     public readonly units: string;

@@ -1,5 +1,7 @@
 export type * from './circuit';
+export type * from './common';
 export type * from './constructor';
+export type * from './constructor-standing';
 export type * from './driver';
 export type * from './driver-standing';
 export type * from './lap';
@@ -8,6 +10,8 @@ export type * from './qualifying-result';
 export type * from './race';
 export type * from './result';
 export type * from './season';
+export type * from './sprint-result';
+export type * from './status';
 
 export interface Pagination {
     /**

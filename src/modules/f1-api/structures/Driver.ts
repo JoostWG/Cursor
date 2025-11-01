@@ -9,6 +9,8 @@ export class Driver extends Model<DriverApiData> {
     public readonly lastName: string;
     public readonly dateOfBirth: Date;
     public readonly nationality: string;
+    public readonly number: number | null;
+    public readonly code: string | null;
 
     public constructor(data: DriverApiData, api: Api) {
         super(data, api);
@@ -19,6 +21,8 @@ export class Driver extends Model<DriverApiData> {
         this.lastName = data.familyName;
         this.dateOfBirth = new Date(data.dateOfBirth);
         this.nationality = data.nationality;
+        this.number = data.permanentNUmber !== undefined ? Number(data.permanentNUmber) : null;
+        this.code = data.code ?? null;
     }
 
     public get name(): string {

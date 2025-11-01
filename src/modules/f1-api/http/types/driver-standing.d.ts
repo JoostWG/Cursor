@@ -13,6 +13,8 @@ export interface DriverStandingApiData {
 
 export type DriverStandingsResponse = SuccessResponse<{
     StandingsTable: {
-        StandingsLists: DriverStandingApiData[];
+        StandingsLists: {
+            DriverStandings: DriverStandingApiData[];
+        }[];
     };
 }>;
