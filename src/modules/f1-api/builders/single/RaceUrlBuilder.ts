@@ -1,12 +1,14 @@
-import type { RacesResponse } from '../http';
-import { Race } from '../structures';
-import { DriverStandingsUrlBuilder } from './DriverStandingsUrlBuilder';
-import { DriversUrlBuilder } from './DriversUrlBuilder';
-import { LapsUrlBuilder } from './LapsUrlBuilder';
-import { ResultsUrlBuilder } from './ResultsUrlBuilder';
-import { TeamStandingsUrlBuilder } from './TeamStandingsUrlBuilder';
-import { TeamsUrlBuilder } from './TeamsUrlBuilder';
-import { UrlBuilder } from './UrlBuilder';
+import type { RacesResponse } from '../../http';
+import { Race } from '../../structures';
+import {
+    DriverStandingsUrlBuilder,
+    DriversUrlBuilder,
+    LapsUrlBuilder,
+    ResultsUrlBuilder,
+    TeamStandingsUrlBuilder,
+    TeamsUrlBuilder,
+} from '../multiple';
+import { UrlBuilder } from '../UrlBuilder';
 
 export class RaceUrlBuilder extends UrlBuilder<RacesResponse, Race | null> {
     public driverStandings(): DriverStandingsUrlBuilder {

@@ -1,6 +1,6 @@
-import type { SeasonsResponse } from '../http';
-import { Season } from '../structures';
-import { UrlBuilder } from './UrlBuilder';
+import type { SeasonsResponse } from '../../http';
+import { Season } from '../../structures';
+import { UrlBuilder } from '../UrlBuilder';
 
 export class SeasonsUrlBuilder extends UrlBuilder<SeasonsResponse, Season[]> {
     protected override path(): string {

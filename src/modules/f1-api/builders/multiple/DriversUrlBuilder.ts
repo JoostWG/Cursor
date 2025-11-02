@@ -1,7 +1,7 @@
-import type { StatusType } from '../enums';
-import type { DriversResponse } from '../http';
-import { Driver } from '../structures';
-import { UrlBuilder, type UrlBuilderOptions } from './UrlBuilder';
+import type { StatusType } from '../../enums';
+import type { DriversResponse } from '../../http';
+import { Driver } from '../../structures';
+import { UrlBuilder, type UrlBuilderOptions } from '../UrlBuilder';
 
 export class DriversUrlBuilder extends UrlBuilder<DriversResponse, Driver[]> {
     /**

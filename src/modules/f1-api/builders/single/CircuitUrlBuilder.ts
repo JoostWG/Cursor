@@ -1,9 +1,7 @@
-import type { CircuitsResponse } from '../http';
-import { Circuit } from '../structures';
-import { DriversUrlBuilder } from './DriversUrlBuilder';
-import { SeasonsUrlBuilder } from './SeasonsUrlBuilder';
-import { TeamsUrlBuilder } from './TeamsUrlBuilder';
-import { UrlBuilder } from './UrlBuilder';
+import type { CircuitsResponse } from '../../http';
+import { Circuit } from '../../structures';
+import { DriversUrlBuilder, SeasonsUrlBuilder, TeamsUrlBuilder } from '../multiple';
+import { UrlBuilder } from '../UrlBuilder';
 
 export class CircuitUrlBuilder extends UrlBuilder<CircuitsResponse, Circuit | null> {
     public drivers(): DriversUrlBuilder {

@@ -1,6 +1,6 @@
-import type { DriverStandingsResponse } from '../http';
-import { DriverStanding } from '../structures';
-import { UrlBuilder, type UrlBuilderOptions } from './UrlBuilder';
+import type { DriverStandingsResponse } from '../../http';
+import { DriverStanding } from '../../structures';
+import { UrlBuilder, type UrlBuilderOptions } from '../UrlBuilder';
 
 export class DriverStandingsUrlBuilder
     extends UrlBuilder<DriverStandingsResponse, DriverStanding[]>

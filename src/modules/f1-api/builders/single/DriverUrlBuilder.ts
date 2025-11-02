@@ -1,11 +1,13 @@
-import type { DriversResponse } from '../http';
-import { Driver } from '../structures';
-import { CircuitsUrlBuilder } from './CircuitsUrlBuilder';
-import { LapsUrlBuilder } from './LapsUrlBuilder';
-import { RacesUrlBuilder } from './RacesUrlBuilder';
-import { ResultsUrlBuilder } from './ResultsUrlBuilder';
-import { TeamsUrlBuilder } from './TeamsUrlBuilder';
-import { UrlBuilder } from './UrlBuilder';
+import type { DriversResponse } from '../../http';
+import { Driver } from '../../structures';
+import {
+    CircuitsUrlBuilder,
+    LapsUrlBuilder,
+    RacesUrlBuilder,
+    ResultsUrlBuilder,
+    TeamsUrlBuilder,
+} from '../multiple';
+import { UrlBuilder } from '../UrlBuilder';
 
 export class DriverUrlBuilder extends UrlBuilder<DriversResponse, Driver | null> {
     public circuits(): CircuitsUrlBuilder {

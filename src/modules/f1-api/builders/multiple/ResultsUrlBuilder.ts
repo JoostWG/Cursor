@@ -1,6 +1,6 @@
-import type { ResultsResponse } from '../http';
-import { Result } from '../structures';
-import { UrlBuilder } from './UrlBuilder';
+import type { ResultsResponse } from '../../http';
+import { Result } from '../../structures';
+import { UrlBuilder } from '../UrlBuilder';
 
 export class ResultsUrlBuilder extends UrlBuilder<ResultsResponse, Result[]> {
     protected override path(): string {

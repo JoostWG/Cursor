@@ -1,6 +1,6 @@
-import type { LapsResponse } from '../http';
-import { Lap } from '../structures';
-import { UrlBuilder, type UrlBuilderOptions } from './UrlBuilder';
+import type { LapsResponse } from '../../http';
+import { Lap } from '../../structures';
+import { UrlBuilder, type UrlBuilderOptions } from '../UrlBuilder';
 
 export class LapsUrlBuilder extends UrlBuilder<LapsResponse, Lap[]> {
     /**

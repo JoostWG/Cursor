@@ -1,6 +1,6 @@
-import type { SprintResultsResponse } from '../http';
-import { SprintResult } from '../structures';
-import { UrlBuilder } from './UrlBuilder';
+import type { SprintResultsResponse } from '../../http';
+import { SprintResult } from '../../structures';
+import { UrlBuilder } from '../UrlBuilder';
 
 export class SprintResultsUrlBuilder extends UrlBuilder<SprintResultsResponse, SprintResult[]> {
     protected override path(): string {

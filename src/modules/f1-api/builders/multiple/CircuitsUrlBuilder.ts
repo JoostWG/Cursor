@@ -1,7 +1,7 @@
-import type { StatusType } from '../enums';
-import type { CircuitsResponse } from '../http';
-import { Circuit } from '../structures';
-import { UrlBuilder, type UrlBuilderOptions } from './UrlBuilder';
+import type { StatusType } from '../../enums';
+import type { CircuitsResponse } from '../../http';
+import { Circuit } from '../../structures';
+import { UrlBuilder, type UrlBuilderOptions } from '../UrlBuilder';
 
 export class CircuitsUrlBuilder extends UrlBuilder<CircuitsResponse, Circuit[]> {
     /**

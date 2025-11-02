@@ -1,6 +1,6 @@
-import type { StatusesResponse } from '../http';
-import { Status } from '../structures';
-import { UrlBuilder } from './UrlBuilder';
+import type { StatusesResponse } from '../../http';
+import { Status } from '../../structures';
+import { UrlBuilder } from '../UrlBuilder';
 
 export class StatusesUrlBuilder extends UrlBuilder<StatusesResponse, Status[]> {
     protected override path(): string {

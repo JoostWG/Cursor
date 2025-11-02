@@ -1,7 +1,7 @@
-import type { StatusType } from '../enums';
-import type { ConstructorsResponse } from '../http';
-import { Team } from '../structures';
-import { UrlBuilder, type UrlBuilderOptions } from './UrlBuilder';
+import type { StatusType } from '../../enums';
+import type { ConstructorsResponse } from '../../http';
+import { Team } from '../../structures';
+import { UrlBuilder, type UrlBuilderOptions } from '../UrlBuilder';
 
 export class TeamsUrlBuilder extends UrlBuilder<ConstructorsResponse, Team[]> {
     /**

@@ -1,14 +1,16 @@
-import type { Api, SeasonsResponse } from '../http';
-import { Season } from '../structures';
-import { CircuitsUrlBuilder } from './CircuitsUrlBuilder';
-import { DriverStandingsUrlBuilder } from './DriverStandingsUrlBuilder';
-import { DriversUrlBuilder } from './DriversUrlBuilder';
-import { LapsUrlBuilder } from './LapsUrlBuilder';
-import { RacesUrlBuilder } from './RacesUrlBuilder';
-import { ResultsUrlBuilder } from './ResultsUrlBuilder';
-import { TeamStandingsUrlBuilder } from './TeamStandingsUrlBuilder';
-import { TeamsUrlBuilder } from './TeamsUrlBuilder';
-import { UrlBuilder, type UrlBuilderOptions } from './UrlBuilder';
+import type { Api, SeasonsResponse } from '../../http';
+import { Season } from '../../structures';
+import {
+    CircuitsUrlBuilder,
+    DriverStandingsUrlBuilder,
+    DriversUrlBuilder,
+    LapsUrlBuilder,
+    RacesUrlBuilder,
+    ResultsUrlBuilder,
+    TeamStandingsUrlBuilder,
+    TeamsUrlBuilder,
+} from '../multiple';
+import { UrlBuilder, type UrlBuilderOptions } from '../UrlBuilder';
 
 export class SeasonUrlBuilder extends UrlBuilder<SeasonsResponse, Season | null> {
     public constructor(api: Api, private readonly year: UrlBuilderOptions['year']) {

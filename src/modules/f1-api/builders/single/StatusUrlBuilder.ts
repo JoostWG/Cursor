@@ -1,9 +1,7 @@
-import type { StatusesResponse } from '../http';
-import { Status } from '../structures';
-import { CircuitsUrlBuilder } from './CircuitsUrlBuilder';
-import { DriversUrlBuilder } from './DriversUrlBuilder';
-import { TeamsUrlBuilder } from './TeamsUrlBuilder';
-import { UrlBuilder } from './UrlBuilder';
+import type { StatusesResponse } from '../../http';
+import { Status } from '../../structures';
+import { CircuitsUrlBuilder, DriversUrlBuilder, TeamsUrlBuilder } from '../multiple';
+import { UrlBuilder } from '../UrlBuilder';
 
 export class StatusUrlBuilder extends UrlBuilder<StatusesResponse, Status | null> {
     public circuits(): CircuitsUrlBuilder {

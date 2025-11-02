@@ -1,6 +1,6 @@
-import type { ConstructorStandingsResponse } from '../http';
-import { TeamStanding } from '../structures';
-import { UrlBuilder, type UrlBuilderOptions } from './UrlBuilder';
+import type { ConstructorStandingsResponse } from '../../http';
+import { TeamStanding } from '../../structures';
+import { UrlBuilder, type UrlBuilderOptions } from '../UrlBuilder';
 
 export class TeamStandingsUrlBuilder
     extends UrlBuilder<ConstructorStandingsResponse, TeamStanding[]>

@@ -1,10 +1,12 @@
-import type { ConstructorsResponse } from '../http';
-import { Team } from '../structures';
-import { CircuitsUrlBuilder } from './CircuitsUrlBuilder';
-import { DriversUrlBuilder } from './DriversUrlBuilder';
-import { LapsUrlBuilder } from './LapsUrlBuilder';
-import { TeamStandingsUrlBuilder } from './TeamStandingsUrlBuilder';
-import { UrlBuilder } from './UrlBuilder';
+import type { ConstructorsResponse } from '../../http';
+import { Team } from '../../structures';
+import {
+    CircuitsUrlBuilder,
+    DriversUrlBuilder,
+    LapsUrlBuilder,
+    TeamStandingsUrlBuilder,
+} from '../multiple';
+import { UrlBuilder } from '../UrlBuilder';
 
 export class TeamUrlBuilder extends UrlBuilder<ConstructorsResponse, Team | null> {
     public circuits(): CircuitsUrlBuilder {
