@@ -3,6 +3,7 @@ import {
     CircuitsUrlBuilder,
     DriverStandingsUrlBuilder,
     DriversUrlBuilder,
+    PitStopsUrlBuilder,
     RacesUrlBuilder,
     ResultsUrlBuilder,
     SeasonUrlBuilder,
@@ -38,6 +39,10 @@ export class Api {
 
     public drivers(): DriversUrlBuilder {
         return new DriversUrlBuilder(this);
+    }
+
+    public pitStops(): PitStopsUrlBuilder {
+        return new PitStopsUrlBuilder(this);
     }
 
     public races(): RacesUrlBuilder {

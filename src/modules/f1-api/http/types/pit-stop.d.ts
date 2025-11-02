@@ -8,7 +8,7 @@ export interface PitStopApiData {
     duration?: string;
 }
 
-export type PitStopsApiResponse = SuccessResponse<{
+export type PitStopsResponse = SuccessResponse<{
     RaceTable: {
         Races: (RaceApiData & { PitStops: PitStopApiData[] })[];
     };

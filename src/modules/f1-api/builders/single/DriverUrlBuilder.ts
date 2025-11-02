@@ -3,6 +3,7 @@ import { Driver } from '../../structures';
 import {
     CircuitsUrlBuilder,
     LapsUrlBuilder,
+    PitStopsUrlBuilder,
     RacesUrlBuilder,
     ResultsUrlBuilder,
     TeamsUrlBuilder,
@@ -28,6 +29,10 @@ export class DriverUrlBuilder extends UrlBuilder<DriversResponse, Driver | null>
 
     public laps(): LapsUrlBuilder {
         return this.builder(LapsUrlBuilder);
+    }
+
+    public pitStops(): PitStopsUrlBuilder {
+        return this.builder(PitStopsUrlBuilder);
     }
 
     protected override transformResponse(data: DriversResponse): Driver | null {

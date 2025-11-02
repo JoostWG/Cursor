@@ -5,6 +5,7 @@ import {
     DriverStandingsUrlBuilder,
     DriversUrlBuilder,
     LapsUrlBuilder,
+    PitStopsUrlBuilder,
     RacesUrlBuilder,
     ResultsUrlBuilder,
     TeamStandingsUrlBuilder,
@@ -47,6 +48,10 @@ export class SeasonUrlBuilder extends UrlBuilder<SeasonsResponse, Season | null>
 
     public laps(): LapsUrlBuilder {
         return this.builder(LapsUrlBuilder);
+    }
+
+    public pitStops(): PitStopsUrlBuilder {
+        return this.builder(PitStopsUrlBuilder);
     }
 
     protected override builderOptions(): UrlBuilderOptions {

@@ -4,6 +4,7 @@ import {
     DriverStandingsUrlBuilder,
     DriversUrlBuilder,
     LapsUrlBuilder,
+    PitStopsUrlBuilder,
     ResultsUrlBuilder,
     TeamStandingsUrlBuilder,
     TeamsUrlBuilder,
@@ -33,6 +34,10 @@ export class RaceUrlBuilder extends UrlBuilder<RacesResponse, Race | null> {
 
     public laps(): LapsUrlBuilder {
         return this.builder(LapsUrlBuilder);
+    }
+
+    public pitStops(): PitStopsUrlBuilder {
+        return this.builder(PitStopsUrlBuilder);
     }
 
     protected override path(): string {

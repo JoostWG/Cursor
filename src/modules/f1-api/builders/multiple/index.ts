@@ -2,6 +2,7 @@ export * from './CircuitsUrlBuilder';
 export * from './DriverStandingsUrlBuilder';
 export * from './DriversUrlBuilder';
 export * from './LapsUrlBuilder';
+export * from './PitStopsUrlBuilder';
 export * from './RacesUrlBuilder';
 export * from './ResultsUrlBuilder';
 export * from './SeasonsUrlBuilder';
