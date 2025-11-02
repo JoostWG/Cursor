@@ -35,14 +35,18 @@ export class AutocompleteHandler {
         }
 
         const drivers = await query.get();
-        const searchString = interaction.options.getFocused().toLowerCase();
 
-        return drivers
-            .filter((driver) => driver.name.toLowerCase().includes(searchString))
-            .toSorted((a, b) =>
-                a.name.toLowerCase().indexOf(searchString)
-                - b.name.toLowerCase().indexOf(searchString)
-            )
+        return this.filter(drivers, interaction.options.getFocused(), (driver) => driver.name)
             .map((driver) => ({ name: driver.name, value: driver.id }));
+    }
+
+    private filter<T>(entries: T[], search: string, toString: (entry: T) => string): T[] {
+        const searchString = search.toLowerCase();
+        // eslint-disable-next-line func-style
+        const toStr = (entry: T): string => toString(entry).toLowerCase();
+
+        return entries
+            .filter((entry) => toStr(entry).includes(searchString))
+            .toSorted((a, b) => toStr(a).indexOf(searchString) - toStr(b).indexOf(searchString));
     }
 }
