@@ -1,10 +1,10 @@
 import { FastestLap, FinishingTime } from '../data';
 import type { Api, SprintResultApiData } from '../http';
 import { Driver } from './Driver';
-import { Model } from './Model';
+import { Structure } from './Structure';
 import { Team } from './Team';
 
-export class SprintResult extends Model<SprintResultApiData> {
+export class SprintResult extends Structure<SprintResultApiData> {
     public readonly number: number;
     public readonly position: string;
     public readonly positionText: string;

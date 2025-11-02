@@ -1,9 +1,9 @@
 import type { Api, DriverStandingApiData } from '../http';
 import { Driver } from './Driver';
-import { Model } from './Model';
+import { Structure } from './Structure';
 import { Team } from './Team';
 
-export class DriverStanding extends Model<DriverStandingApiData> {
+export class DriverStanding extends Structure<DriverStandingApiData> {
     public readonly position: number | null;
     public readonly positionText: string;
     public readonly points: number;

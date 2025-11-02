@@ -1,7 +1,7 @@
 import type { Api, DriverApiData } from '../http';
-import { Model } from './Model';
+import { Structure } from './Structure';
 
-export class Driver extends Model<DriverApiData> {
+export class Driver extends Structure<DriverApiData> {
     public readonly id: string;
     public readonly url: string;
     public readonly firstName: string;

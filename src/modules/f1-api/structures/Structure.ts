@@ -1,6 +1,6 @@
 import type { Api } from '../http';
 
-export class Model<T> {
+export class Structure<T> {
     protected constructor(protected readonly data: T, protected readonly api: Api) {
         //
     }

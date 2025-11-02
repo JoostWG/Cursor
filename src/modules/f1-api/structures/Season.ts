@@ -9,9 +9,9 @@ import {
     type TeamsUrlBuilder,
 } from '../builders';
 import type { Api, SeasonApiData } from '../http';
-import { Model } from './Model';
+import { Structure } from './Structure';
 
-export class Season extends Model<SeasonApiData> {
+export class Season extends Structure<SeasonApiData> {
     public readonly year: string;
     public readonly url: string;
     private readonly urlBuilder: SeasonUrlBuilder;

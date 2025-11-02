@@ -1,8 +1,8 @@
 import type { StatusType } from '../enums';
 import type { Api, StatusApiData } from '../http';
-import { Model } from './Model';
+import { Structure } from './Structure';
 
-export class Status extends Model<StatusApiData> {
+export class Status extends Structure<StatusApiData> {
     public readonly id: StatusType;
     public readonly count: number;
     public readonly name: string;

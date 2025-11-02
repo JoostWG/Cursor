@@ -1,8 +1,8 @@
 import type { Api, ConstructorStandingApiData } from '../http';
-import { Model } from './Model';
+import { Structure } from './Structure';
 import { Team } from './Team';
 
-export class TeamStanding extends Model<ConstructorStandingApiData> {
+export class TeamStanding extends Structure<ConstructorStandingApiData> {
     public readonly position: string | null;
     public readonly positionText: string;
     public readonly points: number;

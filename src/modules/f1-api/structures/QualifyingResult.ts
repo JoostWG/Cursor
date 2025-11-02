@@ -1,9 +1,9 @@
 import type { Api, QualifyingResultApiData } from '../http';
 import { Driver } from './Driver';
-import { Model } from './Model';
+import { Structure } from './Structure';
 import { Team } from './Team';
 
-export class QualifyingResult extends Model<QualifyingResultApiData> {
+export class QualifyingResult extends Structure<QualifyingResultApiData> {
     public readonly number: number;
     public readonly position: number | null;
     public readonly driver: Driver;

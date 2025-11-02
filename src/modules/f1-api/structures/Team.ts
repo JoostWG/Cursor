@@ -1,7 +1,7 @@
 import type { Api, ConstructorApiData } from '../http';
-import { Model } from './Model';
+import { Structure } from './Structure';
 
-export class Team extends Model<ConstructorApiData> {
+export class Team extends Structure<ConstructorApiData> {
     public readonly id: string | null;
     public readonly url: string | null;
     public readonly name: string;

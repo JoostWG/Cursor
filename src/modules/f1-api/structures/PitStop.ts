@@ -1,7 +1,7 @@
 import type { Api, PitStopApiData } from '../http';
-import { Model } from './Model';
+import { Structure } from './Structure';
 
-export class PitStop extends Model<PitStopApiData> {
+export class PitStop extends Structure<PitStopApiData> {
     public readonly driverId: string;
     public readonly lap: number | null;
     public readonly stop: number | null;

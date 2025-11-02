@@ -1,8 +1,8 @@
 import { CircuitLocation } from '../data';
 import type { Api, CircuitApiData } from '../http';
-import { Model } from './Model';
+import { Structure } from './Structure';
 
-export class Circuit extends Model<CircuitApiData> {
+export class Circuit extends Structure<CircuitApiData> {
     public readonly id: string;
     public readonly url: string;
     public readonly name: string;

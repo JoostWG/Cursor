@@ -1,9 +1,9 @@
 import { SessionDateTime } from '../data';
 import type { Api, RaceApiData } from '../http';
 import { Circuit } from './Circuit';
-import { Model } from './Model';
+import { Structure } from './Structure';
 
-export class Race extends Model<RaceApiData> {
+export class Race extends Structure<RaceApiData> {
     public readonly season: string;
     public readonly round: number;
     public readonly url: string | null;

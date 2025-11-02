@@ -1,8 +1,8 @@
 import { LapTiming } from '../data';
 import type { Api, LapApiData } from '../http';
-import { Model } from './Model';
+import { Structure } from './Structure';
 
-export class Lap extends Model<LapApiData> {
+export class Lap extends Structure<LapApiData> {
     public readonly number: number;
     public readonly timings: readonly LapTiming[];
 
