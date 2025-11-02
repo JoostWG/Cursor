@@ -31,4 +31,4 @@ jobs:
       - uses: actions/setup-node@v4
       - run: npm ci
       - run: cp example.config.json config.json
-      - run: npx tsc
+      - run: npx tsc --noEmit
