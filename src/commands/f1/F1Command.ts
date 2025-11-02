@@ -2,6 +2,7 @@ import { EmbedBuilder, type ChatInputCommandInteraction } from 'discord.js';
 import { CommandError, SlashCommand } from '../../lib/core';
 import { Api, type SuccessResponse, type UrlBuilder } from '../../modules/f1-api';
 import { F1CommandOptionsBuilder } from './F1CommandOptionsBuilder';
+import { FileApiCache } from './FileApiCache';
 
 export class F1Command extends SlashCommand {
     private readonly optionsBuilder: F1CommandOptionsBuilder;
@@ -20,7 +21,7 @@ export class F1Command extends SlashCommand {
 
         this.devOnly = true;
 
-        this.api = new Api();
+        this.api = new Api(new FileApiCache('./cache/f1'));
     }
 
     public override async handle(interaction: ChatInputCommandInteraction): Promise<void> {

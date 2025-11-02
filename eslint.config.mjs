@@ -114,6 +114,7 @@ export default defineConfig(
                 },
             ],
             // Below is all disabled
+            '@typescript-eslint/no-unnecessary-type-parameters': 'off',
             '@typescript-eslint/prefer-regexp-exec': 'off',
             '@typescript-eslint/require-array-sort-compare': 'off',
             '@typescript-eslint/no-unsafe-type-assertion': 'off',
