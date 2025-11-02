@@ -17,7 +17,7 @@ export interface UrlBuilderOptions {
 
 export abstract class UrlBuilder<TResponse extends SuccessResponse, TData> {
     public constructor(
-        protected readonly api: Api,
+        private readonly api: Api,
         protected readonly options: UrlBuilderOptions = {},
     ) {
         //
@@ -42,7 +42,7 @@ export abstract class UrlBuilder<TResponse extends SuccessResponse, TData> {
     protected builder<T extends UrlBuilder<SuccessResponse, unknown>>(
         builderClass: new (api: Api, options: UrlBuilderOptions) => T,
     ): T {
-        return new builderClass(this.api, this.options);
+        return new builderClass(this.api, this.builderOptions());
     }
 
     protected transformMultiple<D, TStructure>(
@@ -61,6 +61,10 @@ export abstract class UrlBuilder<TResponse extends SuccessResponse, TData> {
 
     protected path(): string {
         return '';
+    }
+
+    protected builderOptions(): UrlBuilderOptions {
+        return this.options;
     }
 
     private getPath(): string {

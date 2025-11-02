@@ -1,4 +1,4 @@
-import type { SeasonsResponse } from '../http';
+import type { Api, SeasonsResponse } from '../http';
 import { Season } from '../structures';
 import { CircuitsUrlBuilder } from './CircuitsUrlBuilder';
 import { DriverStandingsUrlBuilder } from './DriverStandingsUrlBuilder';
@@ -8,9 +8,13 @@ import { RacesUrlBuilder } from './RacesUrlBuilder';
 import { ResultsUrlBuilder } from './ResultsUrlBuilder';
 import { TeamStandingsUrlBuilder } from './TeamStandingsUrlBuilder';
 import { TeamsUrlBuilder } from './TeamsUrlBuilder';
-import { UrlBuilder } from './UrlBuilder';
+import { UrlBuilder, type UrlBuilderOptions } from './UrlBuilder';
 
 export class SeasonUrlBuilder extends UrlBuilder<SeasonsResponse, Season | null> {
+    public constructor(api: Api, private readonly year: UrlBuilderOptions['year']) {
+        super(api);
+    }
+
     public circuits(): CircuitsUrlBuilder {
         return this.builder(CircuitsUrlBuilder);
     }
@@ -41,6 +45,14 @@ export class SeasonUrlBuilder extends UrlBuilder<SeasonsResponse, Season | null>
 
     public laps(): LapsUrlBuilder {
         return this.builder(LapsUrlBuilder);
+    }
+
+    protected override builderOptions(): UrlBuilderOptions {
+        return { year: this.year };
+    }
+
+    protected override path(): string {
+        return `${this.year}/seasons`;
     }
 
     protected override transformResponse(data: SeasonsResponse): Season | null {

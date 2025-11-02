@@ -1,28 +1,32 @@
 import axios, { AxiosHeaders, type AxiosInstance, type AxiosResponse } from 'axios';
 import {
     CircuitsUrlBuilder,
+    DriverStandingsUrlBuilder,
     DriversUrlBuilder,
     RacesUrlBuilder,
     ResultsUrlBuilder,
+    SeasonUrlBuilder,
     SeasonsUrlBuilder,
     SprintResultsUrlBuilder,
     StatusesUrlBuilder,
     TeamStandingsUrlBuilder,
     TeamsUrlBuilder,
+    type UrlBuilderOptions,
 } from '../builders';
-import { DriverStandingsUrlBuilder } from '../builders/DriverStandingsUrlBuilder';
 import { BadRequest, HttpError, NotFound } from '../errors';
 import type { BadRequestResponse, Pagination, SuccessResponse } from './types';
 
 export class Api {
-    private readonly api: AxiosInstance;
+    private readonly axios: AxiosInstance;
 
     public constructor() {
-        this.api = axios.create({
+        this.axios = axios.create({
             baseURL: 'https://api.jolpi.ca/ergast/f1',
             headers: new AxiosHeaders().setContentType('application/json'),
         });
     }
+
+    // Multiple
 
     public circuits(): CircuitsUrlBuilder {
         return new CircuitsUrlBuilder(this);
@@ -64,8 +68,14 @@ export class Api {
         return new TeamsUrlBuilder(this);
     }
 
+    // Single
+
+    public season(year: UrlBuilderOptions['year']): SeasonUrlBuilder {
+        return new SeasonUrlBuilder(this, year);
+    }
+
     public async get<T extends SuccessResponse>(path: string, pagination?: Pagination): Promise<T> {
-        const response = await this.api.get<T | BadRequestResponse>(`${path}.json`, {
+        const response = await this.axios.get<T | BadRequestResponse>(`${path}.json`, {
             params: pagination,
         });
 
