@@ -9,9 +9,14 @@ export class FileApiCache implements ApiCache {
 
     public async get<T>(path: string, pagination?: Pagination): Promise<T | null> {
         try {
-            const { data } = JSON.parse(
+            const { timestamp, data } = JSON.parse(
                 await fs.readFile(this.getPath(path, pagination), { encoding: 'utf-8' }),
             ) as { timestamp: number; data: T };
+
+            // Week
+            if ((Date.now() - timestamp) >= 604_800_000) {
+                return null;
+            }
 
             return data;
         } catch {
