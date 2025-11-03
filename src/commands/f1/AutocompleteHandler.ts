@@ -1,17 +1,18 @@
 import type { ApplicationCommandOptionChoiceData, AutocompleteInteraction } from 'discord.js';
-import type { Api } from '../../modules/f1-api';
+import type { SimpleApi } from '../../modules/f1-api';
+import { OptionName } from './F1CommandOptionsBuilder';
 
 export class AutocompleteHandler {
-    public constructor(private readonly api: Api) {
+    public constructor(private readonly api: SimpleApi) {
         //
     }
 
     public async handle(
         interaction: AutocompleteInteraction,
     ): Promise<ApplicationCommandOptionChoiceData[]> {
-        const { name } = interaction.options.getFocused(true);
+        const { name } = interaction.options.getFocused(true) as { name: OptionName };
 
-        if (name === 'driver') {
+        if (name === OptionName.Driver) {
             return await this.handleDriverAutocomplete(interaction);
         }
 
@@ -21,20 +22,14 @@ export class AutocompleteHandler {
     private async handleDriverAutocomplete(
         interaction: AutocompleteInteraction,
     ): Promise<ApplicationCommandOptionChoiceData[]> {
-        const season = interaction.options.getString('season');
-        const round = interaction.options.getInteger('round');
+        const season = interaction.options.getString(OptionName.Season);
+        const round = interaction.options.getInteger(OptionName.Round);
 
         if (season === null) {
             return [];
         }
 
-        const query = this.api.drivers().season(season);
-
-        if (round !== null) {
-            query.round(round);
-        }
-
-        const drivers = await query.get();
+        const drivers = await this.api.getDrivers({ season, round: round ?? undefined });
 
         return this.filter(drivers, interaction.options.getFocused(), (driver) => driver.name)
             .map((driver) => ({ name: driver.name, value: driver.id }));

@@ -5,6 +5,35 @@ import type {
 } from 'discord.js';
 import { integerOption, stringOption, subcommand } from '../../lib/utils/builders';
 
+export enum SubcommandName {
+    Circuits = 'circuits',
+    DriverStandings = 'driver-standings',
+    Drivers = 'drivers',
+    Laps = 'laps',
+    PitStops = 'pit-stops',
+    QualifyingResults = 'qualifying-results',
+    Races = 'races',
+    Results = 'results',
+    Seasons = 'seasons',
+    SprintResults = 'sprint-results',
+    TeamStandings = 'team-standings',
+    Teams = 'teams',
+}
+
+export enum OptionName {
+    Season = 'season',
+    Round = 'round',
+    Circuit = 'circuit',
+    Driver = 'driver',
+    Fastest = 'fastest',
+    Grid = 'grid',
+    Lap = 'lap',
+    PitStop = 'pit-stop',
+    Result = 'result',
+    Status = 'status',
+    Team = 'team',
+}
+
 export class F1CommandOptionsBuilder {
     public getOptions(): APIApplicationCommandSubcommandOption[] {
         return [
@@ -27,7 +56,7 @@ export class F1CommandOptionsBuilder {
 
     private getCircuitsSubcommand(): APIApplicationCommandSubcommandOption {
         return subcommand({
-            name: 'circuits',
+            name: SubcommandName.Circuits,
             description: 'Query circuits',
             options: [
                 this.getSeasonOption(),
@@ -44,7 +73,7 @@ export class F1CommandOptionsBuilder {
 
     private getDriverStandingsSubcommand(): APIApplicationCommandSubcommandOption {
         return subcommand({
-            name: 'driver-standings',
+            name: SubcommandName.DriverStandings,
             description: 'Query driver standings',
             options: [
                 this.getSeasonOption(true),
@@ -56,7 +85,7 @@ export class F1CommandOptionsBuilder {
 
     private getDriversSubcommand(): APIApplicationCommandSubcommandOption {
         return subcommand({
-            name: 'drivers',
+            name: SubcommandName.Drivers,
             description: 'Query drivers',
             options: [
                 this.getSeasonOption(),
@@ -73,7 +102,7 @@ export class F1CommandOptionsBuilder {
 
     private getLapsSubcommand(): APIApplicationCommandSubcommandOption {
         return subcommand({
-            name: 'laps',
+            name: SubcommandName.Laps,
             description: 'Query laps',
             options: [
                 this.getSeasonOption(true),
@@ -87,7 +116,7 @@ export class F1CommandOptionsBuilder {
 
     private getPitStopsSubcommand(): APIApplicationCommandSubcommandOption {
         return subcommand({
-            name: 'pit-stops',
+            name: SubcommandName.PitStops,
             description: 'Query pit stops',
             options: [
                 this.getSeasonOption(true),
@@ -101,7 +130,7 @@ export class F1CommandOptionsBuilder {
 
     private getQualifyingResultsSubcommand(): APIApplicationCommandSubcommandOption {
         return subcommand({
-            name: 'qualifying-results',
+            name: SubcommandName.QualifyingResults,
             description: 'Query qualifying results',
             options: [
                 this.getSeasonOption(),
@@ -118,7 +147,7 @@ export class F1CommandOptionsBuilder {
 
     private getRacesSubcommand(): APIApplicationCommandSubcommandOption {
         return subcommand({
-            name: 'races',
+            name: SubcommandName.Races,
             description: 'Query races',
             options: [
                 this.getSeasonOption(),
@@ -127,6 +156,7 @@ export class F1CommandOptionsBuilder {
                 this.getDriverOption(),
                 this.getGridOption(),
                 this.getStatusOption(),
+                this.getResultOption(),
                 this.getTeamOption(),
             ],
         });
@@ -134,7 +164,7 @@ export class F1CommandOptionsBuilder {
 
     private getResultsSubcommand(): APIApplicationCommandSubcommandOption {
         return subcommand({
-            name: 'results',
+            name: SubcommandName.Results,
             description: 'Query results',
             options: [
                 this.getSeasonOption(),
@@ -151,7 +181,7 @@ export class F1CommandOptionsBuilder {
 
     private getSeasonsSubcommand(): APIApplicationCommandSubcommandOption {
         return subcommand({
-            name: 'seasons',
+            name: SubcommandName.Seasons,
             description: 'Query seasons',
             options: [
                 this.getCircuitOption(),
@@ -165,7 +195,7 @@ export class F1CommandOptionsBuilder {
 
     private getSprintsSubcommand(): APIApplicationCommandSubcommandOption {
         return subcommand({
-            name: 'sprints',
+            name: SubcommandName.SprintResults,
             description: 'Query sprints',
             options: [
                 this.getSeasonOption(),
@@ -181,7 +211,7 @@ export class F1CommandOptionsBuilder {
 
     private getTeamStandingsSubcommand(): APIApplicationCommandSubcommandOption {
         return subcommand({
-            name: 'team-standings',
+            name: SubcommandName.TeamStandings,
             description: 'Query team standings',
             options: [
                 this.getSeasonOption(true),
@@ -193,7 +223,7 @@ export class F1CommandOptionsBuilder {
 
     private getTeamsSubcommand(): APIApplicationCommandSubcommandOption {
         return subcommand({
-            name: 'teams',
+            name: SubcommandName.Teams,
             description: 'Query teams',
             options: [
                 this.getSeasonOption(),
@@ -212,7 +242,7 @@ export class F1CommandOptionsBuilder {
 
     private getSeasonOption(required = false): APIApplicationCommandStringOption {
         return stringOption({
-            name: 'season',
+            name: OptionName.Season,
             description: 'Filter on season',
             required,
         });
@@ -220,7 +250,7 @@ export class F1CommandOptionsBuilder {
 
     private getRoundOption(required = false): APIApplicationCommandIntegerOption {
         return integerOption({
-            name: 'round',
+            name: OptionName.Round,
             description: 'Filter on round',
             required,
         });
@@ -228,7 +258,7 @@ export class F1CommandOptionsBuilder {
 
     private getCircuitOption(): APIApplicationCommandStringOption {
         return stringOption({
-            name: 'circuit',
+            name: OptionName.Circuit,
             description: 'Filter on circuit',
             required: false,
         });
@@ -236,7 +266,7 @@ export class F1CommandOptionsBuilder {
 
     private getDriverOption(): APIApplicationCommandStringOption {
         return stringOption({
-            name: 'driver',
+            name: OptionName.Driver,
             description: 'Filter on driver',
             required: false,
             autocomplete: true,
@@ -245,7 +275,7 @@ export class F1CommandOptionsBuilder {
 
     private getFastestOption(): APIApplicationCommandIntegerOption {
         return integerOption({
-            name: 'fastest',
+            name: OptionName.Fastest,
             description: 'Filter on fastest lap rank',
             required: false,
         });
@@ -253,7 +283,7 @@ export class F1CommandOptionsBuilder {
 
     private getGridOption(): APIApplicationCommandIntegerOption {
         return integerOption({
-            name: 'grid',
+            name: OptionName.Grid,
             description: 'Filter on grid position',
             required: false,
         });
@@ -261,7 +291,7 @@ export class F1CommandOptionsBuilder {
 
     private getLapOption(): APIApplicationCommandIntegerOption {
         return integerOption({
-            name: 'lap',
+            name: OptionName.Lap,
             description: 'Filter on lap number',
             required: false,
         });
@@ -269,7 +299,7 @@ export class F1CommandOptionsBuilder {
 
     private getPitStopOption(): APIApplicationCommandIntegerOption {
         return integerOption({
-            name: 'pit-stop',
+            name: OptionName.PitStop,
             description: 'Filter on pit stop number',
             required: false,
         });
@@ -277,7 +307,7 @@ export class F1CommandOptionsBuilder {
 
     private getResultOption(): APIApplicationCommandIntegerOption {
         return integerOption({
-            name: 'result',
+            name: OptionName.Result,
             description: 'Filter on finishing position',
             required: false,
         });
@@ -285,7 +315,7 @@ export class F1CommandOptionsBuilder {
 
     private getStatusOption(): APIApplicationCommandStringOption {
         return stringOption({
-            name: 'status',
+            name: OptionName.Status,
             description: 'Filter on status',
             required: false,
         });
@@ -293,7 +323,7 @@ export class F1CommandOptionsBuilder {
 
     private getTeamOption(): APIApplicationCommandStringOption {
         return stringOption({
-            name: 'team',
+            name: OptionName.Team,
             description: 'Filter on team',
             required: false,
         });
