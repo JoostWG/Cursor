@@ -248,6 +248,7 @@ export class F1CommandOptionsBuilder {
             name: OptionName.Season,
             description: 'Filter on season',
             required,
+            autocomplete: true,
         });
     }
 
