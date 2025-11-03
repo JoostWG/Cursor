@@ -1,4 +1,5 @@
 import type {
+    APIApplicationCommandBasicOption,
     APIApplicationCommandIntegerOption,
     APIApplicationCommandStringOption,
     APIApplicationCommandSubcommandOption,
@@ -32,6 +33,8 @@ export enum OptionName {
     Result = 'result',
     Status = 'status',
     Team = 'team',
+    Limit = 'limit',
+    Offset = 'offset',
 }
 
 export class F1CommandOptionsBuilder {
@@ -58,7 +61,7 @@ export class F1CommandOptionsBuilder {
         return subcommand({
             name: SubcommandName.Circuits,
             description: 'Query circuits',
-            options: [
+            options: this.options(
                 this.getSeasonOption(),
                 this.getRoundOption(),
                 this.getDriverOption(),
@@ -67,7 +70,7 @@ export class F1CommandOptionsBuilder {
                 this.getResultOption(),
                 this.getStatusOption(),
                 this.getTeamOption(),
-            ],
+            ),
         });
     }
 
@@ -75,11 +78,11 @@ export class F1CommandOptionsBuilder {
         return subcommand({
             name: SubcommandName.DriverStandings,
             description: 'Query driver standings',
-            options: [
+            options: this.options(
                 this.getSeasonOption(true),
                 this.getRoundOption(),
                 this.getDriverOption(),
-            ],
+            ),
         });
     }
 
@@ -87,7 +90,7 @@ export class F1CommandOptionsBuilder {
         return subcommand({
             name: SubcommandName.Drivers,
             description: 'Query drivers',
-            options: [
+            options: this.options(
                 this.getSeasonOption(),
                 this.getRoundOption(),
                 this.getCircuitOption(),
@@ -96,7 +99,7 @@ export class F1CommandOptionsBuilder {
                 this.getResultOption(),
                 this.getStatusOption(),
                 this.getTeamOption(),
-            ],
+            ),
         });
     }
 
@@ -104,13 +107,13 @@ export class F1CommandOptionsBuilder {
         return subcommand({
             name: SubcommandName.Laps,
             description: 'Query laps',
-            options: [
+            options: this.options(
                 this.getSeasonOption(true),
                 this.getRoundOption(true),
                 this.getDriverOption(),
                 this.getLapOption(),
                 this.getTeamOption(),
-            ],
+            ),
         });
     }
 
@@ -118,13 +121,13 @@ export class F1CommandOptionsBuilder {
         return subcommand({
             name: SubcommandName.PitStops,
             description: 'Query pit stops',
-            options: [
+            options: this.options(
                 this.getSeasonOption(true),
                 this.getRoundOption(true),
                 this.getDriverOption(),
                 this.getLapOption(),
                 this.getPitStopOption(),
-            ],
+            ),
         });
     }
 
@@ -132,7 +135,7 @@ export class F1CommandOptionsBuilder {
         return subcommand({
             name: SubcommandName.QualifyingResults,
             description: 'Query qualifying results',
-            options: [
+            options: this.options(
                 this.getSeasonOption(),
                 this.getRoundOption(),
                 this.getCircuitOption(),
@@ -141,7 +144,7 @@ export class F1CommandOptionsBuilder {
                 this.getFastestOption(),
                 this.getStatusOption(),
                 this.getTeamOption(),
-            ],
+            ),
         });
     }
 
@@ -149,7 +152,7 @@ export class F1CommandOptionsBuilder {
         return subcommand({
             name: SubcommandName.Races,
             description: 'Query races',
-            options: [
+            options: this.options(
                 this.getSeasonOption(),
                 this.getRoundOption(),
                 this.getCircuitOption(),
@@ -158,7 +161,7 @@ export class F1CommandOptionsBuilder {
                 this.getStatusOption(),
                 this.getResultOption(),
                 this.getTeamOption(),
-            ],
+            ),
         });
     }
 
@@ -166,7 +169,7 @@ export class F1CommandOptionsBuilder {
         return subcommand({
             name: SubcommandName.Results,
             description: 'Query results',
-            options: [
+            options: this.options(
                 this.getSeasonOption(),
                 this.getRoundOption(),
                 this.getCircuitOption(),
@@ -175,7 +178,7 @@ export class F1CommandOptionsBuilder {
                 this.getGridOption(),
                 this.getStatusOption(),
                 this.getTeamOption(),
-            ],
+            ),
         });
     }
 
@@ -183,13 +186,13 @@ export class F1CommandOptionsBuilder {
         return subcommand({
             name: SubcommandName.Seasons,
             description: 'Query seasons',
-            options: [
+            options: this.options(
                 this.getCircuitOption(),
                 this.getDriverOption(),
                 this.getGridOption(),
                 this.getStatusOption(),
                 this.getTeamOption(),
-            ],
+            ),
         });
     }
 
@@ -197,7 +200,7 @@ export class F1CommandOptionsBuilder {
         return subcommand({
             name: SubcommandName.SprintResults,
             description: 'Query sprints',
-            options: [
+            options: this.options(
                 this.getSeasonOption(),
                 this.getRoundOption(),
                 this.getCircuitOption(),
@@ -205,7 +208,7 @@ export class F1CommandOptionsBuilder {
                 this.getGridOption(),
                 this.getStatusOption(),
                 this.getTeamOption(),
-            ],
+            ),
         });
     }
 
@@ -213,11 +216,11 @@ export class F1CommandOptionsBuilder {
         return subcommand({
             name: SubcommandName.TeamStandings,
             description: 'Query team standings',
-            options: [
+            options: this.options(
                 this.getSeasonOption(true),
                 this.getRoundOption(),
                 this.getTeamOption(),
-            ],
+            ),
         });
     }
 
@@ -225,7 +228,7 @@ export class F1CommandOptionsBuilder {
         return subcommand({
             name: SubcommandName.Teams,
             description: 'Query teams',
-            options: [
+            options: this.options(
                 this.getSeasonOption(),
                 this.getRoundOption(),
                 this.getCircuitOption(),
@@ -234,7 +237,7 @@ export class F1CommandOptionsBuilder {
                 this.getGridOption(),
                 this.getResultOption(),
                 this.getStatusOption(),
-            ],
+            ),
         });
     }
 
@@ -327,5 +330,27 @@ export class F1CommandOptionsBuilder {
             description: 'Filter on team',
             required: false,
         });
+    }
+
+    // Helpers
+
+    private options(
+        ...options: APIApplicationCommandBasicOption[]
+    ): APIApplicationCommandBasicOption[] {
+        return [
+            ...options,
+            integerOption({
+                name: OptionName.Limit,
+                description: 'Pagination limit',
+                min_value: 0,
+                required: false,
+            }),
+            integerOption({
+                name: OptionName.Offset,
+                description: 'Pagination offset',
+                min_value: 0,
+                required: false,
+            }),
+        ];
     }
 }

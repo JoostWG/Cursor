@@ -62,10 +62,11 @@ export class F1Command extends SlashCommand {
         };
 
         const pagination: Pagination = {
-            limit: 30,
+            limit: interaction.options.getInteger(OptionName.Limit) ?? undefined,
+            offset: interaction.options.getInteger(OptionName.Offset) ?? undefined,
         };
 
-        const data = await ({
+        const response = await ({
             [SubcommandName.Circuits]: async () => await this.api.getCircuits(options, pagination),
             [SubcommandName.DriverStandings]: async () =>
                 // @ts-expect-error Ensured via required command option
@@ -92,7 +93,14 @@ export class F1Command extends SlashCommand {
             files: [
                 new AttachmentBuilder(
                     Buffer.from(
-                        JSON.stringify(data.map(structure => structure.toJson()), null, '  '),
+                        JSON.stringify(
+                            {
+                                meta: response.meta,
+                                data: response.data.map(structure => structure.toJson()),
+                            },
+                            null,
+                            '  ',
+                        ),
                         'utf-8',
                     ),
                     { name: `${subcommand}.json` },

@@ -29,7 +29,7 @@ export class AutocompleteHandler {
             return [];
         }
 
-        const drivers = await this.api.getDrivers({ season, round: round ?? undefined });
+        const { data: drivers } = await this.api.getDrivers({ season, round: round ?? undefined });
 
         return this.filter(drivers, interaction.options.getFocused(), (driver) => driver.name)
             .map((driver) => ({ name: driver.name, value: driver.id }));

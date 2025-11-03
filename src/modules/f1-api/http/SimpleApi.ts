@@ -104,6 +104,15 @@ export interface ResponsesMap {
     status: StatusesResponse;
 }
 
+export interface Response<T> {
+    meta: {
+        limit: number;
+        offset: number;
+        total: number;
+    };
+    data: T;
+}
+
 export class SimpleApi extends Api {
     public async getCircuits(
         options?:
@@ -116,23 +125,29 @@ export class SimpleApi extends Api {
             & StatusOption
             & TeamOption,
         pagination?: Pagination,
-    ): Promise<Circuit[]> {
-        return await this.getWithOptions('circuits', options, pagination)
-            .then((data) =>
-                data.MRData.CircuitTable.Circuits.map((circuit) => new Circuit(circuit, this))
-            );
+    ): Promise<Response<Circuit[]>> {
+        return await this.getWithOptions(
+            'circuits',
+            (data) =>
+                data.MRData.CircuitTable.Circuits.map((circuit) => new Circuit(circuit, this)),
+            options,
+            pagination,
+        );
     }
 
     public async getDriverStandings(
         options: Required<SeasonOption> & RoundOption & DriverOption,
         pagination?: Pagination,
-    ): Promise<DriverStanding[]> {
-        return await this.getWithOptions('driverstandings', options, pagination)
-            .then((data) =>
+    ): Promise<Response<DriverStanding[]>> {
+        return await this.getWithOptions(
+            'driverstandings',
+            (data) =>
                 data.MRData.StandingsTable.StandingsLists[0].DriverStandings.map((driverStanding) =>
                     new DriverStanding(driverStanding, this)
-                )
-            );
+                ),
+            options,
+            pagination,
+        );
     }
 
     public async getDrivers(
@@ -146,11 +161,13 @@ export class SimpleApi extends Api {
             & StatusOption
             & TeamOption,
         pagination?: Pagination,
-    ): Promise<Driver[]> {
-        return await this.getWithOptions('drivers', options, pagination)
-            .then((data) =>
-                data.MRData.DriverTable.Drivers.map((driver) => new Driver(driver, this))
-            );
+    ): Promise<Response<Driver[]>> {
+        return await this.getWithOptions(
+            'drivers',
+            (data) => data.MRData.DriverTable.Drivers.map((driver) => new Driver(driver, this)),
+            options,
+            pagination,
+        );
     }
 
     public async getLaps(
@@ -161,9 +178,13 @@ export class SimpleApi extends Api {
             & LapOption
             & TeamOption,
         pagination?: Pagination,
-    ): Promise<Lap[]> {
-        return await this.getWithOptions('laps', options, pagination)
-            .then((data) => data.MRData.RaceTable.Races[0].Laps.map((lap) => new Lap(lap, this)));
+    ): Promise<Response<Lap[]>> {
+        return await this.getWithOptions(
+            'laps',
+            (data) => data.MRData.RaceTable.Races[0].Laps.map((lap) => new Lap(lap, this)),
+            options,
+            pagination,
+        );
     }
 
     public async getPitStops(
@@ -174,11 +195,16 @@ export class SimpleApi extends Api {
             & LapOption
             & PitStopOption,
         pagination?: Pagination,
-    ): Promise<PitStop[]> {
-        return await this.getWithOptions('pitstops', options, pagination)
-            .then((data) =>
-                data.MRData.RaceTable.Races[0].PitStops.map((pitStop) => new PitStop(pitStop, this))
-            );
+    ): Promise<Response<PitStop[]>> {
+        return await this.getWithOptions(
+            'pitstops',
+            (data) =>
+                data.MRData.RaceTable.Races[0].PitStops.map((pitStop) =>
+                    new PitStop(pitStop, this)
+                ),
+            options,
+            pagination,
+        );
     }
 
     public async getQualifyingResults(
@@ -192,13 +218,16 @@ export class SimpleApi extends Api {
             & StatusOption
             & TeamOption,
         pagination?: Pagination,
-    ): Promise<QualifyingResult[]> {
-        return await this.getWithOptions('qualifying', options, pagination)
-            .then((data) =>
+    ): Promise<Response<QualifyingResult[]>> {
+        return await this.getWithOptions(
+            'qualifying',
+            (data) =>
                 data.MRData.RaceTable.Races[0].QualifyingResults.map((qualifyingResult) =>
                     new QualifyingResult(qualifyingResult, this)
-                )
-            );
+                ),
+            options,
+            pagination,
+        );
     }
 
     public async getRaces(
@@ -212,9 +241,13 @@ export class SimpleApi extends Api {
             & StatusOption
             & TeamOption,
         pagination?: Pagination,
-    ): Promise<Race[]> {
-        return await this.getWithOptions('races', options, pagination)
-            .then((data) => data.MRData.RaceTable.Races.map((race) => new Race(race, this)));
+    ): Promise<Response<Race[]>> {
+        return await this.getWithOptions(
+            'races',
+            (data) => data.MRData.RaceTable.Races.map((race) => new Race(race, this)),
+            options,
+            pagination,
+        );
     }
 
     public async getResults(
@@ -228,11 +261,14 @@ export class SimpleApi extends Api {
             & StatusOption
             & TeamOption,
         pagination?: Pagination,
-    ): Promise<Result[]> {
-        return await this.getWithOptions('results', options, pagination)
-            .then((data) =>
-                data.MRData.RaceTable.Races[0].Results.map((result) => new Result(result, this))
-            );
+    ): Promise<Response<Result[]>> {
+        return await this.getWithOptions(
+            'results',
+            (data) =>
+                data.MRData.RaceTable.Races[0].Results.map((result) => new Result(result, this)),
+            options,
+            pagination,
+        );
     }
 
     public async getSeasons(
@@ -243,11 +279,13 @@ export class SimpleApi extends Api {
             & StatusOption
             & TeamOption,
         pagination?: Pagination,
-    ): Promise<Season[]> {
-        return await this.getWithOptions('seasons', options, pagination)
-            .then((data) =>
-                data.MRData.SeasonTable.Seasons.map((season) => new Season(season, this))
-            );
+    ): Promise<Response<Season[]>> {
+        return await this.getWithOptions(
+            'seasons',
+            (data) => data.MRData.SeasonTable.Seasons.map((season) => new Season(season, this)),
+            options,
+            pagination,
+        );
     }
 
     public async getSprintResults(
@@ -258,25 +296,31 @@ export class SimpleApi extends Api {
             & StatusOption
             & TeamOption,
         pagination?: Pagination,
-    ): Promise<SprintResult[]> {
-        return await this.getWithOptions('sprint', options, pagination)
-            .then((data) =>
+    ): Promise<Response<SprintResult[]>> {
+        return await this.getWithOptions(
+            'sprint',
+            (data) =>
                 data.MRData.RaceTable.Races[0].SprintResults.map((sprintResult) =>
                     new SprintResult(sprintResult, this)
-                )
-            );
+                ),
+            options,
+            pagination,
+        );
     }
 
     public async getTeamStandings(
         options: Required<SeasonOption> & RoundOption & TeamOption,
         pagination?: Pagination,
-    ): Promise<TeamStanding[]> {
-        return await this.getWithOptions('constructorstandings', options, pagination)
-            .then((data) =>
+    ): Promise<Response<TeamStanding[]>> {
+        return await this.getWithOptions(
+            'constructorstandings',
+            (data) =>
                 data.MRData.StandingsTable.StandingsLists[0].ConstructorStandings.map((
                     teamStanding,
-                ) => new TeamStanding(teamStanding, this))
-            );
+                ) => new TeamStanding(teamStanding, this)),
+            options,
+            pagination,
+        );
     }
 
     public async getTeams(
@@ -289,19 +333,35 @@ export class SimpleApi extends Api {
             & FinishPositionOption
             & StatusOption,
         pagination?: Pagination,
-    ): Promise<Team[]> {
-        return await this.getWithOptions('constructors', options, pagination)
-            .then((data) =>
-                data.MRData.ConstructorTable.Constructors.map((team) => new Team(team, this))
-            );
+    ): Promise<Response<Team[]>> {
+        return await this.getWithOptions(
+            'constructors',
+            (data) => data.MRData.ConstructorTable.Constructors.map((team) => new Team(team, this)),
+            options,
+            pagination,
+        );
     }
 
-    private async getWithOptions<K extends keyof ResponsesMap>(
+    // eslint-disable-next-line @typescript-eslint/max-params
+    private async getWithOptions<K extends keyof ResponsesMap, R>(
         path: K,
+        transform: (data: ResponsesMap[K]) => R,
         options?: SimpleApiOptions,
         pagination?: Pagination,
-    ): Promise<ResponsesMap[K]> {
-        return await this.get<ResponsesMap[K]>(this.getPath(`/${path}`, options ?? {}), pagination);
+    ): Promise<Response<R>> {
+        const response = await this.get<ResponsesMap[K]>(
+            this.getPath(`/${path}`, options ?? {}),
+            pagination,
+        );
+
+        return {
+            meta: {
+                limit: Number(response.MRData.limit),
+                offset: Number(response.MRData.offset),
+                total: Number(response.MRData.total),
+            },
+            data: transform(response),
+        };
     }
 
     private getPath(basePath: string, options: SimpleApiOptions): string {
