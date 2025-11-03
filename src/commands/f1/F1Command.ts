@@ -1,13 +1,11 @@
-import type {
-    APIEmbed,
-    ApplicationCommandOptionChoiceData,
-    AutocompleteInteraction,
-    ChatInputCommandInteraction,
+import {
+    AttachmentBuilder,
+    type ApplicationCommandOptionChoiceData,
+    type AutocompleteInteraction,
+    type ChatInputCommandInteraction,
 } from 'discord.js';
 import { SlashCommand } from '../../lib/core';
 import {
-    Circuit,
-    Race,
     SimpleApi,
     type Pagination,
     type SimpleApiOptions,
@@ -64,7 +62,7 @@ export class F1Command extends SlashCommand {
         };
 
         const pagination: Pagination = {
-            limit: 10,
+            limit: 30,
         };
 
         const data = await ({
@@ -90,66 +88,16 @@ export class F1Command extends SlashCommand {
             [SubcommandName.Teams]: async () => await this.api.getTeams(options, pagination),
         })[subcommand]();
 
-        await interaction.reply({ embeds: data.map((structure) => this.getEmbed(structure)) });
-    }
-
-    private getEmbed(structure: unknown): APIEmbed {
-        if (structure instanceof Race) {
-            return this.getRaceEmbed(structure);
-        }
-
-        if (structure instanceof Circuit) {
-            return this.getCircuitEmbed(structure);
-        }
-
-        return {
-            title: 'Nope',
-        };
-    }
-
-    private getCircuitEmbed(circuit: Circuit): APIEmbed {
-        return {
-            title: circuit.name,
-            fields: [
-                {
-                    name: 'City',
-                    value: circuit.location.locality,
-                    inline: true,
-                },
-                {
-                    name: 'Country',
-                    value: circuit.location.country,
-                    inline: true,
-                },
-                {
-                    name: 'Wiki',
-                    value: circuit.url,
-                    inline: true,
-                },
-                {
-                    name: 'Latitude',
-                    value: circuit.location.latitude.toString(),
-                    inline: true,
-                },
-                {
-                    name: 'Longitude',
-                    value: circuit.location.longitude.toString(),
-                    inline: true,
-                },
+        await interaction.reply({
+            files: [
+                new AttachmentBuilder(
+                    Buffer.from(
+                        JSON.stringify(data.map(structure => structure.toJson()), null, '  '),
+                        'utf-8',
+                    ),
+                    { name: `${subcommand}.json` },
+                ),
             ],
-        };
-    }
-
-    private getRaceEmbed(race: Race): APIEmbed {
-        return {
-            title: race.toString(),
-            description: race.url ?? undefined,
-            fields: [
-                {
-                    name: 'Circuit',
-                    value: race.circuit.toString(),
-                },
-            ],
-        };
+        });
     }
 }

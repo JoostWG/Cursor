@@ -1,9 +1,10 @@
 import type { Api, DriverStandingApiData } from '../http';
+import type { DriverStandingJson } from '../types';
 import { Driver } from './Driver';
 import { Structure } from './Structure';
 import { Team } from './Team';
 
-export class DriverStanding extends Structure<DriverStandingApiData> {
+export class DriverStanding extends Structure<DriverStandingJson> {
     public readonly position: number | null;
     public readonly positionText: string;
     public readonly points: number;
@@ -12,7 +13,7 @@ export class DriverStanding extends Structure<DriverStandingApiData> {
     public readonly teams: readonly Team[];
 
     public constructor(data: DriverStandingApiData, api: Api) {
-        super(data, api);
+        super(api);
 
         this.position = data.position !== undefined ? Number(data.position) : null;
         this.positionText = data.positionText;
@@ -20,5 +21,16 @@ export class DriverStanding extends Structure<DriverStandingApiData> {
         this.wins = Number(data.wins);
         this.driver = new Driver(data.Driver, this.api);
         this.teams = data.Constructors.map((team) => new Team(team, this.api));
+    }
+
+    public override toJson(): DriverStandingJson {
+        return {
+            position: this.position,
+            positionText: this.positionText,
+            points: this.points,
+            wins: this.wins,
+            driver: this.driver.toJson(),
+            teams: this.teams.map(team => team.toJson()),
+        };
     }
 }

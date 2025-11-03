@@ -1,7 +1,8 @@
+import type { SupportsJson } from '../../../lib/utils';
 import type { Api } from '../http';
 
-export class Structure<T> {
-    protected constructor(protected readonly data: T, protected readonly api: Api) {
+export abstract class Structure<TJson = unknown> implements SupportsJson<TJson> {
+    protected constructor(protected readonly api: Api) {
         //
     }
 
@@ -11,4 +12,6 @@ export class Structure<T> {
     ): TBuilder {
         return new builderClass(this.api, ...args);
     }
+
+    public abstract toJson(): TJson;
 }

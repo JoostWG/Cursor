@@ -9,15 +9,16 @@ import {
     type TeamsUrlBuilder,
 } from '../builders';
 import type { Api, SeasonApiData } from '../http';
+import type { SeasonJson } from '../types';
 import { Structure } from './Structure';
 
-export class Season extends Structure<SeasonApiData> {
+export class Season extends Structure<SeasonJson> {
     public readonly year: string;
     public readonly url: string;
     private readonly urlBuilder: SeasonUrlBuilder;
 
     public constructor(data: SeasonApiData, api: Api) {
-        super(data, api);
+        super(api);
 
         this.year = data.season;
         this.url = data.url;
@@ -27,6 +28,13 @@ export class Season extends Structure<SeasonApiData> {
 
     public override toString(): string {
         return this.year;
+    }
+
+    public override toJson(): SeasonJson {
+        return {
+            year: this.year,
+            url: this.url,
+        };
     }
 
     // API

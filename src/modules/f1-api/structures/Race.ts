@@ -1,9 +1,10 @@
 import { SessionDateTime } from '../data';
 import type { Api, RaceApiData } from '../http';
+import type { RaceJson } from '../types';
 import { Circuit } from './Circuit';
 import { Structure } from './Structure';
 
-export class Race extends Structure<RaceApiData> {
+export class Race extends Structure<RaceJson> {
     public readonly season: string;
     public readonly round: number;
     public readonly url: string | null;
@@ -20,7 +21,7 @@ export class Race extends Structure<RaceApiData> {
     public readonly sprintShootout: SessionDateTime | null;
 
     public constructor(data: RaceApiData, api: Api) {
-        super(data, api);
+        super(api);
 
         this.season = data.season;
         this.round = Number(data.round);
@@ -54,5 +55,24 @@ export class Race extends Structure<RaceApiData> {
 
     public override toString(): string {
         return `${this.season} ${this.name}`;
+    }
+
+    public override toJson(): RaceJson {
+        return {
+            season: this.season,
+            round: this.round,
+            url: this.url,
+            name: this.name,
+            circuit: this.circuit.toJson(),
+            date: this.date,
+            time: this.time,
+            firstPractice: this.firstPractice?.toJson() ?? null,
+            secondPractice: this.secondPractice?.toJson() ?? null,
+            thirdPractice: this.thirdPractice?.toJson() ?? null,
+            qualifying: this.qualifying?.toJson() ?? null,
+            sprint: this.sprint?.toJson() ?? null,
+            sprintQualifying: this.sprintQualifying?.toJson() ?? null,
+            sprintShootout: this.sprintShootout?.toJson() ?? null,
+        };
     }
 }
