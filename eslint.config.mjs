@@ -45,6 +45,7 @@ export default defineConfig(
             'no-duplicate-imports': 'error',
             'max-classes-per-file': 'warn',
             // Below is all disabled
+            'no-negated-condition': 'off',
             'default-case': 'off', // I want to enable this but I also don't want to implement default cases will never be used in theory
             'sort-keys': 'off',
             'new-cap': 'off',
@@ -113,6 +114,7 @@ export default defineConfig(
                 },
             ],
             // Below is all disabled
+            '@typescript-eslint/no-unnecessary-type-parameters': 'off',
             '@typescript-eslint/prefer-regexp-exec': 'off',
             '@typescript-eslint/require-array-sort-compare': 'off',
             '@typescript-eslint/no-unsafe-type-assertion': 'off',
