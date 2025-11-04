@@ -1,9 +1,9 @@
 import type { ApplicationCommandOptionChoiceData, AutocompleteInteraction } from 'discord.js';
-import type { SimpleApi } from '../../modules/f1-api';
+import type { Api } from 'jolpica-f1-api';
 import { OptionName } from './F1CommandOptionsBuilder';
 
 export class AutocompleteHandler {
-    public constructor(private readonly api: SimpleApi) {
+    public constructor(private readonly api: Api) {
         //
     }
 
@@ -27,8 +27,12 @@ export class AutocompleteHandler {
         interaction: AutocompleteInteraction,
     ): Promise<ApplicationCommandOptionChoiceData[]> {
         const { data: seasons } = await this.api.getSeasons({}, { limit: 100 });
-        return this.filter(seasons, interaction.options.getFocused(), (season) => season.year)
-            .map((season) => ({ name: season.year, value: season.year }));
+        return this.filter(
+            seasons,
+            interaction.options.getFocused(),
+            (season) => String(season.year),
+        )
+            .map((season) => ({ name: String(season.year), value: season.year }));
     }
 
     private async handleDriverAutocomplete(
@@ -46,8 +50,15 @@ export class AutocompleteHandler {
             { limit: 100 },
         );
 
-        return this.filter(drivers, interaction.options.getFocused(), (driver) => driver.name)
-            .map((driver) => ({ name: driver.name, value: driver.id }));
+        return this.filter(
+            drivers,
+            interaction.options.getFocused(),
+            (driver) => `${driver.firstName} ${driver.lastName}`,
+        )
+            .map((driver) => ({
+                name: `${driver.firstName} ${driver.lastName}`,
+                value: driver.id,
+            }));
     }
 
     private filter<T>(entries: T[], search: string, toString: (entry: T) => string): T[] {

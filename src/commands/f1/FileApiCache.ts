@@ -1,6 +1,6 @@
 import fs from 'fs/promises';
+import type { ApiCache, Pagination } from 'jolpica-f1-api';
 import { dirname } from 'path';
-import type { ApiCache, Pagination } from '../../modules/f1-api';
 
 export class FileApiCache implements ApiCache {
     public constructor(private readonly path: string) {

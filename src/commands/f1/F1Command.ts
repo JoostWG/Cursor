@@ -4,20 +4,15 @@ import {
     type AutocompleteInteraction,
     type ChatInputCommandInteraction,
 } from 'discord.js';
+import { Api, type Pagination, type SimpleApiOptions, type StatusType } from 'jolpica-f1-api';
 import { SlashCommand } from '../../lib/core';
-import {
-    SimpleApi,
-    type Pagination,
-    type SimpleApiOptions,
-    type StatusType,
-} from '../../modules/f1-api';
 import { AutocompleteHandler } from './AutocompleteHandler';
 import { F1CommandOptionsBuilder, OptionName, SubcommandName } from './F1CommandOptionsBuilder';
 import { FileApiCache } from './FileApiCache';
 
 export class F1Command extends SlashCommand {
     private readonly optionsBuilder: F1CommandOptionsBuilder;
-    private readonly api: SimpleApi;
+    private readonly api: Api;
     private readonly autocompleteHandler: AutocompleteHandler;
 
     public constructor() {
@@ -33,7 +28,7 @@ export class F1Command extends SlashCommand {
 
         this.devOnly = true;
 
-        this.api = new SimpleApi(new FileApiCache('./cache/f1'));
+        this.api = new Api(new FileApiCache('./cache/f1'));
         this.autocompleteHandler = new AutocompleteHandler(this.api);
     }
 
@@ -96,7 +91,7 @@ export class F1Command extends SlashCommand {
                         JSON.stringify(
                             {
                                 meta: response.meta,
-                                data: response.data.map(structure => structure.toJson()),
+                                data: response.data,
                             },
                             null,
                             '  ',
