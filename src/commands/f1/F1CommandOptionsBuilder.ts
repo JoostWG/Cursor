@@ -2,9 +2,10 @@ import type {
     APIApplicationCommandBasicOption,
     APIApplicationCommandIntegerOption,
     APIApplicationCommandStringOption,
+    APIApplicationCommandSubcommandGroupOption,
     APIApplicationCommandSubcommandOption,
 } from 'discord.js';
-import { integerOption, stringOption, subcommand } from '../../lib/utils/builders';
+import { integerOption, stringOption, subcommand, subcommandGroup } from '../../lib/utils/builders';
 
 export enum SubcommandName {
     Circuits = 'circuits',
@@ -38,21 +39,25 @@ export enum OptionName {
 }
 
 export class F1CommandOptionsBuilder {
-    public getOptions(): APIApplicationCommandSubcommandOption[] {
-        return [
-            this.getCircuitsSubcommand(),
-            this.getDriverStandingsSubcommand(),
-            this.getDriversSubcommand(),
-            this.getLapsSubcommand(),
-            this.getPitStopsSubcommand(),
-            this.getQualifyingResultsSubcommand(),
-            this.getRacesSubcommand(),
-            this.getResultsSubcommand(),
-            this.getSeasonsSubcommand(),
-            this.getSprintsSubcommand(),
-            this.getTeamStandingsSubcommand(),
-            this.getTeamsSubcommand(),
-        ];
+    public getQuerySubcommandGroup(): APIApplicationCommandSubcommandGroupOption {
+        return subcommandGroup({
+            name: 'query',
+            description: 'Query the Jolpica F1 API',
+            options: [
+                this.getCircuitsSubcommand(),
+                this.getDriverStandingsSubcommand(),
+                this.getDriversSubcommand(),
+                this.getLapsSubcommand(),
+                this.getPitStopsSubcommand(),
+                this.getQualifyingResultsSubcommand(),
+                this.getRacesSubcommand(),
+                this.getResultsSubcommand(),
+                this.getSeasonsSubcommand(),
+                this.getSprintsSubcommand(),
+                this.getTeamStandingsSubcommand(),
+                this.getTeamsSubcommand(),
+            ],
+        });
     }
 
     // Subcommands

@@ -32,7 +32,7 @@ export class AutocompleteHandler {
             interaction.options.getFocused(),
             (season) => String(season.year),
         )
-            .map((season) => ({ name: String(season.year), value: season.year }));
+            .map((season) => ({ name: String(season.year), value: String(season.year) }));
     }
 
     private async handleDriverAutocomplete(
