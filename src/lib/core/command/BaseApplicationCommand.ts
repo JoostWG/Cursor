@@ -4,6 +4,7 @@ import {
     type RESTPostAPIApplicationCommandsJSONBody,
 } from 'discord.js';
 import type { OmitType } from '../../utils';
+import { CommandError } from '../errors';
 import type { MessageContextMenu } from './MessageContextMenu';
 import type { SlashCommand } from './SlashCommand';
 import type { UserContextMenu } from './UserContextMenu';
@@ -35,10 +36,14 @@ export abstract class BaseApplicationCommand<
     }
 
     public async invoke(interaction: TInteraction): Promise<void> {
+        if (!this.handle) {
+            throw new CommandError('No command handler defined :(');
+        }
+
         await this.handle(interaction);
     }
 
     public abstract getData(): TData & { type: ApplicationCommandType };
-    protected abstract handle(interaction: TInteraction): Promise<void>;
+    protected handle?(interaction: TInteraction): Promise<void>;
     protected abstract definition(): OmitType<TData>;
 }
