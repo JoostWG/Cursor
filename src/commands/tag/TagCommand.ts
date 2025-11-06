@@ -19,8 +19,6 @@ export class TagCommand extends GuildSlashCommand {
     public constructor(db: CursorDatabase) {
         super();
 
-        this.devOnly = true;
-
         this.tags = new DatabaseTagManager(db);
     }
 
