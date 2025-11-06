@@ -2,9 +2,11 @@ import type {
     ApplicationCommandOptionChoiceData,
     AutocompleteInteraction,
     ChatInputCommandInteraction,
+    RESTPostAPIChatInputApplicationCommandsJSONBody,
 } from 'discord.js';
 import { Api } from 'jolpica-f1-api';
 import { CommandError, SlashCommand } from '../../lib/core';
+import type { OmitType } from '../../lib/utils';
 import { AutocompleteHandler } from './AutocompleteHandler';
 import { F1CommandOptionsBuilder } from './F1CommandOptionsBuilder';
 import { FileApiCache } from './FileApiCache';
@@ -16,13 +18,7 @@ export class F1Command extends SlashCommand {
     private readonly queryCommandHandler: QueryCommandHandler;
 
     public constructor() {
-        super({
-            name: 'f1',
-            description: 'Formula 1',
-            options: [
-                new F1CommandOptionsBuilder().getQuerySubcommandGroup(),
-            ],
-        });
+        super();
 
         this.devOnly = true;
 
@@ -31,7 +27,17 @@ export class F1Command extends SlashCommand {
         this.queryCommandHandler = new QueryCommandHandler(this.api);
     }
 
-    public override async autocomplete(
+    public override definition(): OmitType<RESTPostAPIChatInputApplicationCommandsJSONBody> {
+        return {
+            name: 'f1',
+            description: 'Formula 1',
+            options: [
+                new F1CommandOptionsBuilder().getQuerySubcommandGroup(),
+            ],
+        };
+    }
+
+    protected override async autocomplete(
         interaction: AutocompleteInteraction,
     ): Promise<ApplicationCommandOptionChoiceData[]> {
         const subcommandGroup = interaction.options.getSubcommandGroup();
@@ -43,7 +49,7 @@ export class F1Command extends SlashCommand {
         return [];
     }
 
-    public override async handle(interaction: ChatInputCommandInteraction): Promise<void> {
+    protected override async handle(interaction: ChatInputCommandInteraction): Promise<void> {
         const subcommandGroup = interaction.options.getSubcommandGroup();
 
         if (subcommandGroup && subcommandGroup === 'query') {

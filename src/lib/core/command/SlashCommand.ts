@@ -5,22 +5,32 @@ import {
     type ChatInputCommandInteraction,
     type RESTPostAPIChatInputApplicationCommandsJSONBody,
 } from 'discord.js';
-import type { OmitType } from '../../../lib/utils';
 import { BaseApplicationCommand } from './BaseApplicationCommand';
 
-export abstract class SlashCommand
-    extends BaseApplicationCommand<RESTPostAPIChatInputApplicationCommandsJSONBody>
-{
-    protected constructor(data: OmitType<RESTPostAPIChatInputApplicationCommandsJSONBody>) {
-        super({
+export abstract class SlashCommand extends BaseApplicationCommand<
+    RESTPostAPIChatInputApplicationCommandsJSONBody,
+    ChatInputCommandInteraction
+> {
+    public override getData(): RESTPostAPIChatInputApplicationCommandsJSONBody & {
+        type: ApplicationCommandType;
+    } {
+        return {
             type: ApplicationCommandType.ChatInput,
-            ...data,
-        });
+            ...this.definition(),
+        };
     }
 
-    public abstract override handle(interaction: ChatInputCommandInteraction): Promise<void>;
+    public async invokeAutocomplete(
+        interaction: AutocompleteInteraction,
+    ): Promise<ApplicationCommandOptionChoiceData[]> {
+        if (!this.autocomplete) {
+            return [];
+        }
 
-    public autocomplete?(
+        return await this.autocomplete(interaction);
+    }
+
+    protected autocomplete?(
         interaction: AutocompleteInteraction,
     ): Promise<ApplicationCommandOptionChoiceData[]>;
 }

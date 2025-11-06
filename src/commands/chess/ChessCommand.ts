@@ -4,9 +4,11 @@ import {
     type ApplicationCommandOptionChoiceData,
     type AutocompleteInteraction,
     type ChatInputCommandInteraction,
+    type RESTPostAPIChatInputApplicationCommandsJSONBody,
     type Snowflake,
 } from 'discord.js';
 import { SlashCommand } from '../../lib/core';
+import type { OmitType } from '../../lib/utils';
 import { stringOption, subcommand } from '../../lib/utils/builders';
 import { CheckerboardTheme } from './CheckerboardTheme';
 import { DefaultChessBoard } from './DefaultChessBoard';
@@ -19,7 +21,14 @@ export class ChessCommand extends SlashCommand {
     private readonly games: Map<Snowflake, Game>;
 
     public constructor() {
-        super({
+        super();
+
+        this.games = new Map();
+        this.devOnly = true;
+    }
+
+    protected override definition(): OmitType<RESTPostAPIChatInputApplicationCommandsJSONBody> {
+        return {
             name: 'chess',
             description: 'Play some chess!',
             options: [
@@ -40,13 +49,10 @@ export class ChessCommand extends SlashCommand {
                     ],
                 }),
             ],
-        });
-
-        this.games = new Map();
-        this.devOnly = true;
+        };
     }
 
-    public override async autocomplete(
+    protected override async autocomplete(
         interaction: AutocompleteInteraction,
     ): Promise<ApplicationCommandOptionChoiceData[]> {
         const game = this.games.get(interaction.user.id);
@@ -63,7 +69,7 @@ export class ChessCommand extends SlashCommand {
             .map((move) => ({ name: move, value: move }));
     }
 
-    public override async handle(interaction: ChatInputCommandInteraction): Promise<void> {
+    protected override async handle(interaction: ChatInputCommandInteraction): Promise<void> {
         switch (interaction.options.getSubcommand()) {
             case 'start':
                 await this.handleStart(interaction);

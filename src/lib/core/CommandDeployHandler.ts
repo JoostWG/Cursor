@@ -17,9 +17,9 @@ export class CommandDeployHandler {
 
         for (const command of this.commands.values()) {
             if (command.devOnly) {
-                devCommands.push(command.data);
+                devCommands.push(command.getData());
             } else {
-                globalCommands.push(command.data);
+                globalCommands.push(command.getData());
             }
         }
 

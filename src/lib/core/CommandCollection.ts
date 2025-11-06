@@ -9,7 +9,7 @@ export class CommandCollection<
     T extends BaseApplicationCommand = BaseApplicationCommand,
 > extends Collection<string, T> {
     public constructor(commands: T[]) {
-        super(commands.map((command) => [command.data.name, command]));
+        super(commands.map((command) => [command.getData().name, command]));
     }
 
     public createListeners(db: CursorDatabase): EventListener[] {

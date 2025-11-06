@@ -14,13 +14,13 @@ export class AutocompleteListener extends eventListener(Events.InteractionCreate
 
         const command = this.commands.get(interaction.commandName);
 
-        if (!command?.isSlashCommand() || !command.autocomplete) {
+        if (!command?.isSlashCommand()) {
             console.error(`No command matching ${interaction.commandName} was found.`);
             return;
         }
 
         try {
-            const results = await command.autocomplete(interaction);
+            const results = await command.invokeAutocomplete(interaction);
             await interaction.respond(results.slice(0, 25));
         } catch (error) {
             console.error(error);

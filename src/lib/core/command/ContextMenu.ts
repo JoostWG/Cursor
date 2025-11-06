@@ -4,8 +4,11 @@ import type {
 } from 'discord.js';
 import { BaseApplicationCommand } from './BaseApplicationCommand';
 
-export abstract class ContextMenu
-    extends BaseApplicationCommand<RESTPostAPIContextMenuApplicationCommandsJSONBody>
-{
-    public abstract override handle(interaction: ContextMenuCommandInteraction): Promise<void>;
+export abstract class ContextMenu<
+    TInteraction extends ContextMenuCommandInteraction = ContextMenuCommandInteraction,
+> extends BaseApplicationCommand<
+    RESTPostAPIContextMenuApplicationCommandsJSONBody,
+    TInteraction
+> {
+    //
 }

@@ -16,10 +16,12 @@ import {
     type ApplicationCommandOptionChoiceData,
     type AutocompleteInteraction,
     type ChatInputCommandInteraction,
+    type RESTPostAPIChatInputApplicationCommandsJSONBody,
     type Role,
     type RoleEditOptions,
 } from 'discord.js';
 import { CommandError, GuildSlashCommand } from '../../lib/core';
+import type { OmitType } from '../../lib/utils';
 import {
     actionRow,
     booleanOption,
@@ -37,7 +39,13 @@ export class RoleCommand extends GuildSlashCommand {
     private readonly roleService: RoleService;
 
     public constructor() {
-        super({
+        super();
+
+        this.roleService = new RoleService();
+    }
+
+    protected override definition(): OmitType<RESTPostAPIChatInputApplicationCommandsJSONBody> {
+        return {
             name: 'role',
             description: 'Role utility commands',
             default_member_permissions: PermissionFlagsBits.ManageRoles.toString(),
@@ -91,12 +99,10 @@ export class RoleCommand extends GuildSlashCommand {
                     ],
                 }),
             ],
-        });
-
-        this.roleService = new RoleService();
+        };
     }
 
-    public override async autocomplete(
+    protected override async autocomplete(
         interaction: AutocompleteInteraction,
     ): Promise<ApplicationCommandOptionChoiceData[]> {
         if (interaction.options.getFocused(true).name !== 'color') {
@@ -121,7 +127,7 @@ export class RoleCommand extends GuildSlashCommand {
             );
     }
 
-    public override async handle(interaction: ChatInputCommandInteraction): Promise<void> {
+    protected override async handle(interaction: ChatInputCommandInteraction): Promise<void> {
         if (!interaction.inCachedGuild()) {
             throw new CommandError('Must use in guild');
         }

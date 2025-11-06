@@ -1,4 +1,7 @@
-import type { ChatInputCommandInteraction } from 'discord.js';
+import type {
+    ChatInputCommandInteraction,
+    RESTPostAPIChatInputApplicationCommandsJSONBody,
+} from 'discord.js';
 import {
     Category,
     QuestionDifficulties,
@@ -8,12 +11,13 @@ import {
     type QuestionOptions,
 } from 'open-trivia-db';
 import { SlashCommand } from '../../lib/core';
+import type { OmitType } from '../../lib/utils';
 import { stringOption } from '../../lib/utils/builders';
 import { QuestionView } from './QuestionView';
 
 export class TriviaCommand extends SlashCommand {
-    public constructor() {
-        super({
+    protected override definition(): OmitType<RESTPostAPIChatInputApplicationCommandsJSONBody> {
+        return {
             name: 'trivia',
             description: 'Test your knowledge!',
             options: [
@@ -35,10 +39,10 @@ export class TriviaCommand extends SlashCommand {
                     })),
                 }),
             ],
-        });
+        };
     }
 
-    public override async handle(interaction: ChatInputCommandInteraction): Promise<void> {
+    protected override async handle(interaction: ChatInputCommandInteraction): Promise<void> {
         const difficulty = interaction.options.getString('difficulty');
         const category = interaction.options.getString('category');
 

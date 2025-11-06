@@ -7,9 +7,11 @@ import {
     type ApplicationCommandOptionChoiceData,
     type AutocompleteInteraction,
     type ChatInputCommandInteraction,
+    type RESTPostAPIChatInputApplicationCommandsJSONBody,
 } from 'discord.js';
 import type { CursorDatabase } from '../../database';
 import { CommandError, GuildSlashCommand } from '../../lib/core';
+import type { OmitType } from '../../lib/utils';
 import { container, stringOption, subcommand, textDisplay } from '../../lib/utils/builders';
 import { DatabaseTagManager } from './DatabaseTagManager';
 import type { TagManager } from './TagManager';
@@ -19,7 +21,13 @@ export class TagCommand extends GuildSlashCommand {
     private readonly tags: TagManager;
 
     public constructor(db: CursorDatabase) {
-        super({
+        super();
+
+        this.tags = new DatabaseTagManager(db);
+    }
+
+    protected override definition(): OmitType<RESTPostAPIChatInputApplicationCommandsJSONBody> {
+        return {
             name: 'tag',
             description: 'Manage tags',
             options: [
@@ -99,12 +107,10 @@ export class TagCommand extends GuildSlashCommand {
                     ],
                 }),
             ],
-        });
-
-        this.tags = new DatabaseTagManager(db);
+        };
     }
 
-    public override async autocomplete(
+    protected override async autocomplete(
         interaction: AutocompleteInteraction,
     ): Promise<ApplicationCommandOptionChoiceData[]> {
         if (!interaction.guildId) {
@@ -120,7 +126,7 @@ export class TagCommand extends GuildSlashCommand {
             .map((tag) => ({ name: tag.name, value: tag.name }));
     }
 
-    public override async handle(interaction: ChatInputCommandInteraction): Promise<void> {
+    protected override async handle(interaction: ChatInputCommandInteraction): Promise<void> {
         if (!interaction.inCachedGuild()) {
             return;
         }

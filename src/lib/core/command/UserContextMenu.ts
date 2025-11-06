@@ -1,18 +1,17 @@
 import {
     ApplicationCommandType,
-    type RESTPostAPIApplicationCommandsJSONBody,
+    type RESTPostAPIContextMenuApplicationCommandsJSONBody,
     type UserContextMenuCommandInteraction,
 } from 'discord.js';
-import type { OmitType } from '../../../lib/utils';
 import { ContextMenu } from './ContextMenu';
 
-export abstract class UserContextMenu extends ContextMenu {
-    protected constructor(data: OmitType<RESTPostAPIApplicationCommandsJSONBody>) {
-        super({
+export abstract class UserContextMenu extends ContextMenu<UserContextMenuCommandInteraction> {
+    public override getData(): RESTPostAPIContextMenuApplicationCommandsJSONBody & {
+        type: ApplicationCommandType;
+    } {
+        return {
             type: ApplicationCommandType.User,
-            ...data,
-        });
+            ...this.definition(),
+        };
     }
-
-    public abstract override handle(interaction: UserContextMenuCommandInteraction): Promise<void>;
 }

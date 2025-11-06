@@ -32,14 +32,14 @@ export class CommandListener extends eventListener(Events.InteractionCreate) {
 
         try {
             if (interaction.isChatInputCommand() && command.isSlashCommand()) {
-                await command.handle(interaction);
+                await command.invoke(interaction);
             } else if (interaction.isUserContextMenuCommand() && command.isUserContextMenu()) {
-                await command.handle(interaction);
+                await command.invoke(interaction);
             } else if (
                 interaction.isMessageContextMenuCommand()
                 && command.isMessageContextMenu()
             ) {
-                await command.handle(interaction);
+                await command.invoke(interaction);
             } else {
                 await interaction.reply({
                     content: 'Command not found.',
