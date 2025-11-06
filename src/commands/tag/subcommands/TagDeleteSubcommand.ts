@@ -1,6 +1,5 @@
 import type { ChatInputCommandInteraction } from 'discord.js';
 import type { SubcommandDefinition } from '../../../lib/core';
-import { stringOption } from '../../../lib/utils/builders';
 import { TagSubcommand } from './TagSubcommand';
 
 export class TagDeleteSubcommand extends TagSubcommand {
@@ -9,12 +8,7 @@ export class TagDeleteSubcommand extends TagSubcommand {
             name: 'delete',
             description: 'Delete a tag',
             options: [
-                stringOption({
-                    name: 'name',
-                    description: 'tag name',
-                    required: true,
-                    autocomplete: true,
-                }),
+                this.nameOption(),
             ],
         };
     }

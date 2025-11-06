@@ -1,9 +1,12 @@
 import type {
+    APIApplicationCommandStringOption,
     ApplicationCommandOptionChoiceData,
     AutocompleteInteraction,
     ChatInputCommandInteraction,
 } from 'discord.js';
 import { Subcommand } from '../../../lib/core';
+import type { OmitType } from '../../../lib/utils';
+import { stringOption } from '../../../lib/utils/builders';
 import type { TagManager } from '../TagManager';
 import type { TagData } from '../types';
 
@@ -44,6 +47,29 @@ export abstract class TagSubcommand extends Subcommand {
             interaction.options.getString('name', true),
             { fail: true },
         );
+    }
+
+    protected nameOption(
+        override?: Partial<OmitType<APIApplicationCommandStringOption>>,
+    ): APIApplicationCommandStringOption {
+        return stringOption({
+            name: 'name',
+            description: 'tag name',
+            required: true,
+            autocomplete: true,
+            ...override ?? {},
+        });
+    }
+
+    protected contentOption(
+        override?: Partial<OmitType<APIApplicationCommandStringOption>>,
+    ): APIApplicationCommandStringOption {
+        return stringOption({
+            name: 'content',
+            description: 'tag content',
+            required: true,
+            ...override ?? {},
+        });
     }
 
     protected abstract override handle(

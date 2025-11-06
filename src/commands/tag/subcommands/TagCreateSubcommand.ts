@@ -1,6 +1,5 @@
 import type { ChatInputCommandInteraction } from 'discord.js';
 import { CommandError, type SubcommandDefinition } from '../../../lib/core';
-import { stringOption } from '../../../lib/utils/builders';
 import { TagSubcommand } from './TagSubcommand';
 
 export class TagCreateSubcommand extends TagSubcommand {
@@ -9,17 +8,8 @@ export class TagCreateSubcommand extends TagSubcommand {
             name: 'create',
             description: 'Create a tag',
             options: [
-                stringOption({
-                    name: 'name',
-                    description: 'tag name',
-                    required: true,
-                }),
-                stringOption({
-                    name: 'content',
-                    description: 'The tag content',
-                    required: true,
-                    autocomplete: true,
-                }),
+                this.nameOption({ autocomplete: false }),
+                this.contentOption(),
             ],
         };
     }
