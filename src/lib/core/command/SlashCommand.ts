@@ -21,7 +21,10 @@ export abstract class SlashCommand extends BaseApplicationCommand<
         };
 
         if (this.subcommands) {
-            data.options = this.subcommands().map(subcommand => subcommand.getData());
+            data.options = [
+                ...this.subcommands().map(subcommand => subcommand.getData()),
+                ...data.options ?? [],
+            ];
         }
 
         return data;
@@ -54,16 +57,30 @@ export abstract class SlashCommand extends BaseApplicationCommand<
             const subcommandName = interaction.options.getSubcommand();
 
             if (subcommandName) {
-                for (const subcommand of this.subcommands()) {
-                    if (subcommand.getData().name === subcommandName) {
-                        await subcommand.invoke(interaction);
-                        return;
-                    }
+                const subcommand = this.getSubcommand(subcommandName);
+
+                if (subcommand) {
+                    await subcommand.invoke(interaction);
+                    return;
                 }
             }
         }
 
         await super.invoke(interaction);
+    }
+
+    protected getSubcommand(name: string): Subcommand | null {
+        if (!this.subcommands) {
+            return null;
+        }
+
+        for (const subcommand of this.subcommands()) {
+            if (subcommand.getData().name === name) {
+                return subcommand;
+            }
+        }
+
+        return null;
     }
 
     protected autocomplete?(
