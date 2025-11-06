@@ -10,24 +10,26 @@ export class QueryCommandHandler {
     public async handle(interaction: ChatInputCommandInteraction): Promise<void> {
         const subcommand = interaction.options.getSubcommand(true) as SubcommandName;
 
+        const { getString, getInteger } = interaction.options;
+
         const options: SimpleApiOptions = {
-            season: interaction.options.getString(OptionName.Season) ?? undefined,
-            round: interaction.options.getInteger(OptionName.Round) ?? undefined,
-            circuit: interaction.options.getString(OptionName.Circuit) ?? undefined,
-            driver: interaction.options.getString(OptionName.Driver) ?? undefined,
-            fastestRank: interaction.options.getInteger(OptionName.Fastest) ?? undefined,
-            gridPosition: interaction.options.getInteger(OptionName.Grid) ?? undefined,
-            lap: interaction.options.getInteger(OptionName.Lap) ?? undefined,
-            pitStopNumber: interaction.options.getInteger(OptionName.PitStop) ?? undefined,
-            finishPosition: interaction.options.getInteger(OptionName.Result) ?? undefined,
-            status: interaction.options.getString(OptionName.Status) as StatusType | null
+            season: getString(OptionName.Season) ?? undefined,
+            round: getInteger(OptionName.Round) ?? undefined,
+            circuit: getString(OptionName.Circuit) ?? undefined,
+            driver: getString(OptionName.Driver) ?? undefined,
+            fastestRank: getInteger(OptionName.Fastest) ?? undefined,
+            gridPosition: getInteger(OptionName.Grid) ?? undefined,
+            lap: getInteger(OptionName.Lap) ?? undefined,
+            pitStopNumber: getInteger(OptionName.PitStop) ?? undefined,
+            finishPosition: getInteger(OptionName.Result) ?? undefined,
+            status: getString(OptionName.Status) as StatusType | null
                 ?? undefined,
-            team: interaction.options.getString(OptionName.Team) ?? undefined,
+            team: getString(OptionName.Team) ?? undefined,
         };
 
         const pagination: Pagination = {
-            limit: interaction.options.getInteger(OptionName.Limit) ?? undefined,
-            offset: interaction.options.getInteger(OptionName.Offset) ?? undefined,
+            limit: getInteger(OptionName.Limit) ?? undefined,
+            offset: getInteger(OptionName.Offset) ?? undefined,
         };
 
         const { api } = this;
