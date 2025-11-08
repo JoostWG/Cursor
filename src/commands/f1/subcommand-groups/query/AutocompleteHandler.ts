@@ -1,6 +1,6 @@
 import type { ApplicationCommandOptionChoiceData, AutocompleteInteraction } from 'discord.js';
 import type { Api } from 'jolpica-f1-api';
-import { OptionName } from './F1CommandOptionsBuilder';
+import { OptionName } from './QuerySubcommandGroupDefinitionBuilder';
 
 export class AutocompleteHandler {
     public constructor(private readonly api: Api) {

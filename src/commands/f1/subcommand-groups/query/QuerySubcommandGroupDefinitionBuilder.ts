@@ -5,7 +5,12 @@ import type {
     APIApplicationCommandSubcommandGroupOption,
     APIApplicationCommandSubcommandOption,
 } from 'discord.js';
-import { integerOption, stringOption, subcommand, subcommandGroup } from '../../lib/utils/builders';
+import {
+    integerOption,
+    stringOption,
+    subcommand,
+    subcommandGroup,
+} from '../../../../lib/utils/builders';
 
 export enum SubcommandName {
     Circuits = 'circuits',
@@ -38,7 +43,7 @@ export enum OptionName {
     Offset = 'offset',
 }
 
-export class F1CommandOptionsBuilder {
+export class QuerySubcommandGroupDefinitionBuilder {
     public getQuerySubcommandGroup(): APIApplicationCommandSubcommandGroupOption {
         return subcommandGroup({
             name: 'query',
