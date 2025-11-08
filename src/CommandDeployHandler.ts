@@ -3,7 +3,7 @@ import { Routes, type REST, type RESTPostAPIApplicationCommandsJSONBody } from '
 import { deepEqual } from 'fast-equals';
 import { devGuildId, discordAppId } from '../config.json'; // TODO: Convert to dependency
 import type { CommandDataCache } from './CommandDataCache';
-import type { ApplicationCommandCollection } from './lib/core/collections';
+import type { ApplicationCommandCollection } from './lib/core';
 
 export class CommandDeployHandler {
     public constructor(

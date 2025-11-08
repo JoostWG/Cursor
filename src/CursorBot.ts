@@ -1,6 +1,7 @@
 import SQLite from 'better-sqlite3';
 import { Client, Events, GatewayIntentBits, type CommandInteraction } from 'discord.js';
 import { Kysely, SqliteDialect } from 'kysely';
+import { CommandDataCache } from './CommandDataCache';
 import { CommandDeployHandler } from './CommandDeployHandler';
 import {
     ChessCommand,
@@ -17,8 +18,7 @@ import {
     YahtzeeCommand,
 } from './commands';
 import type { CursorDatabase, DatabaseTables } from './database';
-import { Bot, CommandDataCache } from './lib/core';
-import { ApplicationCommandCollection } from './lib/core/collections';
+import { ApplicationCommandCollection, Bot } from './lib/core';
 
 export class CursorBot extends Bot {
     public readonly db: CursorDatabase;

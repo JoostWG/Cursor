@@ -1,7 +1,6 @@
 import type { RESTPostAPIChatInputApplicationCommandsJSONBody } from 'discord.js';
 import type { CursorDatabase } from '../../database';
-import { SlashCommand } from '../../lib/core';
-import { SubcommandCollection } from '../../lib/core/collections';
+import { SlashCommand, SubcommandCollection } from '../../lib/core';
 import type { OmitType } from '../../lib/utils';
 import { PlaySubcommand, StatsSubcommand } from './subcommands';
 

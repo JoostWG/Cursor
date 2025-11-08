@@ -1,7 +1,6 @@
 import type { RESTPostAPIChatInputApplicationCommandsJSONBody } from 'discord.js';
 import { Api } from 'jolpica-f1-api';
-import { SlashCommand } from '../../lib/core';
-import { SubcommandGroupCollection } from '../../lib/core/collections';
+import { SlashCommand, SubcommandGroupCollection } from '../../lib/core';
 import type { OmitType } from '../../lib/utils';
 import { FileApiCache } from './FileApiCache';
 import { QuerySubcommandGroup } from './subcommand-groups';

@@ -1,7 +1,6 @@
 import type { RESTPostAPIChatInputApplicationCommandsJSONBody } from 'discord.js';
 import type { CursorDatabase } from '../../database';
-import { GuildSlashCommand } from '../../lib/core';
-import { SubcommandCollection } from '../../lib/core/collections';
+import { GuildSlashCommand, SubcommandCollection } from '../../lib/core';
 import type { OmitType } from '../../lib/utils';
 import { DatabaseTagManager } from './DatabaseTagManager';
 import {

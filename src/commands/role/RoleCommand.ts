@@ -2,8 +2,7 @@ import {
     PermissionFlagsBits,
     type RESTPostAPIChatInputApplicationCommandsJSONBody,
 } from 'discord.js';
-import { GuildSlashCommand } from '../../lib/core';
-import { SubcommandCollection } from '../../lib/core/collections';
+import { GuildSlashCommand, SubcommandCollection } from '../../lib/core';
 import type { OmitType } from '../../lib/utils';
 import { RoleDeleteSubcommand, RoleUpdateSubcommand } from './subcommands';
 
