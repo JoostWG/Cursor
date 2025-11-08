@@ -6,10 +6,15 @@ import type {
 } from 'discord.js';
 import type { OmitType } from '../../../utils';
 import { subcommand } from '../../../utils/builders';
+import type { HasName } from '../../contracts';
 
 export type SubcommandDefinition = OmitType<APIApplicationCommandSubcommandOption>;
 
-export abstract class Subcommand {
+export abstract class Subcommand implements HasName {
+    public get name(): string {
+        return this.getData().name;
+    }
+
     public async invoke(interaction: ChatInputCommandInteraction): Promise<void> {
         await this.handle(interaction);
     }

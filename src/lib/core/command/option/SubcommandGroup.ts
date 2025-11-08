@@ -6,23 +6,21 @@ import type {
 } from 'discord.js';
 import type { OmitType } from '../../../utils';
 import { subcommandGroup } from '../../../utils/builders';
-import type { Subcommand } from './Subcommand';
+import { SubcommandCollection } from '../../collections';
+import type { HasName } from '../../contracts';
 
 export type SubcommandGroupDefinition = OmitType<APIApplicationCommandSubcommandGroupOption>;
 
-export abstract class SubcommandGroup {
+export abstract class SubcommandGroup implements HasName {
+    public get name(): string {
+        return this.getData().name;
+    }
+
     public async invoke(interaction: ChatInputCommandInteraction): Promise<void> {
-        if (this.subcommands) {
-            const subcommandName = interaction.options.getSubcommand();
+        const subcommand = this.subcommands().getFromInteraction(interaction);
 
-            if (subcommandName) {
-                const subcommand = this.getSubcommand(subcommandName);
-
-                if (subcommand) {
-                    await subcommand.invoke(interaction);
-                    return;
-                }
-            }
+        if (subcommand) {
+            await subcommand.invoke(interaction);
         }
 
         await this.handle(interaction);
@@ -41,28 +39,16 @@ export abstract class SubcommandGroup {
     public getData(): APIApplicationCommandSubcommandGroupOption {
         const data = subcommandGroup(this.definition());
 
-        if (this.subcommands) {
-            data.options = [
-                ...this.subcommands().map(subcommand => subcommand.getData()),
-                ...data.options ?? [],
-            ];
-        }
+        data.options = [
+            ...this.subcommands().map(subcommand => subcommand.getData()),
+            ...data.options ?? [],
+        ];
 
         return data;
     }
 
-    protected getSubcommand(name: string): Subcommand | null {
-        if (!this.subcommands) {
-            return null;
-        }
-
-        for (const subcommand of this.subcommands()) {
-            if (subcommand.getData().name === name) {
-                return subcommand;
-            }
-        }
-
-        return null;
+    protected subcommands(): SubcommandCollection {
+        return new SubcommandCollection();
     }
 
     protected abstract definition(): SubcommandGroupDefinition;
@@ -71,6 +57,4 @@ export abstract class SubcommandGroup {
     protected autocomplete?(
         interaction: AutocompleteInteraction,
     ): Promise<ApplicationCommandOptionChoiceData[]>;
-
-    protected subcommands?(): Subcommand[];
 }

@@ -4,7 +4,8 @@ import {
     type RESTPostAPIApplicationCommandsJSONBody,
 } from 'discord.js';
 import type { OmitType } from '../../utils';
-import { CommandError } from '../errors';
+import type { HasName } from '../contracts';
+import { CommandHandlerNotFoundError } from '../errors';
 import type { MessageContextMenu } from './MessageContextMenu';
 import type { SlashCommand } from './SlashCommand';
 import type { UserContextMenu } from './UserContextMenu';
@@ -12,8 +13,12 @@ import type { UserContextMenu } from './UserContextMenu';
 export abstract class BaseApplicationCommand<
     TData extends RESTPostAPIApplicationCommandsJSONBody = RESTPostAPIApplicationCommandsJSONBody,
     TInteraction extends CommandInteraction = CommandInteraction,
-> {
+> implements HasName {
     public devOnly?: boolean;
+
+    public get name(): string {
+        return this.getData().name;
+    }
 
     public getType(): ApplicationCommandType {
         return this.getData().type;
@@ -37,7 +42,7 @@ export abstract class BaseApplicationCommand<
 
     public async invoke(interaction: TInteraction): Promise<void> {
         if (!this.handle) {
-            throw new CommandError('No command handler defined :(');
+            throw new CommandHandlerNotFoundError(interaction);
         }
 
         await this.handle(interaction);

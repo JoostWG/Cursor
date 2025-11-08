@@ -1,6 +1,7 @@
 import type { RESTPostAPIChatInputApplicationCommandsJSONBody } from 'discord.js';
 import { Api } from 'jolpica-f1-api';
-import { SlashCommand, type SubcommandGroup } from '../../lib/core';
+import { SlashCommand } from '../../lib/core';
+import { SubcommandGroupCollection } from '../../lib/core/collections';
 import type { OmitType } from '../../lib/utils';
 import { FileApiCache } from './FileApiCache';
 import { QuerySubcommandGroup } from './subcommand-groups';
@@ -23,9 +24,9 @@ export class F1Command extends SlashCommand {
         };
     }
 
-    protected override subcommandGroups(): SubcommandGroup[] {
-        return [
+    protected override subcommandGroups(): SubcommandGroupCollection {
+        return new SubcommandGroupCollection(
             new QuerySubcommandGroup(this.api),
-        ];
+        );
     }
 }

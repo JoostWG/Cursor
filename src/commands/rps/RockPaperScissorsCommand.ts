@@ -1,6 +1,7 @@
 import type { RESTPostAPIChatInputApplicationCommandsJSONBody } from 'discord.js';
 import type { CursorDatabase } from '../../database';
-import { SlashCommand, type Subcommand } from '../../lib/core';
+import { SlashCommand } from '../../lib/core';
+import { SubcommandCollection } from '../../lib/core/collections';
 import type { OmitType } from '../../lib/utils';
 import { PlaySubcommand, StatsSubcommand } from './subcommands';
 
@@ -16,10 +17,10 @@ export class RockPaperScissorsCommand extends SlashCommand {
         };
     }
 
-    protected override subcommands(): Subcommand[] {
-        return [
+    protected override subcommands(): SubcommandCollection {
+        return new SubcommandCollection(
             new PlaySubcommand(this.db),
             new StatsSubcommand(this.db),
-        ];
+        );
     }
 }

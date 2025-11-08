@@ -1,6 +1,7 @@
 import type { RESTPostAPIChatInputApplicationCommandsJSONBody } from 'discord.js';
 import type { CursorDatabase } from '../../database';
-import { GuildSlashCommand, type Subcommand } from '../../lib/core';
+import { GuildSlashCommand } from '../../lib/core';
+import { SubcommandCollection } from '../../lib/core/collections';
 import type { OmitType } from '../../lib/utils';
 import { DatabaseTagManager } from './DatabaseTagManager';
 import {
@@ -29,14 +30,14 @@ export class TagCommand extends GuildSlashCommand {
         };
     }
 
-    protected override subcommands(): Subcommand[] {
-        return [
+    protected override subcommands(): SubcommandCollection {
+        return new SubcommandCollection(
             new TagListSubcommand(this.tags),
             new TagGetSubcommand(this.tags),
             new TagInfoSubcommand(this.tags),
             new TagCreateSubcommand(this.tags),
             new TagUpdateSubcommand(this.tags),
             new TagDeleteSubcommand(this.tags),
-        ];
+        );
     }
 }

@@ -2,7 +2,8 @@ import {
     PermissionFlagsBits,
     type RESTPostAPIChatInputApplicationCommandsJSONBody,
 } from 'discord.js';
-import { GuildSlashCommand, type Subcommand } from '../../lib/core';
+import { GuildSlashCommand } from '../../lib/core';
+import { SubcommandCollection } from '../../lib/core/collections';
 import type { OmitType } from '../../lib/utils';
 import { RoleDeleteSubcommand, RoleUpdateSubcommand } from './subcommands';
 
@@ -15,10 +16,10 @@ export class RoleCommand extends GuildSlashCommand {
         };
     }
 
-    protected override subcommands(): Subcommand[] {
-        return [
+    protected override subcommands(): SubcommandCollection {
+        return new SubcommandCollection(
             new RoleUpdateSubcommand(),
             new RoleDeleteSubcommand(),
-        ];
+        );
     }
 }

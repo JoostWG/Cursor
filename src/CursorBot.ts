@@ -1,0 +1,93 @@
+import SQLite from 'better-sqlite3';
+import { Client, Events, GatewayIntentBits, type CommandInteraction } from 'discord.js';
+import { Kysely, SqliteDialect } from 'kysely';
+import { CommandDeployHandler } from './CommandDeployHandler';
+import {
+    ChessCommand,
+    F1Command,
+    JokeCommand,
+    PingCommand,
+    RawCommand,
+    RockPaperScissorsCommand,
+    RoleCommand,
+    TagCommand,
+    TriviaCommand,
+    UrbanDictionaryCommand,
+    UserCommand,
+    YahtzeeCommand,
+} from './commands';
+import type { CursorDatabase, DatabaseTables } from './database';
+import { Bot, CommandDataCache } from './lib/core';
+import { ApplicationCommandCollection } from './lib/core/collections';
+
+export class CursorBot extends Bot {
+    public readonly db: CursorDatabase;
+    private readonly deployHandler: CommandDeployHandler;
+
+    public constructor(token: string) {
+        super({
+            client: new Client({
+                intents: [GatewayIntentBits.GuildMembers, GatewayIntentBits.Guilds],
+            }),
+            token,
+        });
+
+        this.db = new Kysely<DatabaseTables>({
+            dialect: new SqliteDialect({
+                database: new SQLite('./database/database.db'),
+            }),
+        });
+
+        this.deployHandler = new CommandDeployHandler(
+            new CommandDataCache('./cache/deployed-commands'),
+            this.client.rest,
+            this.applicationCommands(),
+        );
+
+        this.client.on(Events.ClientReady, () => {
+            console.info('Ready');
+        });
+    }
+
+    public override async start(): Promise<void> {
+        await this.deployHandler.deployIfNeeded();
+
+        await super.start();
+    }
+
+    protected override applicationCommands(): ApplicationCommandCollection {
+        return new ApplicationCommandCollection(
+            // Chat
+            new ChessCommand(),
+            new F1Command(),
+            new JokeCommand(),
+            new PingCommand(),
+            new RoleCommand(),
+            new RockPaperScissorsCommand(this.db),
+            new TagCommand(this.db),
+            new TriviaCommand(),
+            new UrbanDictionaryCommand(),
+            new UserCommand(),
+            new YahtzeeCommand(),
+            // Context
+            new RawCommand(),
+        );
+    }
+
+    protected override async onApplicationCommand(interaction: CommandInteraction): Promise<void> {
+        await this.db
+            .insertInto('command_logs')
+            .values({
+                interaction_id: interaction.id,
+                user_id: interaction.user.id,
+                channel_id: interaction.channelId,
+                guild_id: interaction.inGuild() ? interaction.guildId : null,
+                command_name: interaction.commandName,
+                command_type: interaction.commandType,
+                options: JSON.stringify(
+                    interaction.isChatInputCommand() ? interaction.options.data : [],
+                ),
+            })
+            .execute();
+    }
+}
