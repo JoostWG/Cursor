@@ -1,19 +1,48 @@
-import { AttachmentBuilder, type ChatInputCommandInteraction } from 'discord.js';
+import {
+    AttachmentBuilder,
+    type ApplicationCommandOptionChoiceData,
+    type AutocompleteInteraction,
+    type ChatInputCommandInteraction,
+} from 'discord.js';
 import type { Api, Pagination, SimpleApiOptions, StatusType } from 'jolpica-f1-api';
-import { OptionName, SubcommandName } from './F1CommandOptionsBuilder';
+import { SubcommandGroup, type SubcommandGroupDefinition } from '../../../../lib/core';
+import { AutocompleteHandler } from './AutocompleteHandler';
+import {
+    OptionName,
+    QuerySubcommandGroupDefinitionBuilder,
+    SubcommandName,
+} from './QuerySubcommandGroupDefinitionBuilder';
 
-export class QueryCommandHandler {
+export class QuerySubcommandGroup extends SubcommandGroup {
+    private readonly autocompleteHandler: AutocompleteHandler;
+
     public constructor(private readonly api: Api) {
-        //
+        super();
+
+        this.autocompleteHandler = new AutocompleteHandler(this.api);
     }
 
-    public async handle(interaction: ChatInputCommandInteraction): Promise<void> {
+    protected override definition(): SubcommandGroupDefinition {
+        return new QuerySubcommandGroupDefinitionBuilder().getQuerySubcommandGroup();
+    }
+
+    protected override async autocomplete(
+        interaction: AutocompleteInteraction,
+    ): Promise<ApplicationCommandOptionChoiceData[]> {
+        return await this.autocompleteHandler.handle(interaction);
+    }
+
+    protected override async handle(interaction: ChatInputCommandInteraction): Promise<void> {
         const subcommand = interaction.options.getSubcommand(true) as SubcommandName;
 
-        const { getString, getInteger } = interaction.options;
+        // I hate JavaScript
+        const { getString, getInteger } = {
+            getString: interaction.options.getString.bind(interaction.options),
+            getInteger: interaction.options.getInteger.bind(interaction.options),
+        };
 
         const options: SimpleApiOptions = {
-            season: getString(OptionName.Season) ?? undefined,
+            season: interaction.options.getString('season') ?? undefined,
             round: getInteger(OptionName.Round) ?? undefined,
             circuit: getString(OptionName.Circuit) ?? undefined,
             driver: getString(OptionName.Driver) ?? undefined,
@@ -22,8 +51,7 @@ export class QueryCommandHandler {
             lap: getInteger(OptionName.Lap) ?? undefined,
             pitStopNumber: getInteger(OptionName.PitStop) ?? undefined,
             finishPosition: getInteger(OptionName.Result) ?? undefined,
-            status: getString(OptionName.Status) as StatusType | null
-                ?? undefined,
+            status: getString(OptionName.Status) as StatusType | null ?? undefined,
             team: getString(OptionName.Team) ?? undefined,
         };
 

@@ -7,8 +7,10 @@ import {
     spoiler,
     type APIEmbed,
     type ChatInputCommandInteraction,
+    type RESTPostAPIChatInputApplicationCommandsJSONBody,
 } from 'discord.js';
 import { CommandError, SlashCommand } from '../../lib/core';
+import type { OmitType } from '../../lib/utils';
 import { booleanOption, stringOption } from '../../lib/utils/builders';
 import { JokeCategory } from './JokeCategory';
 import { JokeLanguage } from './JokeLanguage';
@@ -18,7 +20,15 @@ export class JokeCommand extends SlashCommand {
     private readonly api: AxiosInstance;
 
     public constructor() {
-        super({
+        super();
+
+        this.api = axios.create({
+            baseURL: 'https://v2.jokeapi.dev',
+        });
+    }
+
+    protected override definition(): OmitType<RESTPostAPIChatInputApplicationCommandsJSONBody> {
+        return {
             name: 'joke',
             description: 'Have a laugh!',
             options: [
@@ -39,14 +49,10 @@ export class JokeCommand extends SlashCommand {
                     ].join(' '),
                 }),
             ],
-        });
-
-        this.api = axios.create({
-            baseURL: 'https://v2.jokeapi.dev',
-        });
+        };
     }
 
-    public override async handle(interaction: ChatInputCommandInteraction): Promise<void> {
+    protected override async handle(interaction: ChatInputCommandInteraction): Promise<void> {
         const category = interaction.options.getString('category') ?? 'Any';
         const safe = interaction.options.getBoolean('safe') ?? true;
 

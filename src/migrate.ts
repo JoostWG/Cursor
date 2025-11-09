@@ -1,6 +1,6 @@
+import { CursorBot } from './CursorBot';
 import { V1, V2, V3 } from './database/migrations';
 import { Migrator } from './database/Migrator';
-import { createDatabaseInstance } from './setup';
 
 (async () => {
     if (process.argv.includes('--up') && process.argv.includes('--down')) {
@@ -9,7 +9,7 @@ import { createDatabaseInstance } from './setup';
     }
 
     const migrator = new Migrator(
-        createDatabaseInstance(),
+        new CursorBot('').db,
         new Map([
             ['v1', new V1()],
             ['v2', new V2()],

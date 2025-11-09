@@ -1,7 +1,4 @@
 import { discordToken } from '../config.json';
-import { createBot } from './setup';
+import { CursorBot } from './CursorBot';
 
-(async () => {
-    const bot = await createBot({ token: discordToken });
-    await bot.run();
-})();
+void new CursorBot(discordToken).start();

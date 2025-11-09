@@ -1,14 +1,17 @@
 import {
     InteractionContextType,
+    type ApplicationCommandType,
     type RESTPostAPIChatInputApplicationCommandsJSONBody,
 } from 'discord.js';
-import type { OmitType } from '../../../lib/utils';
 import { SlashCommand } from './SlashCommand';
 
 export abstract class GuildSlashCommand extends SlashCommand {
-    protected constructor(
-        data: Omit<OmitType<RESTPostAPIChatInputApplicationCommandsJSONBody>, 'contexts'>,
-    ) {
-        super({ contexts: [InteractionContextType.Guild], ...data });
+    public override getData(): RESTPostAPIChatInputApplicationCommandsJSONBody & {
+        type: ApplicationCommandType;
+    } {
+        return {
+            contexts: [InteractionContextType.Guild],
+            ...super.getData(),
+        };
     }
 }

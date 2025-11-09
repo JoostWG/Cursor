@@ -2,17 +2,21 @@ import {
     AttachmentBuilder,
     MessageFlags,
     type MessageContextMenuCommandInteraction,
+    type RESTPostAPIContextMenuApplicationCommandsJSONBody,
 } from 'discord.js';
 import { MessageContextMenu } from '../../../lib/core';
+import type { OmitType } from '../../../lib/utils';
 
 export class RawCommand extends MessageContextMenu {
-    public constructor() {
-        super({
+    protected override definition(): OmitType<RESTPostAPIContextMenuApplicationCommandsJSONBody> {
+        return {
             name: 'Get raw message JSON',
-        });
+        };
     }
 
-    public override async handle(interaction: MessageContextMenuCommandInteraction): Promise<void> {
+    protected override async handle(
+        interaction: MessageContextMenuCommandInteraction,
+    ): Promise<void> {
         await interaction.reply({
             flags: MessageFlags.Ephemeral,
             files: [

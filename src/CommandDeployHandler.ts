@@ -1,14 +1,15 @@
+// TODO: Move back to core
 import { Routes, type REST, type RESTPostAPIApplicationCommandsJSONBody } from 'discord.js';
 import { deepEqual } from 'fast-equals';
-import { devGuildId, discordAppId } from '../../../config.json'; // TODO: Convert to dependency
-import type { CommandCollection } from './CommandCollection';
+import { devGuildId, discordAppId } from '../config.json'; // TODO: Convert to dependency
 import type { CommandDataCache } from './CommandDataCache';
+import type { ApplicationCommandCollection } from './lib/core';
 
 export class CommandDeployHandler {
     public constructor(
         private readonly cache: CommandDataCache,
         private readonly api: REST,
-        private readonly commands: CommandCollection,
+        private readonly commands: ApplicationCommandCollection,
     ) {}
 
     public async deployIfNeeded(): Promise<void> {
@@ -17,9 +18,9 @@ export class CommandDeployHandler {
 
         for (const command of this.commands.values()) {
             if (command.devOnly) {
-                devCommands.push(command.data);
+                devCommands.push(command.getData());
             } else {
-                globalCommands.push(command.data);
+                globalCommands.push(command.getData());
             }
         }
 

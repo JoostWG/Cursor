@@ -3,37 +3,52 @@ import {
     type CommandInteraction,
     type RESTPostAPIApplicationCommandsJSONBody,
 } from 'discord.js';
+import type { OmitType } from '../../utils';
+import type { HasName } from '../contracts';
+import { CommandHandlerNotFoundError } from '../errors';
 import type { MessageContextMenu } from './MessageContextMenu';
 import type { SlashCommand } from './SlashCommand';
 import type { UserContextMenu } from './UserContextMenu';
 
 export abstract class BaseApplicationCommand<
-    T extends RESTPostAPIApplicationCommandsJSONBody = RESTPostAPIApplicationCommandsJSONBody,
-> {
-    public readonly type: ApplicationCommandType;
+    TData extends RESTPostAPIApplicationCommandsJSONBody = RESTPostAPIApplicationCommandsJSONBody,
+    TInteraction extends CommandInteraction = CommandInteraction,
+> implements HasName {
     public devOnly?: boolean;
-    public readonly data: T;
 
-    public constructor(data: T & { type: ApplicationCommandType }) {
-        this.data = data;
-        this.type = data.type;
+    public get name(): string {
+        return this.getData().name;
+    }
+
+    public getType(): ApplicationCommandType {
+        return this.getData().type;
     }
 
     public isSlashCommand(): this is SlashCommand {
-        return this.type === ApplicationCommandType.ChatInput;
+        return this.getType() === ApplicationCommandType.ChatInput;
     }
 
     public isUserContextMenu(): this is UserContextMenu {
-        return this.type === ApplicationCommandType.User;
+        return this.getType() === ApplicationCommandType.User;
     }
 
     public isMessageContextMenu(): this is MessageContextMenu {
-        return this.type === ApplicationCommandType.Message;
+        return this.getType() === ApplicationCommandType.Message;
     }
 
     public isContextMenu(): this is UserContextMenu | MessageContextMenu {
         return this.isUserContextMenu() || this.isMessageContextMenu();
     }
 
-    public abstract handle(interaction: CommandInteraction): Promise<void>;
+    public async invoke(interaction: TInteraction): Promise<void> {
+        if (!this.handle) {
+            throw new CommandHandlerNotFoundError(interaction);
+        }
+
+        await this.handle(interaction);
+    }
+
+    public abstract getData(): TData & { type: ApplicationCommandType };
+    protected handle?(interaction: TInteraction): Promise<void>;
+    protected abstract definition(): OmitType<TData>;
 }

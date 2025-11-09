@@ -1,10 +1,16 @@
-import { TimestampStyles, time, type ChatInputCommandInteraction } from 'discord.js';
+import {
+    TimestampStyles,
+    time,
+    type ChatInputCommandInteraction,
+    type RESTPostAPIChatInputApplicationCommandsJSONBody,
+} from 'discord.js';
 import { SlashCommand } from '../lib/core';
+import type { OmitType } from '../lib/utils';
 import { userOption } from '../lib/utils/builders';
 
 export class UserCommand extends SlashCommand {
-    public constructor() {
-        super({
+    protected override definition(): OmitType<RESTPostAPIChatInputApplicationCommandsJSONBody> {
+        return {
             name: 'user',
             description: 'Get info on a user',
             options: [
@@ -13,10 +19,10 @@ export class UserCommand extends SlashCommand {
                     description: 'Select a user',
                 }),
             ],
-        });
+        };
     }
 
-    public override async handle(interaction: ChatInputCommandInteraction): Promise<void> {
+    protected override async handle(interaction: ChatInputCommandInteraction): Promise<void> {
         const user = interaction.options.getUser('user') ?? interaction.user;
 
         await interaction.reply({

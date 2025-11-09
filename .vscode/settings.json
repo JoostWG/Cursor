@@ -31,6 +31,7 @@
         "constructorstandings",
         "defid",
         "driverstandings",
+        "Invokable",
         "jolpica",
         "Joost",
         "kysely",

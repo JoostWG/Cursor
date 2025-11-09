@@ -1,3 +1,5 @@
-export class CommandError extends Error {
+import { CoreError } from './CoreError';
+
+export class CommandError extends CoreError {
     //
 }
