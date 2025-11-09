@@ -1,5 +1,5 @@
 import { CursorBot } from './CursorBot';
-import { V1, V2, V3 } from './database/migrations';
+import { V1, V2, V3, V4 } from './database/migrations';
 import { Migrator } from './database/Migrator';
 
 (async () => {
@@ -14,6 +14,7 @@ import { Migrator } from './database/Migrator';
             ['v1', new V1()],
             ['v2', new V2()],
             ['v3', new V3()],
+            ['v4', new V4()],
         ]),
     );
 

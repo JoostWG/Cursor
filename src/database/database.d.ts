@@ -11,6 +11,7 @@ export interface DatabaseTables {
     rps_rounds: RpsRoundsTable;
     rps_choices: RpsChoicesTable;
     command_logs: CommandLogsTable;
+    balances: BalancesTable;
 }
 
 export interface MigrationsTable {
@@ -60,4 +61,9 @@ export interface CommandLogsTable extends BaseTable {
     command_type: ApplicationCommandType;
     command_name: string;
     options: JSONColumnType<CommandInteractionOption>;
+}
+
+export interface BalancesTable extends Pick<BaseTable, 'id'> {
+    user_id: string;
+    balance: number;
 }

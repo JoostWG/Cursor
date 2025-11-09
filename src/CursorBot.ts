@@ -6,6 +6,7 @@ import { CommandDeployHandler } from './CommandDeployHandler';
 import { CommandError } from './CommandError';
 import {
     ChessCommand,
+    EconomyCommand,
     F1Command,
     JokeCommand,
     PingCommand,
@@ -60,6 +61,7 @@ export class CursorBot extends Bot {
         return new ApplicationCommandCollection(
             // Chat
             new ChessCommand(),
+            new EconomyCommand(this.db),
             new F1Command(),
             new JokeCommand(),
             new PingCommand(),

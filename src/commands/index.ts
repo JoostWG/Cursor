@@ -1,5 +1,6 @@
 export * from './chess';
 export * from './context';
+export * from './economy';
 export * from './f1';
 export * from './joke';
 export * from './ping';
