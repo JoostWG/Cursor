@@ -5,7 +5,7 @@ import {
     type Interaction,
     type Role,
 } from 'discord.js';
-import { CommandError } from '../../lib/core';
+import { CommandError } from '../../CommandError';
 import { InvalidRoleError } from './InvalidRoleError';
 
 export class RoleService {

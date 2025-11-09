@@ -1,6 +1,7 @@
 import type { ChatInputCommandInteraction } from 'discord.js';
+import { CommandError } from '../../../CommandError';
 import type { CursorDatabase } from '../../../database';
-import { CommandError, Subcommand, type SubcommandDefinition } from '../../../lib/core';
+import { Subcommand, type SubcommandDefinition } from '../../../lib/core';
 import { userOption } from '../../../lib/utils/builders';
 import { Game } from '../Game';
 

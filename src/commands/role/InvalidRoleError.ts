@@ -1,4 +1,4 @@
-import { CommandError } from '../../lib/core';
+import { CommandError } from '../../CommandError';
 
 export class InvalidRoleError extends CommandError {
     //

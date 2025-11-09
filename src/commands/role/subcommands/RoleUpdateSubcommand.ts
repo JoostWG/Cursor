@@ -13,7 +13,8 @@ import {
     type Role,
     type RoleEditOptions,
 } from 'discord.js';
-import { CommandError, type SubcommandDefinition } from '../../../lib/core';
+import { CommandError } from '../../../CommandError';
+import type { SubcommandDefinition } from '../../../lib/core';
 import {
     booleanOption,
     container,

@@ -37,6 +37,7 @@
         "kysely",
         "LATAM",
         "pitstops",
+        "Repliable",
         "twopart"
     ]
 }

@@ -3,6 +3,7 @@ import { Client, Events, GatewayIntentBits, type CommandInteraction } from 'disc
 import { Kysely, SqliteDialect } from 'kysely';
 import { CommandDataCache } from './CommandDataCache';
 import { CommandDeployHandler } from './CommandDeployHandler';
+import { CommandError } from './CommandError';
 import {
     ChessCommand,
     F1Command,
@@ -18,7 +19,7 @@ import {
     YahtzeeCommand,
 } from './commands';
 import type { CursorDatabase, DatabaseTables } from './database';
-import { ApplicationCommandCollection, Bot } from './lib/core';
+import { ApplicationCommandCollection, Bot, type ApplicationCommandError } from './lib/core';
 
 export class CursorBot extends Bot {
     public readonly db: CursorDatabase;
@@ -89,5 +90,19 @@ export class CursorBot extends Bot {
                 ),
             })
             .execute();
+    }
+
+    protected override async onApplicationCommandError(
+        { interaction, cause }: ApplicationCommandError,
+    ): Promise<void> {
+        if (!(cause instanceof CommandError)) {
+            return;
+        }
+
+        if (!interaction.isRepliable()) {
+            return;
+        }
+
+        await interaction.reply(cause.message);
     }
 }

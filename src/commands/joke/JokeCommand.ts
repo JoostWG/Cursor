@@ -9,7 +9,8 @@ import {
     type ChatInputCommandInteraction,
     type RESTPostAPIChatInputApplicationCommandsJSONBody,
 } from 'discord.js';
-import { CommandError, SlashCommand } from '../../lib/core';
+import { CommandError } from '../../CommandError';
+import { SlashCommand } from '../../lib/core';
 import type { OmitType } from '../../lib/utils';
 import { booleanOption, stringOption } from '../../lib/utils/builders';
 import { JokeCategory } from './JokeCategory';

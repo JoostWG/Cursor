@@ -102,7 +102,7 @@ export abstract class Bot {
 
             await this.onApplicationCommandError(error);
 
-            throw error;
+            return;
         }
 
         throw new CommandHandlerNotFoundError(interaction);
