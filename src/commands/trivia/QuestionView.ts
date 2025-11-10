@@ -8,24 +8,21 @@ import {
     type APIBaseComponent,
     type ChatInputCommandInteraction,
 } from 'discord.js';
-import { QuestionTypes, type Question } from 'open-trivia-db';
 import { stringTitle } from '../../lib/utils';
 import { actionRow, button, container, textDisplay } from '../../lib/utils/builders';
+import { QuestionType, type AnyQuestionData } from '../../modules/trivia';
 import type { Answer, Status } from './types';
 
 export class QuestionView {
-    private readonly question: Question;
     private readonly answers: Map<string, Answer>;
     private status: Status;
 
-    public constructor(question: Question) {
-        this.question = question;
-
+    public constructor(private readonly question: AnyQuestionData) {
         // TODO: Below
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-enum-comparison
-        const allAnswers = this.question.type === QuestionTypes.Boolean
+
+        const allAnswers = this.question.type === QuestionType.Boolean
             ? ['True', 'False']
-            : this.question.allAnswers;
+            : [this.question.correct_answer, ...this.question.incorrect_answers];
 
         this.answers = new Map(
             allAnswers.map((answer, index) => [
@@ -33,7 +30,7 @@ export class QuestionView {
                 {
                     value: answer,
                     id: index.toString(),
-                    correct: question.checkAnswer(answer),
+                    correct: question.correct_answer === answer,
                     revealed: false,
                 },
             ]),
@@ -88,7 +85,7 @@ export class QuestionView {
             container({
                 components: [
                     textDisplay({
-                        content: heading(this.question.value, HeadingLevel.Three),
+                        content: heading(this.question.question, HeadingLevel.Three),
                     }),
                     actionRow({
                         components: this.answers
@@ -109,7 +106,7 @@ export class QuestionView {
                     }),
                     textDisplay({
                         content: subtext(
-                            `${this.question.category.name} - ${
+                            `${this.question.category} - ${
                                 stringTitle(
                                     this.question.difficulty,
                                 )

@@ -1,21 +1,32 @@
 import type {
     ChatInputCommandInteraction,
     RESTPostAPIChatInputApplicationCommandsJSONBody,
+    User,
 } from 'discord.js';
-import {
-    Category,
-    QuestionDifficulties,
-    QuestionEncodings,
-    getQuestions,
-    type CategoryNames,
-    type QuestionOptions,
-} from 'open-trivia-db';
 import { SlashCommand } from '../../lib/core';
 import type { OmitType } from '../../lib/utils';
 import { stringOption } from '../../lib/utils/builders';
+import {
+    QuestionDifficulty,
+    TriviaApi,
+    type QuestionOptions,
+    type Session,
+} from '../../modules/trivia';
+import { categories } from './categories';
 import { QuestionView } from './QuestionView';
 
 export class TriviaCommand extends SlashCommand {
+    private readonly api: TriviaApi;
+    private readonly sessions: Map<string, Session>;
+
+    public constructor() {
+        super();
+
+        this.devOnly = true;
+        this.api = new TriviaApi();
+        this.sessions = new Map();
+    }
+
     protected override definition(): OmitType<RESTPostAPIChatInputApplicationCommandsJSONBody> {
         return {
             name: 'trivia',
@@ -24,16 +35,12 @@ export class TriviaCommand extends SlashCommand {
                 stringOption({
                     name: 'category',
                     description: 'Choose a category',
-                    choices: Category.allNames.map((name) => ({
-                        name,
-                        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                        value: Category.idByName(name)!.toString(),
-                    })),
+                    choices: categories.map(({ name, id }) => ({ name, value: id.toString() })),
                 }),
                 stringOption({
                     name: 'difficulty',
                     description: 'Choose difficulty',
-                    choices: Object.entries(QuestionDifficulties).map(([name, value]) => ({
+                    choices: Object.entries(QuestionDifficulty).map(([name, value]) => ({
                         name,
                         value,
                     })),
@@ -43,29 +50,42 @@ export class TriviaCommand extends SlashCommand {
     }
 
     protected override async handle(interaction: ChatInputCommandInteraction): Promise<void> {
-        const difficulty = interaction.options.getString('difficulty');
+        const difficulty = interaction.options.getString('difficulty') as QuestionDifficulty | null;
         const category = interaction.options.getString('category');
 
-        const options: Partial<QuestionOptions> = {
+        const session = await this.getSession(interaction.user);
+
+        const options: QuestionOptions = {
             amount: 1,
-            encode: QuestionEncodings.None,
-            type: 'boolean',
         };
 
         if (difficulty) {
-            options.difficulty = difficulty as QuestionDifficulties;
+            options.difficulty = difficulty;
         }
 
         if (category) {
-            options.category = Number(category) as CategoryNames;
+            options.category = Number(category);
         }
 
-        const questions = await getQuestions(options);
+        const questions = await session.getQuestions(options);
 
         if (!questions.length) {
             return;
         }
 
         await new QuestionView(questions[0]).start(interaction);
+    }
+
+    private async getSession(user: User): Promise<Session> {
+        if (this.sessions.has(user.id)) {
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            return this.sessions.get(user.id)!;
+        }
+
+        const session = await this.api.startSession();
+
+        this.sessions.set(user.id, session);
+
+        return session;
     }
 }
