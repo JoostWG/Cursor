@@ -101,6 +101,8 @@ export class CursorBot extends Bot {
             return;
         }
 
+        console.error(cause);
+
         if (!interaction.isRepliable()) {
             return;
         }
