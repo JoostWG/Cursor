@@ -37,7 +37,7 @@ export class TriviaApi {
 
     public async retrieveSessionToken(): Promise<string> {
         return await this.get<RequestTokenResponse>('api_token', { command: 'request' })
-            .then(data => data.token);
+            .then((data) => data.token);
     }
 
     public async resetSessionToken(token: string): Promise<void> {
@@ -80,7 +80,7 @@ export class TriviaApi {
 
     public async getAllCategories(): Promise<CategoryData[]> {
         return await this.get<CategoriesResponse>('api_categories')
-            .then(data => data.trivia_categories);
+            .then((data) => data.trivia_categories);
     }
 
     // Other

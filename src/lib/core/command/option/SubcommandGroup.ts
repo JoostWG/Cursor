@@ -40,7 +40,7 @@ export abstract class SubcommandGroup implements HasName {
         const data = subcommandGroup(this.definition());
 
         data.options = [
-            ...this.subcommands().map(subcommand => subcommand.getData()),
+            ...this.subcommands().map((subcommand) => subcommand.getData()),
             ...data.options ?? [],
         ];
 

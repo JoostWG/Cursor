@@ -22,8 +22,8 @@ export abstract class SlashCommand extends BaseApplicationCommand<
         };
 
         data.options = [
-            ...this.subcommandGroups().map(subcommandGroup => subcommandGroup.getData()),
-            ...this.subcommands().map(subcommand => subcommand.getData()),
+            ...this.subcommandGroups().map((subcommandGroup) => subcommandGroup.getData()),
+            ...this.subcommands().map((subcommand) => subcommand.getData()),
             ...data.options ?? [],
         ];
 
