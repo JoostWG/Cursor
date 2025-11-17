@@ -39,6 +39,6 @@ export class CellCollection extends Array<Cell> {
     }
 
     public count(value: Value): number {
-        return this.filter(cell => cell.value === value).length;
+        return this.filter((cell) => cell.value === value).length;
     }
 }
