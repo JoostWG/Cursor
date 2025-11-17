@@ -15,6 +15,7 @@
         "conditionalType.preferSingleLine": true,
         "constructSignature.spaceAfterNewKeyword": true,
         "constructorType.spaceAfterNewKeyword": true,
+        "arrowFunction.useParentheses": "force",
     },
     "json": {
         "indentWidth": 4,
