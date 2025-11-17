@@ -11,7 +11,7 @@ export class F1Command extends SlashCommand {
     public constructor() {
         super();
 
-        this.api = new Api(new FileApiCache('./cache/f1'));
+        this.api = new Api({ cache: new FileApiCache('./cache/f1') });
 
         this.devOnly = true;
     }
