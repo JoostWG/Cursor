@@ -13,5 +13,6 @@
         "resolveJsonModule": true,
         "allowUnreachableCode": false,
         "noImplicitOverride": true
-    }
+    },
+    "exclude": ["./tests"]
 }

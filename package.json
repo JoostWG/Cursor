@@ -8,7 +8,8 @@
         "lint": "eslint . --fix",
         "format": "dprint fmt",
         "type-check": "tsc --noEmit",
-        "quality": "concurrently -n ESLint,dprint,TypeScript -c #3178C6,#4D5564,#4B32C3 \"npm run lint\" \"npm run format\" \"npm run type-check\" "
+        "quality": "concurrently -n ESLint,dprint,TypeScript,Jest -c #3178C6,#4D5564,#4B32C3,#15C213 \"npm run lint\" \"npm run format\" \"npm run type-check\" \"npm run test\"",
+        "test": "jest"
     },
     "dependencies": {
         "axios": "^1.12.2",
@@ -24,6 +25,7 @@
         "@eslint/js": "^9.35.0",
         "@stylistic/eslint-plugin": "^5.3.1",
         "@types/better-sqlite3": "^7.6.13",
+        "@types/jest": "^30.0.0",
         "@typescript-eslint/eslint-plugin": "^8.44.0",
         "@typescript-eslint/parser": "^8.44.0",
         "concurrently": "^9.2.1",
@@ -31,6 +33,7 @@
         "eslint": "^9.26.0",
         "eslint-plugin-check-file": "^3.3.0",
         "globals": "^16.4.0",
+        "jest": "^29.7.0",
         "ts-node": "^10.9.2",
         "typescript": "^5.9.2",
         "typescript-eslint": "^8.44.0"
