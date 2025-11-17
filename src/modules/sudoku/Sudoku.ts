@@ -1,14 +1,13 @@
 import { Cell } from './Cell';
 import { CellCollection } from './CellCollection';
 import { arrayChunk, arrayZip } from './helpers';
-import { Square } from './Square';
 import type { Value } from './types';
 
 export class Sudoku {
     private readonly cells: CellCollection;
     private readonly rows: CellCollection[];
     private readonly columns: CellCollection[];
-    private readonly squares: Square[];
+    private readonly squares: CellCollection[];
 
     public constructor(cells: Cell[]) {
         this.cells = new CellCollection(...cells);
@@ -19,7 +18,7 @@ export class Sudoku {
 
         for (const sqr of arrayChunk(this.cells, 27)) {
             for (const s of arrayZip(...arrayChunk(sqr, 9).map((r) => arrayChunk(r, 3)))) {
-                this.squares.push(new Square(...s.flat()));
+                this.squares.push(new CellCollection(...s.flat()));
             }
         }
 
@@ -28,7 +27,6 @@ export class Sudoku {
         }
 
         for (const cell of cells) {
-            cell.sudoku = this;
             cell.square = this.get([cell.parentPosition.x, cell.parentPosition.y]);
             cell.row = this.rows[cell.absolutePosition.y];
             cell.column = this.columns[cell.absolutePosition.x];
@@ -45,7 +43,6 @@ export class Sudoku {
                     new Cell(
                         x !== 'x' ? Number(x) : null,
                         { x: i % 9, y: Math.floor(i / 9) },
-                        i,
                     )
                 ),
         );
@@ -60,13 +57,7 @@ export class Sudoku {
     }
 
     public isValid(): boolean {
-        const toValidate = [
-            this.squares,
-            this.rows,
-            this.columns,
-        ];
-
-        for (const collections of toValidate) {
+        for (const collections of [this.squares, this.rows, this.columns]) {
             for (const collection of collections) {
                 if (!collection.isValid()) {
                     return false;
@@ -133,7 +124,7 @@ export class Sudoku {
         return this.cells.map((cell) => cell.toString().replaceAll('-', 'x')).join('');
     }
 
-    public get(item: number | [number, number]): Square {
+    public get(item: number | [number, number]): CellCollection {
         if (typeof item === 'number') {
             return this.squares[item];
         }

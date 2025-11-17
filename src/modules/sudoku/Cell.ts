@@ -1,28 +1,14 @@
 import type { CellCollection } from './CellCollection';
-import type { Square } from './Square';
-import type { Sudoku } from './Sudoku';
 import type { Position, Value } from './types';
 
 export class Cell {
-    public sudoku!: Sudoku;
-    public square!: Square;
+    public square!: CellCollection;
     public row!: CellCollection;
     public column!: CellCollection;
     #value: Value;
 
-    public constructor(
-        value: Value,
-        public readonly absolutePosition: Position,
-        public readonly index: number,
-    ) {
+    public constructor(value: Value, public readonly absolutePosition: Position) {
         this.#value = value;
-    }
-
-    public get relativePosition(): Position {
-        return {
-            x: this.absolutePosition.x % 3,
-            y: this.absolutePosition.y % 3,
-        };
     }
 
     public get parentPosition(): Position {
@@ -37,10 +23,6 @@ export class Cell {
     }
 
     public set value(value: Value) {
-        // if (value) {
-        //     console.log(this.sudoku.toDataString().replaceAll('x', ' '));
-        // }
-
         if (value && (value < 1 || value > 9)) {
             throw new Error(`Something has gone terribly wrong. ${value}`);
         }

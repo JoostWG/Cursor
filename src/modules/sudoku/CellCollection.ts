@@ -2,26 +2,18 @@ import type { Cell } from './Cell';
 import type { Value } from './types';
 
 export class CellCollection extends Array<Cell> {
-    public get sum(): number {
-        return this.reduce((cumulative, cell) => cumulative + (cell.value ?? 0), 0);
-    }
-
     public isValid(): boolean {
         if (this.length !== 9) {
             return false;
         }
 
         for (const { value } of this) {
-            if (value !== null && this.count(value) > 1) {
+            if (value !== null && this.filter((cell) => cell.value === value).length > 1) {
                 return false;
             }
         }
 
         return true;
-    }
-
-    public isFilled(): boolean {
-        return !this.has(null);
     }
 
     public has(value: Value): boolean {
@@ -36,9 +28,5 @@ export class CellCollection extends Array<Cell> {
 
     public emptyCells(): CellCollection {
         return new CellCollection(...this.filter((cell) => cell.value === null));
-    }
-
-    public count(value: Value): number {
-        return this.filter((cell) => cell.value === value).length;
     }
 }
