@@ -19,6 +19,7 @@ import {
     UserCommand,
     YahtzeeCommand,
 } from './commands';
+import { SudokuCommand } from './commands/sudoku';
 import type { CursorDatabase, DatabaseTables } from './database';
 import { ApplicationCommandCollection, Bot, type ApplicationCommandError } from './lib/core';
 
@@ -67,6 +68,7 @@ export class CursorBot extends Bot {
             new PingCommand(),
             new RoleCommand(),
             new RockPaperScissorsCommand(this.db),
+            new SudokuCommand(),
             new TagCommand(this.db),
             new TriviaCommand(),
             new UrbanDictionaryCommand(),
