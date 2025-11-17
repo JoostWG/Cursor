@@ -68,11 +68,11 @@ export class Cell {
 
     /**
      * Solve the cell.
-     * Returns the value if the solved.
-     * Returns None if the cell cannot be solved because of more than one possibility
-     * Returns False if the cell cannot be solved because of no possibilities (invalid sudoku)
+     * - Returns the value if the solved.
+     * - Returns `null` if the cell cannot be solved because of more than one possibility
+     * - Returns `false` if the cell cannot be solved because of no possibilities (invalid sudoku)
      */
-    public solve(): number | boolean | null {
+    public solve(): number | false | null {
         if (this.value !== null) {
             return null;
         }
@@ -80,7 +80,7 @@ export class Cell {
         const options = this.options().filter((x) => x > 0);
 
         if (!options.length) {
-            return null;
+            return false;
         }
 
         if (options.length === 1) {

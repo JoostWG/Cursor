@@ -7,14 +7,15 @@ export class CellCollection extends Array<Cell> {
     }
 
     public isValid(): boolean {
-        // TODO: Fix
-        // const values = this
-        //     .filter((cell) => cell.value !== null)
-        //     .map((cell) => cell.value);
-        //
-        // if (values.length !== [...new Set(values)].length) {
-        //     return false;
-        // }
+        if (this.length !== 9) {
+            return false;
+        }
+
+        for (const { value } of this) {
+            if (value !== null && this.count(value) > 1) {
+                return false;
+            }
+        }
 
         return true;
     }
@@ -35,5 +36,9 @@ export class CellCollection extends Array<Cell> {
 
     public emptyCells(): CellCollection {
         return new CellCollection(...this.filter((cell) => cell.value === null));
+    }
+
+    public count(value: Value): number {
+        return this.filter(cell => cell.value === value).length;
     }
 }
