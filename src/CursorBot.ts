@@ -99,6 +99,8 @@ export class CursorBot extends Bot {
     protected override async onApplicationCommandError(
         { interaction, cause }: ApplicationCommandError,
     ): Promise<void> {
+        console.error(cause);
+
         if (!(cause instanceof CommandError)) {
             return;
         }
