@@ -16,12 +16,12 @@ export abstract class TagSubcommand extends Subcommand {
         super();
     }
 
-    public override async invoke(context: ChatInputContext): Promise<void> {
-        if (!context.interaction.inCachedGuild()) {
+    public override async invoke(ctx: ChatInputContext): Promise<void> {
+        if (!ctx.interaction.inCachedGuild()) {
             return;
         }
 
-        await super.invoke(context);
+        await super.invoke(ctx);
     }
 
     protected override async autocomplete(

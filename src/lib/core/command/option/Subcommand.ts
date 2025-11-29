@@ -15,8 +15,8 @@ export abstract class Subcommand implements HasName, Invokable<ChatInputContext>
         return this.getData().name;
     }
 
-    public async invoke(context: ChatInputContext): Promise<void> {
-        await this.handle(context);
+    public async invoke(ctx: ChatInputContext): Promise<void> {
+        await this.handle(ctx);
     }
 
     public async invokeAutocomplete(
@@ -34,7 +34,7 @@ export abstract class Subcommand implements HasName, Invokable<ChatInputContext>
     }
 
     protected abstract definition(): SubcommandDefinition;
-    protected abstract handle(context: ChatInputContext): Promise<void>;
+    protected abstract handle(ctx: ChatInputContext): Promise<void>;
 
     protected autocomplete?(
         interaction: AutocompleteInteraction,

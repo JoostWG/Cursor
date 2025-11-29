@@ -47,15 +47,15 @@ export abstract class SlashCommand extends BaseApplicationCommand<
         return await this.autocomplete(interaction);
     }
 
-    public override async invoke(context: ChatInputContext): Promise<void> {
-        const invokable = this.getInvokable(context.interaction);
+    public override async invoke(ctx: ChatInputContext): Promise<void> {
+        const invokable = this.getInvokable(ctx.interaction);
 
         if (invokable) {
-            await invokable.invoke(context);
+            await invokable.invoke(ctx);
             return;
         }
 
-        await super.invoke(context);
+        await super.invoke(ctx);
     }
 
     protected subcommandGroups(): SubcommandGroupCollection {

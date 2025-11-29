@@ -11,13 +11,13 @@ export abstract class RoleSubCommand extends Subcommand {
         this.roleService = new RoleService();
     }
 
-    public override async invoke(context: ChatInputContext): Promise<void> {
-        if (!context.interaction.inCachedGuild()) {
+    public override async invoke(ctx: ChatInputContext): Promise<void> {
+        if (!ctx.interaction.inCachedGuild()) {
             return;
         }
 
-        await super.invoke(context);
+        await super.invoke(ctx);
     }
 
-    protected abstract override handle(context: ChatInputContext<'cached'>): Promise<void>;
+    protected abstract override handle(ctx: ChatInputContext<'cached'>): Promise<void>;
 }

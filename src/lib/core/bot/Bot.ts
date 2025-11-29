@@ -98,12 +98,12 @@ export abstract class Bot {
             throw new CommandHandlerNotFoundError(interaction);
         }
 
-        const context = this.getContext(interaction, command);
+        const ctx = this.getContext(interaction, command);
 
         await this.onApplicationCommand(interaction).catch(console.error);
 
         try {
-            await context.invoke();
+            await ctx.invoke();
         } catch (cause) {
             const error = new ApplicationCommandError(interaction, undefined, cause);
 

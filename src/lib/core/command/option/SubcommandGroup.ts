@@ -16,14 +16,14 @@ export abstract class SubcommandGroup implements HasName, Invokable<ChatInputCon
         return this.getData().name;
     }
 
-    public async invoke(context: ChatInputContext): Promise<void> {
-        const subcommand = this.subcommands().getFromInteraction(context.interaction);
+    public async invoke(ctx: ChatInputContext): Promise<void> {
+        const subcommand = this.subcommands().getFromInteraction(ctx.interaction);
 
         if (subcommand) {
-            await subcommand.invoke(context);
+            await subcommand.invoke(ctx);
         }
 
-        await this.handle(context);
+        await this.handle(ctx);
     }
 
     public async invokeAutocomplete(
@@ -52,7 +52,7 @@ export abstract class SubcommandGroup implements HasName, Invokable<ChatInputCon
     }
 
     protected abstract definition(): SubcommandGroupDefinition;
-    protected abstract handle(context: ChatInputContext): Promise<void>;
+    protected abstract handle(ctx: ChatInputContext): Promise<void>;
 
     protected autocomplete?(
         interaction: AutocompleteInteraction,

@@ -37,15 +37,15 @@ export abstract class BaseApplicationCommand<
         return this.isUserContextMenu() || this.isMessageContextMenu();
     }
 
-    public async invoke(context: TContext): Promise<void> {
+    public async invoke(ctx: TContext): Promise<void> {
         if (!this.handle) {
-            throw new CommandHandlerNotFoundError(context.interaction);
+            throw new CommandHandlerNotFoundError(ctx.interaction);
         }
 
-        await this.handle(context);
+        await this.handle(ctx);
     }
 
     public abstract getData(): TData & { type: ApplicationCommandType };
-    protected handle?(context: TContext): Promise<void>;
+    protected handle?(ctx: TContext): Promise<void>;
     protected abstract definition(): OmitType<TData>;
 }

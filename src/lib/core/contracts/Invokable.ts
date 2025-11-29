@@ -2,7 +2,7 @@ import type { ApplicationCommandOptionChoiceData, AutocompleteInteraction } from
 import type { BaseContext } from '../context';
 
 export interface Invokable<TContext extends BaseContext> {
-    invoke: (context: TContext) => Promise<void>;
+    invoke: (ctx: TContext) => Promise<void>;
     invokeAutocomplete: (
         interaction: AutocompleteInteraction,
     ) => Promise<ApplicationCommandOptionChoiceData[]>;
