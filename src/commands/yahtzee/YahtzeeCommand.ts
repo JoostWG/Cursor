@@ -1,8 +1,6 @@
-import type {
-    ChatInputCommandInteraction,
-    RESTPostAPIChatInputApplicationCommandsJSONBody,
-} from 'discord.js';
+import type { RESTPostAPIChatInputApplicationCommandsJSONBody } from 'discord.js';
 import { SlashCommand } from '../../lib/core';
+import type { ChatInputContext } from '../../lib/core/context';
 import type { OmitType } from '../../lib/utils';
 import { Dice, Die, ScoreCard } from '../../modules/yahtzee';
 import { Game } from './Game';
@@ -15,7 +13,7 @@ export class YahtzeeCommand extends SlashCommand {
         };
     }
 
-    protected override async handle(interaction: ChatInputCommandInteraction): Promise<void> {
+    protected override async handle({ interaction }: ChatInputContext): Promise<void> {
         const game = new Game(
             interaction,
             new ScoreCard(),

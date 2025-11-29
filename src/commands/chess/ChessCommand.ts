@@ -8,6 +8,7 @@ import {
     type Snowflake,
 } from 'discord.js';
 import { SlashCommand } from '../../lib/core';
+import type { ChatInputContext } from '../../lib/core/context';
 import type { OmitType } from '../../lib/utils';
 import { stringOption, subcommand } from '../../lib/utils/builders';
 import { CheckerboardTheme } from './CheckerboardTheme';
@@ -69,7 +70,7 @@ export class ChessCommand extends SlashCommand {
             .map((move) => ({ name: move, value: move }));
     }
 
-    protected override async handle(interaction: ChatInputCommandInteraction): Promise<void> {
+    protected override async handle({ interaction }: ChatInputContext): Promise<void> {
         switch (interaction.options.getSubcommand()) {
             case 'start':
                 await this.handleStart(interaction);

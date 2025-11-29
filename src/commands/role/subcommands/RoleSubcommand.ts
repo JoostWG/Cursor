@@ -1,5 +1,5 @@
-import type { ChatInputCommandInteraction } from 'discord.js';
 import { Subcommand } from '../../../lib/core';
+import type { ChatInputContext } from '../../../lib/core/context';
 import { RoleService } from '../RoleService';
 
 export abstract class RoleSubCommand extends Subcommand {
@@ -11,15 +11,13 @@ export abstract class RoleSubCommand extends Subcommand {
         this.roleService = new RoleService();
     }
 
-    public override async invoke(interaction: ChatInputCommandInteraction): Promise<void> {
-        if (!interaction.inCachedGuild()) {
+    public override async invoke(context: ChatInputContext): Promise<void> {
+        if (!context.interaction.inCachedGuild()) {
             return;
         }
 
-        await super.invoke(interaction);
+        await super.invoke(context);
     }
 
-    protected abstract override handle(
-        interaction: ChatInputCommandInteraction<'cached'>,
-    ): Promise<void>;
+    protected abstract override handle(context: ChatInputContext<'cached'>): Promise<void>;
 }

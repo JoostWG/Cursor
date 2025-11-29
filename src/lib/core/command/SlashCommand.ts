@@ -6,12 +6,13 @@ import {
     type RESTPostAPIChatInputApplicationCommandsJSONBody,
 } from 'discord.js';
 import { SubcommandCollection, SubcommandGroupCollection } from '../collections';
+import type { ChatInputContext } from '../context';
 import type { Invokable } from '../contracts';
 import { BaseApplicationCommand } from './BaseApplicationCommand';
 
 export abstract class SlashCommand extends BaseApplicationCommand<
     RESTPostAPIChatInputApplicationCommandsJSONBody,
-    ChatInputCommandInteraction
+    ChatInputContext
 > {
     public override getData(): RESTPostAPIChatInputApplicationCommandsJSONBody & {
         type: ApplicationCommandType;
@@ -46,15 +47,15 @@ export abstract class SlashCommand extends BaseApplicationCommand<
         return await this.autocomplete(interaction);
     }
 
-    public override async invoke(interaction: ChatInputCommandInteraction): Promise<void> {
-        const invokable = this.getInvokable(interaction);
+    public override async invoke(context: ChatInputContext): Promise<void> {
+        const invokable = this.getInvokable(context.interaction);
 
         if (invokable) {
-            await invokable.invoke(interaction);
+            await invokable.invoke(context);
             return;
         }
 
-        await super.invoke(interaction);
+        await super.invoke(context);
     }
 
     protected subcommandGroups(): SubcommandGroupCollection {
@@ -67,7 +68,7 @@ export abstract class SlashCommand extends BaseApplicationCommand<
 
     private getInvokable(
         interaction: ChatInputCommandInteraction | AutocompleteInteraction,
-    ): Invokable<ChatInputCommandInteraction> | null {
+    ): Invokable<ChatInputContext> | null {
         const subcommandGroup = this.subcommandGroups().getFromInteraction(interaction);
 
         if (subcommandGroup) {

@@ -1,10 +1,10 @@
 import {
     TimestampStyles,
     time,
-    type ChatInputCommandInteraction,
     type RESTPostAPIChatInputApplicationCommandsJSONBody,
 } from 'discord.js';
 import { SlashCommand } from '../lib/core';
+import type { ChatInputContext } from '../lib/core/context';
 import type { OmitType } from '../lib/utils';
 import { userOption } from '../lib/utils/builders';
 
@@ -22,7 +22,7 @@ export class UserCommand extends SlashCommand {
         };
     }
 
-    protected override async handle(interaction: ChatInputCommandInteraction): Promise<void> {
+    protected override async handle({ interaction }: ChatInputContext): Promise<void> {
         const user = interaction.options.getUser('user') ?? interaction.user;
 
         await interaction.reply({

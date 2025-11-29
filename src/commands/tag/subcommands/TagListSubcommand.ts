@@ -1,5 +1,5 @@
-import type { ChatInputCommandInteraction } from 'discord.js';
 import type { SubcommandDefinition } from '../../../lib/core';
+import type { ChatInputContext } from '../../../lib/core/context';
 import { TagSubcommand } from './TagSubcommand';
 
 export class TagListSubcommand extends TagSubcommand {
@@ -10,9 +10,7 @@ export class TagListSubcommand extends TagSubcommand {
         };
     }
 
-    protected override async handle(
-        interaction: ChatInputCommandInteraction<'cached'>,
-    ): Promise<void> {
+    protected override async handle({ interaction }: ChatInputContext<'cached'>): Promise<void> {
         const tags = await this.tags.list(interaction.guildId);
 
         await interaction.reply(

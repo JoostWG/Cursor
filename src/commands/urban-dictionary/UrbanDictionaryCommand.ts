@@ -1,10 +1,10 @@
 import type {
     ApplicationCommandOptionChoiceData,
     AutocompleteInteraction,
-    ChatInputCommandInteraction,
     RESTPostAPIChatInputApplicationCommandsJSONBody,
 } from 'discord.js';
 import { SlashCommand } from '../../lib/core';
+import type { ChatInputContext } from '../../lib/core/context';
 import type { OmitType } from '../../lib/utils';
 import { stringOption } from '../../lib/utils/builders';
 import type { Api } from '../../modules/urban-dictionary';
@@ -52,7 +52,7 @@ export class UrbanDictionaryCommand extends SlashCommand {
         return results.map((result) => ({ name: result, value: result }));
     }
 
-    protected override async handle(interaction: ChatInputCommandInteraction): Promise<void> {
+    protected override async handle({ interaction }: ChatInputContext): Promise<void> {
         await new UrbanDictionary(
             this.api,
             new InteractionHandler(interaction, new ComponentBuilder()),

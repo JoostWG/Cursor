@@ -5,6 +5,7 @@ import type {
     ChatInputCommandInteraction,
 } from 'discord.js';
 import { Subcommand } from '../../../lib/core';
+import type { ChatInputContext } from '../../../lib/core/context';
 import type { OmitType } from '../../../lib/utils';
 import { stringOption } from '../../../lib/utils/builders';
 import type { TagManager } from '../TagManager';
@@ -15,12 +16,12 @@ export abstract class TagSubcommand extends Subcommand {
         super();
     }
 
-    public override async invoke(interaction: ChatInputCommandInteraction): Promise<void> {
-        if (!interaction.inCachedGuild()) {
+    public override async invoke(context: ChatInputContext): Promise<void> {
+        if (!context.interaction.inCachedGuild()) {
             return;
         }
 
-        await super.invoke(interaction);
+        await super.invoke(context);
     }
 
     protected override async autocomplete(
@@ -72,7 +73,5 @@ export abstract class TagSubcommand extends Subcommand {
         });
     }
 
-    protected abstract override handle(
-        interaction: ChatInputCommandInteraction<'cached'>,
-    ): Promise<void>;
+    protected abstract override handle({ interaction }: ChatInputContext<'cached'>): Promise<void>;
 }

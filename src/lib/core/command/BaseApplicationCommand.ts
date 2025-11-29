@@ -1,9 +1,6 @@
-import {
-    ApplicationCommandType,
-    type CommandInteraction,
-    type RESTPostAPIApplicationCommandsJSONBody,
-} from 'discord.js';
+import { ApplicationCommandType, type RESTPostAPIApplicationCommandsJSONBody } from 'discord.js';
 import type { OmitType } from '../../utils';
+import type { BaseContext } from '../context';
 import type { HasName } from '../contracts';
 import { CommandHandlerNotFoundError } from '../errors';
 import type { MessageContextMenu } from './MessageContextMenu';
@@ -12,7 +9,7 @@ import type { UserContextMenu } from './UserContextMenu';
 
 export abstract class BaseApplicationCommand<
     TData extends RESTPostAPIApplicationCommandsJSONBody = RESTPostAPIApplicationCommandsJSONBody,
-    TInteraction extends CommandInteraction = CommandInteraction,
+    TContext extends BaseContext = BaseContext,
 > implements HasName {
     public devOnly?: boolean;
 
@@ -40,15 +37,15 @@ export abstract class BaseApplicationCommand<
         return this.isUserContextMenu() || this.isMessageContextMenu();
     }
 
-    public async invoke(interaction: TInteraction): Promise<void> {
+    public async invoke(context: TContext): Promise<void> {
         if (!this.handle) {
-            throw new CommandHandlerNotFoundError(interaction);
+            throw new CommandHandlerNotFoundError(context.interaction);
         }
 
-        await this.handle(interaction);
+        await this.handle(context);
     }
 
     public abstract getData(): TData & { type: ApplicationCommandType };
-    protected handle?(interaction: TInteraction): Promise<void>;
+    protected handle?(context: TContext): Promise<void>;
     protected abstract definition(): OmitType<TData>;
 }

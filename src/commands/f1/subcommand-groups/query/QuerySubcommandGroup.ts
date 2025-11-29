@@ -2,10 +2,10 @@ import {
     AttachmentBuilder,
     type ApplicationCommandOptionChoiceData,
     type AutocompleteInteraction,
-    type ChatInputCommandInteraction,
 } from 'discord.js';
 import type { Api, Pagination, SimpleApiOptions, StatusType } from 'jolpica-f1-api';
 import { SubcommandGroup, type SubcommandGroupDefinition } from '../../../../lib/core';
+import type { ChatInputContext } from '../../../../lib/core/context';
 import { AutocompleteHandler } from './AutocompleteHandler';
 import {
     OptionName,
@@ -32,7 +32,7 @@ export class QuerySubcommandGroup extends SubcommandGroup {
         return await this.autocompleteHandler.handle(interaction);
     }
 
-    protected override async handle(interaction: ChatInputCommandInteraction): Promise<void> {
+    protected override async handle({ interaction }: ChatInputContext): Promise<void> {
         const subcommand = interaction.options.getSubcommand(true) as SubcommandName;
 
         // I hate JavaScript

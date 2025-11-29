@@ -2,28 +2,28 @@ import type {
     APIApplicationCommandSubcommandGroupOption,
     ApplicationCommandOptionChoiceData,
     AutocompleteInteraction,
-    ChatInputCommandInteraction,
 } from 'discord.js';
 import type { OmitType } from '../../../utils';
 import { subcommandGroup } from '../../../utils/builders';
 import { SubcommandCollection } from '../../collections';
-import type { HasName } from '../../contracts';
+import type { ChatInputContext } from '../../context';
+import type { HasName, Invokable } from '../../contracts';
 
 export type SubcommandGroupDefinition = OmitType<APIApplicationCommandSubcommandGroupOption>;
 
-export abstract class SubcommandGroup implements HasName {
+export abstract class SubcommandGroup implements HasName, Invokable<ChatInputContext> {
     public get name(): string {
         return this.getData().name;
     }
 
-    public async invoke(interaction: ChatInputCommandInteraction): Promise<void> {
-        const subcommand = this.subcommands().getFromInteraction(interaction);
+    public async invoke(context: ChatInputContext): Promise<void> {
+        const subcommand = this.subcommands().getFromInteraction(context.interaction);
 
         if (subcommand) {
-            await subcommand.invoke(interaction);
+            await subcommand.invoke(context);
         }
 
-        await this.handle(interaction);
+        await this.handle(context);
     }
 
     public async invokeAutocomplete(
@@ -52,7 +52,7 @@ export abstract class SubcommandGroup implements HasName {
     }
 
     protected abstract definition(): SubcommandGroupDefinition;
-    protected abstract handle(interaction: ChatInputCommandInteraction): Promise<void>;
+    protected abstract handle(context: ChatInputContext): Promise<void>;
 
     protected autocomplete?(
         interaction: AutocompleteInteraction,

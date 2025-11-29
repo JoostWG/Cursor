@@ -1,6 +1,7 @@
-import { MessageFlags, bold, heading, type ChatInputCommandInteraction } from 'discord.js';
+import { MessageFlags, bold, heading } from 'discord.js';
 import type { CursorDatabase } from '../../../database';
 import { Subcommand, type SubcommandDefinition } from '../../../lib/core';
+import type { ChatInputContext } from '../../../lib/core/context';
 import { container, textDisplay } from '../../../lib/utils/builders';
 import type { Choice } from '../Choice';
 import { emojis } from '../emojis';
@@ -17,7 +18,7 @@ export class StatsSubcommand extends Subcommand {
         };
     }
 
-    protected override async handle(interaction: ChatInputCommandInteraction): Promise<void> {
+    protected override async handle({ interaction }: ChatInputContext): Promise<void> {
         const games = await this.db
             .selectFrom('rps_games')
             .where('user_id', '=', interaction.user.id)

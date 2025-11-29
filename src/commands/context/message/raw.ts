@@ -1,10 +1,10 @@
 import {
     AttachmentBuilder,
     MessageFlags,
-    type MessageContextMenuCommandInteraction,
     type RESTPostAPIContextMenuApplicationCommandsJSONBody,
 } from 'discord.js';
 import { MessageContextMenu } from '../../../lib/core';
+import type { MessageContextMenuContext } from '../../../lib/core/context';
 import type { OmitType } from '../../../lib/utils';
 
 export class RawCommand extends MessageContextMenu {
@@ -14,9 +14,7 @@ export class RawCommand extends MessageContextMenu {
         };
     }
 
-    protected override async handle(
-        interaction: MessageContextMenuCommandInteraction,
-    ): Promise<void> {
+    protected override async handle({ interaction }: MessageContextMenuContext): Promise<void> {
         await interaction.reply({
             flags: MessageFlags.Ephemeral,
             files: [
