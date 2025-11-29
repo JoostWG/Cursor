@@ -1,4 +1,5 @@
 import { range } from 'discord.js';
+import type { Stringable } from './types';
 
 export interface TableCell {
     align?: 'left' | 'right';
@@ -56,10 +57,7 @@ export class Table {
             .toArray();
     }
 
-    public static cell(
-        content: { toString: () => string },
-        options?: Omit<TableCell, 'content'>,
-    ): TableCell {
+    public static cell(content: Stringable, options?: Omit<TableCell, 'content'>): TableCell {
         return { content: content.toString(), ...(options ?? {}) };
     }
 
