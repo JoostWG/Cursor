@@ -18,6 +18,7 @@ export class RecentResultsSubcommand extends Subcommand {
 
     protected override async handle({ interaction }: ChatInputContext): Promise<void> {
         const { data: results } = await this.api.getResults({ season: 'current', round: 'last' });
+
         const table = new Table([
             Table.row([
                 Table.cell('P', { align: 'right' }),
