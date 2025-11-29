@@ -1,6 +1,7 @@
 {
     "compileOnSave": true,
     "compilerOptions": {
+        "sourceMap": true,
         "rootDir": "./src",
         "strict": true,
         "forceConsistentCasingInFileNames": true,
