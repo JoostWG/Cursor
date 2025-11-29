@@ -49,9 +49,7 @@ export class RecentResultsSubcommand extends Subcommand {
             ),
         ]);
 
-        await interaction.reply({
-            files: [attachment(table.render(), 'results.txt')],
-        });
+        await interaction.reply({ files: [attachment(table.render(), 'results.txt')] });
     }
 
     private formatPositionDiff(diff: number): string {
