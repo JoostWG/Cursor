@@ -1,5 +1,5 @@
 import SQLite from 'better-sqlite3';
-import { Client, Events, GatewayIntentBits, type CommandInteraction } from 'discord.js';
+import { Client, Events, GatewayIntentBits } from 'discord.js';
 import { Kysely, SqliteDialect } from 'kysely';
 import { CommandDataCache } from './CommandDataCache';
 import { CommandDeployHandler } from './CommandDeployHandler';
@@ -22,6 +22,7 @@ import {
 import { SudokuCommand } from './commands/sudoku';
 import type { CursorDatabase, DatabaseTables } from './database';
 import { ApplicationCommandCollection, Bot, type ApplicationCommandError } from './lib/core';
+import type { BaseContext } from './lib/core/context';
 
 export class CursorBot extends Bot {
     public readonly db: CursorDatabase;
@@ -79,7 +80,7 @@ export class CursorBot extends Bot {
         );
     }
 
-    protected override async onApplicationCommand(interaction: CommandInteraction): Promise<void> {
+    protected override async onApplicationCommand({ interaction }: BaseContext): Promise<void> {
         await this.db
             .insertInto('command_logs')
             .values({

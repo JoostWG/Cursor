@@ -64,7 +64,7 @@ export abstract class Bot {
     }
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    protected async onApplicationCommand(interaction: CommandInteraction): Promise<void> {
+    protected async onApplicationCommand(ctx: BaseContext): Promise<void> {
         //
     }
 
@@ -100,7 +100,7 @@ export abstract class Bot {
 
         const ctx = this.getContext(interaction, command);
 
-        await this.onApplicationCommand(interaction).catch(console.error);
+        this.onApplicationCommand(ctx).catch(console.error);
 
         try {
             await ctx.invoke();

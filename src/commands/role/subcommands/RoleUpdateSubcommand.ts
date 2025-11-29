@@ -9,12 +9,12 @@ import {
     roleMention,
     type ApplicationCommandOptionChoiceData,
     type AutocompleteInteraction,
-    type ChatInputCommandInteraction,
     type Role,
     type RoleEditOptions,
 } from 'discord.js';
 import { CommandError } from '../../../CommandError';
 import type { SubcommandDefinition } from '../../../lib/core';
+import type { ChatInputContext } from '../../../lib/core/context';
 import {
     booleanOption,
     container,
@@ -87,9 +87,7 @@ export class RoleUpdateSubcommand extends RoleSubCommand {
             );
     }
 
-    protected override async handle(
-        interaction: ChatInputCommandInteraction<'cached'>,
-    ): Promise<void> {
+    protected override async handle({ interaction }: ChatInputContext<'cached'>): Promise<void> {
         const role = interaction.options.getRole('role', true);
 
         this.roleService.validateRole(interaction, role, { allowManaged: true });

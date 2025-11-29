@@ -1,11 +1,12 @@
-import { ApplicationCommandType, type RESTPostAPIApplicationCommandsJSONBody } from 'discord.js';
+import type { ApplicationCommandType, RESTPostAPIApplicationCommandsJSONBody } from 'discord.js';
 import type { OmitType } from '../../utils';
 import type { BaseContext } from '../context';
 import type { HasName } from '../contracts';
 import { CommandHandlerNotFoundError } from '../errors';
-import type { MessageContextMenu } from './MessageContextMenu';
-import type { SlashCommand } from './SlashCommand';
-import type { UserContextMenu } from './UserContextMenu';
+import { ContextMenu } from './ContextMenu';
+import { MessageContextMenu } from './MessageContextMenu';
+import { SlashCommand } from './SlashCommand';
+import { UserContextMenu } from './UserContextMenu';
 
 export abstract class BaseApplicationCommand<
     TData extends RESTPostAPIApplicationCommandsJSONBody = RESTPostAPIApplicationCommandsJSONBody,
@@ -22,19 +23,19 @@ export abstract class BaseApplicationCommand<
     }
 
     public isSlashCommand(): this is SlashCommand {
-        return this.getType() === ApplicationCommandType.ChatInput;
+        return this instanceof SlashCommand;
     }
 
     public isUserContextMenu(): this is UserContextMenu {
-        return this.getType() === ApplicationCommandType.User;
+        return this instanceof UserContextMenu;
     }
 
     public isMessageContextMenu(): this is MessageContextMenu {
-        return this.getType() === ApplicationCommandType.Message;
+        return this instanceof MessageContextMenu;
     }
 
-    public isContextMenu(): this is UserContextMenu | MessageContextMenu {
-        return this.isUserContextMenu() || this.isMessageContextMenu();
+    public isContextMenu(): this is ContextMenu {
+        return this instanceof ContextMenu;
     }
 
     public async invoke(ctx: TContext): Promise<void> {
