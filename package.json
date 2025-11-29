@@ -1,5 +1,5 @@
 {
-    "version": "9.0.1",
+    "version": "9.1.0",
     "scripts": {
         "migrate": "node ./dist/migrate.js --up",
         "rollback": "node ./dist/migrate.js --down",
