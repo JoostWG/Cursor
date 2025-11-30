@@ -32,8 +32,6 @@ export class RecentResultsSubcommand extends Subcommand {
             ),
             this.col(
                 'Fastest',
-                // I don't know why it doesn't see that fastestLap can be null
-                // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
                 (result) => result.fastestLap !== null ? result.fastestLap.time.time : '',
                 true,
             ),
