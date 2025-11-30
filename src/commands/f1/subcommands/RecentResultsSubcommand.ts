@@ -63,17 +63,26 @@ export class RecentResultsSubcommand extends Subcommand {
     }
 
     protected override async handle({ interaction }: ChatInputContext): Promise<void> {
-        const season = interaction.options.getInteger('season');
+        const seasonInput = interaction.options.getInteger('season');
+        const roundInput = interaction.options.getInteger('round');
 
-        if (season !== null && !this.validateSeason(season)) {
+        if (seasonInput !== null && !this.validateSeason(seasonInput)) {
             throw new CommandError('Invalid season');
         }
 
+        const season = seasonInput?.toString() ?? 'current';
+        const round = roundInput ?? 'last';
+
+        const { data: races } = await this.api.getRaces({ season, round });
+
+        if (races.length === 0) {
+            throw new CommandError('Race not found');
+        }
+
+        const [race] = races;
+
         const results = await this.api
-            .getResults({
-                season: season?.toString() ?? 'current',
-                round: interaction.options.getInteger('round') ?? 'last',
-            }, { limit: 100 })
+            .getResults({ season, round }, { limit: 100 })
             .then(({ data }) => data)
             .catch(() => {
                 throw new CommandError('Race not found');
@@ -115,7 +124,9 @@ export class RecentResultsSubcommand extends Subcommand {
             ),
         ]);
 
-        await interaction.reply({ files: [attachment(table.render(), 'results.txt')] });
+        const text = `${race.season} ${race.name}\n${table.render()}`;
+
+        await interaction.reply({ files: [attachment(text, 'results.txt')] });
     }
 
     private col(
