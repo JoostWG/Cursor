@@ -113,6 +113,7 @@ export class JokeCommand extends SlashCommand {
                 await interaction.reply({
                     embeds: [this.buildErrorEmbed(error.response?.data as ErrorResponse)],
                 });
+
                 console.error('Axios error:', error.response?.data ?? error.message);
             } else {
                 throw new CommandError('Something went wrong...');

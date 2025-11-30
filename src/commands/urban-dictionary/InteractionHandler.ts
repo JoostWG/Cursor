@@ -76,6 +76,7 @@ export class InteractionHandler {
             })
             .on('end', async () => {
                 this.active = false;
+
                 await this.interaction.editReply({
                     components: this.componentBuilder.build({
                         active: this.active,

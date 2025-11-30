@@ -35,6 +35,7 @@ export class Game extends ComponentUI {
         super(interaction, {
             time: 60_000,
         });
+
         this.rollCount = 0;
         this.isCancelled = false;
     }

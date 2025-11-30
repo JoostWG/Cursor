@@ -127,6 +127,7 @@ export class Game {
             });
         } catch (error) {
             console.error(error);
+
             await interaction.editReply({
                 components: [textDisplay({ content: 'Failed to start game: database issue' })],
             });
@@ -206,6 +207,7 @@ export class Game {
                 switch (this.status) {
                     case 'invitePending':
                         builder.accent_color = Colors.Blue;
+
                         builder.components.push(
                             textDisplay({
                                 content: [
@@ -218,6 +220,7 @@ export class Game {
                                 ].join('\n'),
                             }),
                         );
+
                         break;
 
                     case 'inviteDenied':
@@ -249,12 +252,14 @@ export class Game {
                         ],
                     }),
                 );
+
                 break;
 
             case 'gameExpired':
             case 'gameActive':
             case 'gameFinished':
                 builder.accent_color = Colors.Gold;
+
                 builder.components = builder.components.concat([
                     textDisplay({
                         content: this.rounds

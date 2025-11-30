@@ -26,6 +26,7 @@ export class FileApiCache implements ApiCache {
 
     public async set(data: unknown, path: string, pagination?: Pagination): Promise<void> {
         await fs.mkdir(dirname(this.getPath(path, pagination)), { recursive: true });
+
         await fs.writeFile(
             this.getPath(path, pagination),
             JSON.stringify({ timestamp: Date.now(), data }),

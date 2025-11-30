@@ -36,6 +36,7 @@ export class Migrator {
             try {
                 await this.db.transaction().execute(async (transaction) => {
                     await migration.up(transaction.schema);
+
                     await transaction
                         .insertInto('migrations')
                         .values({
@@ -79,6 +80,7 @@ export class Migrator {
             try {
                 await this.db.transaction().execute(async (transaction) => {
                     await migrationInstance.down(transaction.schema);
+
                     await transaction
                         .deleteFrom('migrations')
                         .where('id', '=', migration.id)
