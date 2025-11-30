@@ -10,6 +10,16 @@ export function stringTitle(string: string): string {
         .join(' ');
 }
 
+export function searchSorted<T>(items: T[], search: string, toString: (item: T) => string): T[] {
+    const searchString = search.toLowerCase();
+    // eslint-disable-next-line func-style
+    const toStr = (entry: T): string => toString(entry).toLowerCase();
+
+    return items
+        .filter((entry) => toStr(entry).includes(searchString))
+        .toSorted((a, b) => toStr(a).indexOf(searchString) - toStr(b).indexOf(searchString));
+}
+
 export function attachment(
     content: string,
     name: string,
