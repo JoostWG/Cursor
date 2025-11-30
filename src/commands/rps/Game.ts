@@ -62,6 +62,7 @@ export class Game {
                 embeds: [],
                 components: [],
             });
+
             return;
         }
 
@@ -75,6 +76,7 @@ export class Game {
         } catch {
             this.status = 'inviteExpired';
             await interaction.editReply({ components: this.buildComponents() });
+
             return;
         }
 
@@ -87,6 +89,7 @@ export class Game {
             case 'deny':
                 this.status = 'inviteDenied';
                 await inviteInteraction.update({ components: this.buildComponents() });
+
                 return;
         }
 
@@ -127,6 +130,7 @@ export class Game {
             await interaction.editReply({
                 components: [textDisplay({ content: 'Failed to start game: database issue' })],
             });
+
             return;
         }
 
@@ -144,6 +148,7 @@ export class Game {
                         content: "This ain't your game!",
                         flags: MessageFlags.Ephemeral,
                     });
+
                     return;
                 }
 
@@ -154,6 +159,7 @@ export class Game {
                         content: 'You have already chosen this round. Waiting for opponent...',
                         flags: MessageFlags.Ephemeral,
                     });
+
                     return;
                 }
 

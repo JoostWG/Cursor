@@ -52,6 +52,7 @@ export abstract class SlashCommand extends BaseApplicationCommand<
 
         if (invokable) {
             await invokable.invoke(ctx);
+
             return;
         }
 

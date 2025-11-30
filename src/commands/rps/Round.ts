@@ -27,6 +27,7 @@ export class Round {
         }
 
         const keys = Object.keys(emojis);
+
         return (keys.indexOf(this.choices[0]) - keys.indexOf(this.choices[1])) % 3;
     }
 }

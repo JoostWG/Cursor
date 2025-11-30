@@ -27,6 +27,7 @@ export class AutocompleteHandler {
         interaction: AutocompleteInteraction,
     ): Promise<ApplicationCommandOptionChoiceData[]> {
         const { data: seasons } = await this.api.getSeasons({}, { limit: 100 });
+
         return this.filter(
             seasons,
             interaction.options.getFocused(),

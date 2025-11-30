@@ -95,6 +95,7 @@ export class RoleDeleteSubcommand extends RoleSubCommand {
         if (!response.resource?.message) {
             // TODO: Inform user
             console.error('role delete command missing response.resource.message');
+
             return;
         }
 
@@ -107,6 +108,7 @@ export class RoleDeleteSubcommand extends RoleSubCommand {
             });
         } catch {
             await interaction.deleteReply();
+
             return;
         }
 
@@ -115,6 +117,7 @@ export class RoleDeleteSubcommand extends RoleSubCommand {
                 await confirmInteraction.update({
                     components: [textDisplay({ content: 'Role delete cancelled.' })],
                 });
+
                 return;
 
             case 'confirm':

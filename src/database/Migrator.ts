@@ -21,6 +21,7 @@ export class Migrator {
         const existingMigrations = await this.db.selectFrom('migrations').selectAll().execute();
 
         const existingNames = existingMigrations.map((migration) => migration.name);
+
         const lastBatchNumber = existingMigrations.length
             ? Math.max(...existingMigrations.map((migration) => migration.batch))
             : 0;
@@ -69,6 +70,7 @@ export class Migrator {
 
             if (!migrationInstance) {
                 console.error(`No migration instance found for ${migration.name}`);
+
                 return;
             }
 

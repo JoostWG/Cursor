@@ -98,9 +98,11 @@ export class Sudoku {
         }
 
         const originalValues = this.cells.map((cell) => cell.value);
+
         const [cell] = this.emptyCells().toSorted((a, b) =>
             a.options().length - b.options().length
         );
+
         const options = cell.options();
 
         for (const option of options) {

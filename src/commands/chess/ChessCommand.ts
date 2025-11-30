@@ -107,6 +107,7 @@ export class ChessCommand extends SlashCommand {
                 flags: MessageFlags.Ephemeral,
                 content: 'No game found',
             });
+
             return;
         }
 

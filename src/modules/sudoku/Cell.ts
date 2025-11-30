@@ -81,6 +81,7 @@ export class Cell {
             for (const other of others) {
                 if (other.filter((o) => o === x).length === 1) {
                     this.value = x;
+
                     return this.value;
                 }
             }
