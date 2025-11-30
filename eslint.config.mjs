@@ -149,6 +149,7 @@ export default defineConfig(
             ],
             'stylistic/padding-line-between-statements': [
                 'warn',
+                // TODO: Add more
                 {
                     blankLine: 'always',
                     prev: '*',
