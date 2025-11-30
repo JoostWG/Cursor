@@ -6,6 +6,7 @@ export * from './joke';
 export * from './ping';
 export * from './role';
 export * from './rps';
+export * from './sudoku';
 export * from './tag';
 export * from './trivia';
 export * from './urban-dictionary';

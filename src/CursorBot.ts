@@ -13,13 +13,13 @@ import {
     RawCommand,
     RockPaperScissorsCommand,
     RoleCommand,
+    SudokuCommand,
     TagCommand,
     TriviaCommand,
     UrbanDictionaryCommand,
     UserCommand,
     YahtzeeCommand,
 } from './commands';
-import { SudokuCommand } from './commands/sudoku';
 import type { CursorDatabase, DatabaseTables } from './database';
 import { ApplicationCommandCollection, Bot, type ApplicationCommandError } from './lib/core';
 import type { BaseContext } from './lib/core/context';
