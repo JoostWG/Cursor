@@ -20,6 +20,12 @@ export interface TableSplit {
     split: true;
 }
 
+export interface Column<T> {
+    name: string;
+    value: (row: T) => Stringable;
+    options?: Omit<TableCell, 'content'>;
+}
+
 export type TableRow = TableCells | TableDivider | TableSplit;
 
 /* eslint-disable @typescript-eslint/naming-convention */
@@ -55,6 +61,16 @@ export class Table {
                 Math.max(...dataRows.map((row) => row.cells[columnIndex].content.length))
             )
             .toArray();
+    }
+
+    public static build<T>(rows: T[], columns: Column<T>[]): Table {
+        return new this([
+            this.row(columns.map((column) => this.cell(column.name, column.options))),
+            this.divider(),
+            ...rows.map((row) =>
+                this.row(columns.map((column) => this.cell(column.value(row), column.options)))
+            ),
+        ]);
     }
 
     public static cell(content: Stringable, options?: Omit<TableCell, 'content'>): TableCell {
