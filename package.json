@@ -4,7 +4,7 @@
         "bot": "ts-node ./src/index.ts",
         "migrate": "node ./dist/migrate.js --up",
         "rollback": "node ./dist/migrate.js --down",
-        "watch": "tsc --watch",
+        "watch": "tsc --watch --noEmit",
         "build": "tsc --build",
         "lint": "eslint . --fix",
         "format": "dprint fmt",
