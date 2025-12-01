@@ -15,6 +15,7 @@ import {
 import { CommandError } from '../../../CommandError';
 import type { SubcommandDefinition } from '../../../lib/core';
 import type { ChatInputContext } from '../../../lib/core/context';
+import { autocompleteResults } from '../../../lib/utils';
 import {
     booleanOption,
     container,
@@ -69,22 +70,20 @@ export class RoleUpdateSubcommand extends RoleSubCommand {
             return [];
         }
 
-        const q = interaction.options.getFocused().toLowerCase();
-
-        return Object.entries(Colors)
-            .map(([name, value]) => ({
-                // Convert PascalCase to normal text
-                name: name.replaceAll(
-                    /([a-z])([A-Z])/gu,
-                    (_, a: string, b: string) => `${a} ${b.toLowerCase()}`,
-                ),
-                value: `#${value.toString(16)}`,
-            }))
-            .filter(({ name }) => name.toLowerCase().includes(q))
-            .toSorted(
-                ({ name: aName }, { name: bName }) =>
-                    aName.toLowerCase().indexOf(q) - bName.toLowerCase().indexOf(q),
-            );
+        return autocompleteResults(
+            interaction.options.getFocused(),
+            Object.entries(Colors)
+                .map(([name, value]) => ({
+                    // Convert PascalCase to normal text
+                    name: name.replaceAll(
+                        /([a-z])([A-Z])/gu,
+                        (_, a: string, b: string) => `${a} ${b.toLowerCase()}`,
+                    ),
+                    value: `#${value.toString(16)}`,
+                })),
+            (result) => result.name,
+            (result) => result,
+        );
     }
 
     protected override async handle({ interaction }: ChatInputContext<'cached'>): Promise<void> {

@@ -1,15 +1,48 @@
-import { AttachmentBuilder } from 'discord.js';
+import { AttachmentBuilder, type ApplicationCommandOptionChoiceData } from 'discord.js';
 
 export type * from './types';
 
-export function searchSorted<T>(items: T[], search: string, toString: (item: T) => string): T[] {
+export function autocompleteResults<
+    T,
+>(
+    search: string,
+    items: T[],
+    toString: (item: T) => string,
+): ApplicationCommandOptionChoiceData<string>[];
+
+// eslint-disable-next-line @typescript-eslint/max-params
+export function autocompleteResults<
+    T,
+    R extends ApplicationCommandOptionChoiceData<string>,
+>(
+    search: string,
+    items: T[],
+    toString: (item: T) => string,
+    toAutocompleteResult?: (item: T) => R,
+): R[];
+
+// eslint-disable-next-line @typescript-eslint/max-params
+export function autocompleteResults<
+    T,
+    R extends ApplicationCommandOptionChoiceData<string>,
+>(
+    search: string,
+    items: T[],
+    toString: (item: T) => string,
+    toAutocompleteResult?: (item: T) => R,
+): R[] | ApplicationCommandOptionChoiceData<string>[] {
     const searchString = search.toLowerCase();
     // eslint-disable-next-line func-style
-    const toStr = (entry: T): string => toString(entry).toLowerCase();
+    const toStr = (item: T): string => toString(item).toLowerCase();
 
     return items
-        .filter((entry) => toStr(entry).includes(searchString))
-        .toSorted((a, b) => toStr(a).indexOf(searchString) - toStr(b).indexOf(searchString));
+        .filter((item) => toStr(item).includes(searchString))
+        .toSorted((a, b) => toStr(a).indexOf(searchString) - toStr(b).indexOf(searchString))
+        .map(
+            toAutocompleteResult
+                ? (item) => toAutocompleteResult(item)
+                : (item) => ({ name: toStr(item), value: toStr(item) }),
+        );
 }
 
 export function attachment(

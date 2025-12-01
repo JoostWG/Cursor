@@ -4,7 +4,7 @@ import _ from 'lodash';
 import { CommandError } from '../../../CommandError';
 import { Subcommand, type SubcommandDefinition } from '../../../lib/core';
 import type { ChatInputContext } from '../../../lib/core/context';
-import { attachment, searchSorted, type Stringable } from '../../../lib/utils';
+import { attachment, autocompleteResults, type Stringable } from '../../../lib/utils';
 import { integerOption } from '../../../lib/utils/builders';
 import { Table, type Column } from '../../../lib/utils/table';
 
@@ -38,11 +38,12 @@ export class RecentResultsSubcommand extends Subcommand {
         const focused = interaction.options.getFocused(true);
 
         if (focused.name === 'season') {
-            return searchSorted(
-                this.getValidSeasons(),
+            return autocompleteResults(
                 focused.value,
+                this.getValidSeasons(),
                 (year) => year.toString(),
-            ).map((year) => ({ name: year.toString(), value: year.toString() }));
+                (year) => ({ name: year.toString(), value: year.toString() }),
+            );
         }
 
         const season = interaction.options.getInteger('season');
@@ -50,11 +51,12 @@ export class RecentResultsSubcommand extends Subcommand {
         if (focused.name === 'round' && this.validateSeason(season)) {
             return await this.api.getRaces({ season: season.toString() })
                 .then(({ data: races }) =>
-                    searchSorted(
-                        races,
+                    autocompleteResults(
                         focused.value,
+                        races,
                         (race) => race.name,
-                    ).map((race) => ({ name: race.name, value: race.round.toString() }))
+                        (race) => ({ name: race.name, value: race.round.toString() }),
+                    )
                 )
                 .catch(() => []);
         }
