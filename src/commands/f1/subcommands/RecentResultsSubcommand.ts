@@ -154,6 +154,6 @@ export class RecentResultsSubcommand extends Subcommand {
     private validateSeason(season: unknown): season is number {
         return typeof season === 'number'
             && season >= 1950
-            && season <= (new Date().getFullYear() + 1);
+            && season <= (new Date().getFullYear());
     }
 }
