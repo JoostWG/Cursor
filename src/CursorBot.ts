@@ -100,16 +100,12 @@ export class CursorBot extends Bot {
     protected override async onApplicationCommandError(
         { interaction, cause }: ApplicationCommandError,
     ): Promise<void> {
-        if (!(cause instanceof CommandError)) {
+        if (cause instanceof CommandError && interaction.isRepliable()) {
+            await interaction.reply(cause.message);
+
             return;
         }
 
         console.error(cause instanceof Error ? cause.stack : cause);
-
-        if (!interaction.isRepliable()) {
-            return;
-        }
-
-        await interaction.reply(cause.message);
     }
 }
