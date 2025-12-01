@@ -2,14 +2,6 @@ import { AttachmentBuilder } from 'discord.js';
 
 export type * from './types';
 
-export function stringTitle(string: string): string {
-    return string
-        .toLowerCase()
-        .split(' ')
-        .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-        .join(' ');
-}
-
 export function searchSorted<T>(items: T[], search: string, toString: (item: T) => string): T[] {
     const searchString = search.toLowerCase();
     // eslint-disable-next-line func-style
