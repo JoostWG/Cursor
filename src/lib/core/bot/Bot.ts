@@ -18,6 +18,7 @@ import { ApplicationCommandError, CommandHandlerNotFoundError } from '../errors'
 export abstract class Bot {
     public readonly client: Client;
     private readonly token: string;
+    readonly #applicationCommands: ApplicationCommandCollection;
 
     public constructor({ client, token }: { client: Client; token: string }) {
         this.client = client;
@@ -36,6 +37,8 @@ export abstract class Bot {
         });
 
         this.client.on(Events.Error, this.onError.bind(this));
+
+        this.#applicationCommands = this.applicationCommands();
     }
 
     public async start(): Promise<void> {
@@ -92,7 +95,7 @@ export abstract class Bot {
     }
 
     private async handleCommandInteraction(interaction: CommandInteraction): Promise<void> {
-        const command = this.applicationCommands().get(interaction.commandName);
+        const command = this.#applicationCommands.get(interaction.commandName);
 
         if (!command) {
             throw new CommandHandlerNotFoundError(interaction);
@@ -114,7 +117,7 @@ export abstract class Bot {
     private async handleAutocompleteInteraction(
         interaction: AutocompleteInteraction,
     ): Promise<void> {
-        const command = this.applicationCommands().get(interaction.commandName);
+        const command = this.#applicationCommands.get(interaction.commandName);
 
         if (!command?.isSlashCommand()) {
             throw new CommandHandlerNotFoundError(interaction);

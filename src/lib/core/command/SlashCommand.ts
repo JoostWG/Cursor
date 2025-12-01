@@ -14,6 +14,9 @@ export abstract class SlashCommand extends BaseApplicationCommand<
     RESTPostAPIChatInputApplicationCommandsJSONBody,
     ChatInputContext
 > {
+    #subcommands?: SubcommandCollection;
+    #subcommandGroups?: SubcommandGroupCollection;
+
     public override getData(): RESTPostAPIChatInputApplicationCommandsJSONBody & {
         type: ApplicationCommandType;
     } {
@@ -23,8 +26,8 @@ export abstract class SlashCommand extends BaseApplicationCommand<
         };
 
         data.options = [
-            ...this.subcommandGroups().map((subcommandGroup) => subcommandGroup.getData()),
-            ...this.subcommands().map((subcommand) => subcommand.getData()),
+            ...this.getSubcommandGroups().map((subcommandGroup) => subcommandGroup.getData()),
+            ...this.getSubcommands().map((subcommand) => subcommand.getData()),
             ...data.options ?? [],
         ];
 
@@ -67,16 +70,32 @@ export abstract class SlashCommand extends BaseApplicationCommand<
         return new SubcommandCollection();
     }
 
+    private getSubcommands(): SubcommandCollection {
+        if (!this.#subcommands) {
+            this.#subcommands = this.subcommands();
+        }
+
+        return this.#subcommands;
+    }
+
+    private getSubcommandGroups(): SubcommandGroupCollection {
+        if (!this.#subcommandGroups) {
+            this.#subcommandGroups = this.subcommandGroups();
+        }
+
+        return this.#subcommandGroups;
+    }
+
     private getInvokable(
         interaction: ChatInputCommandInteraction | AutocompleteInteraction,
     ): Invokable<ChatInputContext> | null {
-        const subcommandGroup = this.subcommandGroups().getFromInteraction(interaction);
+        const subcommandGroup = this.getSubcommandGroups().getFromInteraction(interaction);
 
         if (subcommandGroup) {
             return subcommandGroup;
         }
 
-        const subcommand = this.subcommands().getFromInteraction(interaction);
+        const subcommand = this.getSubcommands().getFromInteraction(interaction);
 
         if (subcommand) {
             return subcommand;
