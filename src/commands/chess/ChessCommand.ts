@@ -1,22 +1,8 @@
-import { Chess } from 'chess.js';
-import {
-    MessageFlags,
-    type ApplicationCommandOptionChoiceData,
-    type AutocompleteInteraction,
-    type ChatInputCommandInteraction,
-    type RESTPostAPIChatInputApplicationCommandsJSONBody,
-    type Snowflake,
-} from 'discord.js';
-import { SlashCommand } from '../../lib/core';
-import type { ChatInputContext } from '../../lib/core/context';
+import type { RESTPostAPIChatInputApplicationCommandsJSONBody, Snowflake } from 'discord.js';
+import { SlashCommand, SubcommandCollection } from '../../lib/core';
 import type { OmitType } from '../../lib/utils';
-import { stringOption, subcommand } from '../../lib/utils/builders';
-import { CheckerboardTheme } from './CheckerboardTheme';
-import { DefaultChessBoard } from './DefaultChessBoard';
-import { DefaultChessPieceFactory } from './DefaultChessPieceFactory';
-import { DefaultMessageFactory } from './DefaultMessageFactory';
-import { Game } from './Game';
-import { InteractionHandler } from './InteractionHandler';
+import type { Game } from './Game';
+import { MoveSubcommand, StartSubcommand } from './subcommands';
 
 export class ChessCommand extends SlashCommand {
     private readonly games: Map<Snowflake, Game>;
@@ -32,100 +18,13 @@ export class ChessCommand extends SlashCommand {
         return {
             name: 'chess',
             description: 'Play some chess!',
-            options: [
-                subcommand({
-                    name: 'start',
-                    description: 'Start a game',
-                }),
-                subcommand({
-                    name: 'move',
-                    description: 'Play a move',
-                    options: [
-                        stringOption({
-                            name: 'move',
-                            description: 'Move notation',
-                            required: true,
-                            autocomplete: true,
-                        }),
-                    ],
-                }),
-            ],
         };
     }
 
-    protected override async autocomplete(
-        interaction: AutocompleteInteraction,
-    ): Promise<ApplicationCommandOptionChoiceData[]> {
-        const game = this.games.get(interaction.user.id);
-
-        if (!game) {
-            return [];
-        }
-
-        const q = interaction.options.getFocused();
-
-        return game
-            .getValidMoves()
-            .filter((move) => move.includes(q))
-            .map((move) => ({ name: move, value: move }));
-    }
-
-    protected override async handle({ interaction }: ChatInputContext): Promise<void> {
-        switch (interaction.options.getSubcommand()) {
-            case 'start':
-                await this.handleStart(interaction);
-                break;
-
-            case 'move':
-                await this.handleMove(interaction);
-                break;
-        }
-    }
-
-    private async handleStart(interaction: ChatInputCommandInteraction): Promise<void> {
-        const game = new Game(
-            new Chess(),
-            new InteractionHandler(interaction, new DefaultMessageFactory()),
-            new DefaultChessBoard(
-                512,
-                new CheckerboardTheme({ light: '#ffcf9f', dark: '#d28c45', border: '#241302' }),
-                new DefaultChessPieceFactory('../../assets/chess'),
-            ),
+    protected override subcommands(): SubcommandCollection {
+        return new SubcommandCollection(
+            new StartSubcommand(this.games),
+            new MoveSubcommand(this.games),
         );
-
-        this.games.set(interaction.user.id, game);
-
-        await game.start();
-    }
-
-    private async handleMove(interaction: ChatInputCommandInteraction): Promise<void> {
-        const game = this.games.get(interaction.user.id);
-        const move = interaction.options.getString('move', true);
-
-        if (!game) {
-            await interaction.reply({
-                flags: MessageFlags.Ephemeral,
-                content: 'No game found',
-            });
-
-            return;
-        }
-
-        if (game.getValidMoves().includes(move)) {
-            await Promise.all([
-                game.move(move),
-                interaction.reply({
-                    flags: MessageFlags.Ephemeral,
-                    content: 'Moving...',
-                }),
-            ]);
-        } else {
-            await interaction.reply({
-                flags: MessageFlags.Ephemeral,
-                content: 'Invalid move',
-            });
-        }
-
-        await interaction.deleteReply();
     }
 }

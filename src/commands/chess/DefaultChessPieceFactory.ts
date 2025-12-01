@@ -23,7 +23,7 @@ export class DefaultChessPieceFactory implements ChessPieceFactory {
         return await loadImage(
             path.join(
                 __dirname,
-                `${this.dirPath}/${this.colorMap[piece.color]}${this.pieceMap[piece.type]}.png`,
+                `../${this.dirPath}/${this.colorMap[piece.color]}${this.pieceMap[piece.type]}.png`,
             ),
         );
     }

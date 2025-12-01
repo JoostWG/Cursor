@@ -1,4 +1,8 @@
 import { discordToken } from '../config.json';
 import { CursorBot } from './CursorBot';
 
-void new CursorBot(discordToken).start();
+(async () => {
+    const bot = new CursorBot(discordToken);
+
+    await bot.start();
+})();
