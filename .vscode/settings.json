@@ -38,6 +38,7 @@
         "LATAM",
         "pitstops",
         "Repliable",
+        "Stringable",
         "twopart"
     ]
 }

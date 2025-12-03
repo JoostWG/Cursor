@@ -1,11 +1,7 @@
-import {
-    AttachmentBuilder,
-    MessageFlags,
-    type MessageContextMenuCommandInteraction,
-    type RESTPostAPIContextMenuApplicationCommandsJSONBody,
-} from 'discord.js';
+import { MessageFlags, type RESTPostAPIContextMenuApplicationCommandsJSONBody } from 'discord.js';
 import { MessageContextMenu } from '../../../lib/core';
-import type { OmitType } from '../../../lib/utils';
+import type { MessageContextMenuContext } from '../../../lib/core/context';
+import { jsonAttachment, type OmitType } from '../../../lib/utils';
 
 export class RawCommand extends MessageContextMenu {
     protected override definition(): OmitType<RESTPostAPIContextMenuApplicationCommandsJSONBody> {
@@ -14,20 +10,10 @@ export class RawCommand extends MessageContextMenu {
         };
     }
 
-    protected override async handle(
-        interaction: MessageContextMenuCommandInteraction,
-    ): Promise<void> {
+    protected override async handle({ interaction }: MessageContextMenuContext): Promise<void> {
         await interaction.reply({
             flags: MessageFlags.Ephemeral,
-            files: [
-                new AttachmentBuilder(
-                    Buffer.from(
-                        JSON.stringify(interaction.targetMessage.toJSON(), null, '  '),
-                        'utf-8',
-                    ),
-                    { name: 'message.json' },
-                ),
-            ],
+            files: [jsonAttachment(interaction.targetMessage.toJSON(), 'message.json')],
         });
     }
 }

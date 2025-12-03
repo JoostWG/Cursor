@@ -1,11 +1,8 @@
-import type {
-    ApplicationCommandOptionChoiceData,
-    AutocompleteInteraction,
-    CommandInteraction,
-} from 'discord.js';
+import type { ApplicationCommandOptionChoiceData, AutocompleteInteraction } from 'discord.js';
+import type { BaseContext } from '../context';
 
-export interface Invokable<TInteraction extends CommandInteraction> {
-    invoke: (interaction: TInteraction) => Promise<void>;
+export interface Invokable<TContext extends BaseContext> {
+    invoke: (ctx: TContext) => Promise<void>;
     invokeAutocomplete: (
         interaction: AutocompleteInteraction,
     ) => Promise<ApplicationCommandOptionChoiceData[]>;

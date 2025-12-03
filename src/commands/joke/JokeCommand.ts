@@ -6,11 +6,11 @@ import {
     bold,
     spoiler,
     type APIEmbed,
-    type ChatInputCommandInteraction,
     type RESTPostAPIChatInputApplicationCommandsJSONBody,
 } from 'discord.js';
 import { CommandError } from '../../CommandError';
 import { SlashCommand } from '../../lib/core';
+import type { ChatInputContext } from '../../lib/core/context';
 import type { OmitType } from '../../lib/utils';
 import { booleanOption, stringOption } from '../../lib/utils/builders';
 import { JokeCategory } from './JokeCategory';
@@ -53,7 +53,7 @@ export class JokeCommand extends SlashCommand {
         };
     }
 
-    protected override async handle(interaction: ChatInputCommandInteraction): Promise<void> {
+    protected override async handle({ interaction }: ChatInputContext): Promise<void> {
         const category = interaction.options.getString('category') ?? 'Any';
         const safe = interaction.options.getBoolean('safe') ?? true;
 
@@ -113,6 +113,7 @@ export class JokeCommand extends SlashCommand {
                 await interaction.reply({
                     embeds: [this.buildErrorEmbed(error.response?.data as ErrorResponse)],
                 });
+
                 console.error('Axios error:', error.response?.data ?? error.message);
             } else {
                 throw new CommandError('Something went wrong...');

@@ -26,6 +26,7 @@ export class InteractionHandler {
                 content: 'No definitions found',
                 flags: MessageFlags.Ephemeral,
             });
+
             return;
         }
 
@@ -40,6 +41,7 @@ export class InteractionHandler {
 
         if (!response.resource?.message) {
             console.error('Error...');
+
             return;
         }
 
@@ -61,6 +63,7 @@ export class InteractionHandler {
                         flags: [MessageFlags.Ephemeral],
                         content: 'Something went wrong...',
                     });
+
                     return;
                 }
 
@@ -73,6 +76,7 @@ export class InteractionHandler {
             })
             .on('end', async () => {
                 this.active = false;
+
                 await this.interaction.editReply({
                     components: this.componentBuilder.build({
                         active: this.active,

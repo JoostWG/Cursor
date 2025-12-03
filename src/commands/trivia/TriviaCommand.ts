@@ -1,9 +1,6 @@
-import type {
-    ChatInputCommandInteraction,
-    RESTPostAPIChatInputApplicationCommandsJSONBody,
-    User,
-} from 'discord.js';
+import type { RESTPostAPIChatInputApplicationCommandsJSONBody, User } from 'discord.js';
 import { SlashCommand } from '../../lib/core';
+import type { ChatInputContext } from '../../lib/core/context';
 import type { OmitType } from '../../lib/utils';
 import { stringOption } from '../../lib/utils/builders';
 import {
@@ -49,7 +46,7 @@ export class TriviaCommand extends SlashCommand {
         };
     }
 
-    protected override async handle(interaction: ChatInputCommandInteraction): Promise<void> {
+    protected override async handle({ interaction }: ChatInputContext): Promise<void> {
         const difficulty = interaction.options.getString('difficulty') as QuestionDifficulty | null;
         const category = interaction.options.getString('category');
 

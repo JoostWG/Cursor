@@ -1,7 +1,7 @@
-import type { ChatInputCommandInteraction } from 'discord.js';
 import { CommandError } from '../../../CommandError';
 import type { CursorDatabase } from '../../../database';
 import { Subcommand, type SubcommandDefinition } from '../../../lib/core';
+import type { ChatInputContext } from '../../../lib/core/context';
 import { userOption } from '../../../lib/utils/builders';
 import { Game } from '../Game';
 
@@ -23,7 +23,7 @@ export class PlaySubcommand extends Subcommand {
         };
     }
 
-    protected override async handle(interaction: ChatInputCommandInteraction): Promise<void> {
+    protected override async handle({ interaction }: ChatInputContext): Promise<void> {
         const opponent = interaction.options.getUser('opponent', true);
 
         if (opponent.bot) {

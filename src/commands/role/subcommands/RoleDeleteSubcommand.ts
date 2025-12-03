@@ -9,9 +9,9 @@ import {
     roleMention,
     subtext,
     time,
-    type ChatInputCommandInteraction,
 } from 'discord.js';
 import type { SubcommandDefinition } from '../../../lib/core';
+import type { ChatInputContext } from '../../../lib/core/context';
 import {
     actionRow,
     button,
@@ -41,9 +41,7 @@ export class RoleDeleteSubcommand extends RoleSubCommand {
         };
     }
 
-    protected override async handle(
-        interaction: ChatInputCommandInteraction<'cached'>,
-    ): Promise<void> {
+    protected override async handle({ interaction }: ChatInputContext<'cached'>): Promise<void> {
         const timeout = 10; // Show confirmation modal for 10 seconds
         const role = interaction.options.getRole('role', true);
         const reason = interaction.options.getString('reason') ?? undefined;
@@ -97,6 +95,7 @@ export class RoleDeleteSubcommand extends RoleSubCommand {
         if (!response.resource?.message) {
             // TODO: Inform user
             console.error('role delete command missing response.resource.message');
+
             return;
         }
 
@@ -109,6 +108,7 @@ export class RoleDeleteSubcommand extends RoleSubCommand {
             });
         } catch {
             await interaction.deleteReply();
+
             return;
         }
 
@@ -117,6 +117,7 @@ export class RoleDeleteSubcommand extends RoleSubCommand {
                 await confirmInteraction.update({
                     components: [textDisplay({ content: 'Role delete cancelled.' })],
                 });
+
                 return;
 
             case 'confirm':

@@ -1,11 +1,8 @@
-import {
-    AttachmentBuilder,
-    type ApplicationCommandOptionChoiceData,
-    type AutocompleteInteraction,
-    type ChatInputCommandInteraction,
-} from 'discord.js';
+import type { ApplicationCommandOptionChoiceData, AutocompleteInteraction } from 'discord.js';
 import type { Api, Pagination, SimpleApiOptions, StatusType } from 'jolpica-f1-api';
 import { SubcommandGroup, type SubcommandGroupDefinition } from '../../../../lib/core';
+import type { ChatInputContext } from '../../../../lib/core/context';
+import { jsonAttachment } from '../../../../lib/utils';
 import { AutocompleteHandler } from './AutocompleteHandler';
 import {
     OptionName,
@@ -32,7 +29,7 @@ export class QuerySubcommandGroup extends SubcommandGroup {
         return await this.autocompleteHandler.handle(interaction);
     }
 
-    protected override async handle(interaction: ChatInputCommandInteraction): Promise<void> {
+    protected override async handle({ interaction }: ChatInputContext): Promise<void> {
         const subcommand = interaction.options.getSubcommand(true) as SubcommandName;
 
         // I hate JavaScript
@@ -81,12 +78,7 @@ export class QuerySubcommandGroup extends SubcommandGroup {
         const response = await callback(options, pagination);
 
         await interaction.reply({
-            files: [
-                new AttachmentBuilder(
-                    Buffer.from(JSON.stringify(response, null, '  '), 'utf-8'),
-                    { name: `${subcommand}.json` },
-                ),
-            ],
+            files: [jsonAttachment(response, `${subcommand}.json`)],
         });
     }
 }

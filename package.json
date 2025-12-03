@@ -1,10 +1,11 @@
 {
     "version": "9.1.0",
     "scripts": {
+        "bot": "ts-node ./src/index.ts",
         "migrate": "node ./dist/migrate.js --up",
         "rollback": "node ./dist/migrate.js --down",
-        "watch": "tsc --watch --sourceMap",
-        "build": "tsc --build --sourceMap",
+        "watch": "tsc --watch --noEmit",
+        "build": "tsc --build",
         "lint": "eslint . --fix",
         "format": "dprint fmt",
         "type-check": "tsc --noEmit",
@@ -18,12 +19,14 @@
         "discord.js": "^14.25.1",
         "fast-equals": "^5.3.3",
         "jolpica-f1-api": "github:JoostWG/jolpica-f1-api",
-        "kysely": "^0.28.8"
+        "kysely": "^0.28.8",
+        "lodash": "^4.17.21"
     },
     "devDependencies": {
         "@eslint/js": "^9.35.0",
         "@stylistic/eslint-plugin": "^5.6.1",
         "@types/better-sqlite3": "^7.6.13",
+        "@types/lodash": "^4.17.21",
         "@typescript-eslint/eslint-plugin": "^8.44.0",
         "@typescript-eslint/parser": "^8.44.0",
         "concurrently": "^9.2.1",

@@ -1,5 +1,5 @@
 import SQLite from 'better-sqlite3';
-import { Client, Events, GatewayIntentBits, type CommandInteraction } from 'discord.js';
+import { Client, Events, GatewayIntentBits } from 'discord.js';
 import { Kysely, SqliteDialect } from 'kysely';
 import { CommandDataCache } from './CommandDataCache';
 import { CommandDeployHandler } from './CommandDeployHandler';
@@ -13,15 +13,16 @@ import {
     RawCommand,
     RockPaperScissorsCommand,
     RoleCommand,
+    SudokuCommand,
     TagCommand,
     TriviaCommand,
     UrbanDictionaryCommand,
     UserCommand,
     YahtzeeCommand,
 } from './commands';
-import { SudokuCommand } from './commands/sudoku';
 import type { CursorDatabase, DatabaseTables } from './database';
 import { ApplicationCommandCollection, Bot, type ApplicationCommandError } from './lib/core';
+import type { BaseContext } from './lib/core/context';
 
 export class CursorBot extends Bot {
     public readonly db: CursorDatabase;
@@ -79,7 +80,7 @@ export class CursorBot extends Bot {
         );
     }
 
-    protected override async onApplicationCommand(interaction: CommandInteraction): Promise<void> {
+    protected override async onApplicationCommand({ interaction }: BaseContext): Promise<void> {
         await this.db
             .insertInto('command_logs')
             .values({
@@ -99,18 +100,12 @@ export class CursorBot extends Bot {
     protected override async onApplicationCommandError(
         { interaction, cause }: ApplicationCommandError,
     ): Promise<void> {
-        console.error(cause);
+        if (cause instanceof CommandError && interaction.isRepliable()) {
+            await interaction.reply(cause.message);
 
-        if (!(cause instanceof CommandError)) {
             return;
         }
 
-        console.error(cause);
-
-        if (!interaction.isRepliable()) {
-            return;
-        }
-
-        await interaction.reply(cause.message);
+        console.error(cause instanceof Error ? cause.stack : cause);
     }
 }

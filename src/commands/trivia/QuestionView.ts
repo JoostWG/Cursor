@@ -8,7 +8,7 @@ import {
     type APIBaseComponent,
     type ChatInputCommandInteraction,
 } from 'discord.js';
-import { stringTitle } from '../../lib/utils';
+import _ from 'lodash';
 import { actionRow, button, container, textDisplay } from '../../lib/utils/builders';
 import { QuestionType, type AnyQuestionData } from '../../modules/trivia';
 import type { Answer, Status } from './types';
@@ -106,11 +106,7 @@ export class QuestionView {
                     }),
                     textDisplay({
                         content: subtext(
-                            `${this.question.category} - ${
-                                stringTitle(
-                                    this.question.difficulty,
-                                )
-                            }`,
+                            `${this.question.category} - ${_.capitalize(this.question.difficulty)}`,
                         ),
                     }),
                 ],

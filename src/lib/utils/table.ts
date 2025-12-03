@@ -1,4 +1,5 @@
 import { range } from 'discord.js';
+import type { Stringable } from './types';
 
 export interface TableCell {
     align?: 'left' | 'right';
@@ -17,6 +18,12 @@ export interface TableDivider {
 
 export interface TableSplit {
     split: true;
+}
+
+export interface Column<T> {
+    name: string;
+    value: (row: T) => Stringable;
+    options?: Omit<TableCell, 'content'>;
 }
 
 export type TableRow = TableCells | TableDivider | TableSplit;
@@ -56,10 +63,17 @@ export class Table {
             .toArray();
     }
 
-    public static cell(
-        content: { toString: () => string },
-        options?: Omit<TableCell, 'content'>,
-    ): TableCell {
+    public static build<T>(rows: T[], columns: Column<T>[]): Table {
+        return new this([
+            this.row(columns.map((column) => this.cell(column.name, column.options))),
+            this.divider(),
+            ...rows.map((row) =>
+                this.row(columns.map((column) => this.cell(column.value(row), column.options)))
+            ),
+        ]);
+    }
+
+    public static cell(content: Stringable, options?: Omit<TableCell, 'content'>): TableCell {
         return { content: content.toString(), ...(options ?? {}) };
     }
 

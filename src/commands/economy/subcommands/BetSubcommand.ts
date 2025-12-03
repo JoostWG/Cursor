@@ -1,6 +1,6 @@
-import type { ChatInputCommandInteraction } from 'discord.js';
 import { CommandError } from '../../../CommandError';
 import type { SubcommandDefinition } from '../../../lib/core';
+import type { ChatInputContext } from '../../../lib/core/context';
 import { integerOption } from '../../../lib/utils/builders';
 import { EconomySubcommand } from './EconomySubcommand';
 
@@ -20,7 +20,7 @@ export class BetSubcommand extends EconomySubcommand {
         };
     }
 
-    protected override async handle(interaction: ChatInputCommandInteraction): Promise<void> {
+    protected override async handle({ interaction }: ChatInputContext): Promise<void> {
         const amount = interaction.options.getInteger('amount', true);
 
         if (amount < 1) {

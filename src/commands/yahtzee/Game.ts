@@ -16,7 +16,7 @@ import {
 } from 'discord.js';
 import { actionRow, button, container, stringSelect, textDisplay } from '../../lib/utils/builders';
 import { ComponentUI } from '../../lib/utils/ComponentUI';
-import type { Dice, Die, GameOptions, ScoreCard, ScoreCategory } from '../../modules/yahtzee';
+import { Dice, Die, ScoreCard, type GameOptions, type ScoreCategory } from '../../modules/yahtzee';
 import { ScoreCardDisplay } from './ScoreCardDisplay';
 
 export class Game extends ComponentUI {
@@ -26,8 +26,14 @@ export class Game extends ComponentUI {
     // eslint-disable-next-line @typescript-eslint/max-params
     public constructor(
         interaction: ChatInputCommandInteraction,
-        private readonly scoreCard: ScoreCard,
-        private readonly dice: Dice,
+        private readonly scoreCard: ScoreCard = new ScoreCard(),
+        private readonly dice: Dice = new Dice(
+            new Die(),
+            new Die(),
+            new Die(),
+            new Die(),
+            new Die(),
+        ),
         private readonly options: GameOptions = {
             maxRollCount: 3,
         },
@@ -35,6 +41,7 @@ export class Game extends ComponentUI {
         super(interaction, {
             time: 60_000,
         });
+
         this.rollCount = 0;
         this.isCancelled = false;
     }

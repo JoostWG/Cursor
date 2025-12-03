@@ -5,7 +5,8 @@ import type {
     ChatInputCommandInteraction,
 } from 'discord.js';
 import { Subcommand } from '../../../lib/core';
-import type { OmitType } from '../../../lib/utils';
+import type { ChatInputContext } from '../../../lib/core/context';
+import { autocompleteResults, type OmitType } from '../../../lib/utils';
 import { stringOption } from '../../../lib/utils/builders';
 import type { TagManager } from '../TagManager';
 import type { TagData } from '../types';
@@ -15,12 +16,12 @@ export abstract class TagSubcommand extends Subcommand {
         super();
     }
 
-    public override async invoke(interaction: ChatInputCommandInteraction): Promise<void> {
-        if (!interaction.inCachedGuild()) {
+    public override async invoke(ctx: ChatInputContext): Promise<void> {
+        if (!ctx.interaction.inCachedGuild()) {
             return;
         }
 
-        await super.invoke(interaction);
+        await super.invoke(ctx);
     }
 
     protected override async autocomplete(
@@ -30,13 +31,11 @@ export abstract class TagSubcommand extends Subcommand {
             return [];
         }
 
-        const tags = await this.tags.list(interaction.guildId);
-
-        const q = interaction.options.getFocused().toLowerCase();
-
-        return tags
-            .toSorted((a, b) => a.name.toLowerCase().indexOf(q) - b.name.toLowerCase().indexOf(q))
-            .map((tag) => ({ name: tag.name, value: tag.name }));
+        return autocompleteResults(
+            interaction.options.getFocused().toLowerCase(),
+            await this.tags.list(interaction.guildId),
+            (tag) => tag.name,
+        );
     }
 
     protected async findTagOrFail(
@@ -72,7 +71,5 @@ export abstract class TagSubcommand extends Subcommand {
         });
     }
 
-    protected abstract override handle(
-        interaction: ChatInputCommandInteraction<'cached'>,
-    ): Promise<void>;
+    protected abstract override handle({ interaction }: ChatInputContext<'cached'>): Promise<void>;
 }

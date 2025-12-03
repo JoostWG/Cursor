@@ -1,8 +1,9 @@
+import _ from 'lodash';
 import { Cell } from './Cell';
 import { CellCollection } from './CellCollection';
-import { arrayChunk, arrayZip } from './helpers';
 import type { Value } from './types';
 
+// TODO: Test with lodash
 export class Sudoku {
     private readonly cells: CellCollection;
     private readonly rows: CellCollection[];
@@ -11,14 +12,14 @@ export class Sudoku {
 
     public constructor(cells: Cell[]) {
         this.cells = new CellCollection(...cells);
-        this.rows = arrayChunk(this.cells, 9).map((chunk) => new CellCollection(...chunk));
-        this.columns = arrayZip(...this.rows).map((chunk) => new CellCollection(...chunk));
+        this.rows = _.chunk(this.cells, 9).map((chunk) => new CellCollection(...chunk));
+        this.columns = _.zip(...this.rows).map((chunk) => new CellCollection(..._.compact(chunk)));
 
         this.squares = [];
 
-        for (const sqr of arrayChunk(this.cells, 27)) {
-            for (const s of arrayZip(...arrayChunk(sqr, 9).map((r) => arrayChunk(r, 3)))) {
-                this.squares.push(new CellCollection(...s.flat()));
+        for (const sqr of _.chunk(this.cells, 27)) {
+            for (const s of _.zip(..._.chunk(sqr, 9).map((r) => _.chunk(r, 3)))) {
+                this.squares.push(new CellCollection(..._.compact(s.flat())));
             }
         }
 
@@ -98,9 +99,11 @@ export class Sudoku {
         }
 
         const originalValues = this.cells.map((cell) => cell.value);
+
         const [cell] = this.emptyCells().toSorted((a, b) =>
             a.options().length - b.options().length
         );
+
         const options = cell.options();
 
         for (const option of options) {
@@ -135,10 +138,10 @@ export class Sudoku {
     public toString(): string {
         const lines = [];
 
-        for (const sc of arrayChunk(this.rows, 3)) {
+        for (const sc of _.chunk(this.rows, 3)) {
             for (const chunk1 of sc) {
                 lines.push(
-                    arrayChunk(chunk1, 3)
+                    _.chunk(chunk1, 3)
                         .map((a) => a.map((cell) => cell.toString()).join('')).join(' '),
                 );
             }

@@ -6,11 +6,19 @@ import {
     type CommandInteraction,
 } from 'discord.js';
 import { ApplicationCommandCollection } from '../collections';
+import type { BaseApplicationCommand } from '../command';
+import {
+    ChatInputContext,
+    MessageContextMenuContext,
+    UserContextMenuContext,
+    type BaseContext,
+} from '../context';
 import { ApplicationCommandError, CommandHandlerNotFoundError } from '../errors';
 
 export abstract class Bot {
     public readonly client: Client;
     private readonly token: string;
+    readonly #applicationCommands: ApplicationCommandCollection;
 
     public constructor({ client, token }: { client: Client; token: string }) {
         this.client = client;
@@ -29,6 +37,8 @@ export abstract class Bot {
         });
 
         this.client.on(Events.Error, this.onError.bind(this));
+
+        this.#applicationCommands = this.applicationCommands();
     }
 
     public async start(): Promise<void> {
@@ -57,7 +67,7 @@ export abstract class Bot {
     }
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    protected async onApplicationCommand(interaction: CommandInteraction): Promise<void> {
+    protected async onApplicationCommand(ctx: BaseContext): Promise<void> {
         //
     }
 
@@ -65,53 +75,49 @@ export abstract class Bot {
         return new ApplicationCommandCollection();
     }
 
-    private async handleCommandInteraction(interaction: CommandInteraction): Promise<void> {
-        const command = this.applicationCommands().get(interaction.commandName);
-
-        if (!command) {
-            throw new CommandHandlerNotFoundError(interaction);
+    private getContext(
+        interaction: CommandInteraction,
+        command: BaseApplicationCommand,
+    ): BaseContext {
+        if (interaction.isChatInputCommand() && command.isSlashCommand()) {
+            return new ChatInputContext({ bot: this, interaction, command });
         }
 
-        await this.onApplicationCommand(interaction).catch(console.error);
+        if (interaction.isUserContextMenuCommand() && command.isUserContextMenu()) {
+            return new UserContextMenuContext({ bot: this, interaction, command });
+        }
 
-        try {
-            if (interaction.isChatInputCommand() && command.isSlashCommand()) {
-                await command.invoke(interaction);
-                return;
-            }
-
-            if (interaction.isUserContextMenuCommand() && command.isUserContextMenu()) {
-                await command.invoke(interaction);
-                return;
-            }
-
-            if (
-                interaction.isMessageContextMenuCommand()
-                && command.isMessageContextMenu()
-            ) {
-                await command.invoke(interaction);
-                return;
-            }
-        } catch (cause) {
-            if (cause instanceof CommandHandlerNotFoundError) {
-                throw cause;
-            }
-
-            // TODO
-            const error = new ApplicationCommandError(interaction, undefined, cause);
-
-            await this.onApplicationCommandError(error);
-
-            return;
+        if (interaction.isMessageContextMenuCommand() && command.isMessageContextMenu()) {
+            return new MessageContextMenuContext({ bot: this, interaction, command });
         }
 
         throw new CommandHandlerNotFoundError(interaction);
     }
 
+    private async handleCommandInteraction(interaction: CommandInteraction): Promise<void> {
+        const command = this.#applicationCommands.get(interaction.commandName);
+
+        if (!command) {
+            throw new CommandHandlerNotFoundError(interaction);
+        }
+
+        const ctx = this.getContext(interaction, command);
+
+        this.onApplicationCommand(ctx).catch(console.error);
+
+        try {
+            await ctx.invoke();
+        } catch (cause) {
+            const error = new ApplicationCommandError(interaction, undefined, cause);
+
+            await this.onApplicationCommandError(error);
+        }
+    }
+
     private async handleAutocompleteInteraction(
         interaction: AutocompleteInteraction,
     ): Promise<void> {
-        const command = this.applicationCommands().get(interaction.commandName);
+        const command = this.#applicationCommands.get(interaction.commandName);
 
         if (!command?.isSlashCommand()) {
             throw new CommandHandlerNotFoundError(interaction);

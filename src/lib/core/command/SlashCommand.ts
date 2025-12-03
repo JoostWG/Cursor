@@ -6,13 +6,17 @@ import {
     type RESTPostAPIChatInputApplicationCommandsJSONBody,
 } from 'discord.js';
 import { SubcommandCollection, SubcommandGroupCollection } from '../collections';
+import type { ChatInputContext } from '../context';
 import type { Invokable } from '../contracts';
 import { BaseApplicationCommand } from './BaseApplicationCommand';
 
 export abstract class SlashCommand extends BaseApplicationCommand<
     RESTPostAPIChatInputApplicationCommandsJSONBody,
-    ChatInputCommandInteraction
+    ChatInputContext
 > {
+    #subcommands?: SubcommandCollection;
+    #subcommandGroups?: SubcommandGroupCollection;
+
     public override getData(): RESTPostAPIChatInputApplicationCommandsJSONBody & {
         type: ApplicationCommandType;
     } {
@@ -22,8 +26,8 @@ export abstract class SlashCommand extends BaseApplicationCommand<
         };
 
         data.options = [
-            ...this.subcommandGroups().map((subcommandGroup) => subcommandGroup.getData()),
-            ...this.subcommands().map((subcommand) => subcommand.getData()),
+            ...this.getSubcommandGroups().map((subcommandGroup) => subcommandGroup.getData()),
+            ...this.getSubcommands().map((subcommand) => subcommand.getData()),
             ...data.options ?? [],
         ];
 
@@ -46,15 +50,16 @@ export abstract class SlashCommand extends BaseApplicationCommand<
         return await this.autocomplete(interaction);
     }
 
-    public override async invoke(interaction: ChatInputCommandInteraction): Promise<void> {
-        const invokable = this.getInvokable(interaction);
+    public override async invoke(ctx: ChatInputContext): Promise<void> {
+        const invokable = this.getInvokable(ctx.interaction);
 
         if (invokable) {
-            await invokable.invoke(interaction);
+            await invokable.invoke(ctx);
+
             return;
         }
 
-        await super.invoke(interaction);
+        await super.invoke(ctx);
     }
 
     protected subcommandGroups(): SubcommandGroupCollection {
@@ -65,16 +70,32 @@ export abstract class SlashCommand extends BaseApplicationCommand<
         return new SubcommandCollection();
     }
 
+    private getSubcommands(): SubcommandCollection {
+        if (!this.#subcommands) {
+            this.#subcommands = this.subcommands();
+        }
+
+        return this.#subcommands;
+    }
+
+    private getSubcommandGroups(): SubcommandGroupCollection {
+        if (!this.#subcommandGroups) {
+            this.#subcommandGroups = this.subcommandGroups();
+        }
+
+        return this.#subcommandGroups;
+    }
+
     private getInvokable(
         interaction: ChatInputCommandInteraction | AutocompleteInteraction,
-    ): Invokable<ChatInputCommandInteraction> | null {
-        const subcommandGroup = this.subcommandGroups().getFromInteraction(interaction);
+    ): Invokable<ChatInputContext> | null {
+        const subcommandGroup = this.getSubcommandGroups().getFromInteraction(interaction);
 
         if (subcommandGroup) {
             return subcommandGroup;
         }
 
-        const subcommand = this.subcommands().getFromInteraction(interaction);
+        const subcommand = this.getSubcommands().getFromInteraction(interaction);
 
         if (subcommand) {
             return subcommand;

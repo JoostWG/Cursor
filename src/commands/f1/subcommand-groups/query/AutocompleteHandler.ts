@@ -1,5 +1,6 @@
 import type { ApplicationCommandOptionChoiceData, AutocompleteInteraction } from 'discord.js';
 import type { Api } from 'jolpica-f1-api';
+import { autocompleteResults } from '../../../../lib/utils';
 import { OptionName } from './QuerySubcommandGroupDefinitionBuilder';
 
 export class AutocompleteHandler {
@@ -27,12 +28,13 @@ export class AutocompleteHandler {
         interaction: AutocompleteInteraction,
     ): Promise<ApplicationCommandOptionChoiceData[]> {
         const { data: seasons } = await this.api.getSeasons({}, { limit: 100 });
-        return this.filter(
-            seasons,
+
+        return autocompleteResults(
             interaction.options.getFocused(),
+            seasons,
             (season) => String(season.year),
-        )
-            .map((season) => ({ name: String(season.year), value: String(season.year) }));
+            (season) => ({ name: String(season.year), value: String(season.year) }),
+        );
     }
 
     private async handleDriverAutocomplete(
@@ -50,24 +52,14 @@ export class AutocompleteHandler {
             { limit: 100 },
         );
 
-        return this.filter(
-            drivers,
+        return autocompleteResults(
             interaction.options.getFocused(),
+            drivers,
             (driver) => `${driver.firstName} ${driver.lastName}`,
-        )
-            .map((driver) => ({
+            (driver) => ({
                 name: `${driver.firstName} ${driver.lastName}`,
                 value: driver.id,
-            }));
-    }
-
-    private filter<T>(entries: T[], search: string, toString: (entry: T) => string): T[] {
-        const searchString = search.toLowerCase();
-        // eslint-disable-next-line func-style
-        const toStr = (entry: T): string => toString(entry).toLowerCase();
-
-        return entries
-            .filter((entry) => toStr(entry).includes(searchString))
-            .toSorted((a, b) => toStr(a).indexOf(searchString) - toStr(b).indexOf(searchString));
+            }),
+        );
     }
 }

@@ -2,28 +2,30 @@ import type {
     APIApplicationCommandSubcommandGroupOption,
     ApplicationCommandOptionChoiceData,
     AutocompleteInteraction,
-    ChatInputCommandInteraction,
 } from 'discord.js';
 import type { OmitType } from '../../../utils';
 import { subcommandGroup } from '../../../utils/builders';
 import { SubcommandCollection } from '../../collections';
-import type { HasName } from '../../contracts';
+import type { ChatInputContext } from '../../context';
+import type { HasName, Invokable } from '../../contracts';
 
 export type SubcommandGroupDefinition = OmitType<APIApplicationCommandSubcommandGroupOption>;
 
-export abstract class SubcommandGroup implements HasName {
+export abstract class SubcommandGroup implements HasName, Invokable<ChatInputContext> {
+    #subcommands?: SubcommandCollection;
+
     public get name(): string {
         return this.getData().name;
     }
 
-    public async invoke(interaction: ChatInputCommandInteraction): Promise<void> {
-        const subcommand = this.subcommands().getFromInteraction(interaction);
+    public async invoke(ctx: ChatInputContext): Promise<void> {
+        const subcommand = this.getSubcommands().getFromInteraction(ctx.interaction);
 
         if (subcommand) {
-            await subcommand.invoke(interaction);
+            await subcommand.invoke(ctx);
         }
 
-        await this.handle(interaction);
+        await this.handle(ctx);
     }
 
     public async invokeAutocomplete(
@@ -40,7 +42,7 @@ export abstract class SubcommandGroup implements HasName {
         const data = subcommandGroup(this.definition());
 
         data.options = [
-            ...this.subcommands().map((subcommand) => subcommand.getData()),
+            ...this.getSubcommands().map((subcommand) => subcommand.getData()),
             ...data.options ?? [],
         ];
 
@@ -51,8 +53,16 @@ export abstract class SubcommandGroup implements HasName {
         return new SubcommandCollection();
     }
 
+    private getSubcommands(): SubcommandCollection {
+        if (!this.#subcommands) {
+            this.#subcommands = this.subcommands();
+        }
+
+        return this.#subcommands;
+    }
+
     protected abstract definition(): SubcommandGroupDefinition;
-    protected abstract handle(interaction: ChatInputCommandInteraction): Promise<void>;
+    protected abstract handle(ctx: ChatInputContext): Promise<void>;
 
     protected autocomplete?(
         interaction: AutocompleteInteraction,

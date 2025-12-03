@@ -5,6 +5,7 @@ import { Migrator } from './database/Migrator';
 (async () => {
     if (process.argv.includes('--up') && process.argv.includes('--down')) {
         console.error('Cannot use both --up and --down');
+
         return;
     }
 

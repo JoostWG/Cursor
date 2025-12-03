@@ -3,7 +3,7 @@ name: Quality
 on: [push]
 
 jobs:
-  eslint:
+  ESLint:
     runs-on: ubuntu-latest
 
     steps:
@@ -32,7 +32,7 @@ jobs:
       - name: Run dprint
         run: npx dprint check
 
-  typescript:
+  TypeScript:
     runs-on: ubuntu-latest
 
     steps:
