@@ -4,7 +4,7 @@ import { SlashCommand, SubcommandCollection, SubcommandGroupCollection } from '.
 import type { OmitType } from '../../lib/utils';
 import { FileApiCache } from './FileApiCache';
 import { QuerySubcommandGroup } from './subcommand-groups';
-import { RecentResultsSubcommand } from './subcommands';
+import { ResultsSubcommand } from './subcommands';
 
 export class F1Command extends SlashCommand {
     private readonly api: Api;
@@ -32,7 +32,7 @@ export class F1Command extends SlashCommand {
 
     protected override subcommands(): SubcommandCollection {
         return new SubcommandCollection(
-            new RecentResultsSubcommand(this.api),
+            new ResultsSubcommand(this.api),
         );
     }
 }

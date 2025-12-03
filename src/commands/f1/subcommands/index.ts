@@ -1,1 +1,1 @@
-export * from './RecentResultsSubcommand';
+export * from './ResultsSubcommand';

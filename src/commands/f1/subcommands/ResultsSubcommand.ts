@@ -8,7 +8,7 @@ import { attachment, autocompleteResults, type Stringable } from '../../../lib/u
 import { integerOption } from '../../../lib/utils/builders';
 import { Table, type Column } from '../../../lib/utils/table';
 
-export class RecentResultsSubcommand extends Subcommand {
+export class ResultsSubcommand extends Subcommand {
     public constructor(private readonly api: Api) {
         super();
     }
