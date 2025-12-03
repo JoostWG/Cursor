@@ -13,8 +13,9 @@ export class FileApiCache implements ApiCache {
                 await fs.readFile(this.getPath(path, pagination), { encoding: 'utf-8' }),
             ) as { timestamp: number; data: T };
 
-            // Week
-            if ((Date.now() - timestamp) >= 604_800_000) {
+            // TODO: Cache responses that will never change forever... if possible
+            // Day
+            if ((Date.now() - timestamp) >= 86400) {
                 return null;
             }
 
