@@ -1,18 +1,14 @@
 import type { ApplicationCommandOptionChoiceData, AutocompleteInteraction } from 'discord.js';
-import type { Api, Result } from 'jolpica-f1-api';
-import _ from 'lodash';
+import type { Result } from 'jolpica-f1-api';
 import { CommandError } from '../../../CommandError';
-import { Subcommand, type SubcommandDefinition } from '../../../lib/core';
+import type { SubcommandDefinition } from '../../../lib/core';
 import type { ChatInputContext } from '../../../lib/core/context';
-import { attachment, autocompleteResults, type Stringable } from '../../../lib/utils';
+import { attachment, autocompleteResults } from '../../../lib/utils';
 import { integerOption } from '../../../lib/utils/builders';
-import { Table, type Column } from '../../../lib/utils/table';
+import { Table } from '../../../lib/utils/table';
+import { F1Subcommand } from './F1Subcommand';
 
-export class ResultsSubcommand extends Subcommand {
-    public constructor(private readonly api: Api) {
-        super();
-    }
-
+export class ResultsSubcommand extends F1Subcommand {
     protected override definition(): SubcommandDefinition {
         return {
             name: 'results',
@@ -131,14 +127,6 @@ export class ResultsSubcommand extends Subcommand {
         await interaction.reply({ files: [attachment(text, 'results.txt')] });
     }
 
-    private col(
-        name: string,
-        value: (result: Result) => Stringable,
-        alignRight = false,
-    ): Column<Result> {
-        return { name, value, options: { align: alignRight ? 'right' : 'left' } };
-    }
-
     private formatPositionDiff(diff: number): string {
         return `${['-', '=', '+'][Math.sign(diff) + 1]} ${Math.abs(diff).toString().padStart(2)}`;
     }
@@ -147,15 +135,5 @@ export class ResultsSubcommand extends Subcommand {
         return Number(result.grid) - Number(result.position) - allResults.filter(
             (r) => Number(r.grid) < Number(result.grid) && r.finishingTime === null,
         ).length;
-    }
-
-    private getValidSeasons(): number[] {
-        return _.range(1950, new Date().getFullYear() + 1);
-    }
-
-    private validateSeason(season: unknown): season is number {
-        return typeof season === 'number'
-            && season >= 1950
-            && season <= (new Date().getFullYear());
     }
 }

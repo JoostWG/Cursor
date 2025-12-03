@@ -4,7 +4,7 @@ import { SlashCommand, SubcommandCollection, SubcommandGroupCollection } from '.
 import type { OmitType } from '../../lib/utils';
 import { FileApiCache } from './FileApiCache';
 import { QuerySubcommandGroup } from './subcommand-groups';
-import { ResultsSubcommand } from './subcommands';
+import { DriverStandingsSubcommand, ResultsSubcommand } from './subcommands';
 
 export class F1Command extends SlashCommand {
     private readonly api: Api;
@@ -33,6 +33,7 @@ export class F1Command extends SlashCommand {
     protected override subcommands(): SubcommandCollection {
         return new SubcommandCollection(
             new ResultsSubcommand(this.api),
+            new DriverStandingsSubcommand(this.api),
         );
     }
 }
