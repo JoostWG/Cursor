@@ -2,6 +2,9 @@ import type { CommandInteraction } from 'discord.js';
 import type { Bot } from '../bot';
 import type { BaseApplicationCommand } from '../command';
 
+/**
+ * @since 10.0.0
+ */
 export abstract class BaseContext<
     TInteraction extends CommandInteraction = CommandInteraction,
 > {
