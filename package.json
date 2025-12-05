@@ -1,7 +1,7 @@
 {
     "version": "10.0.0",
     "scripts": {
-        "bot": "ts-node ./src/index.ts",
+        "start": "ts-node ./src/index.ts",
         "migrate": "node ./dist/migrate.js --up",
         "rollback": "node ./dist/migrate.js --down",
         "watch": "tsc --watch --noEmit",
