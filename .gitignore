@@ -6,3 +6,4 @@ config.json
 database/database.db
 tsconfig.tsbuildinfo
 sandbox
+.eslintcache

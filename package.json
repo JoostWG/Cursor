@@ -6,7 +6,7 @@
         "rollback": "node ./dist/migrate.js --down",
         "watch": "tsc --watch --noEmit",
         "build": "tsc --build",
-        "lint": "eslint . --fix --max-warnings=0",
+        "lint": "eslint . --fix --max-warnings=0 --cache",
         "format": "dprint fmt",
         "type-check": "tsc --noEmit",
         "quality": "concurrently -n ESLint,dprint,TypeScript -c #3178C6,#4D5564,#4B32C3 \"npm run lint\" \"npm run format\" \"npm run type-check\" "
