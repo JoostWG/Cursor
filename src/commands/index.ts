@@ -2,6 +2,7 @@ export * from './chess';
 export * from './context';
 export * from './economy';
 export * from './f1';
+export * from './IsEvenCommand';
 export * from './joke';
 export * from './PingCommand';
 export * from './role';
