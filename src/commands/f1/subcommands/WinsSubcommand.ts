@@ -23,10 +23,9 @@ export class WinsSubcommand extends F1Subcommand {
     protected override async handle({ interaction }: ChatInputContext): Promise<void> {
         const driverId = interaction.options.getString('driver', true);
 
-        const { data: races } = await this.api.getRaces(
-            { driver: driverId, finishPosition: 1 },
-            { limit: 100 },
-        );
+        const { data: races } = await this.api
+            .races({ driver: driverId, finishPosition: 1 })
+            .get({ limit: 100 });
 
         const table = Table.build(races, [
             this.col('Season', (race) => race.season, true),

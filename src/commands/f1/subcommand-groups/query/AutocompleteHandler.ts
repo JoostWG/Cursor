@@ -27,7 +27,7 @@ export class AutocompleteHandler {
     private async handleSeasonAutocomplete(
         interaction: AutocompleteInteraction,
     ): Promise<ApplicationCommandOptionChoiceData[]> {
-        const { data: seasons } = await this.api.getSeasons({}, { limit: 100 });
+        const { data: seasons } = await this.api.seasons().get({ limit: 100 });
 
         return autocompleteResults(
             interaction.options.getFocused(),
@@ -40,17 +40,18 @@ export class AutocompleteHandler {
     private async handleDriverAutocomplete(
         interaction: AutocompleteInteraction,
     ): Promise<ApplicationCommandOptionChoiceData[]> {
-        const season = interaction.options.getString(OptionName.Season);
+        const season = interaction.options.getInteger(OptionName.Season);
         const round = interaction.options.getInteger(OptionName.Round);
 
         if (season === null) {
             return [];
         }
 
-        const { data: drivers } = await this.api.getDrivers(
-            { season, round: round ?? undefined },
-            { limit: 100 },
-        );
+        const { data: drivers } = await this.api
+            .drivers({ season, round: round ?? undefined })
+            .get(
+                { limit: 100 },
+            );
 
         return autocompleteResults(
             interaction.options.getFocused(),

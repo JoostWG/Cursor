@@ -1,3 +1,4 @@
+import type axios from 'axios';
 import fs from 'fs/promises';
 import type { ApiCache, Pagination } from 'jolpica-f1-api';
 import { dirname } from 'path';
@@ -25,7 +26,13 @@ export class FileApiCache implements ApiCache {
         }
     }
 
-    public async set(data: unknown, path: string, pagination?: Pagination): Promise<void> {
+    // eslint-disable-next-line @typescript-eslint/max-params
+    public async set(
+        data: unknown,
+        cacheControl: axios.AxiosHeaderValue | undefined,
+        path: string,
+        pagination?: Pagination,
+    ): Promise<void> {
         await fs.mkdir(dirname(this.getPath(path, pagination)), { recursive: true });
 
         await fs.writeFile(

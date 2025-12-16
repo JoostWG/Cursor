@@ -1,6 +1,7 @@
 import type {
     APIApplicationCommandBasicOption,
     APIApplicationCommandIntegerOption,
+    APIApplicationCommandIntegerOptionBase,
     APIApplicationCommandStringOption,
     APIApplicationCommandSubcommandGroupOption,
     APIApplicationCommandSubcommandOption,
@@ -253,8 +254,8 @@ export class QuerySubcommandGroupDefinitionBuilder {
 
     // Options
 
-    private getSeasonOption(required = false): APIApplicationCommandStringOption {
-        return stringOption({
+    private getSeasonOption(required = false): APIApplicationCommandIntegerOptionBase {
+        return integerOption({
             name: OptionName.Season,
             description: 'Filter on season',
             required,

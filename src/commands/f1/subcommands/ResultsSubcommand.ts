@@ -45,7 +45,8 @@ export class ResultsSubcommand extends F1Subcommand {
         const season = interaction.options.getInteger('season');
 
         if (focused.name === 'round' && this.validateSeason(season)) {
-            return await this.api.getRaces({ season: season.toString() })
+            return await this.api.races({ season })
+                .get()
                 .then(({ data: races }) =>
                     autocompleteResults(
                         focused.value,
@@ -68,10 +69,10 @@ export class ResultsSubcommand extends F1Subcommand {
             throw new CommandError('Invalid season');
         }
 
-        const season = seasonInput?.toString() ?? 'current';
+        const season = seasonInput ?? 'current';
         const round = roundInput ?? 'last';
 
-        const { data: races } = await this.api.getRaces({ season, round });
+        const { data: races } = await this.api.races({ season, round }).get();
 
         if (races.length === 0) {
             throw new CommandError('Race not found');
@@ -80,7 +81,8 @@ export class ResultsSubcommand extends F1Subcommand {
         const [race] = races;
 
         const results = await this.api
-            .getResults({ season, round }, { limit: 100 })
+            .results({ season, round })
+            .get({ limit: 100 })
             .then(({ data }) => data)
             .catch(() => {
                 throw new CommandError('Race not found');

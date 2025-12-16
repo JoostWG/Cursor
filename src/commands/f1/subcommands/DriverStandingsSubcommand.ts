@@ -34,10 +34,10 @@ export class DriverStandingsSubcommand extends F1Subcommand {
             throw new CommandError('Invalid season');
         }
 
-        const season = seasonInput?.toString() ?? 'current';
+        const season = seasonInput ?? 'current';
         const round = roundInput ?? 'last';
 
-        const { data: races } = await this.api.getRaces({ season, round });
+        const { data: races } = await this.api.races({ season, round }).get();
 
         if (races.length === 0) {
             throw new CommandError('Race not found');
@@ -46,7 +46,8 @@ export class DriverStandingsSubcommand extends F1Subcommand {
         const [race] = races;
 
         const driverStandings = await this.api
-            .getDriverStandings({ season, round }, { limit: 100 })
+            .driverStandings({ season, round })
+            .get({ limit: 100 })
             .then(({ data }) => data)
             .catch(() => {
                 throw new CommandError('Race not found');

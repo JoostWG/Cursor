@@ -35,7 +35,8 @@ export abstract class F1Subcommand extends Subcommand {
         const season = interaction.options.getInteger('season');
 
         if (focused.name === 'round' && this.validateSeason(season)) {
-            return await this.api.getRaces({ season: season.toString() })
+            return await this.api.races({ season })
+                .get()
                 .then(({ data: races }) =>
                     autocompleteResults(
                         focused.value,

@@ -39,7 +39,7 @@ export class QuerySubcommandGroup extends SubcommandGroup {
         };
 
         const options: SimpleApiOptions = {
-            season: interaction.options.getString('season') ?? undefined,
+            season: getInteger(OptionName.Season) ?? undefined,
             round: getInteger(OptionName.Round) ?? undefined,
             circuit: getString(OptionName.Circuit) ?? undefined,
             driver: getString(OptionName.Driver) ?? undefined,
@@ -59,23 +59,26 @@ export class QuerySubcommandGroup extends SubcommandGroup {
 
         const { api } = this;
 
-        const callback = ({
-            [SubcommandName.Circuits]: api.getCircuits.bind(api),
-            [SubcommandName.DriverStandings]: api.getDriverStandings.bind(api),
-            [SubcommandName.Drivers]: api.getDrivers.bind(api),
-            [SubcommandName.Laps]: api.getLaps.bind(api),
-            [SubcommandName.PitStops]: api.getPitStops.bind(api),
-            [SubcommandName.QualifyingResults]: api.getQualifyingResults.bind(api),
-            [SubcommandName.Races]: api.getRaces.bind(api),
-            [SubcommandName.Results]: api.getResults.bind(api),
-            [SubcommandName.Seasons]: api.getSeasons.bind(api),
-            [SubcommandName.SprintResults]: api.getSprintResults.bind(api),
-            [SubcommandName.TeamStandings]: api.getTeamStandings.bind(api),
-            [SubcommandName.Teams]: api.getTeams.bind(api),
+        const request = ({
+            [SubcommandName.Circuits]: api.circuits(options),
+            // @ts-expect-error Safe at runtime
+            [SubcommandName.DriverStandings]: api.driverStandings(options),
+            [SubcommandName.Drivers]: api.drivers(options),
+            // @ts-expect-error Safe at runtime
+            [SubcommandName.Laps]: api.laps(options),
+            // @ts-expect-error Safe at runtime
+            [SubcommandName.PitStops]: api.pitStops(options),
+            [SubcommandName.QualifyingResults]: api.qualifyingResults(options),
+            [SubcommandName.Races]: api.races(options),
+            [SubcommandName.Results]: api.results(options),
+            [SubcommandName.Seasons]: api.seasons(options),
+            [SubcommandName.SprintResults]: api.sprintResults(options),
+            // @ts-expect-error Safe at runtime
+            [SubcommandName.TeamStandings]: api.teamStandings(options),
+            [SubcommandName.Teams]: api.teams(options),
         })[subcommand];
 
-        // @ts-expect-error This is safe at runtime by command definition
-        const response = await callback(options, pagination);
+        const response = await request.get(pagination);
 
         await interaction.reply({
             files: [jsonAttachment(response, `${subcommand}.json`)],
