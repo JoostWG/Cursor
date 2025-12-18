@@ -1,5 +1,5 @@
 import type { ApplicationCommandOptionChoiceData, AutocompleteInteraction } from 'discord.js';
-import type { Api, Pagination, SimpleApiOptions, StatusType } from 'jolpica-f1-api';
+import type { AllApiOptions, Api, Pagination, StatusType } from 'jolpica-f1-api';
 import { SubcommandGroup, type SubcommandGroupDefinition } from '../../../../lib/core';
 import type { ChatInputContext } from '../../../../lib/core/context';
 import { jsonAttachment } from '../../../../lib/utils';
@@ -38,7 +38,7 @@ export class QuerySubcommandGroup extends SubcommandGroup {
             getInteger: interaction.options.getInteger.bind(interaction.options),
         };
 
-        const options: SimpleApiOptions = {
+        const options: AllApiOptions = {
             season: getInteger(OptionName.Season) ?? undefined,
             round: getInteger(OptionName.Round) ?? undefined,
             circuit: getString(OptionName.Circuit) ?? undefined,
