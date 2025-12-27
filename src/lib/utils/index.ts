@@ -32,8 +32,10 @@ export function autocompleteResults<
     toAutocompleteResult?: (item: T) => R,
 ): R[] | ApplicationCommandOptionChoiceData<string>[] {
     const searchString = search.toLowerCase();
-    // eslint-disable-next-line func-style
-    const toStr = (item: T): string => toString(item).toLowerCase();
+
+    function toStr(item: T): string {
+        return toString(item).toLowerCase();
+    }
 
     return items
         .filter((item) => toStr(item).includes(searchString))
