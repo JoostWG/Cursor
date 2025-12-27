@@ -4,6 +4,7 @@ export * from './economy';
 export * from './f1';
 export * from './IsEvenCommand';
 export * from './joke';
+export * from './PicsumCommand';
 export * from './PingCommand';
 export * from './role';
 export * from './rps';

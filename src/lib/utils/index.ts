@@ -2,6 +2,10 @@ import { AttachmentBuilder, type ApplicationCommandOptionChoiceData } from 'disc
 
 export type * from './types';
 
+export function text(lines: [string, ...string[]], separator = '\n'): string {
+    return lines.join(separator);
+}
+
 export function autocompleteResults<
     T,
 >(
