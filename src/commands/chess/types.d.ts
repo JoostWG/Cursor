@@ -4,23 +4,23 @@ import type { Chess, Piece } from 'chess.js';
 export type ChessBoardColor = CanvasRenderingContext2D['fillStyle'];
 
 export interface OutputHandler {
-    initiate: (chess: Chess, boardImageData: Buffer) => Promise<void>;
-    update: (chess: Chess, boardImageData: Buffer) => Promise<void>;
+    initiate(chess: Chess, boardImageData: Buffer): Promise<void>;
+    update(chess: Chess, boardImageData: Buffer): Promise<void>;
 }
 
 export interface ChessBoard {
-    render: (chess: Chess) => Promise<Buffer>;
+    render(chess: Chess): Promise<Buffer>;
 }
 
 export interface ChessBoardTheme {
-    squareColor: (x: number, y: number) => ChessBoardColor;
-    borderColor: () => ChessBoardColor;
+    squareColor(x: number, y: number): ChessBoardColor;
+    borderColor(): ChessBoardColor;
 }
 
 export interface ChessPieceFactory {
-    getPieceImage: (piece: Piece) => Promise<Canvas | Image>;
+    getPieceImage(piece: Piece): Promise<Canvas | Image>;
 }
 
 export interface MessageFactory {
-    getMessage: (chess: Chess) => string;
+    getMessage(chess: Chess): string;
 }

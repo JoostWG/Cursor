@@ -22,8 +22,8 @@ export interface TableSplit {
 
 export interface Column<T> {
     name: string;
-    value: (row: T) => Stringable;
     options?: Omit<TableCell, 'content'>;
+    value(row: T): Stringable;
 }
 
 export type TableRow = TableCells | TableDivider | TableSplit;
