@@ -26,7 +26,6 @@ export class FileApiCache implements ApiCache {
         }
     }
 
-    // eslint-disable-next-line @typescript-eslint/max-params
     public async set(
         data: unknown,
         cacheControl: axios.AxiosHeaderValue | undefined,

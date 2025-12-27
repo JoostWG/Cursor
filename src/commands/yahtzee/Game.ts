@@ -23,7 +23,6 @@ export class Game extends ComponentUI {
     private rollCount: number;
     private isCancelled: boolean;
 
-    // eslint-disable-next-line @typescript-eslint/max-params
     public constructor(
         interaction: ChatInputCommandInteraction,
         private readonly scoreCard: ScoreCard = new ScoreCard(),

@@ -10,7 +10,6 @@ export function autocompleteResults<
     toString: (item: T) => string,
 ): ApplicationCommandOptionChoiceData<string>[];
 
-// eslint-disable-next-line @typescript-eslint/max-params
 export function autocompleteResults<
     T,
     R extends ApplicationCommandOptionChoiceData<string>,
@@ -21,7 +20,6 @@ export function autocompleteResults<
     toAutocompleteResult?: (item: T) => R,
 ): R[];
 
-// eslint-disable-next-line @typescript-eslint/max-params
 export function autocompleteResults<
     T,
     R extends ApplicationCommandOptionChoiceData<string>,
