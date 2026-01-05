@@ -20,7 +20,8 @@
         "fast-equals": "^5.3.3",
         "jolpica-f1-api": "github:JoostWG/jolpica-f1-api#build",
         "kysely": "^0.28.8",
-        "lodash": "^4.17.21"
+        "lodash": "^4.17.21",
+        "valicheck": "github:JoostWG/valicheck#build"
     },
     "devDependencies": {
         "@eslint/js": "^9.35.0",

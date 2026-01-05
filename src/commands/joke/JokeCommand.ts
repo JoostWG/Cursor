@@ -15,7 +15,8 @@ import type { OmitType } from '../../lib/utils';
 import { booleanOption, stringOption } from '../../lib/utils/builders';
 import { JokeCategory } from './JokeCategory';
 import { JokeLanguage } from './JokeLanguage';
-import type { ErrorResponse, MultipleJokesResponse, SingleJokeResponse } from './types';
+import { JokeResponseValidator } from './JokeResponseValidator';
+import type { ErrorResponse } from './types';
 
 export class JokeCommand extends SlashCommand {
     private readonly api: AxiosInstance;
@@ -82,9 +83,7 @@ export class JokeCommand extends SlashCommand {
         const language = languageMap[interaction.locale] ?? 'en';
 
         try {
-            const { data } = await this.api.get<
-                SingleJokeResponse | MultipleJokesResponse | ErrorResponse
-            >(`/joke/${category}`, {
+            const response = await this.api.get(`/joke/${category}`, {
                 params: {
                     amount: 1,
                     lang: language,
@@ -92,6 +91,11 @@ export class JokeCommand extends SlashCommand {
                     blacklistFlags,
                 },
             });
+
+            const validator = new JokeResponseValidator();
+            const validate = validator.anyResponse();
+
+            const data = validate(response.data, 'response');
 
             if (data.error) {
                 await interaction.reply({

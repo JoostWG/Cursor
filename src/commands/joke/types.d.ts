@@ -9,7 +9,7 @@ export type JokeBlacklistFlag =
     | 'sexist'
     | 'explicit';
 
-export interface ErrorResponse {
+export interface ErrorResponse extends Record<string, unknown> {
     error: true;
     internalError: boolean;
     code: number;
@@ -19,13 +19,13 @@ export interface ErrorResponse {
     timestamp: number;
 }
 
-export interface SuccessResponse {
+export interface SuccessResponse extends Record<string, unknown> {
     error: false;
 }
 
-export interface Joke {
+export interface Joke extends Record<string, unknown> {
     category: JokeCategory;
-    flags: Record<JokeBlacklistFlag, boolean>;
+    flags: Map<JokeBlacklistFlag, boolean>;
     id: number;
     safe: boolean;
     lang: JokeLanguage;
