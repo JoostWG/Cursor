@@ -32,29 +32,31 @@ export class QuerySubcommandGroup extends SubcommandGroup {
     protected override async handle({ interaction }: ChatInputContext): Promise<void> {
         const subcommand = interaction.options.getSubcommand(true) as SubcommandName;
 
-        // I hate JavaScript
-        const { getString, getInteger } = {
-            getString: interaction.options.getString.bind(interaction.options),
-            getInteger: interaction.options.getInteger.bind(interaction.options),
-        };
+        function string(name: OptionName): string | undefined {
+            return interaction.options.getString(name) ?? undefined;
+        }
+
+        function integer(name: OptionName): number | undefined {
+            return interaction.options.getInteger(name) ?? undefined;
+        }
 
         const options: AllApiOptions = {
-            season: getInteger(OptionName.Season) ?? undefined,
-            round: getInteger(OptionName.Round) ?? undefined,
-            circuit: getString(OptionName.Circuit) ?? undefined,
-            driver: getString(OptionName.Driver) ?? undefined,
-            fastestRank: getInteger(OptionName.Fastest) ?? undefined,
-            gridPosition: getInteger(OptionName.Grid) ?? undefined,
-            lap: getInteger(OptionName.Lap) ?? undefined,
-            pitStopNumber: getInteger(OptionName.PitStop) ?? undefined,
-            finishPosition: getInteger(OptionName.Result) ?? undefined,
-            status: getString(OptionName.Status) as StatusType | null ?? undefined,
-            team: getString(OptionName.Team) ?? undefined,
+            season: integer(OptionName.Season),
+            round: integer(OptionName.Round),
+            circuit: string(OptionName.Circuit),
+            driver: string(OptionName.Driver),
+            fastestRank: integer(OptionName.Fastest),
+            gridPosition: integer(OptionName.Grid),
+            lap: integer(OptionName.Lap),
+            pitStopNumber: integer(OptionName.PitStop),
+            finishPosition: integer(OptionName.Result),
+            status: string(OptionName.Status) as StatusType | undefined,
+            team: string(OptionName.Team),
         };
 
         const pagination: Pagination = {
-            limit: getInteger(OptionName.Limit) ?? undefined,
-            offset: getInteger(OptionName.Offset) ?? undefined,
+            limit: integer(OptionName.Limit),
+            offset: integer(OptionName.Offset),
         };
 
         const { api } = this;
