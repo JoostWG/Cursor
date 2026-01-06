@@ -26,22 +26,5 @@
         "package-lock.json": true,
         "tsconfig.tsbuildinfo": true,
         "**/**.db": true
-    },
-    "cSpell.words": [
-        "constructorstandings",
-        "defid",
-        "driverstandings",
-        "Invokable",
-        "iseven",
-        "jolpica",
-        "Joost",
-        "kysely",
-        "LATAM",
-        "Picsum",
-        "pitstops",
-        "Repliable",
-        "Stringable",
-        "twopart",
-        "valicheck"
-    ]
+    }
 }
