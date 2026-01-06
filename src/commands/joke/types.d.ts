@@ -48,3 +48,6 @@ export type MultipleJokesResponse = SuccessResponse & {
     amount: number;
     jokes: (SingleTypeJoke | TwopartTypeJoke)[];
 };
+
+export type AnySuccessResponse = SingleJokeResponse | MultipleJokesResponse;
+export type AnyResponse = ErrorResponse | AnySuccessResponse;

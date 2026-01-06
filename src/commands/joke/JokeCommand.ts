@@ -6,6 +6,7 @@ import {
     bold,
     spoiler,
     type APIEmbed,
+    type ChatInputCommandInteraction,
     type RESTPostAPIChatInputApplicationCommandsJSONBody,
 } from 'discord.js';
 import { CommandError } from '../../CommandError';
@@ -16,10 +17,11 @@ import { booleanOption, stringOption } from '../../lib/utils/builders';
 import { JokeCategory } from './JokeCategory';
 import { JokeLanguage } from './JokeLanguage';
 import { JokeResponseValidator } from './JokeResponseValidator';
-import type { ErrorResponse } from './types';
+import type { AnyResponse, ErrorResponse } from './types';
 
 export class JokeCommand extends SlashCommand {
     private readonly api: AxiosInstance;
+    private readonly validator: JokeResponseValidator;
 
     public constructor() {
         super();
@@ -27,6 +29,8 @@ export class JokeCommand extends SlashCommand {
         this.api = axios.create({
             baseURL: 'https://v2.jokeapi.dev',
         });
+
+        this.validator = new JokeResponseValidator();
     }
 
     protected override definition(): OmitType<RESTPostAPIChatInputApplicationCommandsJSONBody> {
@@ -55,22 +59,78 @@ export class JokeCommand extends SlashCommand {
     }
 
     protected override async handle({ interaction }: ChatInputContext): Promise<void> {
-        const category = interaction.options.getString('category') ?? 'Any';
-        const safe = interaction.options.getBoolean('safe') ?? true;
+        const { category, safe } = this.getOptions(interaction);
 
-        if (
-            !safe
-            && !(
-                interaction.channel
-                && interaction.channel instanceof TextChannel
-                && interaction.channel.nsfw
-            )
-        ) {
+        if (!safe && !this.allowUnsafe(interaction)) {
             throw new CommandError('Setting `safe` to `False` can only be done in NSFW channels.');
         }
 
-        const blacklistFlags = safe ? 'nsfw,religious,political,racist,sexist,explicit' : '';
+        try {
+            await this.handleResponse(
+                interaction,
+                await this.fetch({
+                    category,
+                    safe,
+                    amount: 1,
+                    language: this.getLanguage(interaction),
+                }),
+            );
+        } catch (error) {
+            if (!axios.isAxiosError(error)) {
+                throw error;
+            }
 
+            const data = this.validateErrorResponse(error.response?.data);
+
+            await interaction.reply({
+                embeds: [this.buildErrorEmbed(data)],
+            });
+
+            console.error('Axios error:', data ?? error.message);
+        }
+    }
+
+    private async handleResponse(
+        interaction: ChatInputCommandInteraction,
+        data: AnyResponse,
+    ): Promise<void> {
+        if (data.error) {
+            await interaction.reply({
+                embeds: [this.buildErrorEmbed(data)],
+            });
+
+            return;
+        }
+
+        if ('jokes' in data) {
+            throw new CommandError('Multiple jokes not supported');
+        }
+
+        await interaction.reply(
+            `${bold(data.category)}\n${
+                data.type === 'single' ? data.joke : `${data.setup}\n${spoiler(data.delivery)}`
+            }`,
+        );
+    }
+
+    private getOptions(
+        interaction: ChatInputCommandInteraction,
+    ): { category: string; safe: boolean } {
+        return {
+            category: interaction.options.getString('category') ?? 'Any',
+            safe: interaction.options.getBoolean('safe') ?? true,
+        };
+    }
+
+    private allowUnsafe(interaction: ChatInputCommandInteraction): boolean {
+        if (!interaction.channel) {
+            return false;
+        }
+
+        return interaction.channel instanceof TextChannel && interaction.channel.nsfw;
+    }
+
+    private getLanguage(interaction: ChatInputCommandInteraction): JokeLanguage {
         const languageMap: Partial<Record<Locale, JokeLanguage>> = {
             [Locale.Czech]: JokeLanguage.Czech,
             [Locale.German]: JokeLanguage.German,
@@ -80,49 +140,24 @@ export class JokeCommand extends SlashCommand {
             [Locale.PortugueseBR]: JokeLanguage.Portuguese,
         };
 
-        const language = languageMap[interaction.locale] ?? 'en';
+        return languageMap[interaction.locale] ?? JokeLanguage.English;
+    }
 
-        try {
-            const response = await this.api.get(`/joke/${category}`, {
-                params: {
-                    amount: 1,
-                    lang: language,
-                    safe,
-                    blacklistFlags,
-                },
-            });
+    private async fetch(
+        options: { category: string; amount: number; language: JokeLanguage; safe: boolean },
+    ): Promise<AnyResponse> {
+        const response = await this.api.get(`/joke/${options.category}`, {
+            params: {
+                amount: options.amount,
+                lang: options.language,
+                safe: options.safe,
+                blacklistFlags: options.safe
+                    ? 'nsfw,religious,political,racist,sexist,explicit'
+                    : '',
+            },
+        });
 
-            const validator = new JokeResponseValidator();
-            const validate = validator.anyResponse();
-
-            const data = validate(response.data, 'response');
-
-            if (data.error) {
-                await interaction.reply({
-                    embeds: [this.buildErrorEmbed(data)],
-                });
-            }
-
-            if (data.error || 'jokes' in data) {
-                throw new CommandError('Something went wrong...');
-            }
-
-            await interaction.reply(
-                `${bold(data.category)}\n${
-                    data.type === 'single' ? data.joke : `${data.setup}\n${spoiler(data.delivery)}`
-                }`,
-            );
-        } catch (error) {
-            if (axios.isAxiosError(error)) {
-                await interaction.reply({
-                    embeds: [this.buildErrorEmbed(error.response?.data as ErrorResponse)],
-                });
-
-                console.error('Axios error:', error.response?.data ?? error.message);
-            } else {
-                throw new CommandError('Something went wrong...');
-            }
-        }
+        return this.validateResponse(response.data);
     }
 
     private buildErrorEmbed(error?: ErrorResponse): APIEmbed {
@@ -138,5 +173,13 @@ export class JokeCommand extends SlashCommand {
             color: Colors.Red,
             title: 'Unknown error',
         };
+    }
+
+    private validateResponse(response: unknown): AnyResponse {
+        return this.validator.anyResponse()(response, 'response');
+    }
+
+    private validateErrorResponse(response: unknown): ErrorResponse | undefined {
+        return this.validator.optional(this.validator.errorResponse())(response, 'response');
     }
 }

@@ -2,6 +2,7 @@ import { Validator, type ObjectValidatorFunc, type ValidatorFunc } from 'valiche
 import { JokeCategory } from './JokeCategory';
 import { JokeLanguage } from './JokeLanguage';
 import type {
+    AnyResponse,
     ErrorResponse,
     Joke,
     JokeBlacklistFlag,
@@ -83,9 +84,7 @@ export class JokeResponseValidator extends Validator {
         });
     }
 
-    public anyResponse(): ValidatorFunc<
-        SingleJokeResponse | MultipleJokesResponse | ErrorResponse
-    > {
+    public anyResponse(): ValidatorFunc<AnyResponse> {
         return this.anyOf([
             this.singleJokeResponse(),
             this.multipleJokesResponse(),
