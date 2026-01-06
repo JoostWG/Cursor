@@ -1,0 +1,28 @@
+{
+    "language": "en",
+    "files": [
+        "**"
+    ],
+    "ignorePaths": [
+        "tsconfig.tsbuildinfo",
+        "cache/**"
+    ],
+    "words": [
+        "constructorstandings",
+        "defid",
+        "driverstandings",
+        "Invokable",
+        "iseven",
+        "jolpica",
+        "Joost",
+        "kysely",
+        "LATAM",
+        "Picsum",
+        "pitstops",
+        "Repliable",
+        "Stringable",
+        "twopart",
+        "valicheck",
+        "Yahztee"
+    ]
+}
