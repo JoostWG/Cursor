@@ -9,6 +9,7 @@ import {
     type ChatInputCommandInteraction,
     type RESTPostAPIChatInputApplicationCommandsJSONBody,
 } from 'discord.js';
+import { v } from 'valicheck';
 import { CommandError } from '../../CommandError';
 import { SlashCommand } from '../../lib/core';
 import type { ChatInputContext } from '../../lib/core/context';
@@ -180,6 +181,6 @@ export class JokeCommand extends SlashCommand {
     }
 
     private validateErrorResponse(response: unknown): ErrorResponse | undefined {
-        return this.validator.optional(this.validator.errorResponse())(response, 'response');
+        return v.optional(this.validator.errorResponse())(response, 'response');
     }
 }

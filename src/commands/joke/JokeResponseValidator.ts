@@ -1,5 +1,4 @@
-import { Validator, type ObjectValidatorFunc, type ValidatorFunc } from 'valicheck';
-import { JokeCategory } from './JokeCategory';
+import { v, type ObjectValidatorFunc, type ValidatorFunc } from 'valicheck';
 import { JokeLanguage } from './JokeLanguage';
 import type {
     AnyResponse,
@@ -13,82 +12,82 @@ import type {
     TwopartTypeJoke,
 } from './types';
 
-export class JokeResponseValidator extends Validator {
+export class JokeResponseValidator {
     public blacklistFlag(): ValidatorFunc<JokeBlacklistFlag> {
-        return this.literal('nsfw', 'religious', 'political', 'racist', 'sexist', 'explicit');
+        return v.literal('nsfw', 'religious', 'political', 'racist', 'sexist', 'explicit');
     }
 
     public successResponse(): ObjectValidatorFunc<SuccessResponse> {
-        return this.object({
-            error: this.literal(false),
+        return v.object({
+            error: v.literal(false),
         });
     }
 
     public joke(): ObjectValidatorFunc<Joke> {
-        return this.object({
-            category: this.enum(JokeCategory),
-            flags: this.objectMap(this.blacklistFlag(), this.boolean()),
-            id: this.number(),
-            safe: this.boolean(),
-            lang: this.enum(JokeLanguage),
+        return v.object({
+            category: v.string(),
+            flags: v.objectMap(this.blacklistFlag(), v.boolean()),
+            id: v.number(),
+            safe: v.boolean(),
+            lang: v.enumValue(JokeLanguage),
         });
     }
 
     public singleTypeJoke(): ObjectValidatorFunc<SingleTypeJoke> {
-        return this.intersect(
+        return v.intersect(
             this.joke(),
-            this.object({
-                type: this.literal('single'),
-                joke: this.string(),
+            v.object({
+                type: v.literal('single'),
+                joke: v.string(),
             }),
         );
     }
 
     public twoPartTypeJoke(): ObjectValidatorFunc<TwopartTypeJoke> {
-        return this.intersect(
+        return v.intersect(
             this.joke(),
-            this.object({
-                type: this.literal('twopart'),
-                setup: this.string(),
-                delivery: this.string(),
+            v.object({
+                type: v.literal('twopart'),
+                setup: v.string(),
+                delivery: v.string(),
             }),
         );
     }
 
     public singleJokeResponse(): ValidatorFunc<SingleJokeResponse> {
-        return this.anyOf([
-            this.intersect(this.successResponse(), this.singleTypeJoke()),
-            this.intersect(this.successResponse(), this.twoPartTypeJoke()),
-        ]);
+        return v.anyOf(
+            v.intersect(this.successResponse(), this.singleTypeJoke()),
+            v.intersect(this.successResponse(), this.twoPartTypeJoke()),
+        );
     }
 
     public multipleJokesResponse(): ValidatorFunc<MultipleJokesResponse> {
-        return this.intersect(
+        return v.intersect(
             this.successResponse(),
-            this.object({
-                amount: this.number(),
-                jokes: this.array(this.anyOf([this.singleTypeJoke(), this.twoPartTypeJoke()])),
+            v.object({
+                amount: v.number(),
+                jokes: v.array(v.anyOf(this.singleTypeJoke(), this.twoPartTypeJoke())),
             }),
         );
     }
 
     public errorResponse(): ValidatorFunc<ErrorResponse> {
-        return this.object({
-            error: this.literal(true),
-            internalError: this.boolean(),
-            code: this.number(),
-            message: this.string(),
-            causedBy: this.array(this.string()),
-            additionalInfo: this.string(),
-            timestamp: this.number(),
+        return v.object({
+            error: v.literal(true),
+            internalError: v.boolean(),
+            code: v.number(),
+            message: v.string(),
+            causedBy: v.array(v.string()),
+            additionalInfo: v.string(),
+            timestamp: v.number(),
         });
     }
 
     public anyResponse(): ValidatorFunc<AnyResponse> {
-        return this.anyOf([
+        return v.anyOf(
             this.singleJokeResponse(),
             this.multipleJokesResponse(),
             this.errorResponse(),
-        ]);
+        );
     }
 }

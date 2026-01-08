@@ -1,4 +1,3 @@
-import type { JokeCategory } from './JokeCategory';
 import type { JokeLanguage } from './JokeLanguage';
 
 export type JokeBlacklistFlag =
@@ -24,7 +23,7 @@ export interface SuccessResponse extends Record<string, unknown> {
 }
 
 export interface Joke extends Record<string, unknown> {
-    category: JokeCategory;
+    category: string;
     flags: Map<JokeBlacklistFlag, boolean>;
     id: number;
     safe: boolean;
