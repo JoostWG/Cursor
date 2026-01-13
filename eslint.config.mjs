@@ -5,7 +5,7 @@ import { defineConfig, globalIgnores } from 'eslint/config';
 import tseslint from 'typescript-eslint';
 
 export default defineConfig(
-    globalIgnores(['dist/*', 'eslint.config.mjs']),
+    globalIgnores(['dist/*', 'eslint.config.mjs', 'eslint-github-actions-formatter.js']),
     js.configs.all,
     tseslint.configs.all,
     {
