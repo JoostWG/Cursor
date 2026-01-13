@@ -29,12 +29,25 @@ interface PicsumDetails {
     download_url: string;
 }
 
+
+
+
+
 type BlurValue = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10;
 
 export class PicsumCommand extends SlashCommand {
     public override devOnly = true;
+
+
+
+
+    
     private readonly api: AxiosInstance;
 
+
+
+
+    
     public constructor() {
         super();
 
