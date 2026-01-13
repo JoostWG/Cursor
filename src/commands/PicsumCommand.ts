@@ -35,7 +35,7 @@ interface PicsumDetails {
 
 type BlurValue = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10;
 
-export class PicsumCommand extends SlashCommand {
+joe mama
     public override devOnly = true;
 
 
