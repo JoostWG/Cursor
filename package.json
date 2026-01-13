@@ -36,6 +36,7 @@
         "cspell": "^9.4.0",
         "dprint": "^0.50.2",
         "eslint": "^9.39.1",
+        "eslint-formatter-gha": "^2.0.1",
         "eslint-plugin-check-file": "^3.3.1",
         "globals": "^16.5.0",
         "ts-node": "^10.9.2",
