@@ -28,6 +28,7 @@ export class Sudoku {
         }
 
         for (const cell of cells) {
+            cell.sudoku = this;
             cell.square = this.get([cell.parentPosition.x, cell.parentPosition.y]);
             cell.row = this.rows[cell.absolutePosition.y];
             cell.column = this.columns[cell.absolutePosition.x];
@@ -70,57 +71,13 @@ export class Sudoku {
     }
 
     public solve(): boolean {
-        while (!this.isSolved()) {
-            let changed = false;
-
-            const cells = this.emptyCells().toSorted((a, b) =>
-                a.options().length - b.options().length
-            );
-
-            for (const cell of cells) {
-                const solved = cell.solve();
-
-                if (solved === false) {
-                    return false;
-                }
-
-                if (!changed && solved !== null) {
-                    changed = true;
-                }
-            }
-
-            if (!changed) {
-                break;
-            }
-        }
+        this.solveLogically();
 
         if (this.isSolved()) {
             return true;
         }
 
-        const originalValues = this.cells.map((cell) => cell.value);
-
-        const [cell] = this.emptyCells().toSorted((a, b) =>
-            a.options().length - b.options().length
-        );
-
-        const options = cell.options();
-
-        for (const option of options) {
-            if (option < 0) {
-                continue;
-            }
-
-            cell.value = option;
-
-            if (this.solve()) {
-                return true;
-            }
-
-            this.setCellValuesTo(originalValues);
-        }
-
-        return false;
+        return this.solveUsingBackTracking();
     }
 
     public toDataString(): string {
@@ -156,5 +113,53 @@ export class Sudoku {
         for (const [index, cell] of this.cells.entries()) {
             cell.value = data[index];
         }
+    }
+
+    private solveLogically(): void {
+        while (!this.isSolved()) {
+            let changed = false;
+
+            const cells = this.emptyCells().toSorted((a, b) =>
+                a.options().length - b.options().length
+            );
+
+            for (const cell of cells) {
+                const solved = cell.solve();
+
+                if (!changed && solved !== null) {
+                    changed = true;
+                }
+            }
+
+            if (!changed) {
+                break;
+            }
+        }
+    }
+
+    private solveUsingBackTracking(): boolean {
+        const originalValues = this.cells.map((cell) => cell.value);
+
+        const [cell] = this.emptyCells().toSorted((a, b) =>
+            a.options().length - b.options().length
+        );
+
+        const options = cell.options();
+
+        for (const option of options) {
+            if (option < 0) {
+                continue;
+            }
+
+            cell.value = option;
+
+            if (this.solve()) {
+                return true;
+            }
+
+            this.setCellValuesTo(originalValues);
+        }
+
+        return false;
     }
 }

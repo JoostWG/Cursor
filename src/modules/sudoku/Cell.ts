@@ -1,7 +1,10 @@
 import type { CellCollection } from './CellCollection';
+import { InvalidSudoku } from './InvalidSudoku';
+import type { Sudoku } from './Sudoku';
 import type { Position, Value } from './types';
 
 export class Cell {
+    public sudoku!: Sudoku;
     public square!: CellCollection;
     public row!: CellCollection;
     public column!: CellCollection;
@@ -52,9 +55,8 @@ export class Cell {
      * Solve the cell.
      * - Returns the value if the solved.
      * - Returns `null` if the cell cannot be solved because of more than one possibility
-     * - Returns `false` if the cell cannot be solved because of no possibilities (invalid sudoku)
      */
-    public solve(): number | false | null {
+    public solve(): number | null {
         if (this.value !== null) {
             return null;
         }
@@ -62,7 +64,7 @@ export class Cell {
         const options = this.options().filter((x) => x > 0);
 
         if (!options.length) {
-            return false;
+            throw new InvalidSudoku(this.sudoku);
         }
 
         if (options.length === 1) {
