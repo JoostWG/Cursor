@@ -1,12 +1,12 @@
 import type { ApplicationCommandOptionChoiceData, AutocompleteInteraction } from 'discord.js';
-import type { Api } from 'jolpica-f1-api';
+import type { F1Api } from 'f1-garage/jolpica';
 import _ from 'lodash';
 import { Subcommand } from '../../../lib/core';
 import { autocompleteResults, type Stringable } from '../../../lib/utils';
 import type { Column } from '../../../lib/utils/table';
 
 export abstract class F1Subcommand extends Subcommand {
-    public constructor(protected readonly api: Api) {
+    public constructor(protected readonly api: F1Api) {
         super();
     }
 

@@ -1,58 +1,60 @@
-import type axios from 'axios';
-import fs from 'fs/promises';
-import type { ApiCache, Pagination } from 'jolpica-f1-api';
-import { dirname } from 'path';
+// F1 garage doesn't have cache support yet
 
-export class FileApiCache implements ApiCache {
-    public constructor(private readonly path: string) {
-        //
-    }
+// import type axios from 'axios';
+// import fs from 'fs/promises';
+// import type { ApiCache, Pagination } from 'jolpica-f1-api';
+// import { dirname } from 'path';
 
-    public async get<T>(path: string, pagination?: Pagination): Promise<T | null> {
-        try {
-            const { timestamp, data } = JSON.parse(
-                await fs.readFile(this.getPath(path, pagination), { encoding: 'utf-8' }),
-            ) as { timestamp: number; data: T };
+// export class FileApiCache implements ApiCache {
+//     public constructor(private readonly path: string) {
+//         //
+//     }
 
-            // TODO: Cache responses that will never change forever... if possible
-            // Day
-            if ((Date.now() - timestamp) >= 86400) {
-                return null;
-            }
+//     public async get<T>(path: string, pagination?: Pagination): Promise<T | null> {
+//         try {
+//             const { timestamp, data } = JSON.parse(
+//                 await fs.readFile(this.getPath(path, pagination), { encoding: 'utf-8' }),
+//             ) as { timestamp: number; data: T };
 
-            return data;
-        } catch {
-            return null;
-        }
-    }
+//             // TODO: Cache responses that will never change forever... if possible
+//             // Day
+//             if ((Date.now() - timestamp) >= 86400) {
+//                 return null;
+//             }
 
-    public async set(
-        data: unknown,
-        cacheControl: axios.AxiosHeaderValue | undefined,
-        path: string,
-        pagination?: Pagination,
-    ): Promise<void> {
-        await fs.mkdir(dirname(this.getPath(path, pagination)), { recursive: true });
+//             return data;
+//         } catch {
+//             return null;
+//         }
+//     }
 
-        await fs.writeFile(
-            this.getPath(path, pagination),
-            JSON.stringify({ timestamp: Date.now(), data }),
-            { encoding: 'utf-8' },
-        );
-    }
+//     public async set(
+//         data: unknown,
+//         cacheControl: axios.AxiosHeaderValue | undefined,
+//         path: string,
+//         pagination?: Pagination,
+//     ): Promise<void> {
+//         await fs.mkdir(dirname(this.getPath(path, pagination)), { recursive: true });
 
-    private getPath(path: string, pagination?: Pagination): string {
-        return `${this.path}/${this.getCacheKey(path, pagination)}.json`;
-    }
+//         await fs.writeFile(
+//             this.getPath(path, pagination),
+//             JSON.stringify({ timestamp: Date.now(), data }),
+//             { encoding: 'utf-8' },
+//         );
+//     }
 
-    private getCacheKey(path: string, pagination?: Pagination): string {
-        return path
-            .split('/')
-            .filter((part) => part)
-            .concat([
-                String(pagination?.limit ?? 'null'),
-                String(pagination?.offset ?? 'null'),
-            ])
-            .join('-');
-    }
-}
+//     private getPath(path: string, pagination?: Pagination): string {
+//         return `${this.path}/${this.getCacheKey(path, pagination)}.json`;
+//     }
+
+//     private getCacheKey(path: string, pagination?: Pagination): string {
+//         return path
+//             .split('/')
+//             .filter((part) => part)
+//             .concat([
+//                 String(pagination?.limit ?? 'null'),
+//                 String(pagination?.offset ?? 'null'),
+//             ])
+//             .join('-');
+//     }
+// }

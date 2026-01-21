@@ -1,5 +1,5 @@
 import type { ApplicationCommandOptionChoiceData, AutocompleteInteraction } from 'discord.js';
-import type { AnyApiOptions, Api, Pagination, StatusType } from 'jolpica-f1-api';
+import type { AnyApiOptions, F1Api, Pagination, StatusType } from 'f1-garage/jolpica';
 import { SubcommandGroup, type SubcommandGroupDefinition } from '../../../../lib/core';
 import type { ChatInputContext } from '../../../../lib/core/context';
 import { jsonAttachment } from '../../../../lib/utils';
@@ -13,7 +13,7 @@ import {
 export class QuerySubcommandGroup extends SubcommandGroup {
     private readonly autocompleteHandler: AutocompleteHandler;
 
-    public constructor(private readonly api: Api) {
+    public constructor(private readonly api: F1Api) {
         super();
 
         this.autocompleteHandler = new AutocompleteHandler(this.api);

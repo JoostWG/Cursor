@@ -1,18 +1,18 @@
 import type { RESTPostAPIChatInputApplicationCommandsJSONBody } from 'discord.js';
-import { Api } from 'jolpica-f1-api';
+import { F1Api } from 'f1-garage/jolpica';
 import { SlashCommand, SubcommandCollection, SubcommandGroupCollection } from '../../lib/core';
 import type { OmitType } from '../../lib/utils';
-import { FileApiCache } from './FileApiCache';
 import { QuerySubcommandGroup } from './subcommand-groups';
 import { DriverStandingsSubcommand, ResultsSubcommand, WinsSubcommand } from './subcommands';
 
 export class F1Command extends SlashCommand {
-    private readonly api: Api;
+    private readonly api: F1Api;
 
     public constructor() {
         super();
 
-        this.api = new Api({ cache: new FileApiCache('./cache/f1') });
+        // this.api = new Api({ cache: new FileApiCache('./cache/f1') });
+        this.api = new F1Api();
 
         this.devOnly = true;
     }
