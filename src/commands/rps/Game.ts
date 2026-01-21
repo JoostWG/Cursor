@@ -32,10 +32,10 @@ export class Game {
         | 'gameFinished'
         | 'gameExpired';
 
-    public constructor(users: [User, User], db: CursorDatabase, options?: { timeout?: number }) {
-        this.users = users;
-        this.db = db;
-        this.timeout = options?.timeout ?? 60_000;
+    public constructor(options: { users: [User, User]; db: CursorDatabase; timeout?: number }) {
+        this.users = options.users;
+        this.db = options.db;
+        this.timeout = options.timeout ?? 60_000;
         this.rounds = [new Round(), new Round(), new Round()];
         this.currentRoundIndex = 0;
         this.status = 'invitePending';

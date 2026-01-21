@@ -44,11 +44,11 @@ export class CursorBot extends Bot {
             }),
         });
 
-        this.deployHandler = new CommandDeployHandler(
-            new CommandDataCache('./cache/deployed-commands'),
-            this.client.rest,
-            this.applicationCommands(),
-        );
+        this.deployHandler = new CommandDeployHandler({
+            cache: new CommandDataCache('./cache/deployed-commands'),
+            api: this.client.rest,
+            commands: this.applicationCommands(),
+        });
 
         this.client.on(Events.ClientReady, () => {
             console.info('Ready');

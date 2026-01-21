@@ -89,7 +89,7 @@ export class RoleUpdateSubcommand extends RoleSubCommand {
     protected override async handle({ interaction }: ChatInputContext<'cached'>): Promise<void> {
         const role = interaction.options.getRole('role', true);
 
-        this.roleService.validateRole(interaction, role, { allowManaged: true });
+        this.roleService.validateRole({ interaction, role, allowManaged: true });
 
         const options: Partial<Pick<RoleEditOptions, AllowedRoleProps>> = {
             name: interaction.options.getString('name') ?? undefined,

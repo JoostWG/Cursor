@@ -20,9 +20,9 @@ export abstract class Bot {
     private readonly token: string;
     readonly #applicationCommands: ApplicationCommandCollection;
 
-    public constructor({ client, token }: { client: Client; token: string }) {
-        this.client = client;
-        this.token = token;
+    public constructor(options: { client: Client; token: string }) {
+        this.client = options.client;
+        this.token = options.token;
 
         this.client.rest.setToken(this.token);
 

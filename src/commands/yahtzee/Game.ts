@@ -22,24 +22,33 @@ import { ScoreCardDisplay } from './ScoreCardDisplay';
 export class Game extends ComponentUI {
     private rollCount: number;
     private isCancelled: boolean;
+    private readonly scoreCard: ScoreCard;
+    private readonly dice: Dice;
+    private readonly options: GameOptions;
 
-    public constructor(
-        interaction: ChatInputCommandInteraction,
-        private readonly scoreCard: ScoreCard = new ScoreCard(),
-        private readonly dice: Dice = new Dice(
-            new Die(),
-            new Die(),
-            new Die(),
-            new Die(),
-            new Die(),
-        ),
-        private readonly options: GameOptions = {
-            maxRollCount: 3,
-        },
-    ) {
-        super(interaction, {
+    public constructor(options: {
+        interaction: ChatInputCommandInteraction;
+        scoreCard?: ScoreCard;
+        dice?: Dice;
+        options?: GameOptions;
+    }) {
+        super(options.interaction, {
             time: 60_000,
         });
+
+        this.scoreCard = options.scoreCard ?? new ScoreCard();
+
+        this.dice = options.dice ?? new Dice(
+            new Die(),
+            new Die(),
+            new Die(),
+            new Die(),
+            new Die(),
+        );
+
+        this.options = options.options ?? {
+            maxRollCount: 3,
+        };
 
         this.rollCount = 0;
         this.isCancelled = false;

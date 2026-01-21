@@ -3,11 +3,15 @@ import { InvalidMove } from './InvalidMove';
 import type { ChessBoard, OutputHandler } from './types';
 
 export class Game {
-    public constructor(
-        private readonly chess: Chess,
-        private readonly output: OutputHandler,
-        private readonly board: ChessBoard,
-    ) {}
+    private readonly chess: Chess;
+    private readonly output: OutputHandler;
+    private readonly board: ChessBoard;
+
+    public constructor(options: { chess: Chess; output: OutputHandler; board: ChessBoard }) {
+        this.chess = options.chess;
+        this.output = options.output;
+        this.board = options.board;
+    }
 
     public async start(): Promise<void> {
         await this.output.initiate(this.chess, await this.board.render(this.chess));

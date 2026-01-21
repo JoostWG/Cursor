@@ -21,20 +21,21 @@ export class RoleService {
         }
     }
 
-    public validateRole(
-        interaction: Interaction<'cached'>,
-        role: Role,
-        options?: { allowManaged?: boolean; allowEveryone?: boolean },
-    ): void {
+    public validateRole({ interaction, role, allowManaged, allowEveryone }: {
+        interaction: Interaction<'cached'>;
+        role: Role;
+        allowManaged?: boolean;
+        allowEveryone?: boolean;
+    }): void {
         // TODO
         // I'm not sure, but this function may need some more checks to also work properly
         // when the user is server owner
 
-        if (role.id === interaction.guild.id && !options?.allowEveryone) {
+        if (role.id === interaction.guild.id && !allowEveryone) {
             throw new InvalidRoleError('Cannot modify @everyone role.');
         }
 
-        if (role.managed && !options?.allowManaged) {
+        if (role.managed && !allowManaged) {
             throw new InvalidRoleError('Target role is managed and cannot be modified.');
         }
 

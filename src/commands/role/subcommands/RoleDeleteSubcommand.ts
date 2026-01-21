@@ -46,7 +46,7 @@ export class RoleDeleteSubcommand extends RoleSubCommand {
         const role = interaction.options.getRole('role', true);
         const reason = interaction.options.getString('reason') ?? undefined;
 
-        this.roleService.validateRole(interaction, role);
+        this.roleService.validateRole({ interaction, role });
 
         const response = await interaction.reply({
             flags: [MessageFlags.IsComponentsV2, MessageFlags.Ephemeral],

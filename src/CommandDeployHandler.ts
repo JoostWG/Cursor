@@ -6,11 +6,19 @@ import type { CommandDataCache } from './CommandDataCache';
 import type { ApplicationCommandCollection } from './lib/core';
 
 export class CommandDeployHandler {
-    public constructor(
-        private readonly cache: CommandDataCache,
-        private readonly api: REST,
-        private readonly commands: ApplicationCommandCollection,
-    ) {}
+    private readonly cache: CommandDataCache;
+    private readonly api: REST;
+    private readonly commands: ApplicationCommandCollection;
+
+    public constructor(options: {
+        cache: CommandDataCache;
+        api: REST;
+        commands: ApplicationCommandCollection;
+    }) {
+        this.cache = options.cache;
+        this.api = options.api;
+        this.commands = options.commands;
+    }
 
     public async deployIfNeeded(): Promise<void> {
         const globalCommands: RESTPostAPIApplicationCommandsJSONBody[] = [];

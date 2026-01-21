@@ -34,6 +34,6 @@ export class PlaySubcommand extends Subcommand {
             throw new CommandError('You cannot play against yourself.');
         }
 
-        await new Game([interaction.user, opponent], this.db).start(interaction);
+        await new Game({ users: [interaction.user, opponent], db: this.db }).start(interaction);
     }
 }

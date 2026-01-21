@@ -18,15 +18,19 @@ export class StartSubcommand extends ChessSubcommand {
     }
 
     protected override async handle({ interaction }: ChatInputContext): Promise<void> {
-        const game = new Game(
-            new Chess(),
-            new InteractionHandler(interaction, new DefaultMessageFactory()),
-            new DefaultChessBoard(
-                512,
-                new CheckerboardTheme({ light: '#ffcf9f', dark: '#d28c45', border: '#241302' }),
-                new DefaultChessPieceFactory('../../assets/chess'),
-            ),
-        );
+        const game = new Game({
+            chess: new Chess(),
+            output: new InteractionHandler(interaction, new DefaultMessageFactory()),
+            board: new DefaultChessBoard({
+                size: 512,
+                theme: new CheckerboardTheme({
+                    light: '#ffcf9f',
+                    dark: '#d28c45',
+                    border: '#241302',
+                }),
+                chessPieceFactory: new DefaultChessPieceFactory('../../assets/chess'),
+            }),
+        });
 
         this.games.set(interaction.user.id, game);
 

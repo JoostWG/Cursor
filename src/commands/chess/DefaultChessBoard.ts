@@ -4,12 +4,19 @@ import type { ChessBoard, ChessBoardTheme, ChessPieceFactory } from './types';
 
 export class DefaultChessBoard implements ChessBoard {
     private readonly letterMap = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'] as const;
+    private readonly size: number;
+    private readonly theme: ChessBoardTheme;
+    private readonly chessPieceFactory: ChessPieceFactory;
 
-    public constructor(
-        private readonly size: number,
-        private readonly theme: ChessBoardTheme,
-        private readonly chessPieceFactory: ChessPieceFactory,
-    ) {}
+    public constructor(options: {
+        size: number;
+        theme: ChessBoardTheme;
+        chessPieceFactory: ChessPieceFactory;
+    }) {
+        this.size = options.size;
+        this.theme = options.theme;
+        this.chessPieceFactory = options.chessPieceFactory;
+    }
 
     public async render(chess: Chess): Promise<Buffer> {
         const cellSize = this.size / 8;
@@ -17,7 +24,11 @@ export class DefaultChessBoard implements ChessBoard {
         const canvas = createCanvas(this.size + borderWidth * 2, this.size + borderWidth * 2);
         const ctx = canvas.getContext('2d');
 
-        this.drawSquare(ctx, this.theme.borderColor(), 0, 0, canvas.width, canvas.height);
+        this.drawSquare({
+            ctx,
+            color: this.theme.borderColor(),
+            position: [0, 0, canvas.width, canvas.height],
+        });
 
         const lastMove = chess.history({ verbose: true }).at(-1);
 
@@ -66,14 +77,18 @@ export class DefaultChessBoard implements ChessBoard {
 
                 const square = `${this.letterMap[columnIndex]}${8 - rowIndex}`;
 
-                this.drawSquare(ctx, this.theme.squareColor(columnIndex, rowIndex), ...pos);
+                this.drawSquare({
+                    ctx,
+                    color: this.theme.squareColor(columnIndex, rowIndex),
+                    position: pos,
+                });
 
                 if (lastMove?.from === square) {
-                    this.drawSquare(ctx, '#FF000033', ...pos);
+                    this.drawSquare({ ctx, color: '#FF000033', position: pos });
                 }
 
                 if (lastMove?.to === square) {
-                    this.drawSquare(ctx, '#00FF0033', ...pos);
+                    this.drawSquare({ ctx, color: '#00FF0033', position: pos });
                 }
 
                 if (cell) {
@@ -85,14 +100,14 @@ export class DefaultChessBoard implements ChessBoard {
         return canvas.toBuffer('image/png');
     }
 
-    private drawSquare(
-        ctx: CanvasRenderingContext2D,
-        fillStyle: CanvasRenderingContext2D['fillStyle'],
-        ...args: Parameters<CanvasRenderingContext2D['rect']>
-    ): void {
+    private drawSquare({ ctx, color, position }: {
+        ctx: CanvasRenderingContext2D;
+        color: CanvasRenderingContext2D['fillStyle'];
+        position: Readonly<Parameters<CanvasRenderingContext2D['rect']>>;
+    }): void {
         ctx.beginPath();
-        ctx.fillStyle = fillStyle;
-        ctx.rect(...args);
+        ctx.fillStyle = color;
+        ctx.rect(...position);
         ctx.fill();
     }
 }
