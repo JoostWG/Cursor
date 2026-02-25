@@ -1,6 +1,17 @@
 name: Quality
 
-on: [push]
+on:
+  push:
+    paths:
+      - src/**
+      - package.json
+      - package-lock.json
+      - tsconfig.json
+      - eslint.config.mjs
+      - dprint.jsonc
+      - cspell.json
+      - config.json
+      - .github/workflows/quality.yml
 
 jobs:
   ESLint:
@@ -55,3 +66,13 @@ jobs:
         with:
           persist-credentials: false
       - uses: streetsidesoftware/cspell-action@v8
+
+  Security:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Run npm audit
+        run: npm audit
