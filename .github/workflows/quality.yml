@@ -1,6 +1,19 @@
 name: Quality
 
-on: [push]
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - src/**
+      - package.json
+      - package-lock.json
+      - tsconfig.json
+      - eslint.config.mjs
+      - dprint.jsonc
+      - cspell.json
+      - config.json
+      - .github/workflows/quality.yml
 
 jobs:
   ESLint:
