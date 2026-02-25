@@ -137,6 +137,7 @@ export default defineConfig(
             '@typescript-eslint/init-declarations': 'off',
             '@typescript-eslint/require-await': 'off',
             '@typescript-eslint/parameter-properties': 'off',
+            '@typescript-eslint/strict-void-return': 'off',
 
             // Things dprint doesn't cover
             'stylistic/lines-between-class-members': [
