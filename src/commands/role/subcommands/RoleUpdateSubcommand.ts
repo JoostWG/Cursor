@@ -6,7 +6,6 @@ import {
     bold,
     heading,
     inlineCode,
-    roleMention,
     type ApplicationCommandOptionChoiceData,
     type AutocompleteInteraction,
     type Role,
@@ -15,7 +14,7 @@ import {
 import { CommandError } from '../../../CommandError';
 import type { SubcommandDefinition } from '../../../lib/core';
 import type { ChatInputContext } from '../../../lib/core/context';
-import { autocompleteResults } from '../../../lib/utils';
+import { autocompleteResults, mention } from '../../../lib/utils';
 import {
     booleanOption,
     container,
@@ -132,7 +131,7 @@ export class RoleUpdateSubcommand extends RoleSubCommand {
                     components: [
                         textDisplay({
                             content: [
-                                heading(`Updated ${roleMention(role.id)}`, HeadingLevel.Three),
+                                heading(`Updated ${mention(role)}`, HeadingLevel.Three),
                                 ...changes.map((value, key) =>
                                     [
                                         'Set',

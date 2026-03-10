@@ -4,7 +4,6 @@ import {
     HeadingLevel,
     MessageFlags,
     heading,
-    userMention,
     type APIBaseComponent,
     type ChatInputCommandInteraction,
     type ComponentType,
@@ -12,6 +11,7 @@ import {
 } from 'discord.js';
 
 import type { CursorDatabase } from '../../database';
+import { mention } from '../../lib/utils';
 import { actionRow, button, container, separator, textDisplay } from '../../lib/utils/builders';
 import type { Choice } from './Choice';
 import { emojis } from './emojis';
@@ -212,9 +212,7 @@ export class Game {
                             textDisplay({
                                 content: [
                                     `${
-                                        userMention(
-                                            this.player1.id,
-                                        )
+                                        mention(this.player1)
                                     } has invited you to play Rock Paper Scissors`,
                                     'Please accept or deny within 60 seconds.',
                                 ].join('\n'),

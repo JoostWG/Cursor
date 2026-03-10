@@ -6,12 +6,12 @@ import {
     TimestampStyles,
     bold,
     heading,
-    roleMention,
     subtext,
     time,
 } from 'discord.js';
 import type { SubcommandDefinition } from '../../../lib/core';
 import type { ChatInputContext } from '../../../lib/core/context';
+import { mention } from '../../../lib/utils';
 import {
     actionRow,
     button,
@@ -58,7 +58,7 @@ export class RoleDeleteSubcommand extends RoleSubCommand {
                         textDisplay({
                             content: [
                                 heading('⚠️ Hold up!'),
-                                `Are you sure you want to delete ${roleMention(role.id)}?`,
+                                `Are you sure you want to delete ${mention(role)}?`,
                                 subtext('This action cannot be undone.'),
                             ].join('\n'),
                         }),
