@@ -1,5 +1,6 @@
 import { AttachmentBuilder, type ApplicationCommandOptionChoiceData } from 'discord.js';
 
+export * from './helpers';
 export type * from './types';
 
 export function text(lines: [string, ...string[]], separator = '\n'): string {
