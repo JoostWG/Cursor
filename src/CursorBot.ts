@@ -1,5 +1,5 @@
 import SQLite from 'better-sqlite3';
-import { Client, Events, GatewayIntentBits } from 'discord.js';
+import { Client, Events, GatewayIntentBits, MessageFlags } from 'discord.js';
 import { Kysely, SqliteDialect } from 'kysely';
 import { CommandDataCache } from './CommandDataCache';
 import { CommandDeployHandler } from './CommandDeployHandler';
@@ -22,6 +22,7 @@ import {
     UserCommand,
     YahtzeeCommand,
 } from './commands';
+import { LockCommand } from './commands/lock/LockCommand';
 import type { CursorDatabase, DatabaseTables } from './database';
 import { ApplicationCommandCollection, Bot, type ApplicationCommandError } from './lib/core';
 import type { BaseContext } from './lib/core/context';
@@ -69,6 +70,7 @@ export class CursorBot extends Bot {
             new F1Command(),
             new IsEvenCommand(),
             new JokeCommand(),
+            new LockCommand(),
             new PicsumCommand(),
             new PingCommand(),
             new RoleCommand(),
