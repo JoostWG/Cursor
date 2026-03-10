@@ -105,7 +105,10 @@ export class CursorBot extends Bot {
         { interaction, cause }: ApplicationCommandError,
     ): Promise<void> {
         if (cause instanceof CommandError && interaction.isRepliable()) {
-            await interaction.reply(cause.message);
+            await interaction.reply({
+                content: cause.message,
+                flags: [MessageFlags.Ephemeral],
+            });
 
             return;
         }
