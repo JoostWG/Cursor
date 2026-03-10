@@ -23,6 +23,7 @@ import {
     YahtzeeCommand,
 } from './commands';
 import { LockCommand } from './commands/lock/LockCommand';
+import { UnlockCommand } from './commands/unlock/UnlockCommand';
 import type { CursorDatabase, DatabaseTables } from './database';
 import { ApplicationCommandCollection, Bot, type ApplicationCommandError } from './lib/core';
 import type { BaseContext } from './lib/core/context';
@@ -78,6 +79,7 @@ export class CursorBot extends Bot {
             new SudokuCommand(),
             new TagCommand(this.db),
             new TriviaCommand(),
+            new UnlockCommand(),
             new UrbanDictionaryCommand(),
             new UserCommand(),
             new YahtzeeCommand(),
