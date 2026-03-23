@@ -65,6 +65,7 @@ export abstract class ComponentUI {
 
     protected listen<C extends ListenableComponent>(
         component: C,
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-arguments
         listener: Listener<C['type']>,
     ): C {
         this.listeners.set(component.custom_id, listener);
