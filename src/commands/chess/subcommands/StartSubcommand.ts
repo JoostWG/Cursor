@@ -20,15 +20,24 @@ export class StartSubcommand extends ChessSubcommand {
     protected override async handle({ interaction }: ChatInputContext): Promise<void> {
         const game = new Game({
             chess: new Chess(),
-            output: new InteractionHandler(interaction, new DefaultMessageFactory()),
+            output: new InteractionHandler({
+                interaction,
+                messageFactory: new DefaultMessageFactory(),
+            }),
             board: new DefaultChessBoard({
                 size: 512,
                 theme: new CheckerboardTheme({
                     light: '#ffcf9f',
                     dark: '#d28c45',
                     border: '#241302',
+                    lastMove: {
+                        from: '#FF000033',
+                        to: '#00FF0033',
+                    },
                 }),
-                chessPieceFactory: new DefaultChessPieceFactory('../../assets/chess'),
+                chessPieceFactory: new DefaultChessPieceFactory({
+                    directory: '../../assets/chess',
+                }),
             }),
         });
 

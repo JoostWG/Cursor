@@ -13,8 +13,10 @@ export interface ChessBoard {
 }
 
 export interface ChessBoardTheme {
-    squareColor(x: number, y: number): ChessBoardColor;
+    squareColor(position: { x: number; y: number }): ChessBoardColor;
     borderColor(): ChessBoardColor;
+    lastMoveFrom(): ChessBoardColor;
+    lastMoveTo(): ChessBoardColor;
 }
 
 export interface ChessPieceFactory {

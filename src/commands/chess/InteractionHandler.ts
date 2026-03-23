@@ -11,10 +11,16 @@ import { container, mediaGallery, textDisplay } from '../../lib/utils/builders';
 import type { MessageFactory, OutputHandler } from './types';
 
 export class InteractionHandler implements OutputHandler {
-    public constructor(
-        private readonly interaction: ChatInputCommandInteraction,
-        private readonly messageFactory: MessageFactory,
-    ) {}
+    private readonly interaction: ChatInputCommandInteraction;
+    private readonly messageFactory: MessageFactory;
+
+    public constructor(options: {
+        interaction: ChatInputCommandInteraction;
+        messageFactory: MessageFactory;
+    }) {
+        this.interaction = options.interaction;
+        this.messageFactory = options.messageFactory;
+    }
 
     public async initiate(chess: Chess, boardImageData: Buffer): Promise<void> {
         await this.interaction.reply(await this.buildMessage(chess, boardImageData));
