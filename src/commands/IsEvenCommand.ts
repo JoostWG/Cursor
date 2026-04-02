@@ -30,8 +30,9 @@ export class IsEvenCommand extends SlashCommand {
         const { data } = await axios.get<IsEvenResponse>(
             `https://api.isevenapi.xyz/api/iseven/${encodeURIComponent(number)}`,
             {
-                validateStatus: (status) =>
-                    (status >= 200 && status <= 299) || (status >= 400 && status <= 499),
+                validateStatus(status) {
+                    return (status >= 200 && status <= 299) || (status >= 400 && status <= 499);
+                },
             },
         );
 

@@ -16,14 +16,19 @@ export class DefaultChessPieceFactory implements ChessPieceFactory {
         q: 'Queen',
         k: 'King',
     } as const;
+    private readonly directory: string;
 
-    public constructor(private readonly dirPath: string) {}
+    public constructor(options: { directory: string }) {
+        this.directory = options.directory;
+    }
 
     public async getPieceImage(piece: Piece): Promise<Image> {
         return await loadImage(
             path.join(
                 __dirname,
-                `../${this.dirPath}/${this.colorMap[piece.color]}${this.pieceMap[piece.type]}.png`,
+                `../${this.directory}/${this.colorMap[piece.color]}${
+                    this.pieceMap[piece.type]
+                }.png`,
             ),
         );
     }
