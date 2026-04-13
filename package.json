@@ -13,7 +13,7 @@
         "quality": "concurrently -n ESLint,dprint,TypeScript,CSpell -c #3178C6,#4D5564,#4B32C3,#B51A00 \"npm run lint\" \"npm run format\" \"npm run type-check\" \"npm run spell-check\""
     },
     "dependencies": {
-        "axios": "^1.13.2",
+        "axios": "^1.15.0",
         "better-sqlite3": "^12.4.6",
         "canvas": "^3.2.0",
         "chess.js": "^1.4.0",
