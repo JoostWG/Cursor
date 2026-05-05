@@ -1,6 +1,7 @@
 import { HeadingLevel, MessageFlags, bold, heading } from 'discord.js';
 import type { SubcommandDefinition } from '../../../lib/core';
 import type { ChatInputContext } from '../../../lib/core/context';
+import { text } from '../../../lib/utils';
 import { container, textDisplay } from '../../../lib/utils/builders';
 import { TagSubcommand } from './TagSubcommand';
 
@@ -24,7 +25,7 @@ export class TagInfoSubcommand extends TagSubcommand {
                 container({
                     components: [
                         textDisplay({
-                            content: [
+                            content: text([
                                 heading('Tag info', HeadingLevel.Three),
                                 bold('Name'),
                                 tag.name,
@@ -36,7 +37,7 @@ export class TagInfoSubcommand extends TagSubcommand {
                                 '',
                                 bold('Uses'),
                                 tag.uses,
-                            ].join('\n'),
+                            ]),
                         }),
                     ],
                 }),

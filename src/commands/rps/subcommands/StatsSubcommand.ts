@@ -2,6 +2,7 @@ import { MessageFlags, bold, heading } from 'discord.js';
 import type { CursorDatabase } from '../../../database';
 import { Subcommand, type SubcommandDefinition } from '../../../lib/core';
 import type { ChatInputContext } from '../../../lib/core/context';
+import { text } from '../../../lib/utils';
 import { container, textDisplay } from '../../../lib/utils/builders';
 import type { Choice } from '../Choice';
 import { emojis } from '../emojis';
@@ -40,7 +41,7 @@ export class StatsSubcommand extends Subcommand {
                 container({
                     components: [
                         textDisplay({
-                            content: [
+                            content: text([
                                 heading('RPS Stats'),
                                 bold('Games played'),
                                 games?.count ?? 0,
@@ -50,7 +51,7 @@ export class StatsSubcommand extends Subcommand {
                                     ([name, emoji]) =>
                                         `${emoji} ${choiceCounts.get(name as Choice) ?? 0}`,
                                 ),
-                            ].join('\n'),
+                            ]),
                         }),
                     ],
                 }),

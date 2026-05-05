@@ -1,4 +1,5 @@
 import { range } from 'discord.js';
+import { text } from '.';
 import type { Stringable } from './types';
 
 export interface TableCell {
@@ -90,7 +91,7 @@ export class Table {
     }
 
     public render(): string {
-        return [
+        return text([
             this.tableTop(),
             ...this.rows.flatMap((row) => {
                 if ('cells' in row) {
@@ -108,7 +109,7 @@ export class Table {
                 return [];
             }),
             this.tableBottom(),
-        ].join('\n');
+        ]);
     }
 
     private tableTop(): string {

@@ -1,9 +1,13 @@
 import { AttachmentBuilder, type ApplicationCommandOptionChoiceData } from 'discord.js';
+import type { Stringable } from './types';
 
 export * from './helpers';
 export type * from './types';
 
-export function text(lines: [string, ...string[]], separator = '\n'): string {
+export function text(
+    lines: [Stringable | undefined, ...(Stringable | undefined)[]],
+    separator = '\n',
+): string {
     return lines.join(separator);
 }
 

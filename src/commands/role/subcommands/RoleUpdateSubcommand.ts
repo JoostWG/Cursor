@@ -14,7 +14,7 @@ import {
 import { CommandError } from '../../../CommandError';
 import type { SubcommandDefinition } from '../../../lib/core';
 import type { ChatInputContext } from '../../../lib/core/context';
-import { autocompleteResults, mention } from '../../../lib/utils';
+import { autocompleteResults, mention, text } from '../../../lib/utils';
 import {
     booleanOption,
     container,
@@ -130,7 +130,7 @@ export class RoleUpdateSubcommand extends RoleSubCommand {
                 container({
                     components: [
                         textDisplay({
-                            content: [
+                            content: text([
                                 heading(`Updated ${mention(role)}`, HeadingLevel.Three),
                                 ...changes.map((value, key) =>
                                     [
@@ -155,7 +155,7 @@ export class RoleUpdateSubcommand extends RoleSubCommand {
                                 '',
                                 bold('Reason'),
                                 reason ?? 'No reason given',
-                            ].join('\n'),
+                            ]),
                         }),
                     ],
                 }),

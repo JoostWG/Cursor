@@ -7,6 +7,7 @@ import {
     type APIBaseComponent,
     type ComponentType,
 } from 'discord.js';
+import { text } from '../../lib/utils';
 import {
     actionRow,
     button,
@@ -40,13 +41,13 @@ export class ComponentBuilder {
             container({
                 components: [
                     textDisplay({
-                        content: [
+                        content: text([
                             heading(definition.word),
                             subtext(`By ${definition.author}`),
                             this.transformHyperlinks(definition.definition),
                             heading('Example', HeadingLevel.Three),
                             this.transformHyperlinks(definition.example),
-                        ].join('\n'),
+                        ]),
                     }),
                     separator({ divider: true }),
                     textDisplay({
@@ -104,6 +105,7 @@ export class ComponentBuilder {
         ];
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-shadow -- This is also why I should get rid of the text helper
     private transformHyperlinks(text: string): string {
         return text.replace(
             this.hyperlinkRegex,

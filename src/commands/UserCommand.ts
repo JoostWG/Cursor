@@ -5,7 +5,7 @@ import {
 } from 'discord.js';
 import { SlashCommand } from '../lib/core';
 import type { ChatInputContext } from '../lib/core/context';
-import type { OmitType } from '../lib/utils';
+import { text, type OmitType } from '../lib/utils';
 import { userOption } from '../lib/utils/builders';
 
 export class UserCommand extends SlashCommand {
@@ -36,10 +36,10 @@ export class UserCommand extends SlashCommand {
                     fields: [
                         {
                             name: 'Created at',
-                            value: [
+                            value: text([
                                 time(user.createdAt),
                                 time(user.createdAt, TimestampStyles.RelativeTime),
-                            ].join('\n'),
+                            ]),
                         },
                     ],
                 },

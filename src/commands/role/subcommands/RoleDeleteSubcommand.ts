@@ -11,7 +11,7 @@ import {
 } from 'discord.js';
 import type { SubcommandDefinition } from '../../../lib/core';
 import type { ChatInputContext } from '../../../lib/core/context';
-import { mention } from '../../../lib/utils';
+import { mention, text } from '../../../lib/utils';
 import {
     actionRow,
     button,
@@ -56,11 +56,11 @@ export class RoleDeleteSubcommand extends RoleSubCommand {
                     accent_color: Colors.Red,
                     components: [
                         textDisplay({
-                            content: [
+                            content: text([
                                 heading('⚠️ Hold up!'),
                                 `Are you sure you want to delete ${mention(role)}?`,
                                 subtext('This action cannot be undone.'),
-                            ].join('\n'),
+                            ]),
                         }),
                         actionRow({
                             components: [
@@ -143,13 +143,13 @@ export class RoleDeleteSubcommand extends RoleSubCommand {
                             accent_color: Colors.Green,
                             components: [
                                 textDisplay({
-                                    content: [
+                                    content: text([
                                         heading('Role deleted'),
                                         'The role was deleted successfully.',
                                         '',
                                         bold('Reason'),
                                         reason,
-                                    ].join('\n'),
+                                    ]),
                                 }),
                             ],
                         }),
