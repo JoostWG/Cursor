@@ -3,7 +3,8 @@ import { AttachmentBuilder, type ApplicationCommandOptionChoiceData } from 'disc
 export * from './helpers';
 export type * from './types';
 
-export function text(lines: [string, ...string[]], separator = '\n'): string {
+export function text(lines: [string, ...string[]], separator = '\n'): string
+{
     return lines.join(separator);
 }
 
@@ -33,10 +34,12 @@ export function autocompleteResults<
     items: T[],
     toString: (item: T) => string,
     toAutocompleteResult?: (item: T) => R,
-): R[] | ApplicationCommandOptionChoiceData<string>[] {
+): R[] | ApplicationCommandOptionChoiceData<string>[]
+{
     const searchString = search.toLowerCase();
 
-    function toStr(item: T): string {
+    function toStr(item: T): string
+    {
         return toString(item).toLowerCase();
     }
 
@@ -54,7 +57,8 @@ export function attachment(
     content: string,
     name: string,
     options?: { encoding?: BufferEncoding },
-): AttachmentBuilder {
+): AttachmentBuilder
+{
     return new AttachmentBuilder(
         Buffer.from(content, options?.encoding ?? 'utf-8'),
         { name },
@@ -65,6 +69,7 @@ export function jsonAttachment(
     data: unknown,
     name: string,
     options?: { encoding?: BufferEncoding },
-): AttachmentBuilder {
+): AttachmentBuilder
+{
     return attachment(JSON.stringify(data, null, '  '), name, options);
 }

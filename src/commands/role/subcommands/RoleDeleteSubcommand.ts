@@ -22,8 +22,10 @@ import {
 } from '../../../lib/utils/builders';
 import { RoleSubCommand } from './RoleSubcommand';
 
-export class RoleDeleteSubcommand extends RoleSubCommand {
-    protected override definition(): SubcommandDefinition {
+export class RoleDeleteSubcommand extends RoleSubCommand
+{
+    protected override definition(): SubcommandDefinition
+    {
         return {
             name: 'delete',
             description: 'Delete a role',
@@ -41,7 +43,8 @@ export class RoleDeleteSubcommand extends RoleSubCommand {
         };
     }
 
-    protected override async handle({ interaction }: ChatInputContext<'cached'>): Promise<void> {
+    protected override async handle({ interaction }: ChatInputContext<'cached'>): Promise<void>
+    {
         const timeout = 10; // Show confirmation modal for 10 seconds
         const role = interaction.options.getRole('role', true);
         const reason = interaction.options.getString('reason') ?? undefined;

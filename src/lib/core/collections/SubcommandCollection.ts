@@ -2,10 +2,12 @@ import type { AutocompleteInteraction, ChatInputCommandInteraction } from 'disco
 import type { Subcommand } from '../command';
 import { NamedObjectCollection } from './NamedObjectCollection';
 
-export class SubcommandCollection extends NamedObjectCollection<Subcommand> {
+export class SubcommandCollection extends NamedObjectCollection<Subcommand>
+{
     public getFromInteraction(
         interaction: ChatInputCommandInteraction | AutocompleteInteraction,
-    ): Subcommand | null {
+    ): Subcommand | null
+    {
         try {
             const subcommandName = interaction.options.getSubcommand(false);
 

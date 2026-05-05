@@ -6,8 +6,10 @@ import { GuildSlashCommand, SubcommandCollection } from '../../lib/core';
 import type { OmitType } from '../../lib/utils';
 import { RoleDeleteSubcommand, RoleUpdateSubcommand } from './subcommands';
 
-export class RoleCommand extends GuildSlashCommand {
-    protected override definition(): OmitType<RESTPostAPIChatInputApplicationCommandsJSONBody> {
+export class RoleCommand extends GuildSlashCommand
+{
+    protected override definition(): OmitType<RESTPostAPIChatInputApplicationCommandsJSONBody>
+    {
         return {
             name: 'role',
             description: 'Role utility commands',
@@ -15,7 +17,8 @@ export class RoleCommand extends GuildSlashCommand {
         };
     }
 
-    protected override subcommands(): SubcommandCollection {
+    protected override subcommands(): SubcommandCollection
+    {
         return new SubcommandCollection(
             new RoleUpdateSubcommand(),
             new RoleDeleteSubcommand(),

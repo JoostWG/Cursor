@@ -13,13 +13,15 @@ import { BaseApplicationCommand } from './BaseApplicationCommand';
 export abstract class SlashCommand extends BaseApplicationCommand<
     RESTPostAPIChatInputApplicationCommandsJSONBody,
     ChatInputContext
-> {
+>
+{
     #subcommands?: SubcommandCollection;
     #subcommandGroups?: SubcommandGroupCollection;
 
     public override getData(): RESTPostAPIChatInputApplicationCommandsJSONBody & {
         type: ApplicationCommandType;
-    } {
+    }
+    {
         const data = {
             type: ApplicationCommandType.ChatInput as const,
             ...this.definition(),
@@ -36,7 +38,8 @@ export abstract class SlashCommand extends BaseApplicationCommand<
 
     public async invokeAutocomplete(
         interaction: AutocompleteInteraction,
-    ): Promise<ApplicationCommandOptionChoiceData[]> {
+    ): Promise<ApplicationCommandOptionChoiceData[]>
+    {
         const invokable = this.getInvokable(interaction);
 
         if (invokable) {
@@ -50,7 +53,8 @@ export abstract class SlashCommand extends BaseApplicationCommand<
         return await this.autocomplete(interaction);
     }
 
-    public override async invoke(ctx: ChatInputContext): Promise<void> {
+    public override async invoke(ctx: ChatInputContext): Promise<void>
+    {
         const invokable = this.getInvokable(ctx.interaction);
 
         if (invokable) {
@@ -62,15 +66,18 @@ export abstract class SlashCommand extends BaseApplicationCommand<
         await super.invoke(ctx);
     }
 
-    protected subcommandGroups(): SubcommandGroupCollection {
+    protected subcommandGroups(): SubcommandGroupCollection
+    {
         return new SubcommandGroupCollection();
     }
 
-    protected subcommands(): SubcommandCollection {
+    protected subcommands(): SubcommandCollection
+    {
         return new SubcommandCollection();
     }
 
-    private getSubcommands(): SubcommandCollection {
+    private getSubcommands(): SubcommandCollection
+    {
         if (!this.#subcommands) {
             this.#subcommands = this.subcommands();
         }
@@ -78,7 +85,8 @@ export abstract class SlashCommand extends BaseApplicationCommand<
         return this.#subcommands;
     }
 
-    private getSubcommandGroups(): SubcommandGroupCollection {
+    private getSubcommandGroups(): SubcommandGroupCollection
+    {
         if (!this.#subcommandGroups) {
             this.#subcommandGroups = this.subcommandGroups();
         }
@@ -88,7 +96,8 @@ export abstract class SlashCommand extends BaseApplicationCommand<
 
     private getInvokable(
         interaction: ChatInputCommandInteraction | AutocompleteInteraction,
-    ): Invokable<ChatInputContext> | null {
+    ): Invokable<ChatInputContext> | null
+    {
         const subcommandGroup = this.getSubcommandGroups().getFromInteraction(interaction);
 
         if (subcommandGroup) {

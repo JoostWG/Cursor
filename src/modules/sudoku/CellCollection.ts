@@ -1,8 +1,10 @@
 import type { Cell } from './Cell';
 import type { Value } from './types';
 
-export class CellCollection extends Array<Cell> {
-    public isValid(): boolean {
+export class CellCollection extends Array<Cell>
+{
+    public isValid(): boolean
+    {
         if (this.length !== 9) {
             return false;
         }
@@ -16,7 +18,8 @@ export class CellCollection extends Array<Cell> {
         return true;
     }
 
-    public has(value: Value): boolean {
+    public has(value: Value): boolean
+    {
         for (const cell of this) {
             if (cell.value === value) {
                 return true;
@@ -26,7 +29,8 @@ export class CellCollection extends Array<Cell> {
         return false;
     }
 
-    public emptyCells(): CellCollection {
+    public emptyCells(): CellCollection
+    {
         return new CellCollection(...this.filter((cell) => cell.value === null));
     }
 }

@@ -2,26 +2,31 @@ import axios, { type AxiosInstance, type AxiosRequestConfig } from 'axios';
 import { ApiError } from './ApiError';
 import type { Definition, ResponseData } from './types';
 
-export class Api {
+export class Api
+{
     private readonly axios: AxiosInstance;
 
-    public constructor() {
+    public constructor()
+    {
         this.axios = axios.create({
             baseURL: 'https://api.urbandictionary.com/v0',
         });
     }
 
-    public async define(term: string): Promise<Definition[]> {
+    public async define(term: string): Promise<Definition[]>
+    {
         const data = await this.get<{ list: Definition[] }>('/define', { params: { term } });
 
         return data.list;
     }
 
-    public async autocomplete(term: string): Promise<string[]> {
+    public async autocomplete(term: string): Promise<string[]>
+    {
         return await this.get<string[]>('/autocomplete', { params: { term } });
     }
 
-    private async get<T>(url: string, config?: AxiosRequestConfig): Promise<T> {
+    private async get<T>(url: string, config?: AxiosRequestConfig): Promise<T>
+    {
         const { data } = await this.axios.get<ResponseData<T>>(url, config);
 
         // `data` can be anything

@@ -12,11 +12,13 @@ import {
 import { categories } from './categories';
 import { QuestionView } from './QuestionView';
 
-export class TriviaCommand extends SlashCommand {
+export class TriviaCommand extends SlashCommand
+{
     private readonly api: TriviaApi;
     private readonly sessions: Map<string, Session>;
 
-    public constructor() {
+    public constructor()
+    {
         super();
 
         this.devOnly = true;
@@ -24,7 +26,8 @@ export class TriviaCommand extends SlashCommand {
         this.sessions = new Map();
     }
 
-    protected override definition(): OmitType<RESTPostAPIChatInputApplicationCommandsJSONBody> {
+    protected override definition(): OmitType<RESTPostAPIChatInputApplicationCommandsJSONBody>
+    {
         return {
             name: 'trivia',
             description: 'Test your knowledge!',
@@ -46,7 +49,8 @@ export class TriviaCommand extends SlashCommand {
         };
     }
 
-    protected override async handle({ interaction }: ChatInputContext): Promise<void> {
+    protected override async handle({ interaction }: ChatInputContext): Promise<void>
+    {
         const difficulty = interaction.options.getString('difficulty') as QuestionDifficulty | null;
         const category = interaction.options.getString('category');
 
@@ -73,7 +77,8 @@ export class TriviaCommand extends SlashCommand {
         await new QuestionView(questions[0]).start(interaction);
     }
 
-    private async getSession(user: User): Promise<Session> {
+    private async getSession(user: User): Promise<Session>
+    {
         if (this.sessions.has(user.id)) {
             // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             return this.sessions.get(user.id)!;

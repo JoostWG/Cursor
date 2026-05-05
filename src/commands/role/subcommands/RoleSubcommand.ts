@@ -2,16 +2,19 @@ import { Subcommand } from '../../../lib/core';
 import type { ChatInputContext } from '../../../lib/core/context';
 import { RoleService } from '../RoleService';
 
-export abstract class RoleSubCommand extends Subcommand {
+export abstract class RoleSubCommand extends Subcommand
+{
     protected readonly roleService: RoleService;
 
-    public constructor() {
+    public constructor()
+    {
         super();
 
         this.roleService = new RoleService();
     }
 
-    public override async invoke(ctx: ChatInputContext): Promise<void> {
+    public override async invoke(ctx: ChatInputContext): Promise<void>
+    {
         if (!ctx.interaction.inCachedGuild()) {
             return;
         }

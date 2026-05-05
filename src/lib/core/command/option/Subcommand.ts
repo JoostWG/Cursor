@@ -10,18 +10,22 @@ import type { HasName, Invokable } from '../../contracts';
 
 export type SubcommandDefinition = OmitType<APIApplicationCommandSubcommandOption>;
 
-export abstract class Subcommand implements HasName, Invokable<ChatInputContext> {
-    public get name(): string {
+export abstract class Subcommand implements HasName, Invokable<ChatInputContext>
+{
+    public get name(): string
+    {
         return this.getData().name;
     }
 
-    public async invoke(ctx: ChatInputContext): Promise<void> {
+    public async invoke(ctx: ChatInputContext): Promise<void>
+    {
         await this.handle(ctx);
     }
 
     public async invokeAutocomplete(
         interaction: AutocompleteInteraction,
-    ): Promise<ApplicationCommandOptionChoiceData[]> {
+    ): Promise<ApplicationCommandOptionChoiceData[]>
+    {
         if (!this.autocomplete) {
             return [];
         }
@@ -29,7 +33,8 @@ export abstract class Subcommand implements HasName, Invokable<ChatInputContext>
         return await this.autocomplete(interaction);
     }
 
-    public getData(): APIApplicationCommandSubcommandOption {
+    public getData(): APIApplicationCommandSubcommandOption
+    {
         return subcommand(this.definition());
     }
 

@@ -25,8 +25,10 @@ import {
 import type { AllowedRoleProps } from '../types';
 import { RoleSubCommand } from './RoleSubcommand';
 
-export class RoleUpdateSubcommand extends RoleSubCommand {
-    protected override definition(): SubcommandDefinition {
+export class RoleUpdateSubcommand extends RoleSubCommand
+{
+    protected override definition(): SubcommandDefinition
+    {
         return {
             name: 'update',
             description: 'Updates a role',
@@ -64,7 +66,8 @@ export class RoleUpdateSubcommand extends RoleSubCommand {
 
     protected override async autocomplete(
         interaction: AutocompleteInteraction,
-    ): Promise<ApplicationCommandOptionChoiceData[]> {
+    ): Promise<ApplicationCommandOptionChoiceData[]>
+    {
         if (interaction.options.getFocused(true).name !== 'color') {
             return [];
         }
@@ -85,7 +88,8 @@ export class RoleUpdateSubcommand extends RoleSubCommand {
         );
     }
 
-    protected override async handle({ interaction }: ChatInputContext<'cached'>): Promise<void> {
+    protected override async handle({ interaction }: ChatInputContext<'cached'>): Promise<void>
+    {
         const role = interaction.options.getRole('role', true);
 
         this.roleService.validateRole({ interaction, role, allowManaged: true });

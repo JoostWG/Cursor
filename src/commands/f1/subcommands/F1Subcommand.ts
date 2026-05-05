@@ -5,22 +5,22 @@ import { Subcommand } from '../../../lib/core';
 import { autocompleteResults, type Stringable } from '../../../lib/utils';
 import type { Column } from '../../../lib/utils/table';
 
-export abstract class F1Subcommand extends Subcommand {
-    public constructor(protected readonly api: F1Api) {
+export abstract class F1Subcommand extends Subcommand
+{
+    public constructor(protected readonly api: F1Api)
+    {
         super();
     }
 
-    protected col<T>(
-        name: string,
-        value: (result: T) => Stringable,
-        alignRight = false,
-    ): Column<T> {
+    protected col<T>(name: string, value: (result: T) => Stringable, alignRight = false): Column<T>
+    {
         return { name, value, options: { align: alignRight ? 'right' : 'left' } };
     }
 
     protected override async autocomplete(
         interaction: AutocompleteInteraction,
-    ): Promise<ApplicationCommandOptionChoiceData[]> {
+    ): Promise<ApplicationCommandOptionChoiceData[]>
+    {
         const focused = interaction.options.getFocused(true);
 
         if (focused.name === 'season') {
@@ -51,11 +51,13 @@ export abstract class F1Subcommand extends Subcommand {
         return [];
     }
 
-    protected getValidSeasons(): number[] {
+    protected getValidSeasons(): number[]
+    {
         return _.range(1950, new Date().getFullYear() + 1);
     }
 
-    protected validateSeason(season: unknown): season is number {
+    protected validateSeason(season: unknown): season is number
+    {
         return typeof season === 'number'
             && season >= 1950
             && season <= (new Date().getFullYear());

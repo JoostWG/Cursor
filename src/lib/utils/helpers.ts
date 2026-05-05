@@ -15,7 +15,8 @@ export function mention(subject: User): `<@${Snowflake}>`;
 export function mention(subject: BaseChannel): `<#${Snowflake}>`;
 export function mention(subject: Role): `@&${Snowflake}>`;
 
-export function mention(subject: Mentionable): string {
+export function mention(subject: Mentionable): string
+{
     if (subject instanceof User) {
         return userMention(subject.id);
     }

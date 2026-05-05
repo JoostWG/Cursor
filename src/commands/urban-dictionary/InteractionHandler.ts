@@ -6,17 +6,20 @@ import {
 import type { ComponentBuilder } from './ComponentBuilder';
 import type { OutputOptions } from './types';
 
-export class InteractionHandler {
+export class InteractionHandler
+{
     private active: boolean;
 
     public constructor(
         private readonly interaction: ChatInputCommandInteraction,
         private readonly componentBuilder: ComponentBuilder,
-    ) {
+    )
+    {
         this.active = false;
     }
 
-    public async initiate(options: OutputOptions): Promise<void> {
+    public async initiate(options: OutputOptions): Promise<void>
+    {
         this.active = true;
 
         const { definition, pagination } = options;
@@ -89,7 +92,8 @@ export class InteractionHandler {
     private async handleComponentInteraction(
         interaction: MessageComponentInteraction,
         { urbanDictionary }: OutputOptions,
-    ): Promise<OutputOptions | undefined> {
+    ): Promise<OutputOptions | undefined>
+    {
         switch (interaction.customId) {
             case 'previous':
                 return await urbanDictionary.previousPage();

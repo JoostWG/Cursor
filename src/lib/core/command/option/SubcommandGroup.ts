@@ -11,14 +11,17 @@ import type { HasName, Invokable } from '../../contracts';
 
 export type SubcommandGroupDefinition = OmitType<APIApplicationCommandSubcommandGroupOption>;
 
-export abstract class SubcommandGroup implements HasName, Invokable<ChatInputContext> {
+export abstract class SubcommandGroup implements HasName, Invokable<ChatInputContext>
+{
     #subcommands?: SubcommandCollection;
 
-    public get name(): string {
+    public get name(): string
+    {
         return this.getData().name;
     }
 
-    public async invoke(ctx: ChatInputContext): Promise<void> {
+    public async invoke(ctx: ChatInputContext): Promise<void>
+    {
         const subcommand = this.getSubcommands().getFromInteraction(ctx.interaction);
 
         if (subcommand) {
@@ -30,7 +33,8 @@ export abstract class SubcommandGroup implements HasName, Invokable<ChatInputCon
 
     public async invokeAutocomplete(
         interaction: AutocompleteInteraction,
-    ): Promise<ApplicationCommandOptionChoiceData[]> {
+    ): Promise<ApplicationCommandOptionChoiceData[]>
+    {
         if (!this.autocomplete) {
             return [];
         }
@@ -38,7 +42,8 @@ export abstract class SubcommandGroup implements HasName, Invokable<ChatInputCon
         return await this.autocomplete(interaction);
     }
 
-    public getData(): APIApplicationCommandSubcommandGroupOption {
+    public getData(): APIApplicationCommandSubcommandGroupOption
+    {
         const data = subcommandGroup(this.definition());
 
         data.options = [
@@ -49,11 +54,13 @@ export abstract class SubcommandGroup implements HasName, Invokable<ChatInputCon
         return data;
     }
 
-    protected subcommands(): SubcommandCollection {
+    protected subcommands(): SubcommandCollection
+    {
         return new SubcommandCollection();
     }
 
-    private getSubcommands(): SubcommandCollection {
+    private getSubcommands(): SubcommandCollection
+    {
         if (!this.#subcommands) {
             this.#subcommands = this.subcommands();
         }

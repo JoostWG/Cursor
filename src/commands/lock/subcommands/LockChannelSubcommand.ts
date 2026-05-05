@@ -5,8 +5,10 @@ import type { ChatInputContext } from '../../../lib/core/context';
 import { mention } from '../../../lib/utils';
 import { LockSubcommand } from './LockSubcommand';
 
-export class LockChannelSubcommand extends LockSubcommand {
-    protected override definition(): SubcommandDefinition {
+export class LockChannelSubcommand extends LockSubcommand
+{
+    protected override definition(): SubcommandDefinition
+    {
         return {
             name: 'channel',
             description: 'Lock a channel',
@@ -17,7 +19,8 @@ export class LockChannelSubcommand extends LockSubcommand {
         };
     }
 
-    protected override async handle({ interaction }: ChatInputContext): Promise<void> {
+    protected override async handle({ interaction }: ChatInputContext): Promise<void>
+    {
         const channel = this.lockService.getChannel(interaction);
         const role = this.lockService.getRole(interaction);
 

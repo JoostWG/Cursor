@@ -1,19 +1,22 @@
 import type { Dice } from '../Dice';
 import type { ScoreCardSection } from '../ScoreCardSection';
 
-export abstract class ScoreCategory {
+export abstract class ScoreCategory
+{
     private scratched: boolean;
     private scoredPoints: number | null;
     public abstract readonly name: string;
     public abstract readonly id: string;
     public abstract readonly section: ScoreCardSection;
 
-    public constructor() {
+    public constructor()
+    {
         this.scratched = false;
         this.scoredPoints = null;
     }
 
-    public scratch(): void {
+    public scratch(): void
+    {
         if (!this.isOpen()) {
             return;
         }
@@ -21,7 +24,8 @@ export abstract class ScoreCategory {
         this.scratched = true;
     }
 
-    public score(dice: Dice): void {
+    public score(dice: Dice): void
+    {
         if (!this.isOpen()) {
             return;
         }
@@ -29,23 +33,28 @@ export abstract class ScoreCategory {
         this.scoredPoints = this.points(dice);
     }
 
-    public check(dice: Dice): boolean {
+    public check(dice: Dice): boolean
+    {
         return this.isOpen() && dice.isRolled() && this.validate(dice);
     }
 
-    public isOpen(): boolean {
+    public isOpen(): boolean
+    {
         return !this.isScratched() && !this.isScored();
     }
 
-    public isScratched(): boolean {
+    public isScratched(): boolean
+    {
         return this.scratched;
     }
 
-    public isScored(): boolean {
+    public isScored(): boolean
+    {
         return this.scoredPoints !== null;
     }
 
-    public getScoredPoints(): number | null {
+    public getScoredPoints(): number | null
+    {
         return this.scoredPoints;
     }
 

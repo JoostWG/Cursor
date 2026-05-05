@@ -12,6 +12,7 @@ export abstract class ContextMenu<
 > extends BaseApplicationCommand<
     RESTPostAPIContextMenuApplicationCommandsJSONBody,
     TContext
-> {
+>
+{
     //
 }

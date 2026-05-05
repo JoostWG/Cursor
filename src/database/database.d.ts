@@ -3,7 +3,8 @@ import type { ColumnType, Generated, JSONColumnType, Kysely } from 'kysely';
 
 export type CursorDatabase = Kysely<DatabaseTables>;
 
-export interface DatabaseTables {
+export interface DatabaseTables
+{
     migrations: MigrationsTable;
     tags: TagsTable;
     rps_games: RpsGamesTable;
@@ -14,18 +15,21 @@ export interface DatabaseTables {
     balances: BalancesTable;
 }
 
-export interface MigrationsTable {
+export interface MigrationsTable
+{
     id: Generated<number>;
     name: string;
     batch: number;
 }
 
-export interface BaseTable {
+export interface BaseTable
+{
     id: Generated<number>;
     created_at: ColumnType<Date, string | undefined, never>;
 }
 
-export interface TagsTable extends BaseTable {
+export interface TagsTable extends BaseTable
+{
     guild_id: string;
     user_id: string;
     name: string;
@@ -33,27 +37,32 @@ export interface TagsTable extends BaseTable {
     uses: Generated<number>;
 }
 
-export interface RpsGamesTable extends BaseTable {
+export interface RpsGamesTable extends BaseTable
+{
     user_id: string;
 }
 
-export interface RpsGameUserTable extends BaseTable {
+export interface RpsGameUserTable extends BaseTable
+{
     rps_game_id: number;
     user_id: string;
 }
 
-export interface RpsRoundsTable extends BaseTable {
+export interface RpsRoundsTable extends BaseTable
+{
     rps_game_id: number;
     nr: number;
 }
 
-export interface RpsChoicesTable extends BaseTable {
+export interface RpsChoicesTable extends BaseTable
+{
     rps_round_id: number;
     user_id: string;
     choice: 'rock' | 'paper' | 'scissors';
 }
 
-export interface CommandLogsTable extends BaseTable {
+export interface CommandLogsTable extends BaseTable
+{
     interaction_id: string;
     user_id: string;
     channel_id: string;
@@ -63,7 +72,8 @@ export interface CommandLogsTable extends BaseTable {
     options: JSONColumnType<CommandInteractionOption>;
 }
 
-export interface BalancesTable extends Pick<BaseTable, 'id'> {
+export interface BalancesTable extends Pick<BaseTable, 'id'>
+{
     user_id: string;
     balance: number;
 }

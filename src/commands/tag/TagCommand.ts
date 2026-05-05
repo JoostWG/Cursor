@@ -13,23 +13,27 @@ import {
 } from './subcommands';
 import type { TagManager } from './TagManager';
 
-export class TagCommand extends GuildSlashCommand {
+export class TagCommand extends GuildSlashCommand
+{
     private readonly tags: TagManager;
 
-    public constructor(db: CursorDatabase) {
+    public constructor(db: CursorDatabase)
+    {
         super();
 
         this.tags = new DatabaseTagManager(db);
     }
 
-    protected override definition(): OmitType<RESTPostAPIChatInputApplicationCommandsJSONBody> {
+    protected override definition(): OmitType<RESTPostAPIChatInputApplicationCommandsJSONBody>
+    {
         return {
             name: 'tag',
             description: 'Manage tags',
         };
     }
 
-    protected override subcommands(): SubcommandCollection {
+    protected override subcommands(): SubcommandCollection
+    {
         return new SubcommandCollection(
             new TagListSubcommand(this.tags),
             new TagGetSubcommand(this.tags),

@@ -4,13 +4,15 @@ import { CellCollection } from './CellCollection';
 import type { Value } from './types';
 
 // TODO: Test with lodash
-export class Sudoku {
+export class Sudoku
+{
     private readonly cells: CellCollection;
     private readonly rows: CellCollection[];
     private readonly columns: CellCollection[];
     private readonly squares: CellCollection[];
 
-    public constructor(cells: Cell[]) {
+    public constructor(cells: Cell[])
+    {
         this.cells = new CellCollection(...cells);
         this.rows = _.chunk(this.cells, 9).map((chunk) => new CellCollection(...chunk));
         this.columns = _.zip(...this.rows).map((chunk) => new CellCollection(..._.compact(chunk)));
@@ -35,7 +37,8 @@ export class Sudoku {
         }
     }
 
-    public static fromString(data: string): Sudoku {
+    public static fromString(data: string): Sudoku
+    {
         const cleanData = data.replaceAll('_', 'x').replaceAll('0', 'x');
 
         return new this(
@@ -50,15 +53,18 @@ export class Sudoku {
         );
     }
 
-    public emptyCells(): Cell[] {
+    public emptyCells(): Cell[]
+    {
         return this.cells.emptyCells();
     }
 
-    public isSolved(): boolean {
+    public isSolved(): boolean
+    {
         return !this.cells.has(null) && this.isValid();
     }
 
-    public isValid(): boolean {
+    public isValid(): boolean
+    {
         for (const collections of [this.squares, this.rows, this.columns]) {
             for (const collection of collections) {
                 if (!collection.isValid()) {
@@ -70,7 +76,8 @@ export class Sudoku {
         return true;
     }
 
-    public solve(): boolean {
+    public solve(): boolean
+    {
         this.solveLogically();
 
         if (this.isSolved()) {
@@ -80,11 +87,13 @@ export class Sudoku {
         return this.solveUsingBackTracking();
     }
 
-    public toDataString(): string {
+    public toDataString(): string
+    {
         return this.cells.map((cell) => cell.toString().replaceAll('-', 'x')).join('');
     }
 
-    public get(item: number | [number, number]): CellCollection {
+    public get(item: number | [number, number]): CellCollection
+    {
         if (typeof item === 'number') {
             return this.squares[item];
         }
@@ -92,7 +101,8 @@ export class Sudoku {
         return this.squares[item[0] + item[1] * 3];
     }
 
-    public toString(): string {
+    public toString(): string
+    {
         const lines = [];
 
         for (const sc of _.chunk(this.rows, 3)) {
@@ -109,13 +119,15 @@ export class Sudoku {
         return lines.join('\n').trim();
     }
 
-    private setCellValuesTo(data: Value[]): void {
+    private setCellValuesTo(data: Value[]): void
+    {
         for (const [index, cell] of this.cells.entries()) {
             cell.value = data[index];
         }
     }
 
-    private solveLogically(): void {
+    private solveLogically(): void
+    {
         while (!this.isSolved()) {
             let changed = false;
 
@@ -137,7 +149,8 @@ export class Sudoku {
         }
     }
 
-    private solveUsingBackTracking(): boolean {
+    private solveUsingBackTracking(): boolean
+    {
         const originalValues = this.cells.map((cell) => cell.value);
 
         const [cell] = this.emptyCells().toSorted((a, b) =>

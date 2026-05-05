@@ -19,7 +19,8 @@ import { GameStatus } from './GameStatus';
 import { Round } from './Round';
 import { RoundResult } from './RoundResult';
 
-export class Game {
+export class Game
+{
     private readonly users: [User, User];
     private readonly db: CursorDatabase;
     private readonly rounds: [Round, Round, Round];
@@ -28,7 +29,8 @@ export class Game {
     private gameId?: number;
     private status: GameStatus;
 
-    public constructor(options: { users: [User, User]; db: CursorDatabase; timeout?: number }) {
+    public constructor(options: { users: [User, User]; db: CursorDatabase; timeout?: number })
+    {
         this.users = options.users;
         this.db = options.db;
         this.timeout = options.timeout ?? 60_000;
@@ -37,15 +39,18 @@ export class Game {
         this.status = GameStatus.InvitePending;
     }
 
-    private get player1(): User {
+    private get player1(): User
+    {
         return this.users[0];
     }
 
-    private get player2(): User {
+    private get player2(): User
+    {
         return this.users[1];
     }
 
-    public async start(interaction: ChatInputCommandInteraction): Promise<void> {
+    public async start(interaction: ChatInputCommandInteraction): Promise<void>
+    {
         const response = await interaction.reply({
             flags: MessageFlags.IsComponentsV2,
             components: this.buildComponents(),
@@ -187,7 +192,8 @@ export class Game {
             });
     }
 
-    private buildComponents(): APIBaseComponent<ComponentType>[] {
+    private buildComponents(): APIBaseComponent<ComponentType>[]
+    {
         const builder = container({
             components: [
                 textDisplay({

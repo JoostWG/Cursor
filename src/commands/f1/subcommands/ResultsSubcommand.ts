@@ -8,8 +8,10 @@ import { integerOption } from '../../../lib/utils/builders';
 import { Table } from '../../../lib/utils/table';
 import { F1Subcommand } from './F1Subcommand';
 
-export class ResultsSubcommand extends F1Subcommand {
-    protected override definition(): SubcommandDefinition {
+export class ResultsSubcommand extends F1Subcommand
+{
+    protected override definition(): SubcommandDefinition
+    {
         return {
             name: 'results',
             description: 'Results',
@@ -30,7 +32,8 @@ export class ResultsSubcommand extends F1Subcommand {
 
     protected override async autocomplete(
         interaction: AutocompleteInteraction,
-    ): Promise<ApplicationCommandOptionChoiceData[]> {
+    ): Promise<ApplicationCommandOptionChoiceData[]>
+    {
         const focused = interaction.options.getFocused(true);
 
         if (focused.name === 'season') {
@@ -61,7 +64,8 @@ export class ResultsSubcommand extends F1Subcommand {
         return [];
     }
 
-    protected override async handle({ interaction }: ChatInputContext): Promise<void> {
+    protected override async handle({ interaction }: ChatInputContext): Promise<void>
+    {
         const seasonInput = interaction.options.getInteger('season');
         const roundInput = interaction.options.getInteger('round');
 
@@ -129,11 +133,13 @@ export class ResultsSubcommand extends F1Subcommand {
         await interaction.reply({ files: [attachment(text, 'results.txt')] });
     }
 
-    private formatPositionDiff(diff: number): string {
+    private formatPositionDiff(diff: number): string
+    {
         return `${['-', '=', '+'][Math.sign(diff) + 1]} ${Math.abs(diff).toString().padStart(2)}`;
     }
 
-    private getRealDiff(allResults: Result[], result: Result): number {
+    private getRealDiff(allResults: Result[], result: Result): number
+    {
         return Number(result.grid) - Number(result.position) - allResults.filter(
             (r) => Number(r.grid) < Number(result.grid) && r.finishingTime === null,
         ).length;

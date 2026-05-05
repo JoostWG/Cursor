@@ -4,8 +4,10 @@ import type { ChatInputContext } from '../../../lib/core/context';
 import { container, textDisplay } from '../../../lib/utils/builders';
 import { TagSubcommand } from './TagSubcommand';
 
-export class TagInfoSubcommand extends TagSubcommand {
-    protected override definition(): SubcommandDefinition {
+export class TagInfoSubcommand extends TagSubcommand
+{
+    protected override definition(): SubcommandDefinition
+    {
         return {
             name: 'info',
             description: 'tag info',
@@ -15,7 +17,8 @@ export class TagInfoSubcommand extends TagSubcommand {
         };
     }
 
-    protected override async handle({ interaction }: ChatInputContext<'cached'>): Promise<void> {
+    protected override async handle({ interaction }: ChatInputContext<'cached'>): Promise<void>
+    {
         const tag = await this.findTagOrFail(interaction);
 
         await interaction.reply({

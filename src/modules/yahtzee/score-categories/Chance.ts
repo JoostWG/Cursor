@@ -2,16 +2,19 @@ import type { Dice } from '../Dice';
 import { ScoreCardSection } from '../ScoreCardSection';
 import { ScoreCategory } from './ScoreCategory';
 
-export class Chance extends ScoreCategory {
+export class Chance extends ScoreCategory
+{
     public override readonly name = 'Chance';
     public override readonly id = 'chance';
     public override readonly section = ScoreCardSection.Lower;
 
-    public override points(dice: Dice): number {
+    public override points(dice: Dice): number
+    {
         return dice.sum();
     }
 
-    protected override validate(): boolean {
+    protected override validate(): boolean
+    {
         return true;
     }
 }

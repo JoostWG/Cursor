@@ -6,24 +6,30 @@ import {
     type ScoreCategory,
 } from '../../modules/yahtzee';
 
-export class ScoreCardDisplay {
-    public constructor(private readonly scoreCard: ScoreCard, private readonly dice: Dice) {}
+export class ScoreCardDisplay
+{
+    public constructor(private readonly scoreCard: ScoreCard, private readonly dice: Dice)
+    {}
 
-    public build(): Table {
+    public build(): Table
+    {
         return new Table(this.buildTable());
     }
 
-    public render(): string {
+    public render(): string
+    {
         return this.build().render();
     }
 
-    private getCategoryDisplayLabel(category: ScoreCategory): string {
+    private getCategoryDisplayLabel(category: ScoreCategory): string
+    {
         return category.check(this.dice)
             ? `> ${category.name}`
             : `  ${category.name}`;
     }
 
-    private getCategoryDisplayValue(category: ScoreCategory): string {
+    private getCategoryDisplayValue(category: ScoreCategory): string
+    {
         if (category.isOpen()) {
             return '';
         }
@@ -35,7 +41,8 @@ export class ScoreCardDisplay {
         return String(category.getScoredPoints() ?? '');
     }
 
-    private buildCategoryRow(category: ScoreCategory): TableRow {
+    private buildCategoryRow(category: ScoreCategory): TableRow
+    {
         return Table.row(
             [
                 Table.cell(this.getCategoryDisplayLabel(category)),
@@ -49,13 +56,15 @@ export class ScoreCardDisplay {
         );
     }
 
-    private buildCategoryTableRows(section: ScoreCardSection): TableRow[] {
+    private buildCategoryTableRows(section: ScoreCardSection): TableRow[]
+    {
         return this.scoreCard.scoreCategories
             .filter((category) => category.section === section)
             .map((category) => this.buildCategoryRow(category));
     }
 
-    private buildUpperSectionTotals(): TableRow[] {
+    private buildUpperSectionTotals(): TableRow[]
+    {
         return [
             Table.row(
                 [
@@ -76,7 +85,8 @@ export class ScoreCardDisplay {
         ];
     }
 
-    private buildLowerSectionTotals(): TableRow[] {
+    private buildLowerSectionTotals(): TableRow[]
+    {
         return [
             Table.row([
                 Table.cell('Upper Section Total'),
@@ -93,7 +103,8 @@ export class ScoreCardDisplay {
         ];
     }
 
-    private buildTable(): TableRow[] {
+    private buildTable(): TableRow[]
+    {
         return [
             ...this.buildCategoryTableRows(ScoreCardSection.Upper),
             Table.divider(),

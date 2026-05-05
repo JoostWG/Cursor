@@ -5,7 +5,8 @@ import { devGuildId, discordAppId } from '../config.json'; // TODO: Convert to d
 import type { CommandDataCache } from './CommandDataCache';
 import type { ApplicationCommandCollection } from './lib/core';
 
-export class CommandDeployHandler {
+export class CommandDeployHandler
+{
     private readonly cache: CommandDataCache;
     private readonly api: REST;
     private readonly commands: ApplicationCommandCollection;
@@ -14,13 +15,15 @@ export class CommandDeployHandler {
         cache: CommandDataCache;
         api: REST;
         commands: ApplicationCommandCollection;
-    }) {
+    })
+    {
         this.cache = options.cache;
         this.api = options.api;
         this.commands = options.commands;
     }
 
-    public async deployIfNeeded(): Promise<void> {
+    public async deployIfNeeded(): Promise<void>
+    {
         const globalCommands: RESTPostAPIApplicationCommandsJSONBody[] = [];
         const devCommands: RESTPostAPIApplicationCommandsJSONBody[] = [];
 
@@ -55,7 +58,8 @@ export class CommandDeployHandler {
         }
     }
 
-    private equal<T extends RESTPostAPIApplicationCommandsJSONBody[]>(a: T, b: T): boolean {
+    private equal<T extends RESTPostAPIApplicationCommandsJSONBody[]>(a: T, b: T): boolean
+    {
         return deepEqual(
             Object.fromEntries(a.map((command) => [command.name, command])),
             Object.fromEntries(b.map((command) => [command.name, command])),

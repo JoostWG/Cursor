@@ -19,7 +19,8 @@ import { ComponentUI } from '../../lib/utils/ComponentUI';
 import { Dice, Die, ScoreCard, type GameOptions, type ScoreCategory } from '../../modules/yahtzee';
 import { ScoreCardDisplay } from './ScoreCardDisplay';
 
-export class Game extends ComponentUI {
+export class Game extends ComponentUI
+{
     private rollCount: number;
     private isCancelled: boolean;
     private readonly scoreCard: ScoreCard;
@@ -31,7 +32,8 @@ export class Game extends ComponentUI {
         scoreCard?: ScoreCard;
         dice?: Dice;
         options?: GameOptions;
-    }) {
+    })
+    {
         super(options.interaction, {
             time: 60_000,
         });
@@ -56,7 +58,8 @@ export class Game extends ComponentUI {
 
     protected override async sendInitialMessage(
         interaction: CommandInteraction,
-    ): Promise<InteractionCallbackResponse> {
+    ): Promise<InteractionCallbackResponse>
+    {
         return await interaction.reply({
             flags: [MessageFlags.IsComponentsV2],
             components: [this.buildContainer()],
@@ -64,7 +67,8 @@ export class Game extends ComponentUI {
         });
     }
 
-    protected override async after(interaction: MessageComponentInteraction): Promise<void> {
+    protected override async after(interaction: MessageComponentInteraction): Promise<void>
+    {
         this.collector.resetTimer();
 
         if (this.scoreCard.isComplete()) {
@@ -74,17 +78,20 @@ export class Game extends ComponentUI {
         await interaction.update({ components: [this.buildContainer()] });
     }
 
-    protected override async onEnd(): Promise<void> {
+    protected override async onEnd(): Promise<void>
+    {
         await this.cancel();
     }
 
-    private canRoll(): boolean {
+    private canRoll(): boolean
+    {
         return (
             this.rollCount < this.options.maxRollCount && this.dice.some((die) => !die.isLocked())
         );
     }
 
-    private async cancel(updateMessage = true): Promise<void> {
+    private async cancel(updateMessage = true): Promise<void>
+    {
         if (this.isCancelled) {
             return;
         }
@@ -96,7 +103,8 @@ export class Game extends ComponentUI {
         }
     }
 
-    private rollButton(): APIButtonComponentWithCustomId {
+    private rollButton(): APIButtonComponentWithCustomId
+    {
         return this.listen(
             button({
                 style: ButtonStyle.Success,
@@ -115,7 +123,8 @@ export class Game extends ComponentUI {
         );
     }
 
-    private toggleDiceButton(): APIButtonComponentWithCustomId {
+    private toggleDiceButton(): APIButtonComponentWithCustomId
+    {
         return this.listen(
             button({
                 style: ButtonStyle.Primary,
@@ -131,7 +140,8 @@ export class Game extends ComponentUI {
         );
     }
 
-    private stopButton(): APIButtonComponentWithCustomId {
+    private stopButton(): APIButtonComponentWithCustomId
+    {
         return this.listen(
             button({
                 style: ButtonStyle.Danger,
@@ -146,7 +156,8 @@ export class Game extends ComponentUI {
         );
     }
 
-    private dieButton(die: Die, index: number): APIButtonComponentWithCustomId {
+    private dieButton(die: Die, index: number): APIButtonComponentWithCustomId
+    {
         return this.listen(
             button({
                 style: die.isLocked() ? ButtonStyle.Primary : ButtonStyle.Secondary,
@@ -160,7 +171,8 @@ export class Game extends ComponentUI {
         );
     }
 
-    private actionSelectMenu(actions: ScoreCategory[]): APIStringSelectComponent {
+    private actionSelectMenu(actions: ScoreCategory[]): APIStringSelectComponent
+    {
         if (!this.dice.isRolled()) {
             return stringSelect({
                 placeholder: 'Roll dice to see actions',
@@ -194,7 +206,8 @@ export class Game extends ComponentUI {
         );
     }
 
-    private scratchSelectMenu(scratchOptions: ScoreCategory[]): APIStringSelectComponent {
+    private scratchSelectMenu(scratchOptions: ScoreCategory[]): APIStringSelectComponent
+    {
         if (!this.dice.isRolled()) {
             return stringSelect({
                 placeholder: 'Roll dice to see scratches',
@@ -231,7 +244,8 @@ export class Game extends ComponentUI {
     private handleSelectMenu({
         customId,
         values: [categoryId],
-    }: StringSelectMenuInteraction): void {
+    }: StringSelectMenuInteraction): void
+    {
         const category = this.scoreCard.scoreCategories.find((c) => c.id === categoryId);
 
         if (!category) {
@@ -248,7 +262,8 @@ export class Game extends ComponentUI {
         this.rollCount = 0;
     }
 
-    private buildActionRows(): APIActionRowComponent<APIComponentInMessageActionRow>[] {
+    private buildActionRows(): APIActionRowComponent<APIComponentInMessageActionRow>[]
+    {
         if (this.scoreCard.isComplete() || this.isCancelled) {
             return [];
         }
@@ -277,7 +292,8 @@ export class Game extends ComponentUI {
         ];
     }
 
-    private buildContainer(): APIContainerComponent {
+    private buildContainer(): APIContainerComponent
+    {
         return container({
             components: [
                 textDisplay({ content: heading('Yahtzee!') }),

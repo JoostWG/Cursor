@@ -20,7 +20,8 @@ import {
     textDisplay,
 } from '../lib/utils/builders';
 
-interface PicsumDetails {
+interface PicsumDetails
+{
     id: string;
     author: string;
     width: number;
@@ -31,11 +32,13 @@ interface PicsumDetails {
 
 type BlurValue = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10;
 
-export class PicsumCommand extends SlashCommand {
+export class PicsumCommand extends SlashCommand
+{
     public override devOnly = true;
     private readonly api: AxiosInstance;
 
-    public constructor() {
+    public constructor()
+    {
         super();
 
         this.api = axios.create({
@@ -43,7 +46,8 @@ export class PicsumCommand extends SlashCommand {
         });
     }
 
-    protected override definition(): OmitType<RESTPostAPIChatInputApplicationCommandsJSONBody> {
+    protected override definition(): OmitType<RESTPostAPIChatInputApplicationCommandsJSONBody>
+    {
         return {
             name: 'picsum',
             description: 'Epic imagery',
@@ -79,7 +83,8 @@ export class PicsumCommand extends SlashCommand {
         };
     }
 
-    protected override async handle({ interaction }: ChatInputContext): Promise<void> {
+    protected override async handle({ interaction }: ChatInputContext): Promise<void>
+    {
         const { buffer, details } = await this.getImage({
             width: interaction.options.getInteger('width', true),
             height: interaction.options.getInteger('height', true),
@@ -133,7 +138,8 @@ export class PicsumCommand extends SlashCommand {
         grayscale?: boolean;
         blur?: BlurValue;
         format?: 'jpg' | 'webp';
-    }): Promise<{ buffer: Buffer; details: PicsumDetails }> {
+    }): Promise<{ buffer: Buffer; details: PicsumDetails }>
+    {
         let path = `/${options.width}/${options.height}.${options.format ?? 'jpg'}`;
 
         if (options.id) {
@@ -160,7 +166,8 @@ export class PicsumCommand extends SlashCommand {
         };
     }
 
-    private async getDetails(id: string): Promise<PicsumDetails> {
+    private async getDetails(id: string): Promise<PicsumDetails>
+    {
         return await this.api.get<PicsumDetails>(`/id/${id}/info`).then(({ data }) => data);
     }
 }

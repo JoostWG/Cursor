@@ -1,4 +1,5 @@
-export enum RoundResult {
+export enum RoundResult
+{
     Unfinished = 'unfinished',
     Tie = 'tie',
     PlayerOneWins = 'playerOneWins',

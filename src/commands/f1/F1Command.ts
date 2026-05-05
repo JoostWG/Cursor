@@ -5,10 +5,12 @@ import type { OmitType } from '../../lib/utils';
 import { QuerySubcommandGroup } from './subcommand-groups';
 import { DriverStandingsSubcommand, ResultsSubcommand, WinsSubcommand } from './subcommands';
 
-export class F1Command extends SlashCommand {
+export class F1Command extends SlashCommand
+{
     private readonly api: F1Api;
 
-    public constructor() {
+    public constructor()
+    {
         super();
 
         // this.api = new Api({ cache: new FileApiCache('./cache/f1') });
@@ -17,20 +19,23 @@ export class F1Command extends SlashCommand {
         this.devOnly = true;
     }
 
-    protected override definition(): OmitType<RESTPostAPIChatInputApplicationCommandsJSONBody> {
+    protected override definition(): OmitType<RESTPostAPIChatInputApplicationCommandsJSONBody>
+    {
         return {
             name: 'f1',
             description: 'Formula 1',
         };
     }
 
-    protected override subcommandGroups(): SubcommandGroupCollection {
+    protected override subcommandGroups(): SubcommandGroupCollection
+    {
         return new SubcommandGroupCollection(
             new QuerySubcommandGroup(this.api),
         );
     }
 
-    protected override subcommands(): SubcommandCollection {
+    protected override subcommands(): SubcommandCollection
+    {
         return new SubcommandCollection(
             new ResultsSubcommand(this.api),
             new DriverStandingsSubcommand(this.api),

@@ -12,7 +12,8 @@ import type {
     ResetTokenResponse,
 } from './types';
 
-export interface Endpoints {
+export interface Endpoints
+{
     api_token:
         | {
             params: { command: 'request' };
@@ -24,10 +25,12 @@ export interface Endpoints {
         };
 }
 
-export class TriviaApi {
+export class TriviaApi
+{
     protected readonly axios: AxiosInstance;
 
-    public constructor() {
+    public constructor()
+    {
         this.axios = axios.create({
             baseURL: 'https://opentdb.com',
         });
@@ -35,12 +38,14 @@ export class TriviaApi {
 
     // Endpoints
 
-    public async retrieveSessionToken(): Promise<string> {
+    public async retrieveSessionToken(): Promise<string>
+    {
         return await this.get<RequestTokenResponse>('api_token', { command: 'request' })
             .then((data) => data.token);
     }
 
-    public async resetSessionToken(token: string): Promise<void> {
+    public async resetSessionToken(token: string): Promise<void>
+    {
         await this.get('api_token', { command: 'reset', token });
     }
 
@@ -73,23 +78,27 @@ export class TriviaApi {
         difficulty?: QuestionDifficulty;
         type?: QuestionType;
         token?: string;
-    }): Promise<AnyQuestionData[]> {
+    }): Promise<AnyQuestionData[]>
+    {
         return await this.get<QuestionsResponse>('api', options)
             .then((data) => data.results);
     }
 
-    public async getAllCategories(): Promise<CategoryData[]> {
+    public async getAllCategories(): Promise<CategoryData[]>
+    {
         return await this.get<CategoriesResponse>('api_categories')
             .then((data) => data.trivia_categories);
     }
 
     // Other
 
-    public async startSession(): Promise<Session> {
+    public async startSession(): Promise<Session>
+    {
         return new Session(this, await this.retrieveSessionToken());
     }
 
-    protected async get<T>(path: string, params?: Record<string, unknown>): Promise<T> {
+    protected async get<T>(path: string, params?: Record<string, unknown>): Promise<T>
+    {
         return await this.axios.get<T>(`/${path}.php`, { params })
             .then((response) => response.data);
     }

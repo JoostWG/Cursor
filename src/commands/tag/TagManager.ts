@@ -1,7 +1,8 @@
 import type { Snowflake } from 'discord.js';
 import type { TagData } from './types';
 
-export abstract class TagManager {
+export abstract class TagManager
+{
     public abstract list(guildId: Snowflake): Promise<TagData[]>;
     public abstract find(guildId: Snowflake, name: string): Promise<TagData | null>;
     public abstract find(

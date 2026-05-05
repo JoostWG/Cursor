@@ -40,7 +40,8 @@ import type { OmitType } from '.';
 // #region Components
 export function actionRow<T extends APIComponentInActionRow>(
     data: OmitType<APIActionRowComponent<T>>,
-): APIActionRowComponent<T> {
+): APIActionRowComponent<T>
+{
     return {
         type: ComponentType.ActionRow,
         ...data,
@@ -58,7 +59,8 @@ export function button(
         | OmitType<APIButtonComponentWithCustomId>
         | OmitType<APIButtonComponentWithURL>
         | OmitType<APIButtonComponentWithSKUId>,
-): APIButtonComponentWithCustomId | APIButtonComponentWithURL | APIButtonComponentWithSKUId {
+): APIButtonComponentWithCustomId | APIButtonComponentWithURL | APIButtonComponentWithSKUId
+{
     return {
         type: ComponentType.Button,
         ...data,
@@ -66,28 +68,32 @@ export function button(
 }
 /* eslint-enable stylistic/padding-line-between-statements */
 
-export function textInput(data: OmitType<APITextInputComponent>): APITextInputComponent {
+export function textInput(data: OmitType<APITextInputComponent>): APITextInputComponent
+{
     return {
         type: ComponentType.TextInput,
         ...data,
     };
 }
 
-export function stringSelect(data: OmitType<APIStringSelectComponent>): APIStringSelectComponent {
+export function stringSelect(data: OmitType<APIStringSelectComponent>): APIStringSelectComponent
+{
     return {
         type: ComponentType.StringSelect,
         ...data,
     };
 }
 
-export function userSelect(data: OmitType<APIUserSelectComponent>): APIUserSelectComponent {
+export function userSelect(data: OmitType<APIUserSelectComponent>): APIUserSelectComponent
+{
     return {
         type: ComponentType.UserSelect,
         ...data,
     };
 }
 
-export function roleSelect(data: OmitType<APIRoleSelectComponent>): APIRoleSelectComponent {
+export function roleSelect(data: OmitType<APIRoleSelectComponent>): APIRoleSelectComponent
+{
     return {
         type: ComponentType.RoleSelect,
         ...data,
@@ -96,65 +102,72 @@ export function roleSelect(data: OmitType<APIRoleSelectComponent>): APIRoleSelec
 
 export function mentionableSelect(
     data: OmitType<APIMentionableSelectComponent>,
-): APIMentionableSelectComponent {
+): APIMentionableSelectComponent
+{
     return {
         type: ComponentType.MentionableSelect,
         ...data,
     };
 }
 
-export function channelSelect(
-    data: OmitType<APIChannelSelectComponent>,
-): APIChannelSelectComponent {
+export function channelSelect(data: OmitType<APIChannelSelectComponent>): APIChannelSelectComponent
+{
     return {
         type: ComponentType.ChannelSelect,
         ...data,
     };
 }
 
-export function section(data: OmitType<APISectionComponent>): APISectionComponent {
+export function section(data: OmitType<APISectionComponent>): APISectionComponent
+{
     return {
         type: ComponentType.Section,
         ...data,
     };
 }
 
-export function textDisplay(data: OmitType<APITextDisplayComponent>): APITextDisplayComponent {
+export function textDisplay(data: OmitType<APITextDisplayComponent>): APITextDisplayComponent
+{
     return {
         type: ComponentType.TextDisplay,
         ...data,
     };
 }
 
-export function thumbnail(data: OmitType<APIThumbnailComponent>): APIThumbnailComponent {
+export function thumbnail(data: OmitType<APIThumbnailComponent>): APIThumbnailComponent
+{
     return {
         type: ComponentType.Thumbnail,
         ...data,
     };
 }
 
-export function mediaGallery(data: OmitType<APIMediaGalleryComponent>): APIMediaGalleryComponent {
+export function mediaGallery(data: OmitType<APIMediaGalleryComponent>): APIMediaGalleryComponent
+{
     return {
         type: ComponentType.MediaGallery,
         ...data,
     };
 }
 
-export function file(data: OmitType<APIFileComponent>): APIFileComponent {
+export function file(data: OmitType<APIFileComponent>): APIFileComponent
+{
     return {
         type: ComponentType.File,
         ...data,
     };
 }
 
-export function separator(data: OmitType<APISeparatorComponent>): APISeparatorComponent {
+export function separator(data: OmitType<APISeparatorComponent>): APISeparatorComponent
+{
     return {
         type: ComponentType.Separator,
         ...data,
     };
 }
 
-export function container(data: OmitType<APIContainerComponent>): APIContainerComponent {
+export function container(data: OmitType<APIContainerComponent>): APIContainerComponent
+{
     return {
         type: ComponentType.Container,
         ...data,
@@ -165,7 +178,8 @@ export function container(data: OmitType<APIContainerComponent>): APIContainerCo
 // #region App cmd/options
 export function applicationCommand(
     data: RESTPostAPIApplicationCommandsJSONBody,
-): RESTPostAPIApplicationCommandsJSONBody {
+): RESTPostAPIApplicationCommandsJSONBody
+{
     return {
         ...data,
     };
@@ -173,7 +187,8 @@ export function applicationCommand(
 
 export function subcommand(
     data: OmitType<APIApplicationCommandSubcommandOption>,
-): APIApplicationCommandSubcommandOption {
+): APIApplicationCommandSubcommandOption
+{
     return {
         type: ApplicationCommandOptionType.Subcommand,
         ...data,
@@ -182,7 +197,8 @@ export function subcommand(
 
 export function subcommandGroup(
     data: OmitType<APIApplicationCommandSubcommandGroupOption>,
-): APIApplicationCommandSubcommandGroupOption {
+): APIApplicationCommandSubcommandGroupOption
+{
     return {
         type: ApplicationCommandOptionType.SubcommandGroup,
         ...data,
@@ -191,7 +207,8 @@ export function subcommandGroup(
 
 export function stringOption(
     data: OmitType<APIApplicationCommandStringOption>,
-): APIApplicationCommandStringOptionBase {
+): APIApplicationCommandStringOptionBase
+{
     return {
         type: ApplicationCommandOptionType.String,
         ...data,
@@ -200,7 +217,8 @@ export function stringOption(
 
 export function integerOption(
     data: OmitType<APIApplicationCommandIntegerOption>,
-): APIApplicationCommandIntegerOptionBase {
+): APIApplicationCommandIntegerOptionBase
+{
     return {
         type: ApplicationCommandOptionType.Integer,
         ...data,
@@ -209,7 +227,8 @@ export function integerOption(
 
 export function booleanOption(
     data: OmitType<APIApplicationCommandBooleanOption>,
-): APIApplicationCommandBooleanOption {
+): APIApplicationCommandBooleanOption
+{
     return {
         type: ApplicationCommandOptionType.Boolean,
         ...data,
@@ -218,7 +237,8 @@ export function booleanOption(
 
 export function userOption(
     data: OmitType<APIApplicationCommandUserOption>,
-): APIApplicationCommandUserOption {
+): APIApplicationCommandUserOption
+{
     return {
         type: ApplicationCommandOptionType.User,
         ...data,
@@ -227,7 +247,8 @@ export function userOption(
 
 export function channelOption(
     data: OmitType<APIApplicationCommandChannelOption>,
-): APIApplicationCommandChannelOption {
+): APIApplicationCommandChannelOption
+{
     return {
         type: ApplicationCommandOptionType.Channel,
         ...data,
@@ -236,7 +257,8 @@ export function channelOption(
 
 export function roleOption(
     data: OmitType<APIApplicationCommandRoleOption>,
-): APIApplicationCommandRoleOption {
+): APIApplicationCommandRoleOption
+{
     return {
         type: ApplicationCommandOptionType.Role,
         ...data,
@@ -245,7 +267,8 @@ export function roleOption(
 
 export function mentionableOption(
     data: OmitType<APIApplicationCommandMentionableOption>,
-): APIApplicationCommandMentionableOption {
+): APIApplicationCommandMentionableOption
+{
     return {
         type: ApplicationCommandOptionType.Mentionable,
         ...data,
@@ -254,7 +277,8 @@ export function mentionableOption(
 
 export function numberOption(
     data: OmitType<APIApplicationCommandNumberOption>,
-): APIApplicationCommandNumberOptionBase {
+): APIApplicationCommandNumberOptionBase
+{
     return {
         type: ApplicationCommandOptionType.Number,
         ...data,
@@ -263,7 +287,8 @@ export function numberOption(
 
 export function attachmentOption(
     data: OmitType<APIApplicationCommandAttachmentOption>,
-): APIApplicationCommandAttachmentOption {
+): APIApplicationCommandAttachmentOption
+{
     return {
         type: ApplicationCommandOptionType.Attachment,
         ...data,

@@ -1,4 +1,5 @@
-export enum ScoreCardSection {
+export enum ScoreCardSection
+{
     Upper = 'upper',
     Lower = 'lower',
 }

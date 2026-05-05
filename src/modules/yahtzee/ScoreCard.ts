@@ -13,14 +13,16 @@ import {
 import { ScoreCardSection } from './ScoreCardSection';
 import type { ScoreCardOptions } from './types';
 
-export class ScoreCard {
+export class ScoreCard
+{
     public readonly scoreCategories: readonly ScoreCategory[];
 
     public constructor(
         public readonly options: ScoreCardOptions = {
             bonus: { threshold: 63, reward: 35 },
         },
-    ) {
+    )
+    {
         this.scoreCategories = [
             new UpperSectionScoreCategory(1, 'Ones'),
             new UpperSectionScoreCategory(2, 'Twos'),
@@ -38,7 +40,8 @@ export class ScoreCard {
         ];
     }
 
-    public getActions(dice: Dice): ScoreCategory[] {
+    public getActions(dice: Dice): ScoreCategory[]
+    {
         if (!dice.isRolled()) {
             return [];
         }
@@ -46,7 +49,8 @@ export class ScoreCard {
         return this.scoreCategories.filter((category) => category.check(dice));
     }
 
-    public getScratchOptions(dice: Dice): ScoreCategory[] {
+    public getScratchOptions(dice: Dice): ScoreCategory[]
+    {
         if (!dice.isRolled()) {
             return [];
         }
@@ -54,33 +58,39 @@ export class ScoreCard {
         return this.scoreCategories.filter((category) => category.isOpen());
     }
 
-    public getUpperSectionSubtotal(): number {
+    public getUpperSectionSubtotal(): number
+    {
         return this.scoreCategories
             .filter((category) => category.section === ScoreCardSection.Upper)
             .reduce((subtotal, category) => subtotal + (category.getScoredPoints() ?? 0), 0);
     }
 
-    public getUpperSectionBonus(): number {
+    public getUpperSectionBonus(): number
+    {
         return this.getUpperSectionSubtotal() >= this.options.bonus.threshold
             ? this.options.bonus.reward
             : 0;
     }
 
-    public getUpperSectionTotal(): number {
+    public getUpperSectionTotal(): number
+    {
         return this.getUpperSectionSubtotal() + this.getUpperSectionBonus();
     }
 
-    public getLowerSectionTotal(): number {
+    public getLowerSectionTotal(): number
+    {
         return this.scoreCategories
             .filter((category) => category.section === ScoreCardSection.Lower)
             .reduce((total, category) => total + (category.getScoredPoints() ?? 0), 0);
     }
 
-    public getGrandTotal(): number {
+    public getGrandTotal(): number
+    {
         return this.getUpperSectionTotal() + this.getLowerSectionTotal();
     }
 
-    public isComplete(): boolean {
+    public isComplete(): boolean
+    {
         return this.scoreCategories.every((category) => !category.isOpen());
     }
 }

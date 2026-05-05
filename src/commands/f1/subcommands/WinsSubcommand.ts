@@ -5,8 +5,10 @@ import { stringOption } from '../../../lib/utils/builders';
 import { Table } from '../../../lib/utils/table';
 import { F1Subcommand } from './F1Subcommand';
 
-export class WinsSubcommand extends F1Subcommand {
-    protected override definition(): SubcommandDefinition {
+export class WinsSubcommand extends F1Subcommand
+{
+    protected override definition(): SubcommandDefinition
+    {
         return {
             name: 'wins',
             description: "Get a driver's wins",
@@ -20,7 +22,8 @@ export class WinsSubcommand extends F1Subcommand {
         };
     }
 
-    protected override async handle({ interaction }: ChatInputContext): Promise<void> {
+    protected override async handle({ interaction }: ChatInputContext): Promise<void>
+    {
         const driverId = interaction.options.getString('driver', true);
 
         const { data: races } = await this.api

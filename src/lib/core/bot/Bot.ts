@@ -15,12 +15,14 @@ import {
 } from '../context';
 import { ApplicationCommandError, CommandHandlerNotFoundError } from '../errors';
 
-export abstract class Bot {
+export abstract class Bot
+{
     public readonly client: Client;
     private readonly token: string;
     readonly #applicationCommands: ApplicationCommandCollection;
 
-    public constructor(options: { client: Client; token: string }) {
+    public constructor(options: { client: Client; token: string })
+    {
         this.client = options.client;
         this.token = options.token;
 
@@ -41,11 +43,13 @@ export abstract class Bot {
         this.#applicationCommands = this.applicationCommands();
     }
 
-    public async start(): Promise<void> {
+    public async start(): Promise<void>
+    {
         await this.client.login(this.token);
     }
 
-    protected async onApplicationCommandError(error: ApplicationCommandError): Promise<void> {
+    protected async onApplicationCommandError(error: ApplicationCommandError): Promise<void>
+    {
         console.error(error.cause);
 
         if (!error.interaction.isChatInputCommand()) {
@@ -62,23 +66,27 @@ export abstract class Bot {
         });
     }
 
-    protected async onError(error: Error): Promise<void> {
+    protected async onError(error: Error): Promise<void>
+    {
         console.error(error);
     }
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    protected async onApplicationCommand(ctx: BaseContext): Promise<void> {
+    protected async onApplicationCommand(ctx: BaseContext): Promise<void>
+    {
         //
     }
 
-    protected applicationCommands(): ApplicationCommandCollection {
+    protected applicationCommands(): ApplicationCommandCollection
+    {
         return new ApplicationCommandCollection();
     }
 
     private getContext(
         interaction: CommandInteraction,
         command: BaseApplicationCommand,
-    ): BaseContext {
+    ): BaseContext
+    {
         if (interaction.isChatInputCommand() && command.isSlashCommand()) {
             return new ChatInputContext({ bot: this, interaction, command });
         }
@@ -94,7 +102,8 @@ export abstract class Bot {
         throw new CommandHandlerNotFoundError(interaction);
     }
 
-    private async handleCommandInteraction(interaction: CommandInteraction): Promise<void> {
+    private async handleCommandInteraction(interaction: CommandInteraction): Promise<void>
+    {
         const command = this.#applicationCommands.get(interaction.commandName);
 
         if (!command) {
@@ -114,9 +123,8 @@ export abstract class Bot {
         }
     }
 
-    private async handleAutocompleteInteraction(
-        interaction: AutocompleteInteraction,
-    ): Promise<void> {
+    private async handleAutocompleteInteraction(interaction: AutocompleteInteraction): Promise<void>
+    {
         const command = this.#applicationCommands.get(interaction.commandName);
 
         if (!command?.isSlashCommand()) {

@@ -28,11 +28,13 @@ import type { CursorDatabase, DatabaseTables } from './database';
 import { ApplicationCommandCollection, Bot, type ApplicationCommandError } from './lib/core';
 import type { BaseContext } from './lib/core/context';
 
-export class CursorBot extends Bot {
+export class CursorBot extends Bot
+{
     public readonly db: CursorDatabase;
     private readonly deployHandler: CommandDeployHandler;
 
-    public constructor(token: string) {
+    public constructor(token: string)
+    {
         super({
             client: new Client({
                 intents: [GatewayIntentBits.GuildMembers, GatewayIntentBits.Guilds],
@@ -57,13 +59,15 @@ export class CursorBot extends Bot {
         });
     }
 
-    public override async start(): Promise<void> {
+    public override async start(): Promise<void>
+    {
         await this.deployHandler.deployIfNeeded();
 
         await super.start();
     }
 
-    protected override applicationCommands(): ApplicationCommandCollection {
+    protected override applicationCommands(): ApplicationCommandCollection
+    {
         return new ApplicationCommandCollection(
             // Chat
             new ChessCommand(),
@@ -88,7 +92,8 @@ export class CursorBot extends Bot {
         );
     }
 
-    protected override async onApplicationCommand({ interaction }: BaseContext): Promise<void> {
+    protected override async onApplicationCommand({ interaction }: BaseContext): Promise<void>
+    {
         await this.db
             .insertInto('command_logs')
             .values({
@@ -107,7 +112,8 @@ export class CursorBot extends Bot {
 
     protected override async onApplicationCommandError(
         { interaction, cause }: ApplicationCommandError,
-    ): Promise<void> {
+    ): Promise<void>
+    {
         if (cause instanceof CommandError && interaction.isRepliable()) {
             await interaction.reply({
                 content: cause.message,

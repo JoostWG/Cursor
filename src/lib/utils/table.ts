@@ -1,26 +1,31 @@
 import { range } from 'discord.js';
 import type { Stringable } from './types';
 
-export interface TableCell {
+export interface TableCell
+{
     align?: 'left' | 'right';
     content: string;
 }
 
-export interface TableCells {
+export interface TableCells
+{
     cells: TableCell[];
     after?: string;
 }
 
-export interface TableDivider {
+export interface TableDivider
+{
     divider: true;
     after?: string;
 }
 
-export interface TableSplit {
+export interface TableSplit
+{
     split: true;
 }
 
-export interface Column<T> {
+export interface Column<T>
+{
     name: string;
     options?: Omit<TableCell, 'content'>;
     value(row: T): Stringable;
@@ -50,10 +55,12 @@ const CrossSection = {
 };
 /* eslint-enable @typescript-eslint/naming-convention */
 
-export class Table {
+export class Table
+{
     private readonly columnWidths: number[];
 
-    public constructor(private readonly rows: TableRow[]) {
+    public constructor(private readonly rows: TableRow[])
+    {
         const dataRows = this.rows.filter((row) => 'cells' in row);
 
         this.columnWidths = range(Math.max(...dataRows.map((row) => row.cells.length)))
@@ -63,7 +70,8 @@ export class Table {
             .toArray();
     }
 
-    public static build<T>(rows: T[], columns: Column<T>[]): Table {
+    public static build<T>(rows: T[], columns: Column<T>[]): Table
+    {
         return new this([
             this.row(columns.map((column) => this.cell(column.name, column.options))),
             this.divider(),
@@ -73,23 +81,28 @@ export class Table {
         ]);
     }
 
-    public static cell(content: Stringable, options?: Omit<TableCell, 'content'>): TableCell {
+    public static cell(content: Stringable, options?: Omit<TableCell, 'content'>): TableCell
+    {
         return { content: content.toString(), ...(options ?? {}) };
     }
 
-    public static row(cells: TableCell[], options?: Omit<TableCells, 'cells'>): TableCells {
+    public static row(cells: TableCell[], options?: Omit<TableCells, 'cells'>): TableCells
+    {
         return { cells, ...(options ?? {}) };
     }
 
-    public static divider(options?: Omit<TableDivider, 'divider'>): TableDivider {
+    public static divider(options?: Omit<TableDivider, 'divider'>): TableDivider
+    {
         return { divider: true, ...(options ?? {}) };
     }
 
-    public static split(): TableSplit {
+    public static split(): TableSplit
+    {
         return { split: true };
     }
 
-    public render(): string {
+    public render(): string
+    {
         return [
             this.tableTop(),
             ...this.rows.flatMap((row) => {
@@ -111,7 +124,8 @@ export class Table {
         ].join('\n');
     }
 
-    private tableTop(): string {
+    private tableTop(): string
+    {
         return [
             Corner.TopLeft,
             this.columnWidths.map((width) => Line.Horizontal.repeat(width + 2)).join(
@@ -121,7 +135,8 @@ export class Table {
         ].join('');
     }
 
-    private tableBottom(): string {
+    private tableBottom(): string
+    {
         return [
             Corner.BottomLeft,
             this.columnWidths.map((width) => Line.Horizontal.repeat(width + 2)).join(
@@ -131,7 +146,8 @@ export class Table {
         ].join('');
     }
 
-    private tableCells(cells: TableCell[], options?: { after?: string }): string {
+    private tableCells(cells: TableCell[], options?: { after?: string }): string
+    {
         return [
             Line.Vertical,
             cells
@@ -154,7 +170,8 @@ export class Table {
         ].join('');
     }
 
-    private tableDivider(options?: { after?: string }): string {
+    private tableDivider(options?: { after?: string }): string
+    {
         return [
             CrossSection.Left,
             this.columnWidths
@@ -165,7 +182,8 @@ export class Table {
         ].join('');
     }
 
-    private tableSplit(): string[] {
+    private tableSplit(): string[]
+    {
         return [this.tableBottom(), this.tableTop()];
     }
 }

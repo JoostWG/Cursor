@@ -3,26 +3,31 @@ import type { Chess, Piece } from 'chess.js';
 
 export type ChessBoardColor = CanvasRenderingContext2D['fillStyle'];
 
-export interface OutputHandler {
+export interface OutputHandler
+{
     initiate(chess: Chess, boardImageData: Buffer): Promise<void>;
     update(chess: Chess, boardImageData: Buffer): Promise<void>;
 }
 
-export interface ChessBoard {
+export interface ChessBoard
+{
     render(chess: Chess): Promise<Buffer>;
 }
 
-export interface ChessBoardTheme {
+export interface ChessBoardTheme
+{
     squareColor(position: { x: number; y: number }): ChessBoardColor;
     borderColor(): ChessBoardColor;
     lastMoveFrom(): ChessBoardColor;
     lastMoveTo(): ChessBoardColor;
 }
 
-export interface ChessPieceFactory {
+export interface ChessPieceFactory
+{
     getPieceImage(piece: Piece): Promise<Canvas | Image>;
 }
 
-export interface MessageFactory {
+export interface MessageFactory
+{
     getMessage(chess: Chess): string;
 }

@@ -1,4 +1,5 @@
-export enum QuestionDifficulty {
+export enum QuestionDifficulty
+{
     Easy = 'easy',
     Medium = 'medium',
     Hard = 'hard',

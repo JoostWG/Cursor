@@ -1,4 +1,5 @@
-export enum JokeLanguage {
+export enum JokeLanguage
+{
     Czech = 'cs',
     German = 'de',
     English = 'en',

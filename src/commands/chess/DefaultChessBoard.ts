@@ -2,7 +2,8 @@ import { createCanvas, type CanvasRenderingContext2D } from 'canvas';
 import type { Chess } from 'chess.js';
 import type { ChessBoard, ChessBoardTheme, ChessPieceFactory } from './types';
 
-export class DefaultChessBoard implements ChessBoard {
+export class DefaultChessBoard implements ChessBoard
+{
     private readonly letterMap = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'] as const;
     private readonly size: number;
     private readonly theme: ChessBoardTheme;
@@ -12,21 +13,25 @@ export class DefaultChessBoard implements ChessBoard {
         size: number;
         theme: ChessBoardTheme;
         chessPieceFactory: ChessPieceFactory;
-    }) {
+    })
+    {
         this.size = options.size;
         this.theme = options.theme;
         this.chessPieceFactory = options.chessPieceFactory;
     }
 
-    private get cellSize(): number {
+    private get cellSize(): number
+    {
         return this.size / 8;
     }
 
-    private get borderWidth(): number {
+    private get borderWidth(): number
+    {
         return this.cellSize / 2;
     }
 
-    public async render(chess: Chess): Promise<Buffer> {
+    public async render(chess: Chess): Promise<Buffer>
+    {
         const canvas = createCanvas(
             this.size + this.borderWidth * 2,
             this.size + this.borderWidth * 2,
@@ -108,7 +113,8 @@ export class DefaultChessBoard implements ChessBoard {
         ctx: CanvasRenderingContext2D;
         color: CanvasRenderingContext2D['fillStyle'];
         rectangle: Readonly<Parameters<CanvasRenderingContext2D['rect']>>;
-    }): void {
+    }): void
+    {
         ctx.beginPath();
         ctx.fillStyle = color;
         ctx.rect(...rectangle);
@@ -119,7 +125,8 @@ export class DefaultChessBoard implements ChessBoard {
         ctx: CanvasRenderingContext2D;
         color: CanvasRenderingContext2D['fillStyle'];
         position: { x: number; y: number };
-    }): void {
+    }): void
+    {
         this.drawSquare({
             ctx,
             color,
@@ -129,7 +136,8 @@ export class DefaultChessBoard implements ChessBoard {
 
     private getCellRectangleForPosition(
         position: { x: number; y: number },
-    ): Parameters<CanvasRenderingContext2D['rect']> {
+    ): Parameters<CanvasRenderingContext2D['rect']>
+    {
         return [
             this.cellSize * position.x + this.borderWidth,
             this.cellSize * position.y + this.borderWidth,

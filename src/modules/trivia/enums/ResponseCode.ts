@@ -1,7 +1,8 @@
 /**
  * The API appends a "Response Code" to each API Call to help tell developers what the API is doing.
  */
-export enum ResponseCode {
+export enum ResponseCode
+{
     /**
      * Returned results successfully.
      */

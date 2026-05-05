@@ -8,7 +8,8 @@ export type JokeBlacklistFlag =
     | 'sexist'
     | 'explicit';
 
-export interface ErrorResponse extends Record<string, unknown> {
+export interface ErrorResponse extends Record<string, unknown>
+{
     error: true;
     internalError: boolean;
     code: number;
@@ -18,11 +19,13 @@ export interface ErrorResponse extends Record<string, unknown> {
     timestamp: number;
 }
 
-export interface SuccessResponse extends Record<string, unknown> {
+export interface SuccessResponse extends Record<string, unknown>
+{
     error: false;
 }
 
-export interface Joke extends Record<string, unknown> {
+export interface Joke extends Record<string, unknown>
+{
     category: string;
     flags: Map<JokeBlacklistFlag, boolean>;
     id: number;
@@ -30,12 +33,14 @@ export interface Joke extends Record<string, unknown> {
     lang: JokeLanguage;
 }
 
-export interface SingleTypeJoke extends Joke {
+export interface SingleTypeJoke extends Joke
+{
     type: 'single';
     joke: string;
 }
 
-export interface TwopartTypeJoke extends Joke {
+export interface TwopartTypeJoke extends Joke
+{
     type: 'twopart';
     setup: string;
     delivery: string;

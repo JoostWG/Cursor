@@ -3,7 +3,8 @@ import type { Piece } from 'chess.js';
 import path from 'path';
 import type { ChessPieceFactory } from './types';
 
-export class DefaultChessPieceFactory implements ChessPieceFactory {
+export class DefaultChessPieceFactory implements ChessPieceFactory
+{
     private readonly colorMap = {
         w: 'White',
         b: 'Black',
@@ -18,11 +19,13 @@ export class DefaultChessPieceFactory implements ChessPieceFactory {
     } as const;
     private readonly directory: string;
 
-    public constructor(options: { directory: string }) {
+    public constructor(options: { directory: string })
+    {
         this.directory = options.directory;
     }
 
-    public async getPieceImage(piece: Piece): Promise<Image> {
+    public async getPieceImage(piece: Piece): Promise<Image>
+    {
         return await loadImage(
             path.join(
                 __dirname,

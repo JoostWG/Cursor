@@ -11,12 +11,15 @@ import { stringOption } from '../../../lib/utils/builders';
 import type { TagManager } from '../TagManager';
 import type { TagData } from '../types';
 
-export abstract class TagSubcommand extends Subcommand {
-    public constructor(protected readonly tags: TagManager) {
+export abstract class TagSubcommand extends Subcommand
+{
+    public constructor(protected readonly tags: TagManager)
+    {
         super();
     }
 
-    public override async invoke(ctx: ChatInputContext): Promise<void> {
+    public override async invoke(ctx: ChatInputContext): Promise<void>
+    {
         if (!ctx.interaction.inCachedGuild()) {
             return;
         }
@@ -26,7 +29,8 @@ export abstract class TagSubcommand extends Subcommand {
 
     protected override async autocomplete(
         interaction: AutocompleteInteraction,
-    ): Promise<ApplicationCommandOptionChoiceData[]> {
+    ): Promise<ApplicationCommandOptionChoiceData[]>
+    {
         if (!interaction.guildId) {
             return [];
         }
@@ -40,7 +44,8 @@ export abstract class TagSubcommand extends Subcommand {
 
     protected async findTagOrFail(
         interaction: ChatInputCommandInteraction<'cached'>,
-    ): Promise<TagData> {
+    ): Promise<TagData>
+    {
         return await this.tags.find(
             interaction.guildId,
             interaction.options.getString('name', true),
@@ -50,7 +55,8 @@ export abstract class TagSubcommand extends Subcommand {
 
     protected nameOption(
         override?: Partial<OmitType<APIApplicationCommandStringOption>>,
-    ): APIApplicationCommandStringOption {
+    ): APIApplicationCommandStringOption
+    {
         return stringOption({
             name: 'name',
             description: 'tag name',
@@ -62,7 +68,8 @@ export abstract class TagSubcommand extends Subcommand {
 
     protected contentOption(
         override?: Partial<OmitType<APIApplicationCommandStringOption>>,
-    ): APIApplicationCommandStringOption {
+    ): APIApplicationCommandStringOption
+    {
         return stringOption({
             name: 'content',
             description: 'tag content',

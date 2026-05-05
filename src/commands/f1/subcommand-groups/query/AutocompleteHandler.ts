@@ -3,14 +3,17 @@ import type { F1Api } from 'f1-garage/jolpica';
 import { autocompleteResults } from '../../../../lib/utils';
 import { OptionName } from './QuerySubcommandGroupDefinitionBuilder';
 
-export class AutocompleteHandler {
-    public constructor(private readonly api: F1Api) {
+export class AutocompleteHandler
+{
+    public constructor(private readonly api: F1Api)
+    {
         //
     }
 
     public async handle(
         interaction: AutocompleteInteraction,
-    ): Promise<ApplicationCommandOptionChoiceData[]> {
+    ): Promise<ApplicationCommandOptionChoiceData[]>
+    {
         const { name } = interaction.options.getFocused(true) as { name: OptionName };
 
         if (name === OptionName.Driver) {
@@ -26,7 +29,8 @@ export class AutocompleteHandler {
 
     private async handleSeasonAutocomplete(
         interaction: AutocompleteInteraction,
-    ): Promise<ApplicationCommandOptionChoiceData[]> {
+    ): Promise<ApplicationCommandOptionChoiceData[]>
+    {
         const { data: seasons } = await this.api.seasons().get({ limit: 100 });
 
         return autocompleteResults(
@@ -39,7 +43,8 @@ export class AutocompleteHandler {
 
     private async handleDriverAutocomplete(
         interaction: AutocompleteInteraction,
-    ): Promise<ApplicationCommandOptionChoiceData[]> {
+    ): Promise<ApplicationCommandOptionChoiceData[]>
+    {
         const season = interaction.options.getInteger(OptionName.Season);
         const round = interaction.options.getInteger(OptionName.Round);
 

@@ -5,10 +5,12 @@ import type { OmitType } from '../../lib/utils';
 import { EconomyService } from '../../services';
 import { BalanceSubcommand, BetSubcommand } from './subcommands';
 
-export class EconomyCommand extends SlashCommand {
+export class EconomyCommand extends SlashCommand
+{
     private readonly economy: EconomyService;
 
-    public constructor(db: CursorDatabase) {
+    public constructor(db: CursorDatabase)
+    {
         super();
 
         this.economy = new EconomyService(db);
@@ -16,14 +18,16 @@ export class EconomyCommand extends SlashCommand {
         this.devOnly = true;
     }
 
-    protected override definition(): OmitType<RESTPostAPIChatInputApplicationCommandsJSONBody> {
+    protected override definition(): OmitType<RESTPostAPIChatInputApplicationCommandsJSONBody>
+    {
         return {
             name: 'economy',
             description: 'Idk',
         };
     }
 
-    protected override subcommands(): SubcommandCollection {
+    protected override subcommands(): SubcommandCollection
+    {
         return new SubcommandCollection(
             new BalanceSubcommand(this.economy),
             new BetSubcommand(this.economy),

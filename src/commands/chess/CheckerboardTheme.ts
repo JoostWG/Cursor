@@ -1,6 +1,7 @@
 import type { ChessBoardColor, ChessBoardTheme } from './types';
 
-export class CheckerboardTheme implements ChessBoardTheme {
+export class CheckerboardTheme implements ChessBoardTheme
+{
     public constructor(
         protected readonly colors: {
             light: ChessBoardColor;
@@ -11,21 +12,26 @@ export class CheckerboardTheme implements ChessBoardTheme {
                 to: ChessBoardColor;
             };
         },
-    ) {}
+    )
+    {}
 
-    public squareColor(position: { x: number; y: number }): ChessBoardColor {
+    public squareColor(position: { x: number; y: number }): ChessBoardColor
+    {
         return (position.x + position.y) % 2 ? this.colors.dark : this.colors.light;
     }
 
-    public borderColor(): ChessBoardColor {
+    public borderColor(): ChessBoardColor
+    {
         return this.colors.border;
     }
 
-    public lastMoveFrom(): ChessBoardColor {
+    public lastMoveFrom(): ChessBoardColor
+    {
         return this.colors.lastMove.from;
     }
 
-    public lastMoveTo(): ChessBoardColor {
+    public lastMoveTo(): ChessBoardColor
+    {
         return this.colors.lastMove.to;
     }
 }

@@ -18,7 +18,8 @@ import {
 import { extractHyperlinks } from '../../modules/urban-dictionary';
 import type { ComponentBuilderOptions } from './types';
 
-export class ComponentBuilder {
+export class ComponentBuilder
+{
     private readonly hyperlinkRegex = /\[([^[\]]+)\]/gmu;
 
     public build({
@@ -26,7 +27,8 @@ export class ComponentBuilder {
         history,
         pagination: { currentPage, totalPages },
         active,
-    }: ComponentBuilderOptions): APIBaseComponent<ComponentType>[] {
+    }: ComponentBuilderOptions): APIBaseComponent<ComponentType>[]
+    {
         if (!definition) {
             return [container({ components: [textDisplay({ content: 'Something went wrong!' })] })];
         }
@@ -104,14 +106,16 @@ export class ComponentBuilder {
         ];
     }
 
-    private transformHyperlinks(text: string): string {
+    private transformHyperlinks(text: string): string
+    {
         return text.replace(
             this.hyperlinkRegex,
             (_, term: string) => `[${term}](${this.getWebUrl(term)})`,
         );
     }
 
-    private getWebUrl(term: string): string {
+    private getWebUrl(term: string): string
+    {
         return `https://urbandictionary.com/define.php?term=${encodeURIComponent(term)}`;
     }
 }

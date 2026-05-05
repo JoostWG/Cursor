@@ -1,4 +1,5 @@
-export interface Definition {
+export interface Definition
+{
     defid: number;
     word: string;
     definition: string;

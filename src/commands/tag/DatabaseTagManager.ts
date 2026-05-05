@@ -4,10 +4,13 @@ import type { TagManager } from './TagManager';
 import { TagNotFoundError } from './TagNotFoundError';
 import type { TagData } from './types';
 
-export class DatabaseTagManager implements TagManager {
-    public constructor(private readonly db: CursorDatabase) {}
+export class DatabaseTagManager implements TagManager
+{
+    public constructor(private readonly db: CursorDatabase)
+    {}
 
-    public async list(guildId: Snowflake): Promise<TagData[]> {
+    public async list(guildId: Snowflake): Promise<TagData[]>
+    {
         return await this.db
             .selectFrom('tags')
             .where('guild_id', '=', guildId)
@@ -21,7 +24,8 @@ export class DatabaseTagManager implements TagManager {
         guildId: Snowflake,
         name: string,
         options?: { fail?: true },
-    ): Promise<TagData | null> {
+    ): Promise<TagData | null>
+    {
         const query = this.db
             .selectFrom('tags')
             .where('guild_id', '=', guildId)
@@ -45,7 +49,8 @@ export class DatabaseTagManager implements TagManager {
         userId: Snowflake;
         name: string;
         content: string;
-    }): Promise<TagData> {
+    }): Promise<TagData>
+    {
         const result = await this.db
             .insertInto('tags')
             .values({ guild_id: guildId, user_id: userId, name, content })
@@ -66,11 +71,13 @@ export class DatabaseTagManager implements TagManager {
         name?: string;
         content?: string;
         uses?: number;
-    }): Promise<void> {
+    }): Promise<void>
+    {
         await this.db.updateTable('tags').where('id', '=', tagId).set(data).execute();
     }
 
-    public async delete(tagId: number): Promise<void> {
+    public async delete(tagId: number): Promise<void>
+    {
         await this.db.deleteFrom('tags').where('id', '=', tagId).execute();
     }
 }

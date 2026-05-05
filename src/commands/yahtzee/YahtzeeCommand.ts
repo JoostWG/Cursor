@@ -4,15 +4,18 @@ import type { ChatInputContext } from '../../lib/core/context';
 import type { OmitType } from '../../lib/utils';
 import { Game } from './Game';
 
-export class YahtzeeCommand extends SlashCommand {
-    protected override definition(): OmitType<RESTPostAPIChatInputApplicationCommandsJSONBody> {
+export class YahtzeeCommand extends SlashCommand
+{
+    protected override definition(): OmitType<RESTPostAPIChatInputApplicationCommandsJSONBody>
+    {
         return {
             name: 'yahtzee',
             description: 'Yahtzee!',
         };
     }
 
-    protected override async handle({ interaction }: ChatInputContext): Promise<void> {
+    protected override async handle({ interaction }: ChatInputContext): Promise<void>
+    {
         const game = new Game({ interaction });
 
         await game.start();

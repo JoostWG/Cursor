@@ -2,12 +2,15 @@ import type { QuestionDifficulty, QuestionType } from './enums';
 import type { TriviaApi } from './TriviaApi';
 import type { AnyQuestionData, BooleanQuestionData, MultipleQuestionData } from './types';
 
-export class Session {
-    public constructor(protected readonly api: TriviaApi, public readonly token: string) {
+export class Session
+{
+    public constructor(protected readonly api: TriviaApi, public readonly token: string)
+    {
         //
     }
 
-    public async reset(): Promise<void> {
+    public async reset(): Promise<void>
+    {
         await this.api.resetSessionToken(this.token);
     }
 
@@ -37,7 +40,8 @@ export class Session {
         category?: number;
         difficulty?: QuestionDifficulty;
         type?: QuestionType;
-    }): Promise<AnyQuestionData[]> {
+    }): Promise<AnyQuestionData[]>
+    {
         return await this.api.getQuestions({ ...options, token: this.token });
     }
 }

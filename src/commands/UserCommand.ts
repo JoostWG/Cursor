@@ -8,8 +8,10 @@ import type { ChatInputContext } from '../lib/core/context';
 import type { OmitType } from '../lib/utils';
 import { userOption } from '../lib/utils/builders';
 
-export class UserCommand extends SlashCommand {
-    protected override definition(): OmitType<RESTPostAPIChatInputApplicationCommandsJSONBody> {
+export class UserCommand extends SlashCommand
+{
+    protected override definition(): OmitType<RESTPostAPIChatInputApplicationCommandsJSONBody>
+    {
         return {
             name: 'user',
             description: 'Get info on a user',
@@ -22,7 +24,8 @@ export class UserCommand extends SlashCommand {
         };
     }
 
-    protected override async handle({ interaction }: ChatInputContext): Promise<void> {
+    protected override async handle({ interaction }: ChatInputContext): Promise<void>
+    {
         const user = interaction.options.getUser('user') ?? interaction.user;
 
         await interaction.reply({

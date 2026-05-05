@@ -9,15 +9,18 @@ import { Game } from '../Game';
 import { InteractionHandler } from '../InteractionHandler';
 import { ChessSubcommand } from './ChessSubcommand';
 
-export class StartSubcommand extends ChessSubcommand {
-    protected override definition(): SubcommandDefinition {
+export class StartSubcommand extends ChessSubcommand
+{
+    protected override definition(): SubcommandDefinition
+    {
         return {
             name: 'start',
             description: 'Start a game',
         };
     }
 
-    protected override async handle({ interaction }: ChatInputContext): Promise<void> {
+    protected override async handle({ interaction }: ChatInputContext): Promise<void>
+    {
         const game = new Game({
             chess: new Chess(),
             output: new InteractionHandler({

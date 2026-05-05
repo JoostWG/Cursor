@@ -1,23 +1,28 @@
 import type { DieValue } from './types';
 
-export class Die {
+export class Die
+{
     #value: DieValue | null;
     #isLocked: boolean;
 
-    public constructor(value?: DieValue) {
+    public constructor(value?: DieValue)
+    {
         this.#value = value ?? null;
         this.#isLocked = false;
     }
 
-    public get value(): DieValue | null {
+    public get value(): DieValue | null
+    {
         return this.#value;
     }
 
-    public isLocked(): boolean {
+    public isLocked(): boolean
+    {
         return this.#isLocked;
     }
 
-    public roll(): void {
+    public roll(): void
+    {
         if (this.#value && this.#isLocked) {
             return;
         }
@@ -26,19 +31,23 @@ export class Die {
         this.#isLocked = false;
     }
 
-    public lock(): void {
+    public lock(): void
+    {
         this.#isLocked = true;
     }
 
-    public unlock(): void {
+    public unlock(): void
+    {
         this.#isLocked = false;
     }
 
-    public toggleLocked(): void {
+    public toggleLocked(): void
+    {
         this.#isLocked = !this.#isLocked;
     }
 
-    public reset(): void {
+    public reset(): void
+    {
         this.#value = null;
         this.#isLocked = false;
     }

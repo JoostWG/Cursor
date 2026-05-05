@@ -20,11 +20,13 @@ import { JokeLanguage } from './JokeLanguage';
 import { JokeResponseValidator } from './JokeResponseValidator';
 import type { AnyResponse, ErrorResponse } from './types';
 
-export class JokeCommand extends SlashCommand {
+export class JokeCommand extends SlashCommand
+{
     private readonly api: AxiosInstance;
     private readonly validator: JokeResponseValidator;
 
-    public constructor() {
+    public constructor()
+    {
         super();
 
         this.api = axios.create({
@@ -34,7 +36,8 @@ export class JokeCommand extends SlashCommand {
         this.validator = new JokeResponseValidator();
     }
 
-    protected override definition(): OmitType<RESTPostAPIChatInputApplicationCommandsJSONBody> {
+    protected override definition(): OmitType<RESTPostAPIChatInputApplicationCommandsJSONBody>
+    {
         return {
             name: 'joke',
             description: 'Have a laugh!',
@@ -59,7 +62,8 @@ export class JokeCommand extends SlashCommand {
         };
     }
 
-    protected override async handle({ interaction }: ChatInputContext): Promise<void> {
+    protected override async handle({ interaction }: ChatInputContext): Promise<void>
+    {
         const { category, safe } = this.getOptions(interaction);
 
         if (!safe && !this.allowUnsafe(interaction)) {
@@ -94,7 +98,8 @@ export class JokeCommand extends SlashCommand {
     private async handleResponse(
         interaction: ChatInputCommandInteraction,
         data: AnyResponse,
-    ): Promise<void> {
+    ): Promise<void>
+    {
         if (data.error) {
             await interaction.reply({
                 embeds: [this.buildErrorEmbed(data)],
@@ -116,14 +121,16 @@ export class JokeCommand extends SlashCommand {
 
     private getOptions(
         interaction: ChatInputCommandInteraction,
-    ): { category: string; safe: boolean } {
+    ): { category: string; safe: boolean }
+    {
         return {
             category: interaction.options.getString('category') ?? 'Any',
             safe: interaction.options.getBoolean('safe') ?? true,
         };
     }
 
-    private allowUnsafe(interaction: ChatInputCommandInteraction): boolean {
+    private allowUnsafe(interaction: ChatInputCommandInteraction): boolean
+    {
         if (!interaction.channel) {
             return false;
         }
@@ -131,7 +138,8 @@ export class JokeCommand extends SlashCommand {
         return interaction.channel instanceof TextChannel && interaction.channel.nsfw;
     }
 
-    private getLanguage(interaction: ChatInputCommandInteraction): JokeLanguage {
+    private getLanguage(interaction: ChatInputCommandInteraction): JokeLanguage
+    {
         const languageMap: Partial<Record<Locale, JokeLanguage>> = {
             [Locale.Czech]: JokeLanguage.Czech,
             [Locale.German]: JokeLanguage.German,
@@ -146,7 +154,8 @@ export class JokeCommand extends SlashCommand {
 
     private async fetch(
         options: { category: string; amount: number; language: JokeLanguage; safe: boolean },
-    ): Promise<AnyResponse> {
+    ): Promise<AnyResponse>
+    {
         const response = await this.api.get(`/joke/${options.category}`, {
             params: {
                 amount: options.amount,
@@ -161,7 +170,8 @@ export class JokeCommand extends SlashCommand {
         return this.validateResponse(response.data);
     }
 
-    private buildErrorEmbed(error?: ErrorResponse): APIEmbed {
+    private buildErrorEmbed(error?: ErrorResponse): APIEmbed
+    {
         if (error) {
             return {
                 color: Colors.Red,
@@ -176,11 +186,13 @@ export class JokeCommand extends SlashCommand {
         };
     }
 
-    private validateResponse(response: unknown): AnyResponse {
+    private validateResponse(response: unknown): AnyResponse
+    {
         return this.validator.anyResponse()(response, 'response');
     }
 
-    private validateErrorResponse(response: unknown): ErrorResponse | undefined {
+    private validateErrorResponse(response: unknown): ErrorResponse | undefined
+    {
         return v.optional(this.validator.errorResponse())(response, 'response');
     }
 }

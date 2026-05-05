@@ -10,28 +10,33 @@ import {
 import { container, mediaGallery, textDisplay } from '../../lib/utils/builders';
 import type { MessageFactory, OutputHandler } from './types';
 
-export class InteractionHandler implements OutputHandler {
+export class InteractionHandler implements OutputHandler
+{
     private readonly interaction: ChatInputCommandInteraction;
     private readonly messageFactory: MessageFactory;
 
     public constructor(options: {
         interaction: ChatInputCommandInteraction;
         messageFactory: MessageFactory;
-    }) {
+    })
+    {
         this.interaction = options.interaction;
         this.messageFactory = options.messageFactory;
     }
 
-    public async initiate(chess: Chess, boardImageData: Buffer): Promise<void> {
+    public async initiate(chess: Chess, boardImageData: Buffer): Promise<void>
+    {
         await this.interaction.reply(await this.buildMessage(chess, boardImageData));
     }
 
-    public async update(chess: Chess, boardImageData: Buffer): Promise<void> {
+    public async update(chess: Chess, boardImageData: Buffer): Promise<void>
+    {
         await this.interaction.editReply(await this.buildMessage(chess, boardImageData));
     }
 
     // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-    private async buildMessage(chess: Chess, boardImageData: Buffer) {
+    private async buildMessage(chess: Chess, boardImageData: Buffer)
+    {
         const file = new AttachmentBuilder(boardImageData, { name: 'board.png' });
 
         return {

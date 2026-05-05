@@ -8,8 +8,10 @@ import {
 import { CommandError } from '../../CommandError';
 import { InvalidRoleError } from './InvalidRoleError';
 
-export class RoleService {
-    public resolveColor(input: string): number {
+export class RoleService
+{
+    public resolveColor(input: string): number
+    {
         try {
             return resolveColor(parseInt(input) || input as ColorResolvable);
         } catch (error) {
@@ -26,7 +28,8 @@ export class RoleService {
         role: Role;
         allowManaged?: boolean;
         allowEveryone?: boolean;
-    }): void {
+    }): void
+    {
         // TODO
         // I'm not sure, but this function may need some more checks to also work properly
         // when the user is server owner

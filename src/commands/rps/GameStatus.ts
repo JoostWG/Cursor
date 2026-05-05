@@ -1,4 +1,5 @@
-export enum GameStatus {
+export enum GameStatus
+{
     InvitePending = 'invitePending',
     InviteDenied = 'inviteDenied',
     InviteExpired = 'inviteExpired',

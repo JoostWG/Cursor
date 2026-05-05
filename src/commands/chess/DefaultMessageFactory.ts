@@ -1,8 +1,10 @@
 import type { Chess } from 'chess.js';
 import type { MessageFactory } from './types';
 
-export class DefaultMessageFactory implements MessageFactory {
-    public getMessage(chess: Chess): string {
+export class DefaultMessageFactory implements MessageFactory
+{
+    public getMessage(chess: Chess): string
+    {
         const title = `${chess.turn() === 'w' ? 'White' : 'Black'} to move`;
 
         if (chess.isCheckmate()) {

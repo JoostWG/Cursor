@@ -3,29 +3,34 @@ import { InvalidSudoku } from './InvalidSudoku';
 import type { Sudoku } from './Sudoku';
 import type { Position, Value } from './types';
 
-export class Cell {
+export class Cell
+{
     public sudoku!: Sudoku;
     public square!: CellCollection;
     public row!: CellCollection;
     public column!: CellCollection;
     #value: Value;
 
-    public constructor(value: Value, public readonly absolutePosition: Position) {
+    public constructor(value: Value, public readonly absolutePosition: Position)
+    {
         this.#value = value;
     }
 
-    public get parentPosition(): Position {
+    public get parentPosition(): Position
+    {
         return {
             x: Math.floor(this.absolutePosition.x / 3),
             y: Math.floor(this.absolutePosition.y / 3),
         };
     }
 
-    public get value(): Value {
+    public get value(): Value
+    {
         return this.#value;
     }
 
-    public set value(value: Value) {
+    public set value(value: Value)
+    {
         if (value && (value < 1 || value > 9)) {
             throw new Error(`Something has gone terribly wrong. ${value}`);
         }
@@ -33,7 +38,8 @@ export class Cell {
         this.#value = value;
     }
 
-    public options(): number[] {
+    public options(): number[]
+    {
         if (this.value !== null) {
             return [];
         }
@@ -56,7 +62,8 @@ export class Cell {
      * - Returns the value if the solved.
      * - Returns `null` if the cell cannot be solved because of more than one possibility
      */
-    public solve(): number | null {
+    public solve(): number | null
+    {
         if (this.value !== null) {
             return null;
         }
@@ -92,7 +99,8 @@ export class Cell {
         return null;
     }
 
-    public toString(): string {
+    public toString(): string
+    {
         return this.value !== null ? this.value.toString() : '-';
     }
 }

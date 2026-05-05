@@ -6,19 +6,23 @@ import { container, textDisplay } from '../../../lib/utils/builders';
 import type { Choice } from '../Choice';
 import { emojis } from '../emojis';
 
-export class StatsSubcommand extends Subcommand {
-    public constructor(private readonly db: CursorDatabase) {
+export class StatsSubcommand extends Subcommand
+{
+    public constructor(private readonly db: CursorDatabase)
+    {
         super();
     }
 
-    protected override definition(): SubcommandDefinition {
+    protected override definition(): SubcommandDefinition
+    {
         return {
             name: 'stats',
             description: 'Shows game stats',
         };
     }
 
-    protected override async handle({ interaction }: ChatInputContext): Promise<void> {
+    protected override async handle({ interaction }: ChatInputContext): Promise<void>
+    {
         const games = await this.db
             .selectFrom('rps_games')
             .where('user_id', '=', interaction.user.id)

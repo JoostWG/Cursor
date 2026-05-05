@@ -1,13 +1,16 @@
 import type { CursorDatabase } from './database';
 import type { Migration } from './Migration';
 
-export class Migrator {
+export class Migrator
+{
     public constructor(
         private readonly db: CursorDatabase,
         private readonly migrations: Map<string, Migration>,
-    ) {}
+    )
+    {}
 
-    public async migrate(action: 'up' | 'down'): Promise<void> {
+    public async migrate(action: 'up' | 'down'): Promise<void>
+    {
         await this.createMigrationTable().ifNotExists().execute();
 
         if (action === 'up') {
@@ -17,7 +20,8 @@ export class Migrator {
         }
     }
 
-    private async up(): Promise<void> {
+    private async up(): Promise<void>
+    {
         const existingMigrations = await this.db.selectFrom('migrations').selectAll().execute();
 
         const existingNames = existingMigrations.map((migration) => migration.name);
@@ -52,7 +56,8 @@ export class Migrator {
         }
     }
 
-    private async down(): Promise<void> {
+    private async down(): Promise<void>
+    {
         const latestBatch = await this.db
             .selectFrom('migrations')
             .selectAll()
@@ -94,7 +99,8 @@ export class Migrator {
     }
 
     // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-    private createMigrationTable() {
+    private createMigrationTable()
+    {
         return this.db.schema
             .createTable('migrations')
             .addColumn('id', 'integer', (col) => col.primaryKey().autoIncrement().notNull())

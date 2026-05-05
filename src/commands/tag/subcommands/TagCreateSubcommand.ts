@@ -3,8 +3,10 @@ import type { SubcommandDefinition } from '../../../lib/core';
 import type { ChatInputContext } from '../../../lib/core/context';
 import { TagSubcommand } from './TagSubcommand';
 
-export class TagCreateSubcommand extends TagSubcommand {
-    protected override definition(): SubcommandDefinition {
+export class TagCreateSubcommand extends TagSubcommand
+{
+    protected override definition(): SubcommandDefinition
+    {
         return {
             name: 'create',
             description: 'Create a tag',
@@ -15,7 +17,8 @@ export class TagCreateSubcommand extends TagSubcommand {
         };
     }
 
-    protected override async handle({ interaction }: ChatInputContext<'cached'>): Promise<void> {
+    protected override async handle({ interaction }: ChatInputContext<'cached'>): Promise<void>
+    {
         const name = interaction.options.getString('name', true);
         const content = interaction.options.getString('content', true);
 

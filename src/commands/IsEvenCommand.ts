@@ -9,8 +9,10 @@ type IsEvenResponse =
     | { ad: string; iseven: boolean }
     | { error: string };
 
-export class IsEvenCommand extends SlashCommand {
-    protected override definition(): OmitType<RESTPostAPIChatInputApplicationCommandsJSONBody> {
+export class IsEvenCommand extends SlashCommand
+{
+    protected override definition(): OmitType<RESTPostAPIChatInputApplicationCommandsJSONBody>
+    {
         return {
             name: 'is-even',
             description: 'Check whether a number is even',
@@ -24,13 +26,15 @@ export class IsEvenCommand extends SlashCommand {
         };
     }
 
-    protected override async handle({ interaction }: ChatInputContext): Promise<void> {
+    protected override async handle({ interaction }: ChatInputContext): Promise<void>
+    {
         const number = interaction.options.getString('number', true);
 
         const { data } = await axios.get<IsEvenResponse>(
             `https://api.isevenapi.xyz/api/iseven/${encodeURIComponent(number)}`,
             {
-                validateStatus(status) {
+                validateStatus(status)
+                {
                     return (status >= 200 && status <= 299) || (status >= 400 && status <= 499);
                 },
             },

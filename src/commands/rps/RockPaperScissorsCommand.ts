@@ -4,19 +4,23 @@ import { SlashCommand, SubcommandCollection } from '../../lib/core';
 import type { OmitType } from '../../lib/utils';
 import { PlaySubcommand, StatsSubcommand } from './subcommands';
 
-export class RockPaperScissorsCommand extends SlashCommand {
-    public constructor(private readonly db: CursorDatabase) {
+export class RockPaperScissorsCommand extends SlashCommand
+{
+    public constructor(private readonly db: CursorDatabase)
+    {
         super();
     }
 
-    protected override definition(): OmitType<RESTPostAPIChatInputApplicationCommandsJSONBody> {
+    protected override definition(): OmitType<RESTPostAPIChatInputApplicationCommandsJSONBody>
+    {
         return {
             name: 'rps',
             description: 'Rock Paper Scissors',
         };
     }
 
-    protected override subcommands(): SubcommandCollection {
+    protected override subcommands(): SubcommandCollection
+    {
         return new SubcommandCollection(
             new PlaySubcommand(this.db),
             new StatsSubcommand(this.db),

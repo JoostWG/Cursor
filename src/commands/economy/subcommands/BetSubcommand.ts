@@ -4,8 +4,10 @@ import type { ChatInputContext } from '../../../lib/core/context';
 import { integerOption } from '../../../lib/utils/builders';
 import { EconomySubcommand } from './EconomySubcommand';
 
-export class BetSubcommand extends EconomySubcommand {
-    protected override definition(): SubcommandDefinition {
+export class BetSubcommand extends EconomySubcommand
+{
+    protected override definition(): SubcommandDefinition
+    {
         return {
             name: 'bet',
             description: 'Waste of money...',
@@ -20,7 +22,8 @@ export class BetSubcommand extends EconomySubcommand {
         };
     }
 
-    protected override async handle({ interaction }: ChatInputContext): Promise<void> {
+    protected override async handle({ interaction }: ChatInputContext): Promise<void>
+    {
         const amount = interaction.options.getInteger('amount', true);
 
         if (amount < 1) {

@@ -1,4 +1,5 @@
-export enum JokeCategory {
+export enum JokeCategory
+{
     Programming = 'programming',
     Miscellaneous = 'misc',
     Dark = 'dark',

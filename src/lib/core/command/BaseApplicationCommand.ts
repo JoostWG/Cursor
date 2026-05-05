@@ -10,34 +10,42 @@ import type { UserContextMenu } from './UserContextMenu';
 export abstract class BaseApplicationCommand<
     TData extends RESTPostAPIApplicationCommandsJSONBody = RESTPostAPIApplicationCommandsJSONBody,
     TContext extends BaseContext = BaseContext,
-> implements HasName {
+> implements HasName
+{
     public devOnly?: boolean;
 
-    public get name(): string {
+    public get name(): string
+    {
         return this.getData().name;
     }
 
-    public getType(): ApplicationCommandType {
+    public getType(): ApplicationCommandType
+    {
         return this.getData().type;
     }
 
-    public isSlashCommand(): this is SlashCommand {
+    public isSlashCommand(): this is SlashCommand
+    {
         return this.getType() === ApplicationCommandType.ChatInput;
     }
 
-    public isUserContextMenu(): this is UserContextMenu {
+    public isUserContextMenu(): this is UserContextMenu
+    {
         return this.getType() === ApplicationCommandType.User;
     }
 
-    public isMessageContextMenu(): this is MessageContextMenu {
+    public isMessageContextMenu(): this is MessageContextMenu
+    {
         return this.getType() === ApplicationCommandType.Message;
     }
 
-    public isContextMenu(): this is UserContextMenu | MessageContextMenu {
+    public isContextMenu(): this is UserContextMenu | MessageContextMenu
+    {
         return this.isUserContextMenu() || this.isMessageContextMenu();
     }
 
-    public async invoke(ctx: TContext): Promise<void> {
+    public async invoke(ctx: TContext): Promise<void>
+    {
         if (!this.handle) {
             throw new CommandHandlerNotFoundError(ctx.interaction);
         }

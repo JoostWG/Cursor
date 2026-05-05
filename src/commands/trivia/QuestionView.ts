@@ -13,11 +13,13 @@ import { actionRow, button, container, textDisplay } from '../../lib/utils/build
 import { QuestionType, type AnyQuestionData } from '../../modules/trivia';
 import type { Answer, Status } from './types';
 
-export class QuestionView {
+export class QuestionView
+{
     private readonly answers: Map<string, Answer>;
     private status: Status;
 
-    public constructor(private readonly question: AnyQuestionData) {
+    public constructor(private readonly question: AnyQuestionData)
+    {
         // TODO: Below
 
         const allAnswers = this.question.type === QuestionType.Boolean
@@ -39,7 +41,8 @@ export class QuestionView {
         this.status = 'active';
     }
 
-    public async start(interaction: ChatInputCommandInteraction): Promise<void> {
+    public async start(interaction: ChatInputCommandInteraction): Promise<void>
+    {
         const response = await interaction.reply({
             withResponse: true,
             flags: MessageFlags.IsComponentsV2,
@@ -80,7 +83,8 @@ export class QuestionView {
             });
     }
 
-    private buildComponents(): APIBaseComponent<ComponentType>[] {
+    private buildComponents(): APIBaseComponent<ComponentType>[]
+    {
         return [
             container({
                 components: [

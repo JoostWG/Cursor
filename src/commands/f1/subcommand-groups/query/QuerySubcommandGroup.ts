@@ -10,33 +10,40 @@ import {
     SubcommandName,
 } from './QuerySubcommandGroupDefinitionBuilder';
 
-export class QuerySubcommandGroup extends SubcommandGroup {
+export class QuerySubcommandGroup extends SubcommandGroup
+{
     private readonly autocompleteHandler: AutocompleteHandler;
 
-    public constructor(private readonly api: F1Api) {
+    public constructor(private readonly api: F1Api)
+    {
         super();
 
         this.autocompleteHandler = new AutocompleteHandler(this.api);
     }
 
-    protected override definition(): SubcommandGroupDefinition {
+    protected override definition(): SubcommandGroupDefinition
+    {
         return new QuerySubcommandGroupDefinitionBuilder().getQuerySubcommandGroup();
     }
 
     protected override async autocomplete(
         interaction: AutocompleteInteraction,
-    ): Promise<ApplicationCommandOptionChoiceData[]> {
+    ): Promise<ApplicationCommandOptionChoiceData[]>
+    {
         return await this.autocompleteHandler.handle(interaction);
     }
 
-    protected override async handle({ interaction }: ChatInputContext): Promise<void> {
+    protected override async handle({ interaction }: ChatInputContext): Promise<void>
+    {
         const subcommand = interaction.options.getSubcommand(true) as SubcommandName;
 
-        function string(name: OptionName): string | undefined {
+        function string(name: OptionName): string | undefined
+        {
             return interaction.options.getString(name) ?? undefined;
         }
 
-        function integer(name: OptionName): number | undefined {
+        function integer(name: OptionName): number | undefined
+        {
             return interaction.options.getInteger(name) ?? undefined;
         }
 

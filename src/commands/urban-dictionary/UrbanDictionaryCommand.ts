@@ -13,16 +13,19 @@ import { ComponentBuilder } from './ComponentBuilder';
 import { InteractionHandler } from './InteractionHandler';
 import { UrbanDictionary } from './UrbanDictionary';
 
-export class UrbanDictionaryCommand extends SlashCommand {
+export class UrbanDictionaryCommand extends SlashCommand
+{
     private readonly api: Api;
 
-    public constructor() {
+    public constructor()
+    {
         super();
 
         this.api = new CachedApi();
     }
 
-    protected override definition(): OmitType<RESTPostAPIChatInputApplicationCommandsJSONBody> {
+    protected override definition(): OmitType<RESTPostAPIChatInputApplicationCommandsJSONBody>
+    {
         return {
             name: 'urban-dictionary',
             description: 'Urban dictionary',
@@ -40,7 +43,8 @@ export class UrbanDictionaryCommand extends SlashCommand {
 
     protected override async autocomplete(
         interaction: AutocompleteInteraction,
-    ): Promise<ApplicationCommandOptionChoiceData[]> {
+    ): Promise<ApplicationCommandOptionChoiceData[]>
+    {
         const term = interaction.options.getFocused();
 
         if (!term) {
@@ -52,7 +56,8 @@ export class UrbanDictionaryCommand extends SlashCommand {
         return results.map((result) => ({ name: result, value: result }));
     }
 
-    protected override async handle({ interaction }: ChatInputContext): Promise<void> {
+    protected override async handle({ interaction }: ChatInputContext): Promise<void>
+    {
         await new UrbanDictionary(
             this.api,
             new InteractionHandler(interaction, new ComponentBuilder()),

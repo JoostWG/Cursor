@@ -1,3 +1,4 @@
-export class CommandError extends Error {
+export class CommandError extends Error
+{
     //
 }

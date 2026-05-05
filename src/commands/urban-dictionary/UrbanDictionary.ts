@@ -3,18 +3,21 @@ import { HistoryItem } from './HistoryItem';
 import type { InteractionHandler } from './InteractionHandler';
 import type { OutputOptions } from './types';
 
-export class UrbanDictionary {
+export class UrbanDictionary
+{
     private readonly api: Api;
     private readonly interactionHandler: InteractionHandler;
     private readonly history: HistoryItem[];
 
-    public constructor(api: Api, interactionHandler: InteractionHandler) {
+    public constructor(api: Api, interactionHandler: InteractionHandler)
+    {
         this.api = api;
         this.interactionHandler = interactionHandler;
         this.history = [];
     }
 
-    public async start(term: string): Promise<void> {
+    public async start(term: string): Promise<void>
+    {
         const item = await this.addHistoryItem(term);
 
         await this.interactionHandler.initiate({
@@ -25,19 +28,22 @@ export class UrbanDictionary {
         });
     }
 
-    public async goToDefinition(term: string): Promise<OutputOptions> {
+    public async goToDefinition(term: string): Promise<OutputOptions>
+    {
         await this.addHistoryItem(term);
 
         return this.getOptions();
     }
 
-    public async goBack(): Promise<OutputOptions> {
+    public async goBack(): Promise<OutputOptions>
+    {
         this.history.pop();
 
         return this.getOptions();
     }
 
-    public async previousPage(): Promise<OutputOptions> {
+    public async previousPage(): Promise<OutputOptions>
+    {
         const item = this.history.at(-1);
 
         if (item) {
@@ -47,7 +53,8 @@ export class UrbanDictionary {
         return this.getOptions();
     }
 
-    public async nextPage(): Promise<OutputOptions> {
+    public async nextPage(): Promise<OutputOptions>
+    {
         const item = this.history.at(-1);
 
         if (item) {
@@ -57,7 +64,8 @@ export class UrbanDictionary {
         return this.getOptions();
     }
 
-    private async addHistoryItem(term: string): Promise<HistoryItem> {
+    private async addHistoryItem(term: string): Promise<HistoryItem>
+    {
         const item = new HistoryItem(term, await this.api.define(term));
 
         this.history.push(item);
@@ -65,7 +73,8 @@ export class UrbanDictionary {
         return item;
     }
 
-    private getOptions(): OutputOptions {
+    private getOptions(): OutputOptions
+    {
         const item = this.history.at(-1);
 
         return item

@@ -16,7 +16,8 @@ type Listener<T extends MessageComponentType = MessageComponentType> = (
     interaction: MappedInteractionTypes[T],
 ) => Promise<void>;
 
-export abstract class ComponentUI {
+export abstract class ComponentUI
+{
     protected collector!: InteractionCollector<MappedInteractionTypes[MessageComponentType]>;
     private readonly listeners: Map<string, Listener>;
 
@@ -26,11 +27,13 @@ export abstract class ComponentUI {
             MessageCollectorOptionsParams<MessageComponentType>,
             'componentType' | 'filter'
         > = {},
-    ) {
+    )
+    {
         this.listeners = new Map();
     }
 
-    public async start(): Promise<void> {
+    public async start(): Promise<void>
+    {
         const response = await this.sendInitialMessage(this.interaction);
 
         if (!response.resource?.message) {
@@ -59,7 +62,8 @@ export abstract class ComponentUI {
         });
     }
 
-    protected filter(interaction: MessageComponentInteraction): boolean {
+    protected filter(interaction: MessageComponentInteraction): boolean
+    {
         return interaction.user.id === this.interaction.user.id;
     }
 
@@ -67,7 +71,8 @@ export abstract class ComponentUI {
         component: C,
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-arguments
         listener: Listener<C['type']>,
-    ): C {
+    ): C
+    {
         this.listeners.set(component.custom_id, listener);
 
         return component;

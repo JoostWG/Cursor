@@ -10,14 +10,17 @@ import type { OmitType } from '../../lib/utils';
 import { container, stringOption, textDisplay } from '../../lib/utils/builders';
 import { Sudoku } from '../../modules/sudoku';
 
-export class SudokuCommand extends SlashCommand {
-    public constructor() {
+export class SudokuCommand extends SlashCommand
+{
+    public constructor()
+    {
         super();
 
         this.devOnly = true;
     }
 
-    protected override definition(): OmitType<RESTPostAPIChatInputApplicationCommandsJSONBody> {
+    protected override definition(): OmitType<RESTPostAPIChatInputApplicationCommandsJSONBody>
+    {
         return {
             name: 'sudoku',
             description: 'Solve sudoku',
@@ -31,7 +34,8 @@ export class SudokuCommand extends SlashCommand {
         };
     }
 
-    protected override async handle({ interaction }: ChatInputContext): Promise<void> {
+    protected override async handle({ interaction }: ChatInputContext): Promise<void>
+    {
         const data = interaction.options.getString('data', true);
 
         const sudoku = Sudoku.fromString(data);

@@ -5,12 +5,15 @@ import type { ChatInputContext } from '../../../lib/core/context';
 import { userOption } from '../../../lib/utils/builders';
 import { Game } from '../Game';
 
-export class PlaySubcommand extends Subcommand {
-    public constructor(private readonly db: CursorDatabase) {
+export class PlaySubcommand extends Subcommand
+{
+    public constructor(private readonly db: CursorDatabase)
+    {
         super();
     }
 
-    protected override definition(): SubcommandDefinition {
+    protected override definition(): SubcommandDefinition
+    {
         return {
             name: 'play',
             description: 'Play Rock Paper Scissors',
@@ -23,7 +26,8 @@ export class PlaySubcommand extends Subcommand {
         };
     }
 
-    protected override async handle({ interaction }: ChatInputContext): Promise<void> {
+    protected override async handle({ interaction }: ChatInputContext): Promise<void>
+    {
         const opponent = interaction.options.getUser('opponent', true);
 
         if (opponent.bot) {

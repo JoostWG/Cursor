@@ -1,8 +1,10 @@
 import type { SchemaModule } from 'kysely';
 import type { Migration } from '../Migration';
 
-export class V4 implements Migration {
-    public async up(schema: SchemaModule): Promise<void> {
+export class V4 implements Migration
+{
+    public async up(schema: SchemaModule): Promise<void>
+    {
         await schema
             .createTable('balances')
             .addColumn('id', 'integer', (col) => col.primaryKey().autoIncrement().notNull())
@@ -11,7 +13,8 @@ export class V4 implements Migration {
             .execute();
     }
 
-    public async down(schema: SchemaModule): Promise<void> {
+    public async down(schema: SchemaModule): Promise<void>
+    {
         await schema.dropTable('balances').execute();
     }
 }

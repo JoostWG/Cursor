@@ -13,7 +13,8 @@ import {
     subcommandGroup,
 } from '../../../../lib/utils/builders';
 
-export enum SubcommandName {
+export enum SubcommandName
+{
     Circuits = 'circuits',
     DriverStandings = 'driver-standings',
     Drivers = 'drivers',
@@ -28,7 +29,8 @@ export enum SubcommandName {
     Teams = 'teams',
 }
 
-export enum OptionName {
+export enum OptionName
+{
     Season = 'season',
     Round = 'round',
     Circuit = 'circuit',
@@ -44,8 +46,10 @@ export enum OptionName {
     Offset = 'offset',
 }
 
-export class QuerySubcommandGroupDefinitionBuilder {
-    public getQuerySubcommandGroup(): APIApplicationCommandSubcommandGroupOption {
+export class QuerySubcommandGroupDefinitionBuilder
+{
+    public getQuerySubcommandGroup(): APIApplicationCommandSubcommandGroupOption
+    {
         return subcommandGroup({
             name: 'query',
             description: 'Query the Jolpica F1 API',
@@ -68,7 +72,8 @@ export class QuerySubcommandGroupDefinitionBuilder {
 
     // Subcommands
 
-    private getCircuitsSubcommand(): APIApplicationCommandSubcommandOption {
+    private getCircuitsSubcommand(): APIApplicationCommandSubcommandOption
+    {
         return subcommand({
             name: SubcommandName.Circuits,
             description: 'Query circuits',
@@ -85,7 +90,8 @@ export class QuerySubcommandGroupDefinitionBuilder {
         });
     }
 
-    private getDriverStandingsSubcommand(): APIApplicationCommandSubcommandOption {
+    private getDriverStandingsSubcommand(): APIApplicationCommandSubcommandOption
+    {
         return subcommand({
             name: SubcommandName.DriverStandings,
             description: 'Query driver standings',
@@ -97,7 +103,8 @@ export class QuerySubcommandGroupDefinitionBuilder {
         });
     }
 
-    private getDriversSubcommand(): APIApplicationCommandSubcommandOption {
+    private getDriversSubcommand(): APIApplicationCommandSubcommandOption
+    {
         return subcommand({
             name: SubcommandName.Drivers,
             description: 'Query drivers',
@@ -114,7 +121,8 @@ export class QuerySubcommandGroupDefinitionBuilder {
         });
     }
 
-    private getLapsSubcommand(): APIApplicationCommandSubcommandOption {
+    private getLapsSubcommand(): APIApplicationCommandSubcommandOption
+    {
         return subcommand({
             name: SubcommandName.Laps,
             description: 'Query laps',
@@ -128,7 +136,8 @@ export class QuerySubcommandGroupDefinitionBuilder {
         });
     }
 
-    private getPitStopsSubcommand(): APIApplicationCommandSubcommandOption {
+    private getPitStopsSubcommand(): APIApplicationCommandSubcommandOption
+    {
         return subcommand({
             name: SubcommandName.PitStops,
             description: 'Query pit stops',
@@ -142,7 +151,8 @@ export class QuerySubcommandGroupDefinitionBuilder {
         });
     }
 
-    private getQualifyingResultsSubcommand(): APIApplicationCommandSubcommandOption {
+    private getQualifyingResultsSubcommand(): APIApplicationCommandSubcommandOption
+    {
         return subcommand({
             name: SubcommandName.QualifyingResults,
             description: 'Query qualifying results',
@@ -159,7 +169,8 @@ export class QuerySubcommandGroupDefinitionBuilder {
         });
     }
 
-    private getRacesSubcommand(): APIApplicationCommandSubcommandOption {
+    private getRacesSubcommand(): APIApplicationCommandSubcommandOption
+    {
         return subcommand({
             name: SubcommandName.Races,
             description: 'Query races',
@@ -176,7 +187,8 @@ export class QuerySubcommandGroupDefinitionBuilder {
         });
     }
 
-    private getResultsSubcommand(): APIApplicationCommandSubcommandOption {
+    private getResultsSubcommand(): APIApplicationCommandSubcommandOption
+    {
         return subcommand({
             name: SubcommandName.Results,
             description: 'Query results',
@@ -193,7 +205,8 @@ export class QuerySubcommandGroupDefinitionBuilder {
         });
     }
 
-    private getSeasonsSubcommand(): APIApplicationCommandSubcommandOption {
+    private getSeasonsSubcommand(): APIApplicationCommandSubcommandOption
+    {
         return subcommand({
             name: SubcommandName.Seasons,
             description: 'Query seasons',
@@ -207,7 +220,8 @@ export class QuerySubcommandGroupDefinitionBuilder {
         });
     }
 
-    private getSprintsSubcommand(): APIApplicationCommandSubcommandOption {
+    private getSprintsSubcommand(): APIApplicationCommandSubcommandOption
+    {
         return subcommand({
             name: SubcommandName.SprintResults,
             description: 'Query sprints',
@@ -223,7 +237,8 @@ export class QuerySubcommandGroupDefinitionBuilder {
         });
     }
 
-    private getTeamStandingsSubcommand(): APIApplicationCommandSubcommandOption {
+    private getTeamStandingsSubcommand(): APIApplicationCommandSubcommandOption
+    {
         return subcommand({
             name: SubcommandName.TeamStandings,
             description: 'Query team standings',
@@ -235,7 +250,8 @@ export class QuerySubcommandGroupDefinitionBuilder {
         });
     }
 
-    private getTeamsSubcommand(): APIApplicationCommandSubcommandOption {
+    private getTeamsSubcommand(): APIApplicationCommandSubcommandOption
+    {
         return subcommand({
             name: SubcommandName.Teams,
             description: 'Query teams',
@@ -254,7 +270,8 @@ export class QuerySubcommandGroupDefinitionBuilder {
 
     // Options
 
-    private getSeasonOption(required = false): APIApplicationCommandIntegerOptionBase {
+    private getSeasonOption(required = false): APIApplicationCommandIntegerOptionBase
+    {
         return integerOption({
             name: OptionName.Season,
             description: 'Filter on season',
@@ -263,7 +280,8 @@ export class QuerySubcommandGroupDefinitionBuilder {
         });
     }
 
-    private getRoundOption(required = false): APIApplicationCommandIntegerOption {
+    private getRoundOption(required = false): APIApplicationCommandIntegerOption
+    {
         return integerOption({
             name: OptionName.Round,
             description: 'Filter on round',
@@ -271,7 +289,8 @@ export class QuerySubcommandGroupDefinitionBuilder {
         });
     }
 
-    private getCircuitOption(): APIApplicationCommandStringOption {
+    private getCircuitOption(): APIApplicationCommandStringOption
+    {
         return stringOption({
             name: OptionName.Circuit,
             description: 'Filter on circuit',
@@ -279,7 +298,8 @@ export class QuerySubcommandGroupDefinitionBuilder {
         });
     }
 
-    private getDriverOption(): APIApplicationCommandStringOption {
+    private getDriverOption(): APIApplicationCommandStringOption
+    {
         return stringOption({
             name: OptionName.Driver,
             description: 'Filter on driver',
@@ -288,7 +308,8 @@ export class QuerySubcommandGroupDefinitionBuilder {
         });
     }
 
-    private getFastestOption(): APIApplicationCommandIntegerOption {
+    private getFastestOption(): APIApplicationCommandIntegerOption
+    {
         return integerOption({
             name: OptionName.Fastest,
             description: 'Filter on fastest lap rank',
@@ -296,7 +317,8 @@ export class QuerySubcommandGroupDefinitionBuilder {
         });
     }
 
-    private getGridOption(): APIApplicationCommandIntegerOption {
+    private getGridOption(): APIApplicationCommandIntegerOption
+    {
         return integerOption({
             name: OptionName.Grid,
             description: 'Filter on grid position',
@@ -304,7 +326,8 @@ export class QuerySubcommandGroupDefinitionBuilder {
         });
     }
 
-    private getLapOption(): APIApplicationCommandIntegerOption {
+    private getLapOption(): APIApplicationCommandIntegerOption
+    {
         return integerOption({
             name: OptionName.Lap,
             description: 'Filter on lap number',
@@ -312,7 +335,8 @@ export class QuerySubcommandGroupDefinitionBuilder {
         });
     }
 
-    private getPitStopOption(): APIApplicationCommandIntegerOption {
+    private getPitStopOption(): APIApplicationCommandIntegerOption
+    {
         return integerOption({
             name: OptionName.PitStop,
             description: 'Filter on pit stop number',
@@ -320,7 +344,8 @@ export class QuerySubcommandGroupDefinitionBuilder {
         });
     }
 
-    private getResultOption(): APIApplicationCommandIntegerOption {
+    private getResultOption(): APIApplicationCommandIntegerOption
+    {
         return integerOption({
             name: OptionName.Result,
             description: 'Filter on finishing position',
@@ -328,7 +353,8 @@ export class QuerySubcommandGroupDefinitionBuilder {
         });
     }
 
-    private getStatusOption(): APIApplicationCommandStringOption {
+    private getStatusOption(): APIApplicationCommandStringOption
+    {
         return stringOption({
             name: OptionName.Status,
             description: 'Filter on status',
@@ -336,7 +362,8 @@ export class QuerySubcommandGroupDefinitionBuilder {
         });
     }
 
-    private getTeamOption(): APIApplicationCommandStringOption {
+    private getTeamOption(): APIApplicationCommandStringOption
+    {
         return stringOption({
             name: OptionName.Team,
             description: 'Filter on team',
@@ -348,7 +375,8 @@ export class QuerySubcommandGroupDefinitionBuilder {
 
     private options(
         ...options: APIApplicationCommandBasicOption[]
-    ): APIApplicationCommandBasicOption[] {
+    ): APIApplicationCommandBasicOption[]
+    {
         return [
             ...options,
             integerOption({

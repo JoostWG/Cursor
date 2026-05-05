@@ -1,3 +1,4 @@
-export interface HasName {
+export interface HasName
+{
     name: string;
 }

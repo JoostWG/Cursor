@@ -6,8 +6,10 @@ import { integerOption } from '../../../lib/utils/builders';
 import { Table } from '../../../lib/utils/table';
 import { F1Subcommand } from './F1Subcommand';
 
-export class DriverStandingsSubcommand extends F1Subcommand {
-    protected override definition(): SubcommandDefinition {
+export class DriverStandingsSubcommand extends F1Subcommand
+{
+    protected override definition(): SubcommandDefinition
+    {
         return {
             name: 'driver-standings',
             description: 'Driver standings',
@@ -26,7 +28,8 @@ export class DriverStandingsSubcommand extends F1Subcommand {
         };
     }
 
-    protected override async handle({ interaction }: ChatInputContext): Promise<void> {
+    protected override async handle({ interaction }: ChatInputContext): Promise<void>
+    {
         const seasonInput = interaction.options.getInteger('season');
         const roundInput = interaction.options.getInteger('round');
 
