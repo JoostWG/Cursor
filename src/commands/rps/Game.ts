@@ -15,6 +15,7 @@ import { mention } from '../../lib/utils';
 import { actionRow, button, container, separator, textDisplay } from '../../lib/utils/builders';
 import type { Choice } from './Choice';
 import { emojis } from './emojis';
+import { GameStatus } from './GameStatus';
 import { Round } from './Round';
 
 export class Game {
@@ -24,13 +25,7 @@ export class Game {
     private currentRoundIndex: number;
     private readonly timeout: number;
     private gameId?: number;
-    private status:
-        | 'invitePending'
-        | 'inviteDenied'
-        | 'inviteExpired'
-        | 'gameActive'
-        | 'gameFinished'
-        | 'gameExpired';
+    private status: GameStatus;
 
     public constructor(options: { users: [User, User]; db: CursorDatabase; timeout?: number }) {
         this.users = options.users;
@@ -38,7 +33,7 @@ export class Game {
         this.timeout = options.timeout ?? 60_000;
         this.rounds = [new Round(), new Round(), new Round()];
         this.currentRoundIndex = 0;
-        this.status = 'invitePending';
+        this.status = GameStatus.InvitePending;
     }
 
     private get player1(): User {
@@ -74,7 +69,7 @@ export class Game {
                 filter: (i) => i.user.id === this.player2.id,
             });
         } catch {
-            this.status = 'inviteExpired';
+            this.status = GameStatus.InviteExpired;
             await interaction.editReply({ components: this.buildComponents() });
 
             return;
@@ -82,12 +77,12 @@ export class Game {
 
         switch (inviteInteraction.customId) {
             case 'accept':
-                this.status = 'gameActive';
+                this.status = GameStatus.Active;
                 await inviteInteraction.update({ components: this.buildComponents() });
                 break;
 
             case 'deny':
-                this.status = 'inviteDenied';
+                this.status = GameStatus.InviteDenied;
                 await inviteInteraction.update({ components: this.buildComponents() });
 
                 return;
@@ -181,7 +176,7 @@ export class Game {
 
                 if (round.isFinished()) {
                     if (this.currentRoundIndex === 2) {
-                        this.status = 'gameFinished';
+                        this.status = GameStatus.Finished;
                     } else {
                         this.currentRoundIndex++;
                     }
@@ -201,11 +196,11 @@ export class Game {
         });
 
         switch (this.status) {
-            case 'invitePending':
-            case 'inviteDenied':
-            case 'inviteExpired':
+            case GameStatus.InvitePending:
+            case GameStatus.InviteDenied:
+            case GameStatus.InviteExpired:
                 switch (this.status) {
-                    case 'invitePending':
+                    case GameStatus.InvitePending:
                         builder.accent_color = Colors.Blue;
 
                         builder.components.push(
@@ -221,12 +216,12 @@ export class Game {
 
                         break;
 
-                    case 'inviteDenied':
+                    case GameStatus.InviteDenied:
                         builder.accent_color = Colors.Red;
                         builder.components.push(textDisplay({ content: 'Invite denied' }));
                         break;
 
-                    case 'inviteExpired':
+                    case GameStatus.InviteExpired:
                         builder.accent_color = Colors.Red;
                         builder.components.push(textDisplay({ content: 'Invite expired' }));
                         break;
@@ -239,13 +234,13 @@ export class Game {
                                 style: ButtonStyle.Danger,
                                 label: 'Deny',
                                 custom_id: 'deny',
-                                disabled: this.status !== 'invitePending',
+                                disabled: this.status !== GameStatus.InvitePending,
                             }),
                             button({
                                 style: ButtonStyle.Success,
                                 label: 'Accept',
                                 custom_id: 'accept',
-                                disabled: this.status !== 'invitePending',
+                                disabled: this.status !== GameStatus.InvitePending,
                             }),
                         ],
                     }),
@@ -253,9 +248,9 @@ export class Game {
 
                 break;
 
-            case 'gameExpired':
-            case 'gameActive':
-            case 'gameFinished':
+            case GameStatus.Expired:
+            case GameStatus.Active:
+            case GameStatus.Finished:
                 builder.accent_color = Colors.Gold;
 
                 builder.components = builder.components.concat([
@@ -292,7 +287,7 @@ export class Game {
                                 style: ButtonStyle.Primary,
                                 label: emoji,
                                 custom_id: key,
-                                disabled: this.status !== 'gameActive',
+                                disabled: this.status !== GameStatus.Active,
                             })
                         ),
                     }),
