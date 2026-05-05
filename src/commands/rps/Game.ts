@@ -17,6 +17,7 @@ import type { Choice } from './Choice';
 import { emojis } from './emojis';
 import { GameStatus } from './GameStatus';
 import { Round } from './Round';
+import { RoundResult } from './RoundResult';
 
 export class Game {
     private readonly users: [User, User];
@@ -271,11 +272,14 @@ export class Game {
                                         this.users[choiceIndex].displayName
                                     }: ${choiceString}`;
                                 }),
-                                [
-                                    'Tie',
-                                    `${this.player1.displayName} wins!`,
-                                    `${this.player2.displayName} wins!`,
-                                ][round.getResult()] ?? '',
+                                {
+                                    [RoundResult.Unfinished]: '',
+                                    [RoundResult.Tie]: 'Tie',
+                                    [RoundResult.PlayerOneWins]:
+                                        `${this.player1.displayName} wins!`,
+                                    [RoundResult.PlayerTwoWins]:
+                                        `${this.player2.displayName} wins!`,
+                                }[round.getResult()],
                             ])
                             .flat()
                             .join('\n'),

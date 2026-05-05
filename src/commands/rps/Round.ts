@@ -1,5 +1,6 @@
 import type { Choice } from './Choice';
 import { emojis } from './emojis';
+import { RoundResult } from './RoundResult';
 
 export class Round {
     public choices: [Choice | null, Choice | null];
@@ -21,13 +22,15 @@ export class Round {
         return !this.choices.includes(null);
     }
 
-    public getResult(): number {
+    public getResult(): RoundResult {
         if (!this.choices[0] || !this.choices[1]) {
-            return -1;
+            return RoundResult.Unfinished;
         }
 
         const keys = Object.keys(emojis);
 
-        return (keys.indexOf(this.choices[0]) - keys.indexOf(this.choices[1])) % 3;
+        const index = (keys.indexOf(this.choices[0]) - keys.indexOf(this.choices[1])) % 3;
+
+        return [RoundResult.Tie, RoundResult.PlayerOneWins, RoundResult.PlayerTwoWins][index];
     }
 }
