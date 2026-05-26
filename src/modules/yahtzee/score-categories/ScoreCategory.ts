@@ -1,5 +1,6 @@
 import type { Dice } from '../Dice';
 import type { ScoreCardSection } from '../ScoreCardSection';
+import { YahtzeeError } from '../YahtzeeError';
 
 export abstract class ScoreCategory {
     private scratched: boolean;
@@ -15,15 +16,15 @@ export abstract class ScoreCategory {
 
     public scratch(): void {
         if (!this.isOpen()) {
-            return;
+            throw new YahtzeeError("Cannot scratch a category that isn't open");
         }
 
         this.scratched = true;
     }
 
     public score(dice: Dice): void {
-        if (!this.isOpen()) {
-            return;
+        if (!this.isValid(dice)) {
+            throw new YahtzeeError('Cannot score a that is not valid or not open');
         }
 
         this.scoredPoints = this.getPoints(dice);

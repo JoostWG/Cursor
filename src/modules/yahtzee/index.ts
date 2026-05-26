@@ -4,3 +4,4 @@ export * from './score-categories';
 export * from './ScoreCard';
 export * from './ScoreCardSection';
 export type * from './types';
+export * from './YahtzeeError';
