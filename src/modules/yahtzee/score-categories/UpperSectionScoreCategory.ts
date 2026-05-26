@@ -12,7 +12,7 @@ export class UpperSectionScoreCategory extends ScoreCategory {
         this.id = this.name.toLowerCase();
     }
 
-    public override points(dice: Dice): number {
+    public override getPoints(dice: Dice): number {
         return this.value * dice.count(this.value);
     }
 

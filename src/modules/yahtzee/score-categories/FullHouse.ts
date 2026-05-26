@@ -7,7 +7,7 @@ export class FullHouse extends ScoreCategory {
     public override readonly id = 'fullHouse';
     public override readonly section = ScoreCardSection.Lower;
 
-    public override points(): number {
+    public override getPoints(): number {
         return 25;
     }
 

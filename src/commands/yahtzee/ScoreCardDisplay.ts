@@ -18,7 +18,7 @@ export class ScoreCardDisplay {
     }
 
     private getCategoryDisplayLabel(category: ScoreCategory): string {
-        return category.check(this.dice)
+        return category.isValid(this.dice)
             ? `> ${category.name}`
             : `  ${category.name}`;
     }
@@ -42,8 +42,8 @@ export class ScoreCardDisplay {
                 Table.cell(this.getCategoryDisplayValue(category), { align: 'right' }),
             ],
             {
-                after: category.check(this.dice)
-                    ? `[${category.points(this.dice)}]`
+                after: category.isValid(this.dice)
+                    ? `[${category.getPoints(this.dice)}]`
                     : '',
             },
         );

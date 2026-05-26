@@ -43,7 +43,7 @@ export class ScoreCard {
             return [];
         }
 
-        return this.scoreCategories.filter((category) => category.check(dice));
+        return this.scoreCategories.filter((category) => category.isValid(dice));
     }
 
     public getScratchOptions(dice: Dice): ScoreCategory[] {

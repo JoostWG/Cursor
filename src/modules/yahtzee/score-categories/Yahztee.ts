@@ -7,7 +7,7 @@ export class Yahtzee extends ScoreCategory {
     public override readonly id = 'yahtzee';
     public override readonly section = ScoreCardSection.Lower;
 
-    public override points(): number {
+    public override getPoints(): number {
         return 50;
     }
 

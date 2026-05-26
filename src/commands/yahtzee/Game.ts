@@ -184,7 +184,7 @@ export class Game extends ComponentUI {
                 placeholder: 'Action',
                 custom_id: 'action',
                 options: actions.map((category) => ({
-                    label: `${category.name} - ${category.points(this.dice)}`,
+                    label: `${category.name} - ${category.getPoints(this.dice)}`,
                     value: category.id,
                 })),
             }),

@@ -7,7 +7,7 @@ export class FourOfAKind extends ScoreCategory {
     public override readonly id = 'fourOfAKind';
     public override readonly section = ScoreCardSection.Lower;
 
-    public override points(dice: Dice): number {
+    public override getPoints(dice: Dice): number {
         return dice.sum();
     }
 

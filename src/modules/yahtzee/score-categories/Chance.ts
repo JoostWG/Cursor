@@ -7,7 +7,7 @@ export class Chance extends ScoreCategory {
     public override readonly id = 'chance';
     public override readonly section = ScoreCardSection.Lower;
 
-    public override points(dice: Dice): number {
+    public override getPoints(dice: Dice): number {
         return dice.sum();
     }
 

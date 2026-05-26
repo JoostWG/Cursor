@@ -7,7 +7,7 @@ export class SmallStraight extends ScoreCategory {
     public override readonly id = 'smallStraight';
     public override readonly section = ScoreCardSection.Lower;
 
-    public override points(): number {
+    public override getPoints(): number {
         return 30;
     }
 

@@ -26,10 +26,10 @@ export abstract class ScoreCategory {
             return;
         }
 
-        this.scoredPoints = this.points(dice);
+        this.scoredPoints = this.getPoints(dice);
     }
 
-    public check(dice: Dice): boolean {
+    public isValid(dice: Dice): boolean {
         return this.isOpen() && dice.isRolled() && this.validate(dice);
     }
 
@@ -49,6 +49,6 @@ export abstract class ScoreCategory {
         return this.scoredPoints;
     }
 
-    public abstract points(dice: Dice): number;
+    public abstract getPoints(dice: Dice): number;
     protected abstract validate(dice: Dice): boolean;
 }
