@@ -20,7 +20,7 @@
         "discord.js": "^14.25.1",
         "f1-garage": "^0.2.1",
         "fast-equals": "^5.3.3",
-        "kysely": "^0.28.8",
+        "kysely": "^0.28.17",
         "lodash": "^4.17.21",
         "valicheck": "^0.2.0"
     },
